@@ -23,7 +23,6 @@ const VOICE_MIDI_CENTERS: Record<VoiceTypeId, number> = {
   tenor:    55,  // G3  · ~196 Hz
   alto:     62,  // D4  · ~294 Hz
   soprano:  69,  // A4  · ~440 Hz
-  general:  57,  // A3  · ~220 Hz
 };
 
 function detectVoiceType(medianHz: number): VoiceTypeId {

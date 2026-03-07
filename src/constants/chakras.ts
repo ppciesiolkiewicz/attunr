@@ -97,8 +97,7 @@ export type VoiceTypeId =
   | "baritone"
   | "tenor"
   | "alto"
-  | "soprano"
-  | "general";
+  | "soprano";
 
 export interface VoiceType {
   id: VoiceTypeId;
@@ -112,7 +111,6 @@ export const VOICE_TYPES: VoiceType[] = [
   { id: "tenor",    label: "Tenor",    sacredFactor: 0.50 },
   { id: "alto",     label: "Alto",     sacredFactor: 0.65 },
   { id: "soprano",  label: "Soprano",  sacredFactor: 0.90 },
-  { id: "general",  label: "General",  sacredFactor: 1.00 },
 ];
 
 export type TuningStandard = "A432" | "A440";
@@ -130,7 +128,7 @@ export function getChakraFrequencies(
 ): Chakra[] {
   if (base === "absolute") return CHAKRAS;
 
-  const voice = VOICE_TYPES.find((v) => v.id === voiceId) ?? VOICE_TYPES[2];
+  const voice = VOICE_TYPES.find((v) => v.id === voiceId) ?? VOICE_TYPES[2]; // default: tenor
   const tuningFactor = tuning === "A432" ? 432 / 440 : 1;
 
   return CHAKRAS.map((chakra) => ({
