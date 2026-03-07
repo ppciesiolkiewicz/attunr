@@ -172,19 +172,23 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
               <p className="text-xs text-white/35 mt-1">Choose one, or let us detect it for you.</p>
             </div>
 
-            {/* Voice type pills */}
-            <div className="flex flex-wrap justify-center gap-1.5 w-full">
-              {VOICE_TYPES.map((v) => (
-                <button key={v.id} onClick={() => setSelectedVoiceId(v.id)}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
-                  style={{
-                    backgroundColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
-                    borderColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.1)",
-                    color: selectedVoiceId === v.id ? "#c4b5fd" : "rgba(255,255,255,0.45)",
-                    boxShadow: selectedVoiceId === v.id ? "0 0 10px rgba(124,58,237,0.3)" : "none",
-                  }}>
-                  {v.label}
-                </button>
+            {/* Voice type pills — 3 + 2 layout */}
+            <div className="flex flex-col items-center gap-1.5 w-full">
+              {[VOICE_TYPES.slice(0, 3), VOICE_TYPES.slice(3)].map((row, ri) => (
+                <div key={ri} className="flex justify-center gap-1.5">
+                  {row.map((v) => (
+                    <button key={v.id} onClick={() => setSelectedVoiceId(v.id)}
+                      className="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
+                      style={{
+                        backgroundColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
+                        borderColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.1)",
+                        color: selectedVoiceId === v.id ? "#c4b5fd" : "rgba(255,255,255,0.45)",
+                        boxShadow: selectedVoiceId === v.id ? "0 0 10px rgba(124,58,237,0.3)" : "none",
+                      }}>
+                      {v.label}
+                    </button>
+                  ))}
+                </div>
               ))}
             </div>
 
@@ -288,21 +292,31 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
               </div>
             )}
 
-            {/* Override pills */}
-            <div className="flex flex-wrap justify-center gap-1.5 w-full">
-              {VOICE_TYPES.filter(v => v.id !== detectedVoiceId).map((v) => (
-                <button key={v.id}
-                  onClick={() => { setSelectedVoiceId(v.id); setDetectedVoiceId(v.id); }}
-                  className="px-3 py-1 rounded-full text-[11px] font-medium border transition-all"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.1)",
-                    color: "rgba(255,255,255,0.35)",
-                    backgroundColor: "rgba(255,255,255,0.03)",
-                  }}>
-                  {v.label}
-                </button>
-              ))}
-            </div>
+            {/* Override pills — same 3+2 split, minus the detected one */}
+            {(() => {
+              const others = VOICE_TYPES.filter(v => v.id !== detectedVoiceId);
+              const rows = [others.slice(0, 3), others.slice(3)];
+              return (
+                <div className="flex flex-col items-center gap-1.5 w-full">
+                  {rows.map((row, ri) => (
+                    <div key={ri} className="flex justify-center gap-1.5">
+                      {row.map((v) => (
+                        <button key={v.id}
+                          onClick={() => { setSelectedVoiceId(v.id); setDetectedVoiceId(v.id); }}
+                          className="px-3 py-1 rounded-full text-[11px] font-medium border transition-all"
+                          style={{
+                            borderColor: "rgba(255,255,255,0.1)",
+                            color: "rgba(255,255,255,0.35)",
+                            backgroundColor: "rgba(255,255,255,0.03)",
+                          }}>
+                          {v.label}
+                        </button>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
           </div>
         )}
 
