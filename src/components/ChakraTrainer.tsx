@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
 import OnboardingModal from "./OnboardingModal";
 import {
-  CHAKRAS,
   VOICE_TYPES,
   getChakraFrequencies,
   findClosestChakra,
@@ -13,27 +12,6 @@ import {
 import type { Chakra, FrequencyBase, VoiceTypeId, TuningStandard } from "@/constants/chakras";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
-
-// ── Mic icon ──────────────────────────────────────────────────────────────────
-function MicIcon({ active }: { active: boolean }) {
-  return (
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="9" y="2" width="6" height="11" rx="3" fill={active ? "currentColor" : "none"} />
-      <path d="M5 10a7 7 0 0 0 14 0" />
-      <line x1="12" y1="19" x2="12" y2="22" />
-      <line x1="9"  y1="22" x2="15" y2="22" />
-    </svg>
-  );
-}
-
-// ── Spinner icon ──────────────────────────────────────────────────────────────
-function Spinner() {
-  return (
-    <svg className="spin" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-      <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
-    </svg>
-  );
-}
 
 // ── Play icon ─────────────────────────────────────────────────────────────────
 function PlayIcon() {
@@ -51,7 +29,7 @@ export default function ChakraTrainer() {
   const [tuning, setTuning] = useState<TuningStandard>("A432");
   const [playingId, setPlayingId] = useState<string | null>(null);
 
-  const { pitchHz, pitchHzRef, status, error, startListening, stopListening } = usePitchDetection();
+  const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
   const { playTone } = useTonePlayer();
 
   const chakras = useMemo(
@@ -59,23 +37,12 @@ export default function ChakraTrainer() {
     [freqBase, voiceId, tuning]
   );
 
-  const isListening = status === "listening";
-  const isLoading = status === "requesting-mic" || status === "loading-model";
-
   const closestChakra: Chakra | null = pitchHz
     ? findClosestChakra(pitchHz, chakras)
     : null;
   const locked = closestChakra && pitchHz
     ? isInTune(pitchHz, closestChakra.frequencyHz)
     : false;
-
-  function handleMicToggle() {
-    if (isListening || isLoading) {
-      stopListening();
-    } else {
-      startListening();
-    }
-  }
 
   function handleChakraPlay(chakra: Chakra) {
     setPlayingId(chakra.id);
@@ -87,11 +54,8 @@ export default function ChakraTrainer() {
   const statusLabel =
     status === "requesting-mic" ? "Requesting microphone…" :
     status === "loading-model"  ? "Loading CREPE model…" :
-    status === "listening"      ? pitchHz
-      ? `${Math.round(pitchHz)} Hz${locked ? ` · ${closestChakra?.name} ✓` : ""}`
-      : "Listening…"
-    : status === "error"        ? error ?? "Error"
-    : "Tap to start";
+    status === "error"          ? "Microphone error — reload to retry"
+    : null;
 
   // Auto-start mic as soon as the onboarding screen is visible
   useEffect(() => {
@@ -242,43 +206,14 @@ export default function ChakraTrainer() {
           })}
         </div>
 
-        {/* Mic button + status */}
-        <div className="flex flex-col items-center gap-2">
-          <button
-            onClick={handleMicToggle}
-            disabled={isLoading}
-            className={`w-16 h-16 rounded-full flex items-center justify-center transition-all border-2 ${
-              isListening
-                ? "bg-violet-600/20 border-violet-500 text-violet-300 glow-pulse"
-                : isLoading
-                ? "bg-white/5 border-white/20 text-white/40 cursor-wait"
-                : status === "error"
-                ? "bg-red-500/15 border-red-500/50 text-red-400 hover:bg-red-500/25"
-                : "bg-white/5 border-white/15 text-white/60 hover:bg-white/10 hover:border-white/30 hover:text-white"
-            }`}
-          >
-            {isLoading ? <Spinner /> : <MicIcon active={isListening} />}
-          </button>
-
-          <p
-            className={`text-xs text-center transition-colors ${
-              status === "error"
-                ? "text-red-400"
-                : locked
-                ? "font-medium"
-                : "text-white/40"
-            }`}
-            style={locked ? { color: closestChakra?.color } : undefined}
-          >
-            {statusLabel}
-          </p>
-
-          {status === "loading-model" && (
-            <p className="text-[10px] text-white/25 text-center max-w-[220px]">
-              Downloading CREPE pitch model (~15 MB, first load only)
+        {/* Status indicator */}
+        {status !== "listening" && (
+          <div className="flex justify-center">
+            <p className={`text-xs text-center ${status === "error" ? "text-red-400" : "text-white/30"}`}>
+              {statusLabel}
             </p>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );
