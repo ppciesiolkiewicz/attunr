@@ -23,15 +23,10 @@ function PlayIcon() {
 }
 
 export default function ChakraTrainer() {
-  const [showOnboarding, setShowOnboarding] = useState(
-    () => typeof window === "undefined" || !localStorage.getItem("attunr.onboarded")
-  );
+  // Start with server-safe defaults — localStorage is read in useEffect below
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [freqBase, setFreqBase] = useState<FrequencyBase>("voice");
-  const [voiceId, setVoiceId] = useState<VoiceTypeId>(
-    () => (typeof window !== "undefined"
-      ? (localStorage.getItem("attunr.voiceType") as VoiceTypeId | null) ?? "tenor"
-      : "tenor")
-  );
+  const [voiceId, setVoiceId] = useState<VoiceTypeId>("tenor");
   const [tuning, setTuning] = useState<TuningStandard>("A432");
   const [playingId, setPlayingId] = useState<string | null>(null);
 
@@ -62,6 +57,14 @@ export default function ChakraTrainer() {
     status === "loading-model"  ? "Loading CREPE model…" :
     status === "error"          ? "Microphone error — reload to retry"
     : null;
+
+  // Hydrate from localStorage after mount (avoids SSR/client mismatch)
+  useEffect(() => {
+    const onboarded = localStorage.getItem("attunr.onboarded");
+    const savedVoice = localStorage.getItem("attunr.voiceType") as VoiceTypeId | null;
+    if (savedVoice) setVoiceId(savedVoice);
+    if (!onboarded) setShowOnboarding(true);
+  }, []);
 
   // Auto-start mic as soon as the onboarding screen is visible
   useEffect(() => {
