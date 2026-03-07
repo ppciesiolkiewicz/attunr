@@ -143,8 +143,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
 
           {/* Live pitch display */}
           <div
-            className="flex items-center justify-center gap-2 rounded-xl px-5 py-3 w-full"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+            className="flex flex-col items-center justify-center gap-2 rounded-xl px-5 py-4 w-full"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", minHeight: 80 }}
           >
             {isLoading ? (
               <div className="flex items-center gap-2 text-white/35">
@@ -154,25 +154,25 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
                 </span>
               </div>
             ) : isError ? (
-              <span className="text-xs text-red-400">Couldn&apos;t access microphone. Check your browser settings.</span>
-            ) : pitchHz !== null ? (
-              <div className="flex items-center gap-3">
-                <span
-                  className="text-2xl font-light tabular-nums tracking-tight text-white"
-                >
-                  {Math.round(pitchHz)} Hz
-                </span>
-                <div className="flex items-center gap-1 text-violet-400">
+              <span className="text-xs text-red-400">
+                Couldn&apos;t access microphone. Check your browser settings.
+              </span>
+            ) : (
+              <>
+                {/* Status row — always visible while listening */}
+                <div className="flex items-center gap-1.5 text-white/30">
+                  <div className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
+                  <span className="text-xs">Listening — hum a note</span>
                   <MicWaveIcon />
                 </div>
-              </div>
-            ) : isListening ? (
-              <div className="flex items-center gap-2 text-white/30">
-                <div className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
-                <span className="text-xs">Listening — hum a note</span>
-              </div>
-            ) : (
-              <span className="text-xs text-white/25">Starting microphone…</span>
+
+                {/* Hz readout — shown below, stable position */}
+                <span className="text-2xl font-light tabular-nums tracking-tight transition-all"
+                  style={{ color: pitchHz !== null ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.12)" }}
+                >
+                  {pitchHz !== null ? `${Math.round(pitchHz)} Hz` : "— Hz"}
+                </span>
+              </>
             )}
           </div>
 
