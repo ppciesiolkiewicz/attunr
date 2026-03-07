@@ -6,6 +6,7 @@ import type { Chakra } from "@/constants/chakras";
 
 interface PitchDot {
   hz: number;
+  ts: number; // performance.now() when captured — used for time-based scrolling
 }
 
 interface PitchCanvasProps {
@@ -18,6 +19,10 @@ interface PitchCanvasProps {
 const DOT_INTERVAL_MS = 85;
 const MAX_DOTS = 90;
 const DOT_SPACING_PX = 8;
+/** Pixels per millisecond — constant scroll speed regardless of whether pitch is detected */
+const PX_PER_MS = DOT_SPACING_PX / DOT_INTERVAL_MS;
+/** Dots older than this are discarded (~7.6 s of history) */
+const DOT_MAX_AGE_MS = MAX_DOTS * DOT_INTERVAL_MS;
 const DOT_RADIUS = 5;
 const NEWEST_X = 0.68;
 
@@ -39,12 +44,15 @@ export default function PitchCanvas({
   const rafRef = useRef<number | null>(null);
   const dprRef = useRef(1);
 
-  // Cache computed layout so we don't recompute every frame
-  const layoutRef = useRef({ W: 0, H: 0, minHz: 0, maxHz: 0 });
+  // Canvas dimensions only — minHz/maxHz are derived from chakrasRef each frame
+  // so they stay correct when the user switches frequency mode.
+  const layoutRef = useRef({ W: 0, H: 0 });
 
-  // Sync chakras array (changes at most when user changes settings)
+  // Sync chakras array. Also flush the dot trail so stale dots from the
+  // previous frequency set don't appear in the wrong position.
   useEffect(() => {
     chakrasRef.current = chakras;
+    dotsRef.current = [];
   }, [chakras]);
 
   const setupCanvas = useCallback(() => {
@@ -64,23 +72,25 @@ export default function PitchCanvas({
     const ctx = canvas.getContext("2d");
     ctx?.scale(dpr, dpr);
 
-    // Pre-compute layout constants
-    const freqs = chakrasRef.current.map((c) => c.frequencyHz);
-    layoutRef.current = {
-      W: w,
-      H: h,
-      minHz: Math.min(...freqs) * 0.76,
-      maxHz: Math.max(...freqs) * 1.3,
-    };
+    layoutRef.current = { W: w, H: h };
   }, []);
 
   const render = useCallback(() => {
+    // Schedule the next frame FIRST so the loop survives any early return below.
+    rafRef.current = requestAnimationFrame(render);
+
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
 
-    const { W, H, minHz, maxHz } = layoutRef.current;
+    const { W, H } = layoutRef.current;
     const chakras = chakrasRef.current;
+
+    // Derive frequency bounds from current chakras every frame so they stay
+    // correct after the user switches between Absolute and By-voice modes.
+    const freqs = chakras.map((c) => c.frequencyHz);
+    const minHz = Math.min(...freqs) * 0.76;
+    const maxHz = Math.max(...freqs) * 1.3;
 
     // Read pitch directly from the ref — always the freshest value, no React lag
     const hz = currentHzRef.current;
@@ -154,23 +164,29 @@ export default function PitchCanvas({
     // ── Accumulate trail dot (every DOT_INTERVAL_MS) ─────────────────────────
     const now = performance.now();
     if (hz !== null && now - lastDotMs.current > DOT_INTERVAL_MS) {
-      dotsRef.current.push({ hz });
-      if (dotsRef.current.length > MAX_DOTS) dotsRef.current.shift();
+      dotsRef.current.push({ hz, ts: now });
       lastDotMs.current = now;
     }
 
-    // ── Draw trail ────────────────────────────────────────────────────────────
-    const trail = dotsRef.current;
+    // Expire dots older than DOT_MAX_AGE_MS so the trail length stays bounded.
+    // This also makes dots scroll off the left edge naturally during silence.
+    dotsRef.current = dotsRef.current.filter(
+      (d) => now - d.ts < DOT_MAX_AGE_MS
+    );
 
-    for (let i = 0; i < trail.length; i++) {
-      const dot = trail[trail.length - 1 - i];
-      const x = newestX - i * DOT_SPACING_PX;
-      if (x < 0) break;
+    // ── Draw trail (time-based X so scrolling continues even during silence) ──
+    // X position is derived from how old the dot is, not its index.
+    // Result: the trail keeps moving left at a constant speed even when the
+    // user stops singing — the canvas never looks frozen.
+    for (const dot of dotsRef.current) {
+      const ageMs = now - dot.ts;
+      const x = newestX - ageMs * PX_PER_MS;
+      if (x < 0) continue;
 
+      const ageFraction = ageMs / DOT_MAX_AGE_MS;
+      const opacity = (1 - ageFraction) * 0.8;
+      const r = DOT_RADIUS * (1 - ageFraction * 0.5);
       const y = toY(dot.hz);
-      const age = i / trail.length;
-      const opacity = (1 - age) * 0.75;
-      const r = DOT_RADIUS * (1 - age * 0.5);
       const closest = findClosestChakra(dot.hz, chakras);
       const inTune = isInTune(dot.hz, closest.frequencyHz);
 
@@ -225,8 +241,6 @@ export default function PitchCanvas({
       ctx.stroke();
       ctx.restore();
     }
-
-    rafRef.current = requestAnimationFrame(render);
   }, [currentHzRef]);
 
   useEffect(() => {
@@ -251,8 +265,11 @@ export default function PitchCanvas({
       if (!onChakraClick) return;
       const rect = canvasRef.current!.getBoundingClientRect();
       const clickY = e.clientY - rect.top;
-      const { H, minHz, maxHz } = layoutRef.current;
+      const { H } = layoutRef.current;
       const chakras = chakrasRef.current;
+      const freqs = chakras.map((c) => c.frequencyHz);
+      const minHz = Math.min(...freqs) * 0.76;
+      const maxHz = Math.max(...freqs) * 1.3;
 
       const t = 1 - clickY / H;
       const clickedHz = Math.exp(
