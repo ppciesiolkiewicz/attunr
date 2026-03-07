@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import PitchCanvas from "./PitchCanvas";
+import OnboardingModal from "./OnboardingModal";
 import {
   CHAKRAS,
   VOICE_TYPES,
@@ -44,6 +45,7 @@ function PlayIcon() {
 }
 
 export default function ChakraTrainer() {
+  const [showOnboarding, setShowOnboarding] = useState(true);
   const [freqBase, setFreqBase] = useState<FrequencyBase>("absolute");
   const [voiceId, setVoiceId] = useState<VoiceTypeId>("tenor");
   const [tuning, setTuning] = useState<TuningStandard>("A432");
@@ -91,8 +93,15 @@ export default function ChakraTrainer() {
     : status === "error"        ? error ?? "Error"
     : "Tap to start";
 
+  function handleOnboardingBegin() {
+    setShowOnboarding(false);
+    startListening();
+  }
+
   return (
     <div className="flex flex-col h-full gap-0">
+
+      {showOnboarding && <OnboardingModal onBegin={handleOnboardingBegin} />}
 
       {/* ── Controls bar ───────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-white/[0.06]">
