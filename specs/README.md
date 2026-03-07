@@ -1,33 +1,53 @@
 # attunr (web) – Product Specifications
 
-This is the web edition of attunr, built with Next.js 16 and deployed on Vercel.
-It is a spiritual companion to the mobile app (`attunr-expo`) and shares the same
-product vision and language principles.
-
-At this stage the web app focuses exclusively on the **Chakra frequency trainer** —
-the core pitch practice experience. Journey gamification and account features are
-out of scope for the current phase.
+Web edition of attunr, built with Next.js 16 + Turbopack, deployed on Vercel.
+Shares the same product vision and language principles as `attunr-expo`.
 
 ## Specs index
 
 | Spec | Description |
 | ---- | ----------- |
-| [App Overview](./app-overview.md) | Vision, spiritual positioning, scope vs. mobile |
-| [Language & Messaging](./language-and-messaging.md) | Tone of voice, terminology, copy patterns |
-| [Chakra Trainer](./chakra-trainer.md) | The main feature: frequencies, mic, visualiser, tone play |
-| [Pitch Canvas](./pitch-canvas.md) | Canvas rendering — dot trail, log-scale, in-tune detection |
-| [Settings Panel](./settings-panel.md) | Voice type, tuning, frequency base — inline within trainer |
-| [Tech Stack](./tech-stack.md) | Next.js 16 + Turbopack, Tailwind v4, ml5 CREPE, Web Audio API |
+| [App Overview](./app-overview.md) | Vision, spiritual positioning, scope |
+| [Language & Messaging](./language-and-messaging.md) | Tone of voice, terminology, approved copy |
+| [Chakra Trainer](./chakra-trainer.md) | Shared canvas + audio; navigation overview |
+| [Train Tab](./train-tab.md) | Free-form practice view |
+| [Journey](./journey.md) | Guided progressive stages (individual + sequence exercises) |
+| [Pitch Canvas](./pitch-canvas.md) | Canvas rendering — dot trail, log-scale, waveform ring |
+| [Audio Engine](./audio-engine.md) | Binaural beats, drone, waveform ring |
+| [Settings](./settings.md) | Tuning, voice type, audio, localStorage persistence |
+| [Tech Stack](./tech-stack.md) | Next.js 16, Tailwind v4, ml5 CREPE, Web Audio API |
+
+## Current build status
+
+| Feature | Spec | Built |
+|---------|------|-------|
+| Pitch canvas (7 bands, dot trail, log-scale) | ✓ | ✓ |
+| Real-time pitch detection (ml5 CREPE) | ✓ | ✓ |
+| Chakra tone buttons | ✓ | ✓ |
+| Frequency base toggle (Absolute / By voice) | ✓ | ✓ |
+| Voice type selector | ✓ | ✓ |
+| Pitch readout overlay | ✓ | ✓ |
+| Onboarding with voice type detection | ✓ | ✓ |
+| Voice type disclaimer in voice mode | ✓ | ❌ missing |
+| Tuning in Settings (not main screen) | ✓ | ❌ not yet |
+| App navigation (Train / Journey tabs) | ✓ | ❌ not yet |
+| Journey stages | ✓ | ❌ not yet |
+| Chakra detail panel | ✓ | ❌ not yet |
+| Binaural beats | ✓ | ❌ not yet |
+| Drone accompaniment | ✓ | ❌ not yet |
+| Waveform ring | ✓ | ❌ not yet |
+| Settings panel (slide-over) | ✓ | ❌ not yet |
+| localStorage persistence | ✓ | ❌ not yet |
+| A444 / A528 tuning options | ✓ | ❌ not yet |
 
 ## Relationship to attunr-expo
 
 | Concern | attunr-expo (mobile) | attunr (web) |
 |---------|----------------------|--------------|
 | Platform | React Native / Expo | Next.js / Vercel |
-| Pitch detection | pitchfinder YIN (AMDF) + expo-audio-studio | ml5 CREPE (deep learning) |
-| Canvas renderer | React Native Skia | HTML5 Canvas 2D API |
-| Tone playback | expo-av (native WAV) / Web Audio (web) | Web Audio API (oscillator) |
-| Audio permissions | Expo Go limitations apply | Browser getUserMedia |
-| Journey path | ✓ Implemented | Planned (future phase) |
-| Onboarding | ✓ Implemented | Not required yet |
-| Login / accounts | ✓ Planned | Out of scope |
+| Pitch detection | pitchfinder YIN + expo-audio-studio | ml5 CREPE |
+| Canvas renderer | React Native Skia | HTML5 Canvas 2D |
+| Tone playback | expo-av / Web Audio | Web Audio API (binaural) |
+| Journey path | ✓ | Specced — not yet built |
+| Onboarding | ✓ | ✓ Built |
+| Login / accounts | Planned | Out of scope |
