@@ -11,8 +11,7 @@ export function useTonePlayer() {
 
   const getCtx = useCallback((): AudioContext => {
     if (!audioCtxRef.current || audioCtxRef.current.state === "closed") {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const Ctx = window.AudioContext ?? (window as any).webkitAudioContext;
+        const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       audioCtxRef.current = new Ctx();
     }
     if (audioCtxRef.current.state === "suspended") {

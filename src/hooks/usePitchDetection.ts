@@ -29,15 +29,14 @@ export function usePitchDetection(): PitchDetectionState {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const detectorRef = useRef<any>(null);
+  const detectorRef = useRef<{ getPitch: (cb: (err: Error | null, freq: number | null) => void) => void } | null>(null);
   const activeRef = useRef(false);
 
   /** Recursive loop: ask ml5 for a new pitch, update state, repeat */
   const pollPitch = useCallback(() => {
     if (!activeRef.current || !detectorRef.current) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    detectorRef.current.getPitch((err: any, freq: number | null) => {
+    detectorRef.current.getPitch((err: Error | null, freq: number | null) => {
       if (!activeRef.current) return;
       setPitchHz(freq && freq > 50 && freq < 2000 ? freq : null);
       pollPitch();
@@ -57,14 +56,12 @@ export function usePitchDetection(): PitchDetectionState {
 
       setStatus("loading-model");
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const AudioCtx = window.AudioContext ?? (window as any).webkitAudioContext;
+      const AudioCtx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
       const audioCtx = new AudioCtx();
       audioCtxRef.current = audioCtx;
 
       // ml5 must be loaded client-side only (no SSR)
-      const ml5Module = await import("ml5");
-      const ml5 = (ml5Module as any).default ?? ml5Module;
+      const ml5 = await import("ml5");
 
       activeRef.current = true;
 
