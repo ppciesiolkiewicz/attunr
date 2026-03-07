@@ -23,9 +23,15 @@ function PlayIcon() {
 }
 
 export default function ChakraTrainer() {
-  const [showOnboarding, setShowOnboarding] = useState(true);
-  const [freqBase, setFreqBase] = useState<FrequencyBase>("absolute");
-  const [voiceId, setVoiceId] = useState<VoiceTypeId>("tenor");
+  const [showOnboarding, setShowOnboarding] = useState(
+    () => typeof window === "undefined" || !localStorage.getItem("attunr.onboarded")
+  );
+  const [freqBase, setFreqBase] = useState<FrequencyBase>("voice");
+  const [voiceId, setVoiceId] = useState<VoiceTypeId>(
+    () => (typeof window !== "undefined"
+      ? (localStorage.getItem("attunr.voiceType") as VoiceTypeId | null) ?? "tenor"
+      : "tenor")
+  );
   const [tuning, setTuning] = useState<TuningStandard>("A432");
   const [playingId, setPlayingId] = useState<string | null>(null);
 
@@ -69,7 +75,8 @@ export default function ChakraTrainer() {
     setVoiceId(voiceId);
     setFreqBase("voice");
     setShowOnboarding(false);
-    // Mic is already running — no need to call startListening() again
+    localStorage.setItem("attunr.onboarded", "1");
+    localStorage.setItem("attunr.voiceType", voiceId);
   }
 
   return (
