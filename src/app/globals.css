@@ -1,26 +1,48 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ── Design tokens ───────────────────────────────────────────────────────── */
+@theme {
+  --color-root:       #ef4444;
+  --color-sacral:     #f97316;
+  --color-solar:      #eab308;
+  --color-heart:      #22c55e;
+  --color-throat:     #3b82f6;
+  --color-third-eye:  #6366f1;
+  --color-crown:      #a855f7;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ── Base reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html, body, #__next { height: 100%; margin: 0; padding: 0; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #080810;
+  color: #e2e2ef;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ── Animations ──────────────────────────────────────────────────────────── */
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 18px rgba(139,92,246,0.4), 0 0 40px rgba(139,92,246,0.12); }
+  50%       { box-shadow: 0 0 28px rgba(139,92,246,0.7), 0 0 60px rgba(139,92,246,0.22); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+.fade-in    { animation: fade-in 0.35s ease-out forwards; }
+.spin       { animation: spin 0.9s linear infinite; }
