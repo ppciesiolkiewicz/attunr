@@ -10,35 +10,61 @@ export type PitchDetectionStatus =
   | "error";
 
 interface PitchDetectionState {
+  /** React state — throttled to ~15 fps, use for UI labels only */
   pitchHz: number | null;
+  /** Ref — updated synchronously on every CREPE result, use for canvas */
+  pitchHzRef: React.RefObject<number | null>;
   status: PitchDetectionStatus;
   error: string | null;
   startListening: () => Promise<void>;
   stopListening: () => void;
 }
 
-// ml5 CREPE model hosted on the ml5 CDN
 const CREPE_MODEL_URL =
   "https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/";
+
+/** Valid human-voice pitch range accepted from CREPE */
+const MIN_HZ = 50;
+const MAX_HZ = 2000;
+
+/** How often to push React state updates (for UI labels). Canvas uses the ref. */
+const UI_THROTTLE_MS = 66; // ~15 fps
 
 export function usePitchDetection(): PitchDetectionState {
   const [pitchHz, setPitchHz] = useState<number | null>(null);
   const [status, setStatus] = useState<PitchDetectionStatus>("idle");
   const [error, setError] = useState<string | null>(null);
 
+  // Ref written synchronously in the CREPE callback — no React scheduling delay.
+  // The canvas RAF loop reads from this directly.
+  const pitchHzRef = useRef<number | null>(null);
+
   const audioCtxRef = useRef<AudioContext | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const detectorRef = useRef<{ getPitch: (cb: (err: Error | null, freq: number | null) => void) => void } | null>(null);
+  const detectorRef = useRef<{
+    getPitch: (cb: (err: Error | null, freq: number | null) => void) => void;
+  } | null>(null);
   const activeRef = useRef(false);
+  const lastUiUpdateRef = useRef(0);
 
-  /** Recursive loop: ask ml5 for a new pitch, update state, repeat */
   const pollPitch = useCallback(() => {
     if (!activeRef.current || !detectorRef.current) return;
 
-    detectorRef.current.getPitch((err: Error | null, freq: number | null) => {
+    detectorRef.current.getPitch((_, freq) => {
       if (!activeRef.current) return;
-      setPitchHz(freq && freq > 50 && freq < 2000 ? freq : null);
+
+      const valid = freq && freq > MIN_HZ && freq < MAX_HZ ? freq : null;
+
+      // ① Write ref immediately — canvas sees this on its very next RAF tick
+      pitchHzRef.current = valid;
+
+      // ② Throttle React state — only for the overlay / status label in the UI
+      const now = performance.now();
+      if (now - lastUiUpdateRef.current > UI_THROTTLE_MS) {
+        setPitchHz(valid);
+        lastUiUpdateRef.current = now;
+      }
+
       pollPitch();
     });
   }, []);
@@ -56,31 +82,33 @@ export function usePitchDetection(): PitchDetectionState {
 
       setStatus("loading-model");
 
-      const AudioCtx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const AudioCtx =
+        window.AudioContext ??
+        (
+          window as unknown as {
+            webkitAudioContext: typeof AudioContext;
+          }
+        ).webkitAudioContext;
       const audioCtx = new AudioCtx();
       audioCtxRef.current = audioCtx;
 
-      // ml5 must be loaded client-side only (no SSR)
       const ml5 = await import("ml5");
-
       activeRef.current = true;
 
-      // ml5.pitchDetection returns synchronously; model-ready fires the callback
       detectorRef.current = ml5.pitchDetection(
         CREPE_MODEL_URL,
         audioCtx,
         stream,
         () => {
-          // Model loaded — start polling
           setStatus("listening");
           pollPitch();
         }
       );
     } catch (err) {
       activeRef.current = false;
-      const msg =
-        err instanceof Error ? err.message : "Could not start pitch detection";
-      setError(msg);
+      setError(
+        err instanceof Error ? err.message : "Could not start pitch detection"
+      );
       setStatus("error");
     }
   }, [pollPitch]);
@@ -88,6 +116,7 @@ export function usePitchDetection(): PitchDetectionState {
   const stopListening = useCallback(() => {
     activeRef.current = false;
     detectorRef.current = null;
+    pitchHzRef.current = null;
     setPitchHz(null);
     setStatus("idle");
 
@@ -98,7 +127,6 @@ export function usePitchDetection(): PitchDetectionState {
     audioCtxRef.current = null;
   }, []);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       activeRef.current = false;
@@ -107,5 +135,5 @@ export function usePitchDetection(): PitchDetectionState {
     };
   }, []);
 
-  return { pitchHz, status, error, startListening, stopListening };
+  return { pitchHz, pitchHzRef, status, error, startListening, stopListening };
 }

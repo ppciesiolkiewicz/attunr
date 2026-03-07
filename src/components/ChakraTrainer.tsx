@@ -49,7 +49,7 @@ export default function ChakraTrainer() {
   const [tuning, setTuning] = useState<TuningStandard>("A432");
   const [playingId, setPlayingId] = useState<string | null>(null);
 
-  const { pitchHz, status, error, startListening, stopListening } = usePitchDetection();
+  const { pitchHz, pitchHzRef, status, error, startListening, stopListening } = usePitchDetection();
   const { playTone } = useTonePlayer();
 
   const chakras = useMemo(
@@ -155,7 +155,7 @@ export default function ChakraTrainer() {
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
           chakras={chakras}
-          currentHz={pitchHz}
+          currentHzRef={pitchHzRef}
           onChakraClick={handleChakraPlay}
         />
 
