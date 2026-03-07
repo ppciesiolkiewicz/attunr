@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
 import OnboardingModal from "./OnboardingModal";
 import {
@@ -93,15 +93,31 @@ export default function ChakraTrainer() {
     : status === "error"        ? error ?? "Error"
     : "Tap to start";
 
-  function handleOnboardingBegin() {
+  // Auto-start mic as soon as the onboarding screen is visible
+  useEffect(() => {
+    if (showOnboarding && status === "idle") {
+      startListening();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showOnboarding]);
+
+  function handleOnboardingBegin(voiceId: VoiceTypeId) {
+    setVoiceId(voiceId);
+    setFreqBase("voice");
     setShowOnboarding(false);
-    startListening();
+    // Mic is already running — no need to call startListening() again
   }
 
   return (
     <div className="flex flex-col h-full gap-0">
 
-      {showOnboarding && <OnboardingModal onBegin={handleOnboardingBegin} />}
+      {showOnboarding && (
+        <OnboardingModal
+          pitchHz={pitchHz}
+          status={status}
+          onBegin={handleOnboardingBegin}
+        />
+      )}
 
       {/* ── Controls bar ───────────────────────────────────────────────────── */}
       <div className="flex flex-wrap items-center gap-3 px-5 py-3 border-b border-white/[0.06]">
