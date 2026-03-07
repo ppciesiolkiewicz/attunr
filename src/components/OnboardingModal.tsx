@@ -23,11 +23,11 @@ const VOICE_MIDI_CENTERS: Record<VoiceTypeId, number> = {
   tenor:    55,  // G3  · ~196 Hz
   alto:     62,  // D4  · ~294 Hz
   soprano:  69,  // A4  · ~440 Hz
-};
+} as const;
 
 function detectVoiceType(medianHz: number): VoiceTypeId {
   const medianMidi = 12 * Math.log2(medianHz / 440) + 69;
-  let best: VoiceTypeId = "general";
+  let best: VoiceTypeId = "tenor";
   let bestDist = Infinity;
   for (const [id, center] of Object.entries(VOICE_MIDI_CENTERS)) {
     const dist = Math.abs(center - medianMidi);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { findClosestChakra, isInTune } from "@/constants/chakras";
+import { findClosestChakra, isInTune, pitchConfidence } from "@/constants/chakras";
 import type { Chakra } from "@/constants/chakras";
 
 interface PitchDot {
@@ -13,6 +13,8 @@ interface PitchCanvasProps {
   chakras: Chakra[];
   /** Ref updated synchronously by the pitch detection hook — no React latency */
   currentHzRef: React.RefObject<number | null>;
+  /** When set, non-listed chakras are dimmed (Journey mode) */
+  highlightIds?: string[];
   onChakraClick?: (chakra: Chakra) => void;
 }
 
@@ -35,11 +37,13 @@ function freqToY(hz: number, minHz: number, maxHz: number, h: number): number {
 export default function PitchCanvas({
   chakras,
   currentHzRef,
+  highlightIds,
   onChakraClick,
 }: PitchCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<PitchDot[]>([]);
   const chakrasRef = useRef<Chakra[]>(chakras);
+  const highlightIdsRef = useRef<string[] | undefined>(highlightIds);
   const lastDotMs = useRef(0);
   const rafRef = useRef<number | null>(null);
   const dprRef = useRef(1);
@@ -54,6 +58,10 @@ export default function PitchCanvas({
     chakrasRef.current = chakras;
     dotsRef.current = [];
   }, [chakras]);
+
+  useEffect(() => {
+    highlightIdsRef.current = highlightIds;
+  }, [highlightIds]);
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -123,10 +131,13 @@ export default function PitchCanvas({
       const bh = Math.min(halfBelow, halfAbove, 38);
 
       const active = hz !== null && isInTune(hz, chakra.frequencyHz);
+      const highlighted =
+        !highlightIdsRef.current || highlightIdsRef.current.includes(chakra.id);
+      const dimFactor = highlighted ? 1 : 0.25;
 
       // Band fill
       const grad = ctx.createLinearGradient(0, cy - bh, 0, cy + bh);
-      const alpha = active ? 0.22 : 0.08;
+      const alpha = (active ? 0.22 : 0.08) * dimFactor;
       grad.addColorStop(0, `rgba(${chakra.rgb}, 0)`);
       grad.addColorStop(0.5, `rgba(${chakra.rgb}, ${alpha})`);
       grad.addColorStop(1, `rgba(${chakra.rgb}, 0)`);
@@ -136,7 +147,7 @@ export default function PitchCanvas({
       // Dashed centre line
       ctx.save();
       ctx.setLineDash([3, 7]);
-      ctx.strokeStyle = `rgba(${chakra.rgb}, ${active ? 0.6 : 0.22})`;
+      ctx.strokeStyle = `rgba(${chakra.rgb}, ${(active ? 0.6 : 0.22) * dimFactor})`;
       ctx.lineWidth = active ? 1.5 : 1;
       ctx.beginPath();
       ctx.moveTo(0, cy);
@@ -148,16 +159,16 @@ export default function PitchCanvas({
       const lx = W - 16;
       ctx.textAlign = "right";
       ctx.font = `600 11px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${active ? 1 : 0.55})`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 1 : 0.55) * dimFactor})`;
       ctx.fillText(chakra.name.toUpperCase(), lx, cy - 7);
       ctx.font = `400 10px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${active ? 0.85 : 0.32})`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.85 : 0.32) * dimFactor})`;
       ctx.fillText(`${chakra.frequencyHz} Hz`, lx, cy + 8);
 
       // Left note badge
       ctx.textAlign = "left";
       ctx.font = `500 10px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${active ? 0.9 : 0.3})`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.9 : 0.3) * dimFactor})`;
       ctx.fillText(chakra.note, 14, cy + 4);
     }
 
@@ -203,19 +214,21 @@ export default function PitchCanvas({
       }
     }
 
-    // ── Live cursor dot (drawn every frame at 60fps — no interval gate) ───────
-    // This is the key to snappy visual response: it reflects the ref value
-    // immediately, independent of the trail accumulation interval.
+    // ── Live cursor dot + waveform ring (60fps) ──────────────────────────────
     if (hz !== null) {
       const y = toY(hz);
       const closest = findClosestChakra(hz, chakras);
       const inTune = isInTune(hz, closest.frequencyHz);
+      const conf = pitchConfidence(hz, chakras);
 
-      // Outer glow ring
+      // Waveform ring — pulses at ~2 Hz, expands with confidence
+      const pulse = (Math.sin(now / 500) + 1) / 2; // 0→1 at ~2 Hz
+      const ringRadius = DOT_RADIUS + 4 + conf * 6 + pulse * 3;
+      const ringOpacity = conf * 0.55 + pulse * 0.1;
       ctx.beginPath();
-      ctx.arc(newestX, y, DOT_RADIUS + 4, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(${closest.rgb}, ${inTune ? 0.35 : 0.15})`;
-      ctx.lineWidth = 1;
+      ctx.arc(newestX, y, ringRadius, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${closest.rgb}, ${ringOpacity})`;
+      ctx.lineWidth = inTune ? 1.5 : 1;
       ctx.stroke();
 
       // Main live dot
@@ -236,7 +249,7 @@ export default function PitchCanvas({
       ctx.strokeStyle = `rgba(${closest.rgb}, 0.3)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(newestX + 14, y);
+      ctx.moveTo(newestX + ringRadius + 4, y);
       ctx.lineTo(W - 95, y);
       ctx.stroke();
       ctx.restore();

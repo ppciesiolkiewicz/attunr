@@ -1,0 +1,182 @@
+"use client";
+
+import { useState, useMemo } from "react";
+import PitchCanvas from "./PitchCanvas";
+import AudioControls from "./AudioControls";
+import {
+  VOICE_TYPES,
+  getChakraFrequencies,
+  findClosestChakra,
+  isInTune,
+} from "@/constants/chakras";
+import type { Chakra, FrequencyBase, VoiceTypeId } from "@/constants/chakras";
+import type { Settings } from "@/hooks/useSettings";
+import type { DroneTarget } from "@/hooks/useSettings";
+
+function PlayIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="5,3 19,12 5,21" />
+    </svg>
+  );
+}
+
+interface TrainViewProps {
+  settings: Settings;
+  pitchHz: number | null;
+  pitchHzRef: React.RefObject<number | null>;
+  onPlayTone: (chakra: Chakra) => void;
+  onSettingsUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
+}
+
+export default function TrainView({
+  settings,
+  pitchHz,
+  pitchHzRef,
+  onPlayTone,
+  onSettingsUpdate,
+}: TrainViewProps) {
+  const [freqBase, setFreqBase] = useState<FrequencyBase>(settings.freqBase);
+  const [playingId, setPlayingId] = useState<string | null>(null);
+
+  const chakras = useMemo(
+    () => getChakraFrequencies(freqBase, settings.voiceType, settings.tuning),
+    [freqBase, settings.voiceType, settings.tuning]
+  );
+
+  const closestChakra: Chakra | null = pitchHz
+    ? findClosestChakra(pitchHz, chakras)
+    : null;
+  const locked =
+    closestChakra && pitchHz
+      ? isInTune(pitchHz, closestChakra.frequencyHz)
+      : false;
+
+  function handlePlay(chakra: Chakra) {
+    setPlayingId(chakra.id);
+    onPlayTone(chakra);
+    setTimeout(() => setPlayingId(null), 1800);
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+
+      {/* ── Controls bar ─────────────────────────────────────────────────── */}
+      <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-white/[0.06]">
+        {/* Frequency base */}
+        <div className="flex items-center gap-1 bg-white/[0.05] rounded-lg p-1">
+          {(["absolute", "voice"] as FrequencyBase[]).map((b) => (
+            <button
+              key={b}
+              onClick={() => setFreqBase(b)}
+              className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+                freqBase === b
+                  ? "bg-violet-600 text-white"
+                  : "text-white/50 hover:text-white/80"
+              }`}
+            >
+              {b === "absolute" ? "Absolute" : "By voice"}
+            </button>
+          ))}
+        </div>
+
+        {/* Voice type (voice mode only) */}
+        {freqBase === "voice" && (
+          <div className="flex items-center gap-1 bg-white/[0.05] rounded-lg p-1">
+            {VOICE_TYPES.map((v) => (
+              <button
+                key={v.id}
+                onClick={() => onSettingsUpdate("voiceType", v.id as VoiceTypeId)}
+                className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+                  settings.voiceType === v.id
+                    ? "bg-violet-600 text-white"
+                    : "text-white/50 hover:text-white/80"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Voice disclaimer */}
+      {freqBase === "voice" && (
+        <div className="px-5 py-1.5 border-b border-white/[0.04]">
+          <p className="text-[10px] text-white/25">
+            Frequencies adjusted for{" "}
+            {VOICE_TYPES.find((v) => v.id === settings.voiceType)?.label}.{" "}
+            Change voice type in Settings.
+          </p>
+        </div>
+      )}
+
+      {/* ── Canvas ───────────────────────────────────────────────────────── */}
+      <div className="relative flex-1 min-h-0">
+        <PitchCanvas
+          chakras={chakras}
+          currentHzRef={pitchHzRef}
+          onChakraClick={handlePlay}
+        />
+
+        {/* Pitch overlay */}
+        {pitchHz !== null && (
+          <div className="pointer-events-none absolute top-4 left-5 fade-in">
+            <div
+              className="text-3xl font-light tabular-nums tracking-tight"
+              style={{ color: closestChakra?.color ?? "#fff" }}
+            >
+              {Math.round(pitchHz)} Hz
+            </div>
+            {closestChakra && (
+              <div
+                className="text-xs font-medium mt-0.5"
+                style={{ color: closestChakra.color + "aa" }}
+              >
+                {locked ? "✓ " : "→ "}
+                {closestChakra.name} · {closestChakra.frequencyHz} Hz
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ── Bottom panel ─────────────────────────────────────────────────── */}
+      <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-3 pb-4 flex flex-col gap-3">
+        {/* Chakra tone buttons */}
+        <div className="flex flex-wrap gap-2 justify-center">
+          {chakras.map((chakra) => {
+            const isPlaying = playingId === chakra.id;
+            const isActive = locked && closestChakra?.id === chakra.id;
+            return (
+              <button
+                key={chakra.id}
+                onClick={() => handlePlay(chakra)}
+                title={`${chakra.name} — ${chakra.frequencyHz} Hz\n${chakra.description}`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all"
+                style={{
+                  borderColor: isActive || isPlaying ? chakra.color : `${chakra.color}40`,
+                  color: isActive || isPlaying ? chakra.color : `${chakra.color}99`,
+                  backgroundColor: isActive || isPlaying ? `${chakra.color}18` : "transparent",
+                  boxShadow: isActive ? `0 0 12px ${chakra.color}40` : "none",
+                }}
+              >
+                <PlayIcon />
+                {chakra.name}
+                <span className="opacity-50">{chakra.frequencyHz}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Audio controls */}
+        <AudioControls
+          drone={settings.drone}
+          binaural={settings.binaural}
+          onDroneChange={(v) => onSettingsUpdate("drone", v as DroneTarget)}
+          onBinauralChange={(v) => onSettingsUpdate("binaural", v)}
+        />
+      </div>
+    </div>
+  );
+}

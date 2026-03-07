@@ -1,17 +1,33 @@
 "use client";
 
 import { useRef, useCallback } from "react";
+import type { ChakraId } from "@/constants/chakras";
+
+/** Binaural beat frequency (Hz) per chakra — difference between L and R ears */
+const BEAT_HZ: Record<ChakraId, number> = {
+  "root":        3,   // delta — grounding
+  "sacral":      6,   // theta — creativity
+  "solar-plexus":10,  // alpha — confidence
+  "heart":       8,   // alpha — calm
+  "throat":      14,  // alpha/beta — clarity
+  "third-eye":   6,   // theta — intuition
+  "crown":       4,   // theta — expanded awareness
+};
 
 const TONE_DURATION_MS = 1800;
-const FADE_IN_S = 0.02;
+const FADE_IN_S  = 0.02;
 const FADE_OUT_S = 0.2;
+const GAIN = 0.42;
 
 export function useTonePlayer() {
   const audioCtxRef = useRef<AudioContext | null>(null);
 
   const getCtx = useCallback((): AudioContext => {
     if (!audioCtxRef.current || audioCtxRef.current.state === "closed") {
-        const Ctx = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      const Ctx =
+        window.AudioContext ??
+        (window as unknown as { webkitAudioContext: typeof AudioContext })
+          .webkitAudioContext;
       audioCtxRef.current = new Ctx();
     }
     if (audioCtxRef.current.state === "suspended") {
@@ -20,29 +36,72 @@ export function useTonePlayer() {
     return audioCtxRef.current;
   }, []);
 
+  /**
+   * Play a tone. When chakraId + binaural=true, renders a binaural pair:
+   *   left ear  → frequencyHz
+   *   right ear → frequencyHz + BEAT_HZ[chakraId]
+   * Falls back to mono sine when binaural=false or chakraId is not provided.
+   */
   const playTone = useCallback(
-    (frequencyHz: number, durationMs = TONE_DURATION_MS) => {
+    (
+      frequencyHz: number,
+      options?: { chakraId?: ChakraId; binaural?: boolean; durationMs?: number }
+    ) => {
       const ctx = getCtx();
+      const {
+        chakraId,
+        binaural = true,
+        durationMs = TONE_DURATION_MS,
+      } = options ?? {};
+
       const now = ctx.currentTime;
       const dur = durationMs / 1000;
+      const beatHz = chakraId ? BEAT_HZ[chakraId] : 0;
+      const useBinaural = binaural && beatHz > 0;
 
-      const osc = ctx.createOscillator();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(frequencyHz, now);
+      // Shared gain envelope (applied after merge)
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0, now);
+      masterGain.gain.linearRampToValueAtTime(GAIN, now + FADE_IN_S);
+      masterGain.gain.setValueAtTime(GAIN, now + dur - FADE_OUT_S);
+      masterGain.gain.linearRampToValueAtTime(0, now + dur);
+      masterGain.connect(ctx.destination);
 
-      const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(0.42, now + FADE_IN_S);
-      gain.gain.setValueAtTime(0.42, now + dur - FADE_OUT_S);
-      gain.gain.linearRampToValueAtTime(0, now + dur);
+      if (useBinaural) {
+        // Stereo: L = base, R = base + beat
+        const merger = ctx.createChannelMerger(2);
+        merger.connect(masterGain);
 
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + dur);
+        const oscL = ctx.createOscillator();
+        oscL.type = "sine";
+        oscL.frequency.value = frequencyHz;
+        const gL = ctx.createGain();
+        gL.gain.value = 1;
+        oscL.connect(gL);
+        gL.connect(merger, 0, 0);
+
+        const oscR = ctx.createOscillator();
+        oscR.type = "sine";
+        oscR.frequency.value = frequencyHz + beatHz;
+        const gR = ctx.createGain();
+        gR.gain.value = 1;
+        oscR.connect(gR);
+        gR.connect(merger, 0, 1);
+
+        oscL.start(now); oscL.stop(now + dur);
+        oscR.start(now); oscR.stop(now + dur);
+      } else {
+        // Mono fallback
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        osc.frequency.value = frequencyHz;
+        osc.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + dur);
+      }
     },
     [getCtx]
   );
 
-  return { playTone };
+  return { playTone, getCtx };
 }
