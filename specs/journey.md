@@ -28,34 +28,88 @@ A small non-intrusive line at the top of the Journey view may read:
 
 ## Structure
 
-Two parts, completed in order. Part 2 unlocks after Part 1 is finished.
+Eight parts, completed in order. Each part unlocks when the previous is complete.
 
-### Part 1 — Individual chakras (7 stages)
+### Stage types
 
-One stage per chakra, Root → Crown. Each stage: sing and sustain that single tone.
+- **Technique intro** — First exercise of each technique block. Modal-only: learn the technique, "Video coming soon" placeholder, "Continue" advances. No canvas.
+- **Individual** — Single chakra, hold in tune. Full or brief chakra card.
+- **Sequence** — Multiple chakras in order. Same as before.
 
-| Stage | Chakra | Target |
-|-------|--------|--------|
-| 1 | Root | Hold Root in tune |
-| 2 | Sacral | Hold Sacral in tune |
-| 3 | Solar Plexus | Hold Solar Plexus in tune |
-| 4 | Heart | Hold Heart in tune |
-| 5 | Throat | Hold Throat in tune |
-| 6 | Third Eye | Hold Third Eye in tune |
-| 7 | Crown | Hold Crown in tune |
+### Chakra detail styles
 
-### Part 2 — Sequences / tunes (6 stages)
+- **Full** — Name, mantra, element, frequency, longDescription. Used for first encounter with each chakra.
+- **Brief** — Mantra + interestingFact. Used in Part 3 technique exercises; avoids repetition.
 
-Progressive combinations, sung in order as a flowing melody.
+### Part 1 — Sustain (8 stages)
 
-| Stage | Sequence | Theme |
-|-------|----------|-------|
-| 8 | Root → Sacral | Stability into flow |
-| 9 | Root → Sacral → Solar Plexus | Grounding to power |
-| 10 | Root → Sacral → Solar Plexus → Heart | Base to heart |
-| 11 | Heart → Throat → Third Eye | Heart to mind |
-| 12 | Third Eye → Crown | Into the higher tones |
-| 13 | Root → Crown (all 7) | Full alignment |
+| Stage | Type | Title |
+|-------|------|-------|
+| 1 | Technique intro | Sustain |
+| 2–8 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown |
+
+### Part 2 — Sequences (6 stages)
+
+| Stage | Sequence |
+|-------|----------|
+| 9 | Root → Sacral |
+| 10 | Root → Solar Plexus |
+| 11 | Root to Heart |
+| 12 | Heart to Third Eye |
+| 13 | Third Eye & Crown |
+| 14 | Full Alignment |
+
+### Part 3 — Vowel U (8 stages)
+
+Uuu is the easiest vowel to start with (easier than eee or aaa).
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 15 | Technique intro | Vowel U |
+| 16–22 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown — U |
+
+### Part 4 — Mantra (8 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 23 | Technique intro | Mantra |
+| 24–30 | Individual | Root—LAM, Sacral—VAM, Solar Plexus—RAM, Heart—YAM, Throat—HAM, Third Eye—OM, Crown—AH |
+
+### Part 5 — Vowel EE (4 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 31 | Technique intro | Vowel EE |
+| 32–34 | Individual | Root, Heart, Crown — EE |
+
+### Part 6 — Vowel flow (2 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 35 | Technique intro | Vowel flow U → EE |
+| 36 | Individual | Heart — U to EE |
+
+### Part 7 — Puffy cheeks (4 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 37 | Technique intro | Puffy cheeks |
+| 38–40 | Individual | Root, Heart, Crown — Puffy cheeks |
+
+### Part 8 — Lip rolls (2 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 41 | Technique intro | Lip rolls |
+| 42 | Sequence | Full scale — Lip rolls |
+
+**Mantra stage:** Requires singing the actual seed syllable (LAM, VAM, RAM, etc.) on each chakra's tone — not just sustaining or using generic vowels.
+
+**Implementation notes:**
+
+- Technique intros: modal with instruction + Video coming soon. "Continue" marks complete and opens next stage modal.
+- Brief chakra cards show mantra + interestingFact (from chakras.ts).
+- Progress key: `attunr.journeyStage` 0–42.
 
 ---
 
@@ -148,7 +202,43 @@ Add to `constants/chakras.ts`:
 ## Progress persistence
 
 Journey progress (highest completed stage) is saved to `localStorage`.
-Key: `attunr.journeyStage` — integer 0–13.
+Key: `attunr.journeyStage` — integer 0–42.
+
+---
+
+## Part 3 — Technique stage details
+
+### Stage 14 — Vowel foundations
+
+**Instruction:** "Sing each chakra tone using four vowels: U (as in 'moon'), O (as in 'go'), I (as in 'see'), and A (as in 'father'). Hold each vowel for a few seconds. Notice where the sound resonates — lower vowels tend toward the chest, higher toward the head."
+
+**Chakras:** Root → Crown (all 7).
+
+**Success:** Hold each chakra in tune for cumulative time (e.g. 3s total per chakra, or 12s total across the run). Optionally: one pass through all seven with vowels is enough to complete.
+
+### Stage 15 — Vowel flow
+
+**Instruction:** "Pick a tone (e.g. Heart). Sing U and smoothly transition to EE without changing pitch. Then try O → A, or I → U. Feel the shape of your mouth shift while the tone stays steady. This builds vocal flexibility."
+
+**Chakras:** Heart (or user picks; Heart is a good middle-ground).
+
+**Success:** Hold the tone in tune while performing at least one vowel transition (e.g. 5s total in tune).
+
+### Stage 16 — Lip rolls
+
+**Instruction:** "Let your lips loosely buzz (like a motorboat) while you sing. Start on Root and move up to Crown. Keep the breath steady — the lips should vibrate without force. This loosens the jaw and warms the voice."
+
+**Chakras:** Root → Crown (sequence).
+
+**Success:** Same as sequence stages — each chakra held for 2s in order.
+
+### Stage 17 — Puffy cheeks
+
+**Instruction:** "Fill your cheeks with air, then sing the tone without releasing. Your cheeks stay rounded. Hold for a few seconds, then release gently. This develops breath control and teaches you to sing without jaw tension."
+
+**Chakras:** Root → Crown (can do one chakra or full sequence; full sequence is more advanced).
+
+**Success:** Hold each target tone in tune for cumulative time while maintaining puffy cheeks.
 
 ---
 

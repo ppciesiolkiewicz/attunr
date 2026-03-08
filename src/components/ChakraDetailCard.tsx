@@ -6,11 +6,14 @@ import type { ChakraId } from "@/constants/chakras";
 interface ChakraDetailCardProps {
   chakraIds: ChakraId[];
   frequencyOverrides?: Partial<Record<ChakraId, number>>;
+  /** "full" = name, mantra, element, longDescription; "brief" = mantra + interestingFact */
+  style?: "full" | "brief";
 }
 
 export default function ChakraDetailCard({
   chakraIds,
   frequencyOverrides = {},
+  style = "full",
 }: ChakraDetailCardProps) {
   const items = chakraIds.map((id) => CHAKRAS.find((c) => c.id === id)!);
 
@@ -57,10 +60,16 @@ export default function ChakraDetailCard({
                 </span>
               </div>
 
-              {/* Long description */}
-              <p className="text-sm text-white/58 leading-relaxed">
-                {chakra.longDescription}
-              </p>
+              {/* Description: full longDescription or brief (mantra recap + interesting fact) */}
+              {style === "full" ? (
+                <p className="text-sm text-white/58 leading-relaxed">
+                  {chakra.longDescription}
+                </p>
+              ) : chakra.interestingFact ? (
+                <p className="text-sm text-white/58 leading-relaxed">
+                  {chakra.interestingFact}
+                </p>
+              ) : null}
             </div>
           </div>
         );

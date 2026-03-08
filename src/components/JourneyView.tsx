@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
 import { HeadphonesNotice } from "./TabInfoModal";
-import { JOURNEY_STAGES } from "@/constants/journey";
+import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES } from "@/constants/journey";
 import type { JourneyStage } from "@/constants/journey";
 import {
   CHAKRAS,
@@ -73,7 +73,8 @@ function StageCard({
   const isUnlocked = stage.id <= highestCompleted + 1;
 
   const stageChakras = CHAKRAS.filter((c) => stage.chakraIds.includes(c.id));
-  const primaryColor = stageChakras[0]?.color ?? "#7c3aed";
+  const primaryColor =
+    stageChakras[0]?.color ?? (stage.type === "technique_intro" ? "#7c3aed" : "#7c3aed");
 
   return (
     <button
@@ -100,7 +101,9 @@ function StageCard({
           background:
             stageChakras.length === 1
               ? primaryColor
-              : `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`,
+              : stageChakras.length > 1
+              ? `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`
+              : "linear-gradient(to bottom, #7c3aed, #6d28d9)",
           opacity: !isUnlocked ? 0.65 : 1,
         }}
       />
@@ -114,11 +117,11 @@ function StageCard({
           >
             {stage.title}
           </span>
-          <span className="text-xs text-white/58 shrink-0">Stage {stage.id}</span>
+          <span className="text-xs text-white/58 shrink-0">Exercise {stage.id}</span>
         </div>
 
-        {/* Part I: mantra + element + short description */}
-        {stageChakras.length === 1 && (
+        {/* Part I: mantra + element + short description (single chakra) */}
+        {stageChakras.length === 1 && stage.type !== "technique_intro" && (
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span
               className="text-xs font-mono font-medium tracking-wider"
@@ -133,6 +136,10 @@ function StageCard({
           </div>
         )}
 
+        {/* Technique intro: show technique name */}
+        {stage.type === "technique_intro" && (
+          <p className="text-xs text-white/58">{stage.technique?.replace(/-/g, " ") ?? "Learn"}</p>
+        )}
         {/* Part II: chakra sequence */}
         {stageChakras.length > 1 && (
           <div className="flex flex-wrap items-center gap-1">
@@ -173,6 +180,17 @@ function StageCard({
 
 // ── Journey List ──────────────────────────────────────────────────────────────
 
+const PART_NAMES: Record<number, string> = {
+  1: "Sustain",
+  2: "Sequences",
+  3: "Vowel U",
+  4: "Mantra",
+  5: "Vowel EE",
+  6: "Vowel flow",
+  7: "Puffy cheeks",
+  8: "Lip rolls",
+};
+
 function JourneyList({
   settings,
   onSelect,
@@ -181,50 +199,44 @@ function JourneyList({
   onSelect: (stageId: number) => void;
 }) {
   const { journeyStage: highestCompleted } = settings;
-  const part1 = JOURNEY_STAGES.filter((s) => s.part === 1);
-  const part2 = JOURNEY_STAGES.filter((s) => s.part === 2);
+  const parts = [1, 2, 3, 4, 5, 6, 7, 8] as const;
 
   return (
     <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
 
-        <p className="text-sm text-white/65 leading-relaxed">
-          Each stage asks you to sing a chakra's tone for a few seconds. Start with one chakra, then progress to sequences.
-        </p>
+        <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
+          <p>
+            Sing each chakra&apos;s tone and hold it in tune. You start with foundations (one chakra), then sequences, then vocal techniques like mantras and vowels.
+          </p>
+          <p>
+            When you&apos;ve built confidence, switch to Explore for freeform practice — any tone, any order.
+          </p>
+        </div>
 
-        <section className="flex flex-col gap-2">
-          <header className="flex items-center gap-3 mb-0.5">
-            <span className="text-xs uppercase tracking-widest text-white/58 shrink-0">
-              Part I — Individual chakras
-            </span>
-            <div className="flex-1 h-px bg-white/[0.05]" />
-          </header>
-          {part1.map((stage) => (
-            <StageCard
-              key={stage.id}
-              stage={stage}
-              highestCompleted={highestCompleted}
-              onSelect={onSelect}
-            />
-          ))}
-        </section>
-
-        <section className="flex flex-col gap-2">
-          <header className="flex items-center gap-3 mb-0.5">
-            <span className="text-xs uppercase tracking-widest text-white/58 shrink-0">
-              Part II — Sequences
-            </span>
-            <div className="flex-1 h-px bg-white/[0.05]" />
-          </header>
-          {part2.map((stage) => (
-            <StageCard
-              key={stage.id}
-              stage={stage}
-              highestCompleted={highestCompleted}
-              onSelect={onSelect}
-            />
-          ))}
-        </section>
+        {parts.map((partNum) => {
+          const stages = JOURNEY_STAGES.filter((s) => s.part === partNum);
+          if (stages.length === 0) return null;
+          const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"][partNum - 1];
+          return (
+            <section key={partNum} className="flex flex-col gap-2">
+              <header className="flex items-center gap-3 mb-0.5">
+                <span className="text-xs uppercase tracking-widest text-white/58 shrink-0">
+                  Part {roman} — {PART_NAMES[partNum]}
+                </span>
+                <div className="flex-1 h-px bg-white/[0.05]" />
+              </header>
+              {stages.map((stage) => (
+                <StageCard
+                  key={stage.id}
+                  stage={stage}
+                  highestCompleted={highestCompleted}
+                  onSelect={onSelect}
+                />
+              ))}
+            </section>
+          );
+        })}
 
       </div>
     </div>
@@ -238,13 +250,17 @@ function ExerciseInfoModal({
   settings,
   onStart,
   onDismiss,
+  onAdvanceWithoutExercise,
 }: {
   stageId: number;
   settings: Settings;
   onStart: () => void;
   onDismiss: () => void;
+  /** For technique_intro: mark complete and advance to next stage (no canvas) */
+  onAdvanceWithoutExercise?: () => void;
 }) {
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
+  const isTechniqueIntro = stage.type === "technique_intro";
 
   const allChakras = useMemo(
     () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
@@ -255,9 +271,19 @@ function ExerciseInfoModal({
   const primaryColor = stageChakras[0]?.color ?? "#7c3aed";
 
   const objective =
-    stage.type === "individual"
+    isTechniqueIntro
+      ? "Learn the technique"
+      : stage.type === "individual"
       ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
       : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
+
+  function handleBegin() {
+    if (isTechniqueIntro && onAdvanceWithoutExercise) {
+      onAdvanceWithoutExercise();
+    } else {
+      onStart();
+    }
+  }
 
   return (
     <div
@@ -279,7 +305,8 @@ function ExerciseInfoModal({
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
             <p className="text-xs uppercase tracking-widest text-white/45 mb-1">
-              Stage {stageId} / 13 — {stage.part === 2 ? "Sequence" : "Individual"}
+              Exercise {stageId} of {TOTAL_JOURNEY_STAGES} —{" "}
+              {stage.part === 2 ? "Sequence" : stage.part >= 3 ? "Technique" : isTechniqueIntro ? "Learn" : "Individual"}
             </p>
             <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
             <p className="text-sm mt-1" style={{ color: primaryColor }}>
@@ -297,11 +324,14 @@ function ExerciseInfoModal({
         {/* Scrollable content */}
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1">
 
-          {/* Chakra detail */}
-          <ChakraDetailCard
-            chakraIds={stage.chakraIds}
-            frequencyOverrides={freqOverrides}
-          />
+          {/* Chakra detail — only for non–technique-intro */}
+          {!isTechniqueIntro && stage.chakraIds.length > 0 && (
+            <ChakraDetailCard
+              chakraIds={stage.chakraIds}
+              frequencyOverrides={freqOverrides}
+              style={stage.chakraDetailStyle ?? "full"}
+            />
+          )}
 
           {/* Instructions */}
           <div className="flex flex-col gap-1">
@@ -316,8 +346,22 @@ function ExerciseInfoModal({
             ))}
           </div>
 
-          {/* Headphones notice */}
-          <HeadphonesNotice />
+          {/* Video coming soon — for technique intros */}
+          {isTechniqueIntro && (
+            <div
+              className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px dashed rgba(255,255,255,0.15)",
+              }}
+            >
+              <span className="text-2xl opacity-50">▶</span>
+              <p className="text-sm text-white/45 font-medium">Video coming soon</p>
+            </div>
+          )}
+
+          {/* Headphones notice — only for exercises with canvas */}
+          {!isTechniqueIntro && <HeadphonesNotice />}
 
           {/* Voice / tuning context */}
           <p className="text-xs text-white/45 text-center">
@@ -329,14 +373,14 @@ function ExerciseInfoModal({
         {/* Begin button */}
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
           <button
-            onClick={onStart}
+            onClick={handleBegin}
             className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all"
             style={{
               background: `linear-gradient(135deg, #7c3aed, #6d28d9)`,
               boxShadow: "0 0 28px rgba(124,58,237,0.35)",
             }}
           >
-            Begin exercise →
+            {isTechniqueIntro ? "Continue →" : "Begin exercise →"}
           </button>
         </div>
       </div>
@@ -454,7 +498,7 @@ function JourneyExercise({
 
   function handleComplete() {
     onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
-    if (stageId < 13) {
+    if (stageId < TOTAL_JOURNEY_STAGES) {
       onNext(stageId + 1);
     } else {
       onBack();
@@ -482,7 +526,7 @@ function JourneyExercise({
           ← Journey
         </button>
         <span className="text-white/25">|</span>
-        <span className="text-sm text-white/52">Stage {stageId} / 13</span>
+        <span className="text-sm text-white/52">Exercise {stageId} of {TOTAL_JOURNEY_STAGES}</span>
         <span className="text-white/25">—</span>
         <span className="text-sm text-white/72 font-medium">{stage.title}</span>
         {stage.part === 2 && <span className="text-xs text-white/45">♪</span>}
@@ -567,7 +611,7 @@ function JourneyExercise({
                 boxShadow: "0 0 16px rgba(124,58,237,0.4)",
               }}
             >
-              {stageId < 13 ? "Next →" : "Complete ✓"}
+              {stageId < TOTAL_JOURNEY_STAGES ? "Next →" : "Complete ✓"}
             </button>
           )}
         </div>
@@ -624,6 +668,14 @@ export default function JourneyView({
             setPendingStageId(null);
           }}
           onDismiss={() => setPendingStageId(null)}
+          onAdvanceWithoutExercise={() => {
+            const stage = JOURNEY_STAGES.find((s) => s.id === pendingStageId)!;
+            if (stage.type === "technique_intro") {
+              onSettingsUpdate("journeyStage", Math.max(settings.journeyStage, pendingStageId));
+              const nextId = pendingStageId + 1;
+              setPendingStageId(nextId <= TOTAL_JOURNEY_STAGES ? nextId : null);
+            }
+          }}
         />
       )}
     </div>

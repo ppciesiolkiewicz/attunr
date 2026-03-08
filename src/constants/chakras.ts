@@ -18,6 +18,8 @@ export interface Chakra {
   description: string;
   longDescription: string;
   element: string;
+  /** Short interesting fact for Journey stages (used in later exercises) */
+  interestingFact?: string;
 }
 
 export const CHAKRAS: Chakra[] = [
@@ -33,6 +35,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "The foundation of your being. Root grounds you in safety, security, and belonging. When balanced, you feel steady, present, and at home in your body.",
     element: "Earth",
+    interestingFact: "Root is linked to the colour red and the sense of smell — grounding through the body.",
   },
   {
     id: "sacral",
@@ -46,6 +49,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "The seat of creativity, emotion, and pleasure. Sacral governs how you relate to others and to your own feelings. When balanced, life flows naturally and joyfully.",
     element: "Water",
+    interestingFact: "Sacral is often called the seat of creativity — many artists and dancers connect strongly with this energy.",
   },
   {
     id: "solar-plexus",
@@ -59,6 +63,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "The centre of personal power, will, and confidence. Solar Plexus is where you act on your intentions and transform thought into action. When balanced, you feel purposeful and capable.",
     element: "Fire",
+    interestingFact: "Solar Plexus sits above the navel — in many traditions it's where willpower and 'gut feeling' live.",
   },
   {
     id: "heart",
@@ -72,6 +77,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "The bridge between the lower and upper chakras. Heart governs love, compassion, and connection — both to others and to yourself. When balanced, giving and receiving feel natural and open.",
     element: "Air",
+    interestingFact: "Heart bridges the lower three chakras (body) with the upper three (mind) — the centre of integration.",
   },
   {
     id: "throat",
@@ -85,6 +91,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "The voice of your inner truth. Throat governs communication, authenticity, and the courage to be heard. When balanced, you express yourself clearly and listen with openness.",
     element: "Sound",
+    interestingFact: "Throat is the only chakra with 'sound' as its element — your voice is literally its medium.",
   },
   {
     id: "third-eye",
@@ -98,6 +105,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "The seat of intuition, clarity, and inner vision. Third Eye opens perception beyond the physical. When balanced, you trust your inner knowing and see situations with wisdom.",
     element: "Light",
+    interestingFact: "Third Eye is associated with the pineal gland — sometimes called the 'seat of the soul' in ancient texts.",
   },
   {
     id: "crown",
@@ -111,6 +119,7 @@ export const CHAKRAS: Chakra[] = [
     longDescription:
       "Pure awareness and connection to all that is. Crown transcends the individual self. When balanced, there is a deep sense of peace, presence, and belonging to something larger.",
     element: "Thought",
+    interestingFact: "Crown connects you to what's beyond the individual self — a sense of unity with all that is.",
   },
 ];
 
