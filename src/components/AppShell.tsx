@@ -1,16 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import TrainView from "./TrainView";
-import JourneyView from "./JourneyView";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import SettingsPanel from "./SettingsPanel";
 import OnboardingModal from "./OnboardingModal";
 import { useSettings } from "@/hooks/useSettings";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
+import { AppContext } from "@/context/AppContext";
 import type { Chakra, VoiceTypeId } from "@/constants/chakras";
-
-type Tab = "journey" | "explore";
 
 function SettingsIcon() {
   return (
@@ -22,8 +21,8 @@ function SettingsIcon() {
   );
 }
 
-export default function AppShell() {
-  const [tab, setTab] = useState<Tab>("journey");
+export default function AppShell({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [redetect, setRedetect] = useState(false);
@@ -54,6 +53,17 @@ export default function AppShell() {
     playTone(chakra.frequencyHz, { chakraId: chakra.id, binaural: true });
   }
 
+  const contextValue = {
+    settings,
+    updateSettings: update,
+    pitchHz,
+    pitchHzRef,
+    playTone: handlePlayTone,
+    pitchStatus: status,
+    startListening,
+    openSettings: () => setSettingsOpen(true),
+  };
+
   function handleOnboardingBegin(voiceId: VoiceTypeId) {
     update("voiceType", voiceId);
     setShowOnboarding(false);
@@ -66,6 +76,7 @@ export default function AppShell() {
   ];
 
   return (
+    <AppContext.Provider value={contextValue}>
     <div className="flex flex-col h-full">
 
       {(showOnboarding || redetect) && (
@@ -104,19 +115,24 @@ export default function AppShell() {
         </h1>
 
         <div className="flex items-center gap-1">
-          <div className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-2">
-            {(["journey", "explore"] as Tab[]).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTab(t)}
-                className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
-                  tab === t ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
-                }`}
-              >
-                {t === "journey" ? "Journey" : "Explore"}
-              </button>
-            ))}
-          </div>
+          <nav className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-2">
+            <Link
+              href="/"
+              className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
+                pathname === "/" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
+              }`}
+            >
+              Journey
+            </Link>
+            <Link
+              href="/explore"
+              className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
+                pathname === "/explore" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
+              }`}
+            >
+              Explore
+            </Link>
+          </nav>
 
           <button
             onClick={() => setSettingsOpen(true)}
@@ -128,25 +144,9 @@ export default function AppShell() {
       </header>
 
       <main className="flex-1 min-h-0">
-        {tab === "journey" ? (
-          <JourneyView
-            settings={settings}
-            pitchHz={pitchHz}
-            pitchHzRef={pitchHzRef}
-            onPlayTone={handlePlayTone}
-            onSettingsUpdate={update}
-            onOpenSettings={() => setSettingsOpen(true)}
-          />
-        ) : (
-          <TrainView
-            settings={settings}
-            pitchHz={pitchHz}
-            pitchHzRef={pitchHzRef}
-            onPlayTone={handlePlayTone}
-            onSettingsUpdate={update}
-          />
-        )}
+        {children}
       </main>
     </div>
+    </AppContext.Provider>
   );
 }

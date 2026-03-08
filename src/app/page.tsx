@@ -1,5 +1,5 @@
-import AppShell from "@/components/AppShell";
+import JourneyPage from "./JourneyPage";
 
 export default function Home() {
-  return <AppShell />;
+  return <JourneyPage />;
 }
