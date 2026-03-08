@@ -63,8 +63,8 @@ export function HeadphonesNotice() {
         <HeadphonesIcon />
       </span>
       <p className="text-xs text-white/40 leading-relaxed">
-        Headphones recommended. Without them, the tone from your speakers leaks into the
-        microphone and confuses the pitch detector — making it much harder to track your voice accurately.
+        For the best experience, use headphones — they keep the playback out of your
+        mic so we can hear your voice clearly.
       </p>
     </div>
   );
