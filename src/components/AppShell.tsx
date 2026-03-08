@@ -92,7 +92,10 @@ export default function AppShell() {
       <header className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] shrink-0">
         <h1 className="flex items-center gap-4 text-2xl font-semibold tracking-tight text-white leading-none">
           <span>attunr</span>
-          <span className="inline-flex items-center gap-2 shrink-0">
+          <span
+            className="inline-flex items-center gap-2 shrink-0"
+            style={{ transform: "translateY(2px)" }}
+          >
             {chakraSpectrum.map((color, i) => (
               <span key={i} className="block w-3 h-3 rounded-full opacity-80"
                 style={{ backgroundColor: color }} />

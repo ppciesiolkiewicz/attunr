@@ -13,6 +13,7 @@ import type { Chakra, FrequencyBase, VoiceTypeId } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 
 const STORAGE_KEY = "attunr.exploreInfoSeen";
+const ABSOLUTE_STORAGE_KEY = "attunr.absoluteInfoSeen";
 
 function PlayIcon() {
   return (
@@ -40,6 +41,7 @@ export default function TrainView({
   const [freqBase, setFreqBase] = useState<FrequencyBase>(settings.freqBase);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState(false);
+  const [showAbsoluteModal, setShowAbsoluteModal] = useState(false);
 
   // Auto-show on first visit
   useEffect(() => {
@@ -70,6 +72,20 @@ export default function TrainView({
     setShowInfo(false);
   }
 
+  function handleAbsoluteClick() {
+    if (localStorage.getItem(ABSOLUTE_STORAGE_KEY)) {
+      setFreqBase("absolute");
+    } else {
+      setShowAbsoluteModal(true);
+    }
+  }
+
+  function handleCloseAbsoluteModal(persist: boolean) {
+    if (persist) localStorage.setItem(ABSOLUTE_STORAGE_KEY, "1");
+    setShowAbsoluteModal(false);
+    setFreqBase("absolute");
+  }
+
   return (
     <div className="flex flex-col h-full">
 
@@ -79,7 +95,7 @@ export default function TrainView({
           {(["absolute", "voice"] as FrequencyBase[]).map((b) => (
             <button
               key={b}
-              onClick={() => setFreqBase(b)}
+              onClick={() => b === "absolute" ? handleAbsoluteClick() : setFreqBase(b)}
               className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
                 freqBase === b
                   ? "bg-violet-600 text-white"
@@ -204,11 +220,7 @@ export default function TrainView({
               },
               {
                 icon: "▶",
-                text: "Tap any chakra button at the bottom to hear its target tone",
-              },
-              {
-                icon: "↕",
-                text: "Click on a chakra band to play its tone",
+                text: "Tap a chakra button at the bottom or click on a band to hear its tone",
               },
               {
                 icon: "⚙",
@@ -223,6 +235,41 @@ export default function TrainView({
           </div>
 
           <HeadphonesNotice />
+        </TabInfoModal>
+      )}
+
+      {/* ── Absolute mode info modal ──────────────────────────────────────── */}
+      {showAbsoluteModal && (
+        <TabInfoModal title="Absolute frequencies" onClose={handleCloseAbsoluteModal}>
+          <p className="text-base text-white/65 leading-relaxed">
+            Many of these notes sit outside the range most people can sing — and that&apos;s okay.
+          </p>
+          <p className="text-base text-white/65 leading-relaxed">
+            Breathe out through slightly parted lips. For lower tones, use a soft, slow exhale; as the
+            tone rises, increase the pressure and speed of your breath. Keep the tone playing and
+            imagine it resonating in that chakra&apos;s area — your body responds even without singing.
+          </p>
+          <div
+            className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px dashed rgba(255,255,255,0.15)",
+            }}
+          >
+            <span className="text-2xl opacity-50">▶</span>
+            <p className="text-sm text-white/45 font-medium">Video coming soon</p>
+          </div>
+          <div
+            className="rounded-xl px-4 py-3"
+            style={{
+              background: "rgba(239,68,68,0.08)",
+              border: "1px solid rgba(239,68,68,0.2)",
+            }}
+          >
+            <p className="text-sm text-white/75 leading-relaxed text-center">
+              Never push your voice. If anything feels strained or painful, stop and switch to By voice.
+            </p>
+          </div>
         </TabInfoModal>
       )}
     </div>

@@ -6,6 +6,7 @@
 
 ## Brand voice principles
 
+- **User-friendly, engaging, and easy to understand** — copy should be inviting, clear, and accessible to all
 - **Warm and grounded** — supportive, calm, and encouraging
 - **Simple first** — plain language before music theory terms
 - **Spiritual, not extreme** — invite exploration without overpromising
@@ -49,6 +50,16 @@
 |------|-------|-----------|
 | Absolute | **Absolute sacred** | "396–963 Hz, the same for everyone" |
 | Voice-based | **By voice** | "Adjusted to your vocal range" |
+
+### Absolute mode — info modal (shown when switching to Absolute)
+
+Many absolute frequencies are outside normal singing range. Show a modal that:
+
+1. **Explains the limitation** — "Many of these notes are outside the range most people can sing."
+2. **Offers an alternative** — "You can blow air instead: lower notes use a gentle breath, higher notes a stronger flow. Visualise matching the tone — your body responds even when you're not singing."
+3. **Safety disclaimer** — "Never push your voice. If anything feels strained or painful, stop and switch to By voice."
+
+Copy should stay user-friendly, engaging, and easy to understand.
 
 ### Voice type disclaimer (shown only in voice-based mode)
 
