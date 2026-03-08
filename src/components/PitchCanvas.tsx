@@ -28,10 +28,86 @@ const DOT_MAX_AGE_MS = MAX_DOTS * DOT_INTERVAL_MS;
 const DOT_RADIUS = 5;
 const NEWEST_X = 0.68;
 
-function freqToY(hz: number, minHz: number, maxHz: number, h: number): number {
-  const t =
-    (Math.log(hz) - Math.log(minHz)) / (Math.log(maxHz) - Math.log(minHz));
-  return h - t * h;
+/**
+ * Minimum distance from the top edge to the Crown band. Large enough so that
+ * the Hz readout overlay (absolute top-left) never overlaps the top band.
+ */
+const PAD_TOP_MIN = 96;
+/** Minimum distance from the bottom edge to the Root band. */
+const PAD_BOTTOM_MIN = 50;
+/**
+ * Maximum vertical slot between adjacent bands. Caps the spread on tall
+ * screens so the bands stay tightly grouped rather than filling all space.
+ */
+const MAX_SLOT_H = 68;
+
+/**
+ * Compute the Y positions of the Root (bottom) and Crown (top) bands given
+ * the canvas height and number of chakras. The cluster is centred vertically
+ * while honouring PAD_TOP_MIN and the MAX_SLOT_H cap.
+ */
+function computeBandLayout(n: number, H: number) {
+  if (n <= 1) {
+    const mid = H / 2;
+    return { crownY: mid, rootY: mid, clusterH: 0, slotH: 0 };
+  }
+  const maxClusterH = (n - 1) * MAX_SLOT_H;
+  const naturalH = Math.max(0, H - PAD_TOP_MIN - PAD_BOTTOM_MIN);
+  const clusterH = Math.min(maxClusterH, naturalH);
+  // Centre the cluster, but never closer than PAD_TOP_MIN to the top edge
+  const idealCrownY = (H - clusterH) / 2;
+  const crownY = Math.max(PAD_TOP_MIN, idealCrownY);
+  const rootY = crownY + clusterH;
+  return { crownY, rootY, clusterH, slotH: clusterH / (n - 1) };
+}
+
+/**
+ * Y position of chakra at sorted index idx.
+ * idx 0 = Root (rootY, lower on screen), idx n-1 = Crown (crownY, higher).
+ */
+function chakraIndexY(idx: number, n: number, rootY: number, crownY: number): number {
+  if (n <= 1) return (rootY + crownY) / 2;
+  return rootY - (idx / (n - 1)) * (rootY - crownY);
+}
+
+/**
+ * Map a detected Hz value to canvas Y by linear interpolation in chakra-index
+ * space. Adjacent chakras are always equally spaced visually, regardless of
+ * their actual Hz gap. Requires chakras[] sorted ascending by frequencyHz.
+ */
+function hzToY(hz: number, chakras: Chakra[], rootY: number, crownY: number): number {
+  const n = chakras.length;
+  if (n <= 1) return (rootY + crownY) / 2;
+
+  const idxY = (i: number) => chakraIndexY(i, n, rootY, crownY);
+
+  // Below Root — extrapolate using Root→Sacral slope
+  if (hz <= chakras[0].frequencyHz) {
+    const t =
+      (hz - chakras[0].frequencyHz) /
+      (chakras[1].frequencyHz - chakras[0].frequencyHz);
+    return idxY(0) + t * (idxY(1) - idxY(0));
+  }
+
+  // Above Crown — extrapolate using ThirdEye→Crown slope
+  if (hz >= chakras[n - 1].frequencyHz) {
+    const t =
+      (hz - chakras[n - 2].frequencyHz) /
+      (chakras[n - 1].frequencyHz - chakras[n - 2].frequencyHz);
+    return idxY(n - 2) + t * (idxY(n - 1) - idxY(n - 2));
+  }
+
+  // Interpolate between the two bracketing chakras
+  for (let i = 0; i < n - 1; i++) {
+    if (hz >= chakras[i].frequencyHz && hz <= chakras[i + 1].frequencyHz) {
+      const t =
+        (hz - chakras[i].frequencyHz) /
+        (chakras[i + 1].frequencyHz - chakras[i].frequencyHz);
+      return idxY(i) + t * (idxY(i + 1) - idxY(i));
+    }
+  }
+
+  return (rootY + crownY) / 2;
 }
 
 export default function PitchCanvas({
@@ -42,20 +118,20 @@ export default function PitchCanvas({
 }: PitchCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<PitchDot[]>([]);
-  const chakrasRef = useRef<Chakra[]>(chakras);
+  /** Kept sorted ascending by frequencyHz so index-based rendering is correct */
+  const chakrasRef = useRef<Chakra[]>([]);
   const highlightIdsRef = useRef<string[] | undefined>(highlightIds);
   const lastDotMs = useRef(0);
   const rafRef = useRef<number | null>(null);
-  const dprRef = useRef(1);
+  /** Stores canvas dimensions + computed band positions for the click handler */
+  const layoutRef = useRef({ W: 0, H: 0, rootY: 0, crownY: 0 });
 
-  // Canvas dimensions only — minHz/maxHz are derived from chakrasRef each frame
-  // so they stay correct when the user switches frequency mode.
-  const layoutRef = useRef({ W: 0, H: 0 });
-
-  // Sync chakras array. Also flush the dot trail so stale dots from the
-  // previous frequency set don't appear in the wrong position.
+  // Sort on every prop change and flush stale dots so they don't appear in
+  // the wrong position after a frequency-mode switch.
   useEffect(() => {
-    chakrasRef.current = chakras;
+    chakrasRef.current = [...chakras].sort(
+      (a, b) => a.frequencyHz - b.frequencyHz
+    );
     dotsRef.current = [];
   }, [chakras]);
 
@@ -69,7 +145,6 @@ export default function PitchCanvas({
     if (!canvas || !container) return;
 
     const dpr = window.devicePixelRatio || 1;
-    dprRef.current = dpr;
     const w = container.clientWidth;
     const h = container.clientHeight;
     canvas.width = w * dpr;
@@ -80,11 +155,11 @@ export default function PitchCanvas({
     const ctx = canvas.getContext("2d");
     ctx?.scale(dpr, dpr);
 
-    layoutRef.current = { W: w, H: h };
+    layoutRef.current = { ...layoutRef.current, W: w, H: h };
   }, []);
 
   const render = useCallback(() => {
-    // Schedule the next frame FIRST so the loop survives any early return below.
+    // Schedule next frame first so the loop survives any early return.
     rafRef.current = requestAnimationFrame(render);
 
     const canvas = canvasRef.current;
@@ -93,18 +168,18 @@ export default function PitchCanvas({
 
     const { W, H } = layoutRef.current;
     const chakras = chakrasRef.current;
-
-    // Derive frequency bounds from current chakras every frame so they stay
-    // correct after the user switches between Absolute and By-voice modes.
-    const freqs = chakras.map((c) => c.frequencyHz);
-    const minHz = Math.min(...freqs) * 0.76;
-    const maxHz = Math.max(...freqs) * 1.3;
-
-    // Read pitch directly from the ref — always the freshest value, no React lag
+    const n = chakras.length;
     const hz = currentHzRef.current;
-
-    const toY = (f: number) => freqToY(f, minHz, maxHz, H);
     const newestX = W * NEWEST_X;
+
+    // ── Band layout (computed fresh each frame so it adapts to resize) ────────
+    const { crownY, rootY, slotH } = computeBandLayout(n, H);
+    // Persist in ref so the click handler can use the same values
+    layoutRef.current.crownY = crownY;
+    layoutRef.current.rootY = rootY;
+
+    const bh = Math.min(slotH * 0.42, 32);
+    const idxY = (i: number) => chakraIndexY(i, n, rootY, crownY);
 
     // ── Background ────────────────────────────────────────────────────────────
     ctx.fillStyle = "#080810";
@@ -116,38 +191,29 @@ export default function PitchCanvas({
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // ── Chakra bands ─────────────────────────────────────────────────────────
-    const sortedFreqs = [...chakras.map((c) => c.frequencyHz)].sort(
-      (a, b) => a - b
-    );
-
-    for (const chakra of chakras) {
-      const cy = toY(chakra.frequencyHz);
-      const idx = sortedFreqs.indexOf(chakra.frequencyHz);
-      const belowHz = sortedFreqs[idx - 1] ?? minHz;
-      const aboveHz = sortedFreqs[idx + 1] ?? maxHz;
-      const halfBelow = Math.abs(cy - toY(belowHz)) * 0.44;
-      const halfAbove = Math.abs(toY(aboveHz) - cy) * 0.44;
-      const bh = Math.min(halfBelow, halfAbove, 38);
-
+    // ── Chakra bands + left labels ────────────────────────────────────────────
+    for (let i = 0; i < n; i++) {
+      const chakra = chakras[i]; // sorted Root → Crown
+      const cy = idxY(i);
       const active = hz !== null && isInTune(hz, chakra.frequencyHz);
       const highlighted =
-        !highlightIdsRef.current || highlightIdsRef.current.includes(chakra.id);
-      const dimFactor = highlighted ? 1 : 0.25;
+        !highlightIdsRef.current ||
+        highlightIdsRef.current.includes(chakra.id);
+      const dim = highlighted ? 1 : 0.2;
 
-      // Band fill
+      // Band fill — feathered gradient centred on cy
       const grad = ctx.createLinearGradient(0, cy - bh, 0, cy + bh);
-      const alpha = (active ? 0.22 : 0.08) * dimFactor;
+      const bandAlpha = (active ? 0.22 : 0.13) * dim;
       grad.addColorStop(0, `rgba(${chakra.rgb}, 0)`);
-      grad.addColorStop(0.5, `rgba(${chakra.rgb}, ${alpha})`);
+      grad.addColorStop(0.5, `rgba(${chakra.rgb}, ${bandAlpha})`);
       grad.addColorStop(1, `rgba(${chakra.rgb}, 0)`);
       ctx.fillStyle = grad;
       ctx.fillRect(0, cy - bh, W, bh * 2);
 
-      // Dashed centre line
+      // Dashed centre line (full width)
       ctx.save();
       ctx.setLineDash([3, 7]);
-      ctx.strokeStyle = `rgba(${chakra.rgb}, ${(active ? 0.6 : 0.22) * dimFactor})`;
+      ctx.strokeStyle = `rgba(${chakra.rgb}, ${(active ? 0.6 : 0.38) * dim})`;
       ctx.lineWidth = active ? 1.5 : 1;
       ctx.beginPath();
       ctx.moveTo(0, cy);
@@ -155,21 +221,23 @@ export default function PitchCanvas({
       ctx.stroke();
       ctx.restore();
 
-      // Right labels
-      const lx = W - 16;
-      ctx.textAlign = "right";
-      ctx.font = `600 11px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 1 : 0.55) * dimFactor})`;
-      ctx.fillText(chakra.name.toUpperCase(), lx, cy - 7);
-      ctx.font = `400 10px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.85 : 0.32) * dimFactor})`;
-      ctx.fillText(`${chakra.frequencyHz} Hz`, lx, cy + 8);
-
-      // Left note badge
+      // ── Left labels ─────────────────────────────────────────────────────────
       ctx.textAlign = "left";
-      ctx.font = `500 10px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.9 : 0.3) * dimFactor})`;
-      ctx.fillText(chakra.note, 14, cy + 4);
+
+      // Note letter — large, acts as a musical anchor
+      ctx.font = `700 17px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 1 : 0.82) * dim})`;
+      ctx.fillText(chakra.note, 12, cy + 3);
+
+      // Chakra name — medium, stacked to the right of the note
+      ctx.font = `600 13px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.9 : 0.7) * dim})`;
+      ctx.fillText(chakra.name.toUpperCase(), 32, cy - 4);
+
+      // Frequency — small and muted, below the name
+      ctx.font = `400 10px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.65 : 0.45) * dim})`;
+      ctx.fillText(`${chakra.frequencyHz} Hz`, 32, cy + 9);
     }
 
     // ── Accumulate trail dot (every DOT_INTERVAL_MS) ─────────────────────────
@@ -179,16 +247,12 @@ export default function PitchCanvas({
       lastDotMs.current = now;
     }
 
-    // Expire dots older than DOT_MAX_AGE_MS so the trail length stays bounded.
-    // This also makes dots scroll off the left edge naturally during silence.
+    // Expire old dots — they scroll off the left edge naturally during silence
     dotsRef.current = dotsRef.current.filter(
       (d) => now - d.ts < DOT_MAX_AGE_MS
     );
 
-    // ── Draw trail (time-based X so scrolling continues even during silence) ──
-    // X position is derived from how old the dot is, not its index.
-    // Result: the trail keeps moving left at a constant speed even when the
-    // user stops singing — the canvas never looks frozen.
+    // ── Draw trail ────────────────────────────────────────────────────────────
     for (const dot of dotsRef.current) {
       const ageMs = now - dot.ts;
       const x = newestX - ageMs * PX_PER_MS;
@@ -197,7 +261,7 @@ export default function PitchCanvas({
       const ageFraction = ageMs / DOT_MAX_AGE_MS;
       const opacity = (1 - ageFraction) * 0.8;
       const r = DOT_RADIUS * (1 - ageFraction * 0.5);
-      const y = toY(dot.hz);
+      const y = hzToY(dot.hz, chakras, rootY, crownY);
       const closest = findClosestChakra(dot.hz, chakras);
       const inTune = isInTune(dot.hz, closest.frequencyHz);
 
@@ -214,17 +278,18 @@ export default function PitchCanvas({
       }
     }
 
-    // ── Live cursor dot + waveform ring (60fps) ──────────────────────────────
+    // ── Live cursor dot + waveform ring (60 fps) ──────────────────────────────
     if (hz !== null) {
-      const y = toY(hz);
+      const y = hzToY(hz, chakras, rootY, crownY);
       const closest = findClosestChakra(hz, chakras);
       const inTune = isInTune(hz, closest.frequencyHz);
       const conf = pitchConfidence(hz, chakras);
 
       // Waveform ring — pulses at ~2 Hz, expands with confidence
-      const pulse = (Math.sin(now / 500) + 1) / 2; // 0→1 at ~2 Hz
+      const pulse = (Math.sin(now / 500) + 1) / 2;
       const ringRadius = DOT_RADIUS + 4 + conf * 6 + pulse * 3;
       const ringOpacity = conf * 0.55 + pulse * 0.1;
+
       ctx.beginPath();
       ctx.arc(newestX, y, ringRadius, 0, Math.PI * 2);
       ctx.strokeStyle = `rgba(${closest.rgb}, ${ringOpacity})`;
@@ -243,14 +308,14 @@ export default function PitchCanvas({
       ctx.fillStyle = "rgba(255,255,255,0.75)";
       ctx.fill();
 
-      // Horizontal dash to labels
+      // Horizontal pitch indicator dash — extends rightward from the ring
       ctx.save();
       ctx.setLineDash([2, 5]);
-      ctx.strokeStyle = `rgba(${closest.rgb}, 0.3)`;
+      ctx.strokeStyle = `rgba(${closest.rgb}, 0.25)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(newestX + ringRadius + 4, y);
-      ctx.lineTo(W - 95, y);
+      ctx.lineTo(W - 16, y);
       ctx.stroke();
       ctx.restore();
     }
@@ -260,9 +325,7 @@ export default function PitchCanvas({
     setupCanvas();
     rafRef.current = requestAnimationFrame(render);
 
-    const observer = new ResizeObserver(() => {
-      setupCanvas();
-    });
+    const observer = new ResizeObserver(setupCanvas);
     if (canvasRef.current?.parentElement) {
       observer.observe(canvasRef.current.parentElement);
     }
@@ -278,17 +341,15 @@ export default function PitchCanvas({
       if (!onChakraClick) return;
       const rect = canvasRef.current!.getBoundingClientRect();
       const clickY = e.clientY - rect.top;
-      const { H } = layoutRef.current;
+      const { rootY, crownY } = layoutRef.current;
       const chakras = chakrasRef.current;
-      const freqs = chakras.map((c) => c.frequencyHz);
-      const minHz = Math.min(...freqs) * 0.76;
-      const maxHz = Math.max(...freqs) * 1.3;
+      const n = chakras.length;
+      if (n === 0 || rootY === crownY) return;
 
-      const t = 1 - clickY / H;
-      const clickedHz = Math.exp(
-        t * (Math.log(maxHz) - Math.log(minHz)) + Math.log(minHz)
-      );
-      onChakraClick(findClosestChakra(clickedHz, chakras));
+      // Invert chakraIndexY: idx = (rootY - clickY) / (rootY - crownY) * (n - 1)
+      const idx = ((rootY - clickY) / (rootY - crownY)) * (n - 1);
+      const nearest = Math.max(0, Math.min(n - 1, Math.round(idx)));
+      onChakraClick(chakras[nearest]);
     },
     [onChakraClick]
   );

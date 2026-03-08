@@ -53,20 +53,7 @@ Tuning applies to voice-based mode only. In Absolute mode, tuning has no effect
 
 ---
 
-### 3. Audio
-
-**Binaural beats**
-Toggle on/off. Default: on.
-Sub-text: "Plays slightly different frequencies in each ear. Use headphones."
-
-**Drone tone**
-Selector: Off · Root · Sacral · Solar Plexus · Heart · Throat · Third Eye · Crown
-Default: Off.
-Sub-text: "A continuous background tone to sing against."
-
----
-
-### 4. About
+### 3. About
 
 - App version
 - Link: "What are Solfeggio frequencies?" (external, opens in new tab)
@@ -83,10 +70,8 @@ All settings are saved to `localStorage` immediately on change. No save button.
 | `attunr.voiceType` | `"tenor"` etc. |
 | `attunr.tuning` | `"A432"` etc. |
 | `attunr.freqBase` | `"absolute"` \| `"voice"` |
-| `attunr.binaural` | `"true"` \| `"false"` |
-| `attunr.drone` | `"off"` \| chakra id |
 | `attunr.journeyStage` | integer string |
-| `attunr.headphonesNotice` | `"dismissed"` |
+| `attunr.onboarded` | `"1"` |
 
 On app load, read all keys and hydrate state before first render to avoid flicker.
 

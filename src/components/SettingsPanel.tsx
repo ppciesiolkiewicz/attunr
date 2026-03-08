@@ -3,6 +3,7 @@
 import { VOICE_TYPES, TUNING_OPTIONS } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 import type { VoiceTypeId, TuningStandard } from "@/constants/chakras";
+// binaural is always on — no toggle needed
 
 interface SettingsPanelProps {
   open: boolean;
@@ -119,36 +120,6 @@ export default function SettingsPanel({
               Try each and keep the one that feels right for your practice.
               Tuning applies in voice-based mode.
             </p>
-          </Section>
-
-          <div className="h-px bg-white/[0.06]" />
-
-          {/* ── Audio ──────────────────────────────────────────────────────── */}
-          <Section title="Audio">
-            {/* Binaural */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-white/70">Binaural beats</p>
-                <p className="text-[10px] text-white/30 mt-0.5">
-                  Slightly different Hz per ear. Use headphones.
-                </p>
-              </div>
-              <button
-                onClick={() => onUpdate("binaural", !settings.binaural)}
-                className="shrink-0 rounded-full transition-colors ml-4"
-                style={{
-                  width: 36,
-                  height: 20,
-                  background: settings.binaural ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.12)",
-                  position: "relative",
-                }}
-              >
-                <span
-                  className="absolute top-1 rounded-full bg-white transition-all"
-                  style={{ width: 12, height: 12, left: settings.binaural ? 20 : 4 }}
-                />
-              </button>
-            </div>
           </Section>
 
           <div className="h-px bg-white/[0.06]" />

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "attunr",
-  description: "Sing in tune with the sacred Solfeggio frequencies. Real-time pitch detection and chakra alignment.",
+  title: "attunr — Sing in tune",
+  description: "Real-time chakra tone practice. Sing into your mic and find your frequency.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

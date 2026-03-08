@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
-import AudioControls from "./AudioControls";
+import TabInfoModal, { InfoButton, HeadphonesNotice } from "./TabInfoModal";
 import {
   VOICE_TYPES,
   getChakraFrequencies,
@@ -11,7 +11,8 @@ import {
 } from "@/constants/chakras";
 import type { Chakra, FrequencyBase, VoiceTypeId } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
-import type { DroneTarget } from "@/hooks/useSettings";
+
+const STORAGE_KEY = "attunr.exploreInfoSeen";
 
 function PlayIcon() {
   return (
@@ -38,6 +39,12 @@ export default function TrainView({
 }: TrainViewProps) {
   const [freqBase, setFreqBase] = useState<FrequencyBase>(settings.freqBase);
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [showInfo, setShowInfo] = useState(false);
+
+  // Auto-show on first visit
+  useEffect(() => {
+    if (!localStorage.getItem(STORAGE_KEY)) setShowInfo(true);
+  }, []);
 
   const chakras = useMemo(
     () => getChakraFrequencies(freqBase, settings.voiceType, settings.tuning),
@@ -58,12 +65,16 @@ export default function TrainView({
     setTimeout(() => setPlayingId(null), 1800);
   }
 
+  function handleCloseInfo(persist: boolean) {
+    if (persist) localStorage.setItem(STORAGE_KEY, "1");
+    setShowInfo(false);
+  }
+
   return (
     <div className="flex flex-col h-full">
 
       {/* ── Controls bar ─────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-white/[0.06]">
-        {/* Frequency base */}
+      <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-white/[0.06] pr-4">
         <div className="flex items-center gap-1 bg-white/[0.05] rounded-lg p-1">
           {(["absolute", "voice"] as FrequencyBase[]).map((b) => (
             <button
@@ -80,7 +91,6 @@ export default function TrainView({
           ))}
         </div>
 
-        {/* Voice type (voice mode only) */}
         {freqBase === "voice" && (
           <div className="flex items-center gap-1 bg-white/[0.05] rounded-lg p-1">
             {VOICE_TYPES.map((v) => (
@@ -98,6 +108,10 @@ export default function TrainView({
             ))}
           </div>
         )}
+
+        <div className="ml-auto">
+          <InfoButton onClick={() => setShowInfo(true)} />
+        </div>
       </div>
 
       {/* Voice disclaimer */}
@@ -139,11 +153,11 @@ export default function TrainView({
             )}
           </div>
         )}
+
       </div>
 
       {/* ── Bottom panel ─────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-3 pb-4 flex flex-col gap-3">
-        {/* Chakra tone buttons */}
         <div className="flex flex-wrap gap-2 justify-center">
           {chakras.map((chakra) => {
             const isPlaying = playingId === chakra.id;
@@ -168,15 +182,49 @@ export default function TrainView({
             );
           })}
         </div>
-
-        {/* Audio controls */}
-        <AudioControls
-          drone={settings.drone}
-          binaural={settings.binaural}
-          onDroneChange={(v) => onSettingsUpdate("drone", v as DroneTarget)}
-          onBinauralChange={(v) => onSettingsUpdate("binaural", v)}
-        />
       </div>
+
+      {/* ── Explore info modal ────────────────────────────────────────────── */}
+      {showInfo && (
+        <TabInfoModal title="Explore" onClose={handleCloseInfo}>
+          <p className="text-sm text-white/55 leading-relaxed">
+            Free-form chakra tone practice. No goals, no instructions — just sing and
+            explore your voice against the canvas.
+          </p>
+
+          <div className="flex flex-col gap-3">
+            {[
+              {
+                icon: "🎤",
+                text: "Sing into your mic and watch the canvas respond to your pitch in real time",
+              },
+              {
+                icon: "●",
+                text: "The dot trail records where your pitch has been — filled dots are in tune, outlines are off",
+              },
+              {
+                icon: "▶",
+                text: "Tap any chakra button at the bottom to hear its target tone",
+              },
+              {
+                icon: "↕",
+                text: "Click anywhere on the canvas to play the tone at that frequency band",
+              },
+              {
+                icon: "⚙",
+                text: "Switch between Absolute (universal Hz) and By voice (scaled to your range) in the controls above",
+              },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3">
+                <span className="text-base shrink-0 w-5 text-center opacity-60 mt-0.5">{item.icon}</span>
+                <p className="text-xs text-white/40 leading-relaxed">{item.text}</p>
+              </div>
+            ))}
+          </div>
+
+          <HeadphonesNotice />
+        </TabInfoModal>
+      )}
     </div>
   );
 }

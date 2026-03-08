@@ -3,8 +3,9 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
-import AudioControls from "./AudioControls";
+import { HeadphonesNotice } from "./TabInfoModal";
 import { JOURNEY_STAGES } from "@/constants/journey";
+import type { JourneyStage } from "@/constants/journey";
 import {
   CHAKRAS,
   getChakraFrequencies,
@@ -13,7 +14,6 @@ import {
 } from "@/constants/chakras";
 import type { Chakra } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
-import type { DroneTarget } from "@/hooks/useSettings";
 
 interface JourneyViewProps {
   settings: Settings;
@@ -21,7 +21,19 @@ interface JourneyViewProps {
   pitchHzRef: React.RefObject<number | null>;
   onPlayTone: (chakra: Chakra) => void;
   onSettingsUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
+  onOpenSettings: () => void;
 }
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function voiceTypeLabel(id: string) {
+  const map: Record<string, string> = {
+    bass: "Bass", baritone: "Baritone", tenor: "Tenor", alto: "Alto", soprano: "Soprano",
+  };
+  return map[id] ?? id;
+}
+
+// ── Progress Arc ──────────────────────────────────────────────────────────────
 
 function ProgressArc({ progress }: { progress: number }) {
   const r = 20;
@@ -45,37 +57,333 @@ function ProgressArc({ progress }: { progress: number }) {
   );
 }
 
-export default function JourneyView({
+// ── Stage Card ────────────────────────────────────────────────────────────────
+
+function StageCard({
+  stage,
+  highestCompleted,
+  onSelect,
+}: {
+  stage: JourneyStage;
+  highestCompleted: number;
+  onSelect: (id: number) => void;
+}) {
+  const isComplete = stage.id <= highestCompleted;
+  const isCurrent = stage.id === highestCompleted + 1;
+  const isUnlocked = stage.id <= highestCompleted + 1;
+
+  const stageChakras = CHAKRAS.filter((c) => stage.chakraIds.includes(c.id));
+  const primaryColor = stageChakras[0]?.color ?? "#7c3aed";
+
+  return (
+    <button
+      onClick={() => isUnlocked && onSelect(stage.id)}
+      disabled={!isUnlocked}
+      className="w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
+      style={{
+        borderColor: !isUnlocked
+          ? "rgba(255,255,255,0.04)"
+          : isCurrent
+          ? `${primaryColor}50`
+          : "rgba(255,255,255,0.08)",
+        backgroundColor: isCurrent
+          ? `${primaryColor}09`
+          : "rgba(255,255,255,0.02)",
+        opacity: !isUnlocked ? 0.32 : 1,
+        cursor: !isUnlocked ? "not-allowed" : "pointer",
+      }}
+    >
+      {/* Left colour strip */}
+      <div
+        className="w-[3px] shrink-0"
+        style={{
+          background:
+            stageChakras.length === 1
+              ? primaryColor
+              : `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`,
+          opacity: !isUnlocked ? 0.4 : 1,
+        }}
+      />
+
+      {/* Content */}
+      <div className="flex-1 px-3.5 py-3 min-w-0">
+        <div className="flex items-baseline justify-between gap-2 mb-1.5">
+          <span
+            className="text-sm font-semibold"
+            style={{ color: !isUnlocked ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.85)" }}
+          >
+            {stage.title}
+          </span>
+          <span className="text-[10px] text-white/20 shrink-0">Stage {stage.id}</span>
+        </div>
+
+        {/* Part I: mantra + element + short description */}
+        {stageChakras.length === 1 && (
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span
+              className="text-[11px] font-mono font-medium tracking-wider"
+              style={{ color: isUnlocked ? `${primaryColor}cc` : "rgba(255,255,255,0.2)" }}
+            >
+              {stageChakras[0].mantra}
+            </span>
+            <span className="text-[10px] text-white/20">·</span>
+            <span className="text-[10px] text-white/30">{stageChakras[0].element}</span>
+            <span className="text-[10px] text-white/20">·</span>
+            <span className="text-[10px] text-white/35">{stageChakras[0].description}</span>
+          </div>
+        )}
+
+        {/* Part II: chakra sequence */}
+        {stageChakras.length > 1 && (
+          <div className="flex flex-wrap items-center gap-1">
+            {stageChakras.map((c, i) => (
+              <span key={c.id} className="flex items-center gap-1">
+                <span
+                  className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ backgroundColor: isUnlocked ? c.color : "rgba(255,255,255,0.15)" }}
+                />
+                <span
+                  className="text-[10px]"
+                  style={{ color: isUnlocked ? `${c.color}99` : "rgba(255,255,255,0.2)" }}
+                >
+                  {c.name}
+                </span>
+                {i < stageChakras.length - 1 && (
+                  <span className="text-[9px] text-white/15 mx-0.5">›</span>
+                )}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Status */}
+      <div className="flex items-center px-3.5">
+        {isComplete ? (
+          <span className="text-sm" style={{ color: `${primaryColor}cc` }}>✓</span>
+        ) : !isUnlocked ? (
+          <span className="text-xs text-white/15">⋯</span>
+        ) : (
+          <span className="text-sm text-white/20 group-hover:text-white/50 transition-colors">›</span>
+        )}
+      </div>
+    </button>
+  );
+}
+
+// ── Journey List ──────────────────────────────────────────────────────────────
+
+function JourneyList({
+  settings,
+  onSelect,
+}: {
+  settings: Settings;
+  onSelect: (stageId: number) => void;
+}) {
+  const { journeyStage: highestCompleted } = settings;
+  const part1 = JOURNEY_STAGES.filter((s) => s.part === 1);
+  const part2 = JOURNEY_STAGES.filter((s) => s.part === 2);
+
+  return (
+    <div className="h-full overflow-y-auto">
+      <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
+
+        <p className="text-xs text-white/30 leading-relaxed">
+          Follow the path. Start easy, grow step by step.
+        </p>
+
+        <section className="flex flex-col gap-2">
+          <header className="flex items-center gap-3 mb-0.5">
+            <span className="text-[10px] uppercase tracking-widest text-white/20 shrink-0">
+              Part I — Individual chakras
+            </span>
+            <div className="flex-1 h-px bg-white/[0.05]" />
+          </header>
+          {part1.map((stage) => (
+            <StageCard
+              key={stage.id}
+              stage={stage}
+              highestCompleted={highestCompleted}
+              onSelect={onSelect}
+            />
+          ))}
+        </section>
+
+        <section className="flex flex-col gap-2">
+          <header className="flex items-center gap-3 mb-0.5">
+            <span className="text-[10px] uppercase tracking-widest text-white/20 shrink-0">
+              Part II — Sequences
+            </span>
+            <div className="flex-1 h-px bg-white/[0.05]" />
+          </header>
+          {part2.map((stage) => (
+            <StageCard
+              key={stage.id}
+              stage={stage}
+              highestCompleted={highestCompleted}
+              onSelect={onSelect}
+            />
+          ))}
+        </section>
+
+      </div>
+    </div>
+  );
+}
+
+// ── Exercise Info Modal ───────────────────────────────────────────────────────
+
+function ExerciseInfoModal({
+  stageId,
+  settings,
+  onStart,
+  onDismiss,
+}: {
+  stageId: number;
+  settings: Settings;
+  onStart: () => void;
+  onDismiss: () => void;
+}) {
+  const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
+
+  const allChakras = useMemo(
+    () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
+    [settings.voiceType, settings.tuning]
+  );
+  const stageChakras = allChakras.filter((c) => stage.chakraIds.includes(c.id));
+  const freqOverrides = Object.fromEntries(stageChakras.map((c) => [c.id, c.frequencyHz]));
+  const primaryColor = stageChakras[0]?.color ?? "#7c3aed";
+
+  const objective =
+    stage.type === "individual"
+      ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
+      : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
+
+  return (
+    <div
+      className="fixed inset-0 z-30 flex items-end sm:items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
+      onClick={onDismiss}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col"
+        style={{
+          background: "#0f0f1a",
+          border: "1px solid rgba(255,255,255,0.1)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+          maxHeight: "90vh",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
+          <div>
+            <p className="text-[10px] uppercase tracking-widest text-white/25 mb-1">
+              Stage {stageId} / 13 — {stage.part === 2 ? "Sequence" : "Individual"}
+            </p>
+            <h2 className="text-lg font-semibold text-white">{stage.title}</h2>
+            <p className="text-xs mt-1" style={{ color: `${primaryColor}99` }}>
+              {objective}
+            </p>
+          </div>
+          <button
+            onClick={onDismiss}
+            className="text-white/25 hover:text-white/60 transition-colors text-lg leading-none ml-4 mt-0.5 shrink-0"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Scrollable content */}
+        <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1">
+
+          {/* Chakra detail */}
+          <ChakraDetailCard
+            chakraIds={stage.chakraIds}
+            frequencyOverrides={freqOverrides}
+          />
+
+          {/* Instructions */}
+          <div className="flex flex-col gap-1">
+            {stage.instruction.split("\n").map((line, i) => (
+              <p
+                key={i}
+                className="text-sm leading-relaxed"
+                style={{ color: i === 0 ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.38)" }}
+              >
+                {line}
+              </p>
+            ))}
+          </div>
+
+          {/* Headphones notice */}
+          <HeadphonesNotice />
+
+          {/* Voice / tuning context */}
+          <p className="text-[10px] text-white/20 text-center">
+            Practising as {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
+          </p>
+
+        </div>
+
+        {/* Begin button */}
+        <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
+          <button
+            onClick={onStart}
+            className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-all"
+            style={{
+              background: `linear-gradient(135deg, #7c3aed, #6d28d9)`,
+              boxShadow: "0 0 28px rgba(124,58,237,0.35)",
+            }}
+          >
+            Begin exercise →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Journey Exercise (simplified) ─────────────────────────────────────────────
+
+function JourneyExercise({
+  stageId,
   settings,
   pitchHz,
   pitchHzRef,
   onPlayTone,
   onSettingsUpdate,
-}: JourneyViewProps) {
+  onOpenSettings,
+  onBack,
+  onNext,
+}: {
+  stageId: number;
+  settings: Settings;
+  pitchHz: number | null;
+  pitchHzRef: React.RefObject<number | null>;
+  onPlayTone: (chakra: Chakra) => void;
+  onSettingsUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
+  onOpenSettings: () => void;
+  onBack: () => void;
+  onNext: (nextStageId: number) => void;
+}) {
   const highestCompleted = settings.journeyStage;
-  const currentStageId = Math.min(highestCompleted + 1, 13);
-  const [viewingStageId, setViewingStageId] = useState(currentStageId);
+  const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
+  const isCompleted = stageId <= highestCompleted;
+  const isCurrentStage = stageId === highestCompleted + 1;
 
-  const stage = JOURNEY_STAGES.find((s) => s.id === viewingStageId)!;
-  const isCurrentStage = viewingStageId === currentStageId;
-  const isCompleted = viewingStageId <= highestCompleted;
-
-  // Compute voice-adjusted chakras for the stage
   const allChakras = useMemo(
     () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
     [settings.voiceType, settings.tuning]
   );
-  const stageChakras = allChakras.filter((c) =>
-    stage.chakraIds.includes(c.id)
-  );
-  const freqOverrides = Object.fromEntries(stageChakras.map((c) => [c.id, c.frequencyHz]));
+  const stageChakras = allChakras.filter((c) => stage.chakraIds.includes(c.id));
 
   // ── Success tracking ──────────────────────────────────────────────────────
-  const holdRef = useRef(0);          // cumulative seconds held in-tune (individual)
-  const seqIndexRef = useRef(0);      // current note index in sequence
-  const noteHoldRef = useRef(0);      // seconds held on current sequence note
+  const holdRef = useRef(0);
+  const seqIndexRef = useRef(0);
+  const noteHoldRef = useRef(0);
   const lastTickRef = useRef(0);
-  const [progress, setProgress] = useState(0); // 0–1
+  const [progress, setProgress] = useState(0);
   const [seqIndex, setSeqIndex] = useState(0);
   const [stageComplete, setStageComplete] = useState(false);
   const rafRef = useRef<number | null>(null);
@@ -92,9 +400,8 @@ export default function JourneyView({
 
   useEffect(() => {
     resetProgress();
-  }, [viewingStageId, resetProgress]);
+  }, [stageId, resetProgress]);
 
-  // Tick loop for progress accumulation
   useEffect(() => {
     if (!isCurrentStage || stageComplete) return;
 
@@ -106,20 +413,17 @@ export default function JourneyView({
       const hz = pitchHzRef.current;
 
       if (stage.type === "individual") {
-        const targetChakra = stageChakras[0];
-        if (hz !== null && targetChakra && isInTune(hz, targetChakra.frequencyHz)) {
+        const target = stageChakras[0];
+        if (hz !== null && target && isInTune(hz, target.frequencyHz)) {
           holdRef.current += dt;
         }
         const p = holdRef.current / stage.holdSeconds;
         setProgress(p);
-        if (p >= 1 && !stageComplete) {
-          setStageComplete(true);
-        }
+        if (p >= 1) setStageComplete(true);
       } else {
-        // Sequence: step through notes
         const idx = seqIndexRef.current;
-        const targetChakra = stageChakras[idx];
-        if (targetChakra && hz !== null && isInTune(hz, targetChakra.frequencyHz)) {
+        const target = stageChakras[idx];
+        if (target && hz !== null && isInTune(hz, target.frequencyHz)) {
           noteHoldRef.current += dt;
           if (noteHoldRef.current >= stage.noteSeconds) {
             noteHoldRef.current = 0;
@@ -134,7 +438,10 @@ export default function JourneyView({
         } else {
           noteHoldRef.current = Math.max(0, noteHoldRef.current - dt * 0.5);
         }
-        setProgress((seqIndexRef.current + noteHoldRef.current / stage.noteSeconds) / stageChakras.length);
+        setProgress(
+          (seqIndexRef.current + noteHoldRef.current / stage.noteSeconds) /
+            stageChakras.length
+        );
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -143,13 +450,14 @@ export default function JourneyView({
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCurrentStage, stageComplete, viewingStageId]);
+  }, [isCurrentStage, stageComplete, stageId]);
 
   function handleComplete() {
-    const newStage = viewingStageId;
-    onSettingsUpdate("journeyStage", Math.max(highestCompleted, newStage) as unknown as Settings["journeyStage"]);
-    if (viewingStageId < 13) {
-      setViewingStageId(viewingStageId + 1);
+    onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
+    if (stageId < 13) {
+      onNext(stageId + 1);
+    } else {
+      onBack();
     }
   }
 
@@ -159,68 +467,34 @@ export default function JourneyView({
     });
   }
 
-  // Canvas: highlight only target chakra bands
   const closestChakra = pitchHz ? findClosestChakra(pitchHz, stageChakras) : null;
   const locked = closestChakra && pitchHz ? isInTune(pitchHz, closestChakra.frequencyHz) : false;
 
   return (
     <div className="flex flex-col h-full">
 
-      {/* ── Stage nav ────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-3 px-5 py-3 border-b border-white/[0.06] overflow-x-auto">
-        <div className="flex items-center gap-1 shrink-0">
-          {JOURNEY_STAGES.map((s) => {
-            const done = s.id <= highestCompleted;
-            const current = s.id === currentStageId;
-            const viewing = s.id === viewingStageId;
-            return (
-              <button
-                key={s.id}
-                onClick={() => setViewingStageId(s.id)}
-                className="rounded-full transition-all"
-                title={`Stage ${s.id}: ${s.title}`}
-                style={{
-                  width: viewing ? 20 : 8,
-                  height: 8,
-                  backgroundColor: done
-                    ? "#7c3aed"
-                    : current
-                    ? "rgba(124,58,237,0.5)"
-                    : "rgba(255,255,255,0.1)",
-                  borderRadius: viewing ? 4 : "50%",
-                }}
-              />
-            );
-          })}
-        </div>
-        <span className="text-xs text-white/30 shrink-0">
-          Stage {viewingStageId} / 13 — {stage.title}
-          {stage.part === 2 && " ♪"}
-        </span>
-        <span className="ml-auto text-[10px] text-white/20 shrink-0">
-          {VOICE_TYPES_LABEL(settings.voiceType)} · {settings.tuning}
-        </span>
+      {/* ── Sub-nav ───────────────────────────────────────────────────────────── */}
+      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] shrink-0">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
+        >
+          ← Journey
+        </button>
+        <span className="text-white/10">|</span>
+        <span className="text-xs text-white/30">Stage {stageId} / 13</span>
+        <span className="text-white/10">—</span>
+        <span className="text-xs text-white/50 font-medium">{stage.title}</span>
+        {stage.part === 2 && <span className="text-[10px] text-white/20">♪</span>}
+        <button
+          onClick={onOpenSettings}
+          className="ml-auto text-[10px] text-white/20 hover:text-white/45 transition-colors"
+        >
+          {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
+        </button>
       </div>
 
-      {/* ── Chakra detail card ───────────────────────────────────────────── */}
-      <div className="px-4 pt-3 pb-1">
-        <ChakraDetailCard chakraIds={stage.chakraIds} frequencyOverrides={freqOverrides} />
-
-        {/* Instruction */}
-        <div className="mt-2 px-1">
-          {stage.instruction.split("\n").map((line, i) => (
-            <p
-              key={i}
-              className="text-xs leading-relaxed"
-              style={{ color: i === 0 ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.3)" }}
-            >
-              {line}
-            </p>
-          ))}
-        </div>
-      </div>
-
-      {/* ── Canvas ───────────────────────────────────────────────────────── */}
+      {/* ── Canvas (full remaining height) ────────────────────────────────────── */}
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
           chakras={allChakras}
@@ -268,59 +542,91 @@ export default function JourneyView({
         )}
       </div>
 
-      {/* ── Bottom panel ─────────────────────────────────────────────────── */}
-      <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-3 pb-4 flex flex-col gap-3">
+      {/* ── Bottom panel ──────────────────────────────────────────────────────── */}
+      <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-2.5 pb-1.5 flex items-center gap-4 shrink-0">
+        {isCurrentStage && !stageComplete && <ProgressArc progress={progress} />}
+        {stageComplete && <span className="text-2xl">✓</span>}
+        {isCompleted && !isCurrentStage && (
+          <span className="text-sm text-white/25">Completed</span>
+        )}
 
-        {/* Progress + actions */}
-        <div className="flex items-center gap-4">
-          {isCurrentStage && !stageComplete && (
-            <ProgressArc progress={progress} />
-          )}
-          {stageComplete && (
-            <div className="text-2xl">✓</div>
-          )}
-          {isCompleted && !isCurrentStage && (
-            <div className="text-sm text-white/25">Completed</div>
-          )}
+        <div className="flex gap-2 ml-auto">
+          <button
+            onClick={handleHearTone}
+            className="px-4 py-2 rounded-xl text-xs font-medium border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all"
+          >
+            ▶ Hear {stageChakras.length > 1 ? "tones" : "tone"}
+          </button>
 
-          <div className="flex gap-2 ml-auto">
+          {(stageComplete || (isCompleted && !isCurrentStage)) && (
             <button
-              onClick={handleHearTone}
-              className="px-4 py-2 rounded-xl text-xs font-medium border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all"
+              onClick={handleComplete}
+              className="px-4 py-2 rounded-xl text-xs font-medium text-white transition-all"
+              style={{
+                background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+                boxShadow: "0 0 16px rgba(124,58,237,0.4)",
+              }}
             >
-              ▶ Hear tone{stageChakras.length > 1 ? "s" : ""}
+              {stageId < 13 ? "Next →" : "Complete ✓"}
             </button>
-
-            {(stageComplete || (isCompleted && !isCurrentStage)) && viewingStageId < 13 && (
-              <button
-                onClick={handleComplete}
-                className="px-4 py-2 rounded-xl text-xs font-medium text-white transition-all"
-                style={{
-                  background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
-                  boxShadow: "0 0 16px rgba(124,58,237,0.4)",
-                }}
-              >
-                Next →
-              </button>
-            )}
-          </div>
+          )}
         </div>
-
-        {/* Audio controls */}
-        <AudioControls
-          drone={settings.drone}
-          binaural={settings.binaural}
-          onDroneChange={(v) => onSettingsUpdate("drone", v as DroneTarget)}
-          onBinauralChange={(v) => onSettingsUpdate("binaural", v)}
-        />
       </div>
     </div>
   );
 }
 
-function VOICE_TYPES_LABEL(id: string) {
-  const map: Record<string, string> = {
-    bass: "Bass", baritone: "Baritone", tenor: "Tenor", alto: "Alto", soprano: "Soprano",
-  };
-  return map[id] ?? id;
+// ── Main export ───────────────────────────────────────────────────────────────
+
+export default function JourneyView({
+  settings,
+  pitchHz,
+  pitchHzRef,
+  onPlayTone,
+  onSettingsUpdate,
+  onOpenSettings,
+}: JourneyViewProps) {
+  /** Stage currently shown in the exercise info modal (null = no modal) */
+  const [pendingStageId, setPendingStageId] = useState<number | null>(null);
+  /** Stage currently open in the exercise view (null = list) */
+  const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
+
+  if (selectedStageId !== null) {
+    return (
+      <JourneyExercise
+        stageId={selectedStageId}
+        settings={settings}
+        pitchHz={pitchHz}
+        pitchHzRef={pitchHzRef}
+        onPlayTone={onPlayTone}
+        onSettingsUpdate={onSettingsUpdate}
+        onOpenSettings={onOpenSettings}
+        onBack={() => setSelectedStageId(null)}
+        onNext={setSelectedStageId}
+      />
+    );
+  }
+
+  return (
+    <div className="h-full">
+      <JourneyList
+        settings={settings}
+        onSelect={setPendingStageId}
+      />
+
+      {/* Exercise info modal — shown when a stage card is tapped */}
+      {pendingStageId !== null && (
+        <ExerciseInfoModal
+          stageId={pendingStageId}
+          settings={settings}
+          onStart={() => {
+            setSelectedStageId(pendingStageId);
+            setPendingStageId(null);
+          }}
+          onDismiss={() => setPendingStageId(null)}
+        />
+      )}
+    </div>
+  );
 }
+

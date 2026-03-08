@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import TrainView from "./TrainView";
 import JourneyView from "./JourneyView";
 import SettingsPanel from "./SettingsPanel";
@@ -8,11 +8,9 @@ import OnboardingModal from "./OnboardingModal";
 import { useSettings } from "@/hooks/useSettings";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
-import { useDrone } from "@/hooks/useDrone";
-import { getChakraFrequencies, CHAKRAS } from "@/constants/chakras";
 import type { Chakra, VoiceTypeId } from "@/constants/chakras";
 
-type Tab = "train" | "journey";
+type Tab = "journey" | "explore";
 
 function SettingsIcon() {
   return (
@@ -25,7 +23,7 @@ function SettingsIcon() {
 }
 
 export default function AppShell() {
-  const [tab, setTab] = useState<Tab>("train");
+  const [tab, setTab] = useState<Tab>("journey");
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [redetect, setRedetect] = useState(false);
@@ -33,54 +31,29 @@ export default function AppShell() {
   const { settings, update } = useSettings();
   const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
   const { playTone } = useTonePlayer();
-  const drone = useDrone();
 
-  // ── Hydrate from localStorage after mount ────────────────────────────────
+  // Hydrate onboarding flag after mount
   useEffect(() => {
-    const onboarded = localStorage.getItem("attunr.onboarded");
-    if (!onboarded) setShowOnboarding(true);
+    if (!localStorage.getItem("attunr.onboarded")) setShowOnboarding(true);
   }, []);
 
-  // ── Auto-start mic ───────────────────────────────────────────────────────
+  // Auto-start mic when onboarding is shown
   useEffect(() => {
-    if ((showOnboarding || !localStorage.getItem("attunr.onboarded")) && status === "idle") {
-      startListening();
-    }
+    if (showOnboarding && status === "idle") startListening();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showOnboarding]);
 
+  // Auto-start mic for returning users (no onboarding)
   useEffect(() => {
-    if (!showOnboarding && status === "idle") {
-      startListening();
-    }
+    if (!showOnboarding && status === "idle") startListening();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Drone management ─────────────────────────────────────────────────────
-  const droneChakra = useMemo(() => {
-    if (settings.drone === "off") return null;
-    const chakras = getChakraFrequencies("voice", settings.voiceType, settings.tuning);
-    return chakras.find((c) => c.id === settings.drone) ?? null;
-  }, [settings.drone, settings.voiceType, settings.tuning]);
-
-  useEffect(() => {
-    if (droneChakra) {
-      drone.start(droneChakra.frequencyHz, droneChakra.id, settings.binaural);
-    } else {
-      drone.stop();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.drone, settings.binaural, settings.voiceType, settings.tuning]);
-
-  // ── Tone playback ────────────────────────────────────────────────────────
+  // Binaural is always on — no user toggle needed
   function handlePlayTone(chakra: Chakra) {
-    playTone(chakra.frequencyHz, {
-      chakraId: chakra.id,
-      binaural: settings.binaural,
-    });
+    playTone(chakra.frequencyHz, { chakraId: chakra.id, binaural: true });
   }
 
-  // ── Onboarding ───────────────────────────────────────────────────────────
   function handleOnboardingBegin(voiceId: VoiceTypeId) {
     update("voiceType", voiceId);
     setShowOnboarding(false);
@@ -95,7 +68,6 @@ export default function AppShell() {
   return (
     <div className="flex flex-col h-full">
 
-      {/* ── Onboarding overlay ─────────────────────────────────────────── */}
       {(showOnboarding || redetect) && (
         <OnboardingModal
           pitchHz={pitchHz}
@@ -104,7 +76,6 @@ export default function AppShell() {
         />
       )}
 
-      {/* ── Settings panel ─────────────────────────────────────────────── */}
       <SettingsPanel
         open={settingsOpen}
         settings={settings}
@@ -117,9 +88,8 @@ export default function AppShell() {
         }}
       />
 
-      {/* ── Header ─────────────────────────────────────────────────────── */}
+      {/* Header */}
       <header className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] shrink-0">
-        {/* Logo + chakra dots */}
         <div className="flex items-center gap-3">
           <h1 className="text-lg font-semibold tracking-tight text-white">attunr</h1>
           <div className="flex items-center gap-1.5">
@@ -130,10 +100,9 @@ export default function AppShell() {
           </div>
         </div>
 
-        {/* Nav tabs + settings */}
         <div className="flex items-center gap-1">
           <div className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-2">
-            {(["train", "journey"] as Tab[]).map((t) => (
+            {(["journey", "explore"] as Tab[]).map((t) => (
               <button
                 key={t}
                 onClick={() => setTab(t)}
@@ -141,7 +110,7 @@ export default function AppShell() {
                   tab === t ? "bg-violet-600 text-white" : "text-white/40 hover:text-white/70"
                 }`}
               >
-                {t === "journey" ? "Journey ✦" : "Train"}
+                {t === "journey" ? "Journey" : "Explore"}
               </button>
             ))}
           </div>
@@ -155,18 +124,18 @@ export default function AppShell() {
         </div>
       </header>
 
-      {/* ── Main content ───────────────────────────────────────────────── */}
       <main className="flex-1 min-h-0">
-        {tab === "train" ? (
-          <TrainView
+        {tab === "journey" ? (
+          <JourneyView
             settings={settings}
             pitchHz={pitchHz}
             pitchHzRef={pitchHzRef}
             onPlayTone={handlePlayTone}
             onSettingsUpdate={update}
+            onOpenSettings={() => setSettingsOpen(true)}
           />
         ) : (
-          <JourneyView
+          <TrainView
             settings={settings}
             pitchHz={pitchHz}
             pitchHzRef={pitchHzRef}
