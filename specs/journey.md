@@ -29,6 +29,7 @@ A small non-intrusive line at the top of the Journey view may read:
 ## Structure
 
 Eight parts, completed in order. Each part unlocks when the previous is complete.
+Part 1 is vocal warmups (lip rolls) — start with Crown→Root, then Root→Crown→Root.
 
 ### Stage types
 
@@ -39,69 +40,73 @@ Eight parts, completed in order. Each part unlocks when the previous is complete
 ### Chakra detail styles
 
 - **Full** — Name, mantra, element, frequency, longDescription. Used for first encounter with each chakra.
-- **Brief** — Mantra + interestingFact. Used in Part 3 technique exercises; avoids repetition.
+- **Brief** — Mantra + interestingFact. Used in Part 4+ technique exercises; avoids repetition.
 
-### Part 1 — Sustain (8 stages)
+### Part 1 — Vocal warmups (4 stages)
+
+Do before every session; aim for at least a few minutes. Focus on warming up the voice, not chakra lore.
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 1 | Technique intro | Sustain |
-| 2–8 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown |
+| 1 | Technique intro | Lip rolls |
+| 2 | Sequence | Lip rolls — high to low |
+| 3 | Sequence | Lip rolls — low to high |
+| 4 | Individual | Sustain a lip roll (5 s on one tone) |
 
-### Part 2 — Sequences (6 stages)
+### Part 2 — Sustain (8 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 5 | Technique intro | Sustain |
+| 6–12 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown |
+
+### Part 3 — Sequences (6 stages)
 
 | Stage | Sequence |
 |-------|----------|
-| 9 | Root → Sacral |
-| 10 | Root → Solar Plexus |
-| 11 | Root to Heart |
-| 12 | Heart to Third Eye |
-| 13 | Third Eye & Crown |
-| 14 | Full Alignment |
+| 13 | Root → Sacral |
+| 14 | Root → Solar Plexus |
+| 15 | Root to Heart |
+| 16 | Heart to Third Eye |
+| 17 | Third Eye & Crown |
+| 18 | Full Alignment |
 
-### Part 3 — Vowel U (8 stages)
+### Part 4 — Vowel U (8 stages)
 
 Uuu is the easiest vowel to start with (easier than eee or aaa).
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 15 | Technique intro | Vowel U |
-| 16–22 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown — U |
+| 19 | Technique intro | Vowel U |
+| 20–26 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown — U |
 
-### Part 4 — Mantra (8 stages)
-
-| Stage | Type | Title |
-|-------|------|-------|
-| 23 | Technique intro | Mantra |
-| 24–30 | Individual | Root—LAM, Sacral—VAM, Solar Plexus—RAM, Heart—YAM, Throat—HAM, Third Eye—OM, Crown—AH |
-
-### Part 5 — Vowel EE (4 stages)
+### Part 5 — Mantra (8 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 31 | Technique intro | Vowel EE |
-| 32–34 | Individual | Root, Heart, Crown — EE |
+| 27 | Technique intro | Mantra |
+| 28–34 | Individual | Root—LAM, Sacral—VAM, Solar Plexus—RAM, Heart—YAM, Throat—HAM, Third Eye—OM, Crown—AH |
 
-### Part 6 — Vowel flow (2 stages)
-
-| Stage | Type | Title |
-|-------|------|-------|
-| 35 | Technique intro | Vowel flow U → EE |
-| 36 | Individual | Heart — U to EE |
-
-### Part 7 — Puffy cheeks (4 stages)
+### Part 6 — Vowel EE (4 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 37 | Technique intro | Puffy cheeks |
-| 38–40 | Individual | Root, Heart, Crown — Puffy cheeks |
+| 35 | Technique intro | Vowel EE |
+| 36–38 | Individual | Root, Heart, Crown — EE |
 
-### Part 8 — Lip rolls (2 stages)
+### Part 7 — Vowel flow (2 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 41 | Technique intro | Lip rolls |
-| 42 | Sequence | Full scale — Lip rolls |
+| 39 | Technique intro | Vowel flow U → EE |
+| 40 | Individual | Heart — U to EE |
+
+### Part 8 — Puffy cheeks (4 stages)
+
+| Stage | Type | Title |
+|-------|------|-------|
+| 41 | Technique intro | Puffy cheeks |
+| 42–44 | Individual | Root, Heart, Crown — Puffy cheeks |
 
 **Mantra stage:** Requires singing the actual seed syllable (LAM, VAM, RAM, etc.) on each chakra's tone — not just sustaining or using generic vowels.
 
@@ -109,7 +114,7 @@ Uuu is the easiest vowel to start with (easier than eee or aaa).
 
 - Technique intros: modal with instruction + Video coming soon. "Continue" marks complete and opens next stage modal.
 - Brief chakra cards show mantra + interestingFact (from chakras.ts).
-- Progress key: `attunr.journeyStage` 0–42.
+- Progress key: `attunr.journeyStage` 0–44.
 
 ---
 
@@ -202,7 +207,7 @@ Add to `constants/chakras.ts`:
 ## Progress persistence
 
 Journey progress (highest completed stage) is saved to `localStorage`.
-Key: `attunr.journeyStage` — integer 0–42.
+Key: `attunr.journeyStage` — integer 0–44.
 
 ---
 

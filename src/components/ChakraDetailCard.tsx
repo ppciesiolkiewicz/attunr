@@ -6,8 +6,8 @@ import type { ChakraId } from "@/constants/chakras";
 interface ChakraDetailCardProps {
   chakraIds: ChakraId[];
   frequencyOverrides?: Partial<Record<ChakraId, number>>;
-  /** "full" = name, mantra, element, longDescription; "brief" = mantra + interestingFact */
-  style?: "full" | "brief";
+  /** "full" = name, mantra, element, longDescription; "brief" = mantra + interestingFact; "minimal" = tone only (warmups) */
+  style?: "full" | "brief" | "minimal";
 }
 
 export default function ChakraDetailCard({
@@ -27,6 +27,7 @@ export default function ChakraDetailCard({
     >
       {items.map((chakra) => {
         const displayHz = frequencyOverrides[chakra.id] ?? chakra.frequencyHz;
+        const isMinimal = style === "minimal";
         return (
           <div key={chakra.id} className="flex gap-4 items-start">
             {/* Colour dot */}
@@ -41,35 +42,46 @@ export default function ChakraDetailCard({
             />
 
             <div className="flex flex-col gap-0.5 min-w-0">
-              {/* Name + mantra + element */}
-              <div className="flex items-baseline gap-2 flex-wrap">
-                <span
-                  className="text-base font-semibold"
-                  style={{ color: chakra.color }}
-                >
-                  {chakra.name}
-                </span>
-                <span className="text-sm font-mono text-white/62">
-                  {chakra.mantra}
-                </span>
-                <span className="text-xs text-white/42 uppercase tracking-wider">
-                  {chakra.element}
-                </span>
-                <span className="text-xs text-white/42 tabular-nums ml-auto">
-                  {displayHz} Hz
-                </span>
-              </div>
-
-              {/* Description: full longDescription or brief (mantra recap + interesting fact) */}
-              {style === "full" ? (
-                <p className="text-sm text-white/58 leading-relaxed">
-                  {chakra.longDescription}
-                </p>
-              ) : chakra.interestingFact ? (
-                <p className="text-sm text-white/58 leading-relaxed">
-                  {chakra.interestingFact}
-                </p>
-              ) : null}
+              {/* Minimal: tone + warmup cue only; else name + mantra + element */}
+              {isMinimal ? (
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span className="text-base font-semibold tabular-nums text-white/85">
+                    {displayHz} Hz
+                  </span>
+                  <span className="text-sm text-white/58">
+                    Comfortable middle tone — focus on sustaining the buzz.
+                  </span>
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-baseline gap-2 flex-wrap">
+                    <span
+                      className="text-base font-semibold"
+                      style={{ color: chakra.color }}
+                    >
+                      {chakra.name}
+                    </span>
+                    <span className="text-sm font-mono text-white/62">
+                      {chakra.mantra}
+                    </span>
+                    <span className="text-xs text-white/42 uppercase tracking-wider">
+                      {chakra.element}
+                    </span>
+                    <span className="text-xs text-white/42 tabular-nums ml-auto">
+                      {displayHz} Hz
+                    </span>
+                  </div>
+                  {style === "full" ? (
+                    <p className="text-sm text-white/58 leading-relaxed">
+                      {chakra.longDescription}
+                    </p>
+                  ) : chakra.interestingFact ? (
+                    <p className="text-sm text-white/58 leading-relaxed">
+                      {chakra.interestingFact}
+                    </p>
+                  ) : null}
+                </>
+              )}
             </div>
           </div>
         );

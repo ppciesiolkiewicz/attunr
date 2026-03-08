@@ -72,7 +72,9 @@ function StageCard({
   const isCurrent = stage.id === highestCompleted + 1;
   const isUnlocked = stage.id <= highestCompleted + 1;
 
-  const stageChakras = CHAKRAS.filter((c) => stage.chakraIds.includes(c.id));
+  const stageChakras = stage.chakraIds
+    .map((id) => CHAKRAS.find((c) => c.id === id))
+    .filter((c): c is Chakra => c != null);
   const primaryColor =
     stageChakras[0]?.color ?? (stage.type === "technique_intro" ? "#7c3aed" : "#7c3aed");
 
@@ -120,8 +122,8 @@ function StageCard({
           <span className="text-xs text-white/58 shrink-0">Exercise {stage.id}</span>
         </div>
 
-        {/* Part I: mantra + element + short description (single chakra) */}
-        {stageChakras.length === 1 && stage.type !== "technique_intro" && (
+        {/* Part I: mantra + element (single chakra) — skip for lip-roll warmups */}
+        {stageChakras.length === 1 && stage.type !== "technique_intro" && stage.technique !== "lip-rolls" && (
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span
               className="text-xs font-mono font-medium tracking-wider"
@@ -135,13 +137,17 @@ function StageCard({
             <span className="text-xs text-white/68">{stageChakras[0].description}</span>
           </div>
         )}
+        {/* Lip-roll individual: minimal cue */}
+        {stageChakras.length === 1 && stage.type !== "technique_intro" && stage.technique === "lip-rolls" && (
+          <p className="text-xs text-white/58">Hold the buzz 5 seconds</p>
+        )}
 
         {/* Technique intro: show technique name */}
         {stage.type === "technique_intro" && (
           <p className="text-xs text-white/58">{stage.technique?.replace(/-/g, " ") ?? "Learn"}</p>
         )}
-        {/* Part II: chakra sequence */}
-        {stageChakras.length > 1 && (
+        {/* Part II: chakra sequence — skip for lip-roll (use title instead) */}
+        {stageChakras.length > 1 && stage.technique !== "lip-rolls" && (
           <div className="flex flex-wrap items-center gap-1">
             {stageChakras.map((c, i) => (
               <span key={c.id} className="flex items-center gap-1">
@@ -162,6 +168,10 @@ function StageCard({
             ))}
           </div>
         )}
+        {/* Lip-roll sequence: minimal cue */}
+        {stageChakras.length > 1 && stage.technique === "lip-rolls" && (
+          <p className="text-xs text-white/58">Full range · 2 s per tone</p>
+        )}
       </div>
 
       {/* Status */}
@@ -181,14 +191,14 @@ function StageCard({
 // ── Journey List ──────────────────────────────────────────────────────────────
 
 const PART_NAMES: Record<number, string> = {
-  1: "Sustain",
-  2: "Sequences",
-  3: "Vowel U",
-  4: "Mantra",
-  5: "Vowel EE",
-  6: "Vowel flow",
-  7: "Puffy cheeks",
-  8: "Lip rolls",
+  1: "Vocal warmups",
+  2: "Sustain",
+  3: "Sequences",
+  4: "Vowel U",
+  5: "Mantra",
+  6: "Vowel EE",
+  7: "Vowel flow",
+  8: "Puffy cheeks",
 };
 
 function JourneyList({
@@ -207,7 +217,7 @@ function JourneyList({
 
         <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
           <p>
-            Sing each chakra&apos;s tone and hold it in tune. You start with foundations (one chakra), then sequences, then vocal techniques like mantras and vowels.
+            Start with vocal warmups (lip rolls), then foundations (one chakra), sequences, and vocal techniques like mantras and vowels.
           </p>
           <p>
             When you&apos;ve built confidence, switch to Explore for freeform practice — any tone, any order.
@@ -266,7 +276,9 @@ function ExerciseInfoModal({
     () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
     [settings.voiceType, settings.tuning]
   );
-  const stageChakras = allChakras.filter((c) => stage.chakraIds.includes(c.id));
+  const stageChakras = stage.chakraIds
+    .map((id) => allChakras.find((c) => c.id === id))
+    .filter((c): c is Chakra => c != null);
   const freqOverrides = Object.fromEntries(stageChakras.map((c) => [c.id, c.frequencyHz]));
   const primaryColor = stageChakras[0]?.color ?? "#7c3aed";
 
@@ -324,8 +336,8 @@ function ExerciseInfoModal({
         {/* Scrollable content */}
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1">
 
-          {/* Chakra detail — only for non–technique-intro */}
-          {!isTechniqueIntro && stage.chakraIds.length > 0 && (
+          {/* Chakra detail — skip for lip-roll sequences (warmup focus), else show card */}
+          {!isTechniqueIntro && stage.chakraIds.length > 0 && !(stage.technique === "lip-rolls" && stage.type === "sequence") && (
             <ChakraDetailCard
               chakraIds={stage.chakraIds}
               frequencyOverrides={freqOverrides}
@@ -420,7 +432,9 @@ function JourneyExercise({
     () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
     [settings.voiceType, settings.tuning]
   );
-  const stageChakras = allChakras.filter((c) => stage.chakraIds.includes(c.id));
+  const stageChakras = stage.chakraIds
+    .map((id) => allChakras.find((c) => c.id === id))
+    .filter((c): c is Chakra => c != null);
 
   // ── Success tracking ──────────────────────────────────────────────────────
   const holdRef = useRef(0);
