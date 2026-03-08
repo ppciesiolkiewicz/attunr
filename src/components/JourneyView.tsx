@@ -50,7 +50,7 @@ function ProgressArc({ progress }: { progress: number }) {
         transform="rotate(-90 25 25)"
         style={{ transition: "stroke-dasharray 0.3s" }}
       />
-      <text x={25} y={29} textAnchor="middle" fontSize={11} fill="rgba(255,255,255,0.6)" fontFamily="system-ui">
+      <text x={25} y={29} textAnchor="middle" fontSize={13} fill="rgba(255,255,255,0.75)" fontFamily="system-ui">
         {Math.round(progress * 100)}%
       </text>
     </svg>
@@ -82,14 +82,14 @@ function StageCard({
       className="w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
       style={{
         borderColor: !isUnlocked
-          ? "rgba(255,255,255,0.04)"
+          ? "rgba(255,255,255,0.12)"
           : isCurrent
           ? `${primaryColor}50`
           : "rgba(255,255,255,0.08)",
         backgroundColor: isCurrent
-          ? `${primaryColor}09`
-          : "rgba(255,255,255,0.02)",
-        opacity: !isUnlocked ? 0.32 : 1,
+          ? `${primaryColor}12`
+          : "rgba(255,255,255,0.05)",
+        opacity: !isUnlocked ? 0.58 : 1,
         cursor: !isUnlocked ? "not-allowed" : "pointer",
       }}
     >
@@ -101,7 +101,7 @@ function StageCard({
             stageChakras.length === 1
               ? primaryColor
               : `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`,
-          opacity: !isUnlocked ? 0.4 : 1,
+          opacity: !isUnlocked ? 0.65 : 1,
         }}
       />
 
@@ -109,27 +109,27 @@ function StageCard({
       <div className="flex-1 px-3.5 py-3 min-w-0">
         <div className="flex items-baseline justify-between gap-2 mb-1.5">
           <span
-            className="text-sm font-semibold"
-            style={{ color: !isUnlocked ? "rgba(255,255,255,0.25)" : "rgba(255,255,255,0.85)" }}
+            className="text-base font-semibold"
+            style={{ color: !isUnlocked ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.95)" }}
           >
             {stage.title}
           </span>
-          <span className="text-[10px] text-white/20 shrink-0">Stage {stage.id}</span>
+          <span className="text-xs text-white/58 shrink-0">Stage {stage.id}</span>
         </div>
 
         {/* Part I: mantra + element + short description */}
         {stageChakras.length === 1 && (
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <span
-              className="text-[11px] font-mono font-medium tracking-wider"
-              style={{ color: isUnlocked ? `${primaryColor}cc` : "rgba(255,255,255,0.2)" }}
+              className="text-xs font-mono font-medium tracking-wider"
+              style={{ color: isUnlocked ? `${primaryColor}` : "rgba(255,255,255,0.55)" }}
             >
               {stageChakras[0].mantra}
             </span>
-            <span className="text-[10px] text-white/20">·</span>
-            <span className="text-[10px] text-white/30">{stageChakras[0].element}</span>
-            <span className="text-[10px] text-white/20">·</span>
-            <span className="text-[10px] text-white/35">{stageChakras[0].description}</span>
+            <span className="text-xs text-white/48">·</span>
+            <span className="text-xs text-white/62">{stageChakras[0].element}</span>
+            <span className="text-xs text-white/48">·</span>
+            <span className="text-xs text-white/68">{stageChakras[0].description}</span>
           </div>
         )}
 
@@ -140,16 +140,16 @@ function StageCard({
               <span key={c.id} className="flex items-center gap-1">
                 <span
                   className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-                  style={{ backgroundColor: isUnlocked ? c.color : "rgba(255,255,255,0.15)" }}
+                  style={{ backgroundColor: isUnlocked ? c.color : "rgba(255,255,255,0.4)" }}
                 />
                 <span
-                  className="text-[10px]"
-                  style={{ color: isUnlocked ? `${c.color}99` : "rgba(255,255,255,0.2)" }}
+                  className="text-xs"
+                  style={{ color: isUnlocked ? `${c.color}` : "rgba(255,255,255,0.55)" }}
                 >
                   {c.name}
                 </span>
                 {i < stageChakras.length - 1 && (
-                  <span className="text-[9px] text-white/15 mx-0.5">›</span>
+                  <span className="text-xs text-white/55 mx-0.5">›</span>
                 )}
               </span>
             ))}
@@ -160,11 +160,11 @@ function StageCard({
       {/* Status */}
       <div className="flex items-center px-3.5">
         {isComplete ? (
-          <span className="text-sm" style={{ color: `${primaryColor}cc` }}>✓</span>
+          <span className="text-sm" style={{ color: primaryColor }}>✓</span>
         ) : !isUnlocked ? (
-          <span className="text-xs text-white/15">⋯</span>
+          <span className="text-sm text-white/55">⋯</span>
         ) : (
-          <span className="text-sm text-white/20 group-hover:text-white/50 transition-colors">›</span>
+          <span className="text-base text-white/42 group-hover:text-white/72 transition-colors">›</span>
         )}
       </div>
     </button>
@@ -188,13 +188,13 @@ function JourneyList({
     <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
 
-        <p className="text-xs text-white/30 leading-relaxed">
-          Follow the path. Start easy, grow step by step.
+        <p className="text-sm text-white/65 leading-relaxed">
+          Each stage asks you to sing a chakra's tone for a few seconds. Start with one chakra, then progress to sequences.
         </p>
 
         <section className="flex flex-col gap-2">
           <header className="flex items-center gap-3 mb-0.5">
-            <span className="text-[10px] uppercase tracking-widest text-white/20 shrink-0">
+            <span className="text-xs uppercase tracking-widest text-white/58 shrink-0">
               Part I — Individual chakras
             </span>
             <div className="flex-1 h-px bg-white/[0.05]" />
@@ -211,7 +211,7 @@ function JourneyList({
 
         <section className="flex flex-col gap-2">
           <header className="flex items-center gap-3 mb-0.5">
-            <span className="text-[10px] uppercase tracking-widest text-white/20 shrink-0">
+            <span className="text-xs uppercase tracking-widest text-white/58 shrink-0">
               Part II — Sequences
             </span>
             <div className="flex-1 h-px bg-white/[0.05]" />
@@ -278,17 +278,17 @@ function ExerciseInfoModal({
         {/* Header */}
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
-            <p className="text-[10px] uppercase tracking-widest text-white/25 mb-1">
+            <p className="text-xs uppercase tracking-widest text-white/45 mb-1">
               Stage {stageId} / 13 — {stage.part === 2 ? "Sequence" : "Individual"}
             </p>
-            <h2 className="text-lg font-semibold text-white">{stage.title}</h2>
-            <p className="text-xs mt-1" style={{ color: `${primaryColor}99` }}>
+            <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
+            <p className="text-sm mt-1" style={{ color: primaryColor }}>
               {objective}
             </p>
           </div>
           <button
             onClick={onDismiss}
-            className="text-white/25 hover:text-white/60 transition-colors text-lg leading-none ml-4 mt-0.5 shrink-0"
+            className="text-white/45 hover:text-white/75 transition-colors text-xl leading-none ml-4 mt-0.5 shrink-0"
           >
             ✕
           </button>
@@ -308,8 +308,8 @@ function ExerciseInfoModal({
             {stage.instruction.split("\n").map((line, i) => (
               <p
                 key={i}
-                className="text-sm leading-relaxed"
-                style={{ color: i === 0 ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.38)" }}
+                className="text-base leading-relaxed"
+                style={{ color: i === 0 ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.55)" }}
               >
                 {line}
               </p>
@@ -320,7 +320,7 @@ function ExerciseInfoModal({
           <HeadphonesNotice />
 
           {/* Voice / tuning context */}
-          <p className="text-[10px] text-white/20 text-center">
+          <p className="text-xs text-white/45 text-center">
             Practising as {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
           </p>
 
@@ -330,7 +330,7 @@ function ExerciseInfoModal({
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
           <button
             onClick={onStart}
-            className="w-full py-3.5 rounded-xl text-sm font-semibold text-white transition-all"
+            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all"
             style={{
               background: `linear-gradient(135deg, #7c3aed, #6d28d9)`,
               boxShadow: "0 0 28px rgba(124,58,237,0.35)",
@@ -477,18 +477,18 @@ function JourneyExercise({
       <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] shrink-0">
         <button
           onClick={onBack}
-          className="flex items-center gap-1.5 text-xs text-white/40 hover:text-white/70 transition-colors"
+          className="flex items-center gap-2 text-sm text-white/58 hover:text-white/85 transition-colors"
         >
           ← Journey
         </button>
-        <span className="text-white/10">|</span>
-        <span className="text-xs text-white/30">Stage {stageId} / 13</span>
-        <span className="text-white/10">—</span>
-        <span className="text-xs text-white/50 font-medium">{stage.title}</span>
-        {stage.part === 2 && <span className="text-[10px] text-white/20">♪</span>}
+        <span className="text-white/25">|</span>
+        <span className="text-sm text-white/52">Stage {stageId} / 13</span>
+        <span className="text-white/25">—</span>
+        <span className="text-sm text-white/72 font-medium">{stage.title}</span>
+        {stage.part === 2 && <span className="text-xs text-white/45">♪</span>}
         <button
           onClick={onOpenSettings}
-          className="ml-auto text-[10px] text-white/20 hover:text-white/45 transition-colors"
+          className="ml-auto text-xs text-white/45 hover:text-white/72 transition-colors"
         >
           {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
         </button>
@@ -506,13 +506,13 @@ function JourneyExercise({
         {pitchHz !== null && (
           <div className="pointer-events-none absolute top-3 left-4 fade-in">
             <div
-              className="text-2xl font-light tabular-nums"
+              className="text-3xl font-light tabular-nums"
               style={{ color: closestChakra?.color ?? "#fff" }}
             >
               {Math.round(pitchHz)} Hz
             </div>
             {closestChakra && (
-              <div className="text-xs mt-0.5" style={{ color: `${closestChakra.color}aa` }}>
+              <div className="text-sm mt-0.5" style={{ color: `${closestChakra.color}cc` }}>
                 {locked ? "✓ " : "→ "}{closestChakra.name}
               </div>
             )}
@@ -547,13 +547,13 @@ function JourneyExercise({
         {isCurrentStage && !stageComplete && <ProgressArc progress={progress} />}
         {stageComplete && <span className="text-2xl">✓</span>}
         {isCompleted && !isCurrentStage && (
-          <span className="text-sm text-white/25">Completed</span>
+          <span className="text-base text-white/48">Completed</span>
         )}
 
         <div className="flex gap-2 ml-auto">
           <button
             onClick={handleHearTone}
-            className="px-4 py-2 rounded-xl text-xs font-medium border border-white/10 text-white/50 hover:text-white/80 hover:border-white/20 transition-all"
+            className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
           >
             ▶ Hear {stageChakras.length > 1 ? "tones" : "tone"}
           </button>
@@ -561,7 +561,7 @@ function JourneyExercise({
           {(stageComplete || (isCompleted && !isCurrentStage)) && (
             <button
               onClick={handleComplete}
-              className="px-4 py-2 rounded-xl text-xs font-medium text-white transition-all"
+              className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all"
               style={{
                 background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
                 boxShadow: "0 0 16px rgba(124,58,237,0.4)",

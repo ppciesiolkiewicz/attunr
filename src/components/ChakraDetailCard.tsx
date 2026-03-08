@@ -30,8 +30,8 @@ export default function ChakraDetailCard({
             <div
               className="mt-1 shrink-0 rounded-full"
               style={{
-                width: 10,
-                height: 10,
+                width: 12,
+                height: 12,
                 backgroundColor: chakra.color,
                 boxShadow: `0 0 8px ${chakra.color}88`,
               }}
@@ -41,24 +41,24 @@ export default function ChakraDetailCard({
               {/* Name + mantra + element */}
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span
-                  className="text-sm font-semibold"
+                  className="text-base font-semibold"
                   style={{ color: chakra.color }}
                 >
                   {chakra.name}
                 </span>
-                <span className="text-xs font-mono text-white/50">
+                <span className="text-sm font-mono text-white/62">
                   {chakra.mantra}
                 </span>
-                <span className="text-[10px] text-white/25 uppercase tracking-wider">
+                <span className="text-xs text-white/42 uppercase tracking-wider">
                   {chakra.element}
                 </span>
-                <span className="text-[10px] text-white/25 tabular-nums ml-auto">
+                <span className="text-xs text-white/42 tabular-nums ml-auto">
                   {displayHz} Hz
                 </span>
               </div>
 
               {/* Long description */}
-              <p className="text-xs text-white/45 leading-relaxed">
+              <p className="text-sm text-white/58 leading-relaxed">
                 {chakra.longDescription}
               </p>
             </div>

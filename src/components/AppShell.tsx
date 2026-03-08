@@ -90,15 +90,15 @@ export default function AppShell() {
 
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] shrink-0">
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold tracking-tight text-white">attunr</h1>
-          <div className="flex items-center gap-1.5">
+        <h1 className="flex items-center gap-4 text-2xl font-semibold tracking-tight text-white leading-none">
+          <span>attunr</span>
+          <span className="inline-flex items-center gap-2 shrink-0">
             {chakraSpectrum.map((color, i) => (
-              <div key={i} className="w-1.5 h-1.5 rounded-full opacity-60"
+              <span key={i} className="block w-3 h-3 rounded-full opacity-80"
                 style={{ backgroundColor: color }} />
             ))}
-          </div>
-        </div>
+          </span>
+        </h1>
 
         <div className="flex items-center gap-1">
           <div className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-2">
@@ -106,8 +106,8 @@ export default function AppShell() {
               <button
                 key={t}
                 onClick={() => setTab(t)}
-                className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-all ${
-                  tab === t ? "bg-violet-600 text-white" : "text-white/40 hover:text-white/70"
+                className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
+                  tab === t ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
                 }`}
               >
                 {t === "journey" ? "Journey" : "Explore"}
@@ -117,7 +117,7 @@ export default function AppShell() {
 
           <button
             onClick={() => setSettingsOpen(true)}
-            className="p-2 rounded-lg text-white/40 hover:text-white/80 hover:bg-white/[0.05] transition-all"
+            className="p-2.5 rounded-lg text-white/55 hover:text-white/90 hover:bg-white/[0.08] transition-all"
           >
             <SettingsIcon />
           </button>

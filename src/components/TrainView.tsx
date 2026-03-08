@@ -80,10 +80,10 @@ export default function TrainView({
             <button
               key={b}
               onClick={() => setFreqBase(b)}
-              className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
                 freqBase === b
                   ? "bg-violet-600 text-white"
-                  : "text-white/50 hover:text-white/80"
+                  : "text-white/62 hover:text-white/88"
               }`}
             >
               {b === "absolute" ? "Absolute" : "By voice"}
@@ -97,10 +97,10 @@ export default function TrainView({
               <button
                 key={v.id}
                 onClick={() => onSettingsUpdate("voiceType", v.id as VoiceTypeId)}
-                className={`px-3 py-1 rounded-md text-xs font-medium transition-all ${
+                className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
                   settings.voiceType === v.id
                     ? "bg-violet-600 text-white"
-                    : "text-white/50 hover:text-white/80"
+                    : "text-white/62 hover:text-white/88"
                 }`}
               >
                 {v.label}
@@ -117,7 +117,7 @@ export default function TrainView({
       {/* Voice disclaimer */}
       {freqBase === "voice" && (
         <div className="px-5 py-1.5 border-b border-white/[0.04]">
-          <p className="text-[10px] text-white/25">
+          <p className="text-xs text-white/45">
             Frequencies adjusted for{" "}
             {VOICE_TYPES.find((v) => v.id === settings.voiceType)?.label}.{" "}
             Change voice type in Settings.
@@ -144,7 +144,7 @@ export default function TrainView({
             </div>
             {closestChakra && (
               <div
-                className="text-xs font-medium mt-0.5"
+                className="text-sm font-medium mt-0.5"
                 style={{ color: closestChakra.color + "aa" }}
               >
                 {locked ? "✓ " : "→ "}
@@ -167,7 +167,7 @@ export default function TrainView({
                 key={chakra.id}
                 onClick={() => handlePlay(chakra)}
                 title={`${chakra.name} — ${chakra.frequencyHz} Hz\n${chakra.description}`}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-xs font-medium transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all"
                 style={{
                   borderColor: isActive || isPlaying ? chakra.color : `${chakra.color}40`,
                   color: isActive || isPlaying ? chakra.color : `${chakra.color}99`,
@@ -177,7 +177,7 @@ export default function TrainView({
               >
                 <PlayIcon />
                 {chakra.name}
-                <span className="opacity-50">{chakra.frequencyHz}</span>
+                <span className="opacity-65">{chakra.frequencyHz}</span>
               </button>
             );
           })}
@@ -187,7 +187,7 @@ export default function TrainView({
       {/* ── Explore info modal ────────────────────────────────────────────── */}
       {showInfo && (
         <TabInfoModal title="Explore" onClose={handleCloseInfo}>
-          <p className="text-sm text-white/55 leading-relaxed">
+          <p className="text-base text-white/65 leading-relaxed">
             Free-form chakra tone practice. No goals, no instructions — just sing and
             explore your voice against the canvas.
           </p>
@@ -208,7 +208,7 @@ export default function TrainView({
               },
               {
                 icon: "↕",
-                text: "Click anywhere on the canvas to play the tone at that frequency band",
+                text: "Click on a chakra band to play its tone",
               },
               {
                 icon: "⚙",
@@ -216,8 +216,8 @@ export default function TrainView({
               },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <span className="text-base shrink-0 w-5 text-center opacity-60 mt-0.5">{item.icon}</span>
-                <p className="text-xs text-white/40 leading-relaxed">{item.text}</p>
+                <span className="text-lg shrink-0 w-6 text-center opacity-75 mt-0.5">{item.icon}</span>
+                <p className="text-sm text-white/58 leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>

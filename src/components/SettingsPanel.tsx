@@ -16,7 +16,7 @@ interface SettingsPanelProps {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-[11px] uppercase tracking-widest text-white/25 font-medium">{title}</p>
+      <p className="text-xs uppercase tracking-widest text-white/42 font-medium">{title}</p>
       {children}
     </div>
   );
@@ -54,10 +54,10 @@ export default function SettingsPanel({
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">
-          <span className="text-sm font-semibold text-white">Settings</span>
+          <span className="text-base font-semibold text-white">Settings</span>
           <button
             onClick={onClose}
-            className="text-white/40 hover:text-white transition-colors text-lg leading-none"
+            className="text-white/58 hover:text-white transition-colors text-xl leading-none"
           >
             ✕
           </button>
@@ -72,7 +72,7 @@ export default function SettingsPanel({
                 <button
                   key={v.id}
                   onClick={() => onUpdate("voiceType", v.id as VoiceTypeId)}
-                  className="px-3.5 py-1.5 rounded-full text-xs font-medium border transition-all"
+                  className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
                   style={{
                     backgroundColor: settings.voiceType === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
                     borderColor: settings.voiceType === v.id ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.1)",
@@ -85,7 +85,7 @@ export default function SettingsPanel({
             </div>
             <button
               onClick={onRedetect}
-              className="text-xs text-violet-400/60 hover:text-violet-400 transition-colors text-left"
+              className="text-sm text-violet-400/75 hover:text-violet-400 transition-colors text-left"
             >
               Re-detect my voice type →
             </button>
@@ -107,16 +107,16 @@ export default function SettingsPanel({
                   }}
                 >
                   <div>
-                    <p className="text-xs font-medium text-white/80">{t.label}</p>
-                    <p className="text-[10px] text-white/35 mt-0.5">{t.description}</p>
+                    <p className="text-sm font-medium text-white/85">{t.label}</p>
+                    <p className="text-xs text-white/52 mt-0.5">{t.description}</p>
                   </div>
                   {settings.tuning === t.id && (
-                    <span className="text-white/50 text-xs ml-2">✓</span>
+                    <span className="text-white/65 text-sm ml-2">✓</span>
                   )}
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-white/25 leading-relaxed">
+            <p className="text-xs text-white/42 leading-relaxed">
               Try each and keep the one that feels right for your practice.
               Tuning applies in voice-based mode.
             </p>
@@ -126,7 +126,7 @@ export default function SettingsPanel({
 
           {/* ── About ──────────────────────────────────────────────────────── */}
           <Section title="About">
-            <p className="text-[10px] text-white/25 leading-relaxed">
+            <p className="text-xs text-white/42 leading-relaxed">
               Your microphone is used only for real-time pitch detection.
               Nothing is ever recorded or stored outside your device.
             </p>
@@ -134,7 +134,7 @@ export default function SettingsPanel({
               href="https://en.wikipedia.org/wiki/Solfeggio_frequencies"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-violet-400/50 hover:text-violet-400 transition-colors"
+              className="text-sm text-violet-400/65 hover:text-violet-400 transition-colors"
             >
               What are Solfeggio frequencies? →
             </a>

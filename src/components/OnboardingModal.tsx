@@ -159,7 +159,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
         {/* Wordmark */}
         <div>
           <h1 className="text-[2.1rem] font-semibold tracking-tight text-white leading-none">attunr</h1>
-          <p className="mt-1.5 text-[11px] text-white/30 tracking-widest uppercase">chakra frequency trainer</p>
+          <p className="mt-1.5 text-xs text-white/52 tracking-widest uppercase">chakra frequency trainer</p>
         </div>
 
         <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
@@ -168,8 +168,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
         {phase === "select" && (
           <div className="flex flex-col items-center gap-4 w-full">
             <div>
-              <p className="text-sm font-medium text-white/80">What&apos;s your voice type?</p>
-              <p className="text-xs text-white/35 mt-1">Choose one, or let us detect it for you.</p>
+              <p className="text-base font-medium text-white/88">What&apos;s your voice type?</p>
+              <p className="text-sm text-white/55 mt-1">Choose one, or let us detect it for you.</p>
             </div>
 
             {/* Voice type pills — 3 + 2 layout */}
@@ -178,7 +178,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
                 <div key={ri} className="flex justify-center gap-1.5">
                   {row.map((v) => (
                     <button key={v.id} onClick={() => setSelectedVoiceId(v.id)}
-                      className="px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border"
+                      className="px-4 py-2 rounded-full text-sm font-medium transition-all border"
                       style={{
                         backgroundColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
                         borderColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.1)",
@@ -195,14 +195,14 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
             {/* Detect button */}
             <div className="flex items-center gap-3 w-full">
               <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
-              <span className="text-[11px] text-white/25">or</span>
+              <span className="text-xs text-white/42">or</span>
               <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
             </div>
 
             <button
               onClick={startDetection}
               disabled={!isListening}
-              className="w-full py-2.5 rounded-xl text-sm font-medium border transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              className="w-full py-3 rounded-xl text-base font-medium border transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               style={{
                 borderColor: "rgba(124,58,237,0.45)",
                 color: "#a78bfa",
@@ -227,8 +227,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
         {phase === "detecting" && (
           <div className="flex flex-col items-center gap-4 w-full">
             <div>
-              <p className="text-sm font-medium text-white/80">Sing comfortably for a few seconds…</p>
-              <p className="text-xs text-white/35 mt-1">Any note that feels easy and natural.</p>
+              <p className="text-base font-medium text-white/88">Sing comfortably for a few seconds…</p>
+              <p className="text-sm text-white/55 mt-1">Any note that feels easy and natural.</p>
             </div>
 
             {/* Progress dots */}
@@ -250,19 +250,19 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
                 style={{ color: pitchHz !== null ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.1)" }}>
                 {currentNote ?? "—"}
               </span>
-              <span className="text-xs tabular-nums"
+              <span className="text-sm tabular-nums"
                 style={{ color: pitchHz !== null ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.1)" }}>
                 {pitchHz !== null ? `${Math.round(pitchHz)} Hz` : "— Hz"}
               </span>
               {liveVoiceType && (
-                <span className="text-[11px] text-violet-400/70 mt-1 fade-in">
+                <span className="text-sm text-violet-400/82 mt-1 fade-in">
                   → {liveVoiceType}
                 </span>
               )}
             </div>
 
             <button onClick={cancelDetection}
-              className="text-xs text-white/25 hover:text-white/50 transition-colors">
+              className="text-sm text-white/45 hover:text-white/72 transition-colors">
               Cancel
             </button>
           </div>
@@ -272,8 +272,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
         {phase === "detected" && (
           <div className="flex flex-col items-center gap-4 w-full">
             <div>
-              <p className="text-sm font-medium text-white/80">Sounds like you&apos;re a…</p>
-              <p className="text-xs text-white/35 mt-1">You can change this any time.</p>
+              <p className="text-base font-medium text-white/88">Sounds like you&apos;re a…</p>
+              <p className="text-sm text-white/55 mt-1">You can change this any time.</p>
             </div>
 
             {/* Detected result */}
@@ -303,7 +303,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
                       {row.map((v) => (
                         <button key={v.id}
                           onClick={() => { setSelectedVoiceId(v.id); setDetectedVoiceId(v.id); }}
-                          className="px-3 py-1 rounded-full text-[11px] font-medium border transition-all"
+                          className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
                           style={{
                             borderColor: "rgba(255,255,255,0.1)",
                             color: "rgba(255,255,255,0.35)",
@@ -327,7 +327,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
           <button
             onClick={() => onBegin(phase === "detected" ? (detectedVoiceId ?? selectedVoiceId) : selectedVoiceId)}
             disabled={isLoading || phase === "detecting"}
-            className="w-full py-3.5 rounded-xl font-medium text-sm text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-wait"
+            className="w-full py-4 rounded-xl font-medium text-base text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-wait"
             style={{
               background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
               boxShadow: (isLoading || phase === "detecting")
@@ -336,7 +336,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
             }}>
             Let&apos;s go →
           </button>
-          <p className="text-[10px] text-white/18 leading-relaxed px-2">
+          <p className="text-xs text-white/42 leading-relaxed px-2">
             Microphone used only for real-time pitch detection. Nothing is recorded.
           </p>
         </div>

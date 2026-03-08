@@ -25,19 +25,19 @@ export function InfoButton({ onClick }: { onClick: () => void }) {
     <button
       onClick={onClick}
       aria-label="Show info"
-      className="flex items-center justify-center w-7 h-7 rounded-full transition-all"
+      className="flex items-center justify-center w-8 h-8 rounded-full transition-all"
       style={{
         background: "rgba(255,255,255,0.06)",
         border: "1px solid rgba(255,255,255,0.1)",
-        color: "rgba(255,255,255,0.3)",
+        color: "rgba(255,255,255,0.5)",
       }}
       onMouseEnter={(e) => {
         (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.1)";
-        (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.6)";
+        (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.85)";
       }}
       onMouseLeave={(e) => {
         (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.06)";
-        (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.3)";
+        (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.5)";
       }}
     >
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -55,14 +55,14 @@ export function HeadphonesNotice() {
     <div
       className="flex items-start gap-3 rounded-xl px-4 py-3"
       style={{
-        background: "rgba(255,255,255,0.035)",
-        border: "1px solid rgba(255,255,255,0.07)",
+        background: "rgba(255,255,255,0.06)",
+        border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <span className="text-white/30 shrink-0 mt-0.5">
+      <span className="text-white/52 shrink-0 mt-0.5">
         <HeadphonesIcon />
       </span>
-      <p className="text-xs text-white/40 leading-relaxed">
+      <p className="text-sm text-white/58 leading-relaxed">
         For the best experience, use headphones — they keep the playback out of your
         mic so we can hear your voice clearly.
       </p>
@@ -91,10 +91,10 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
-          <h2 className="text-base font-semibold text-white">{title}</h2>
+          <h2 className="text-lg font-semibold text-white">{title}</h2>
           <button
             onClick={() => onClose(persist)}
-            className="text-white/25 hover:text-white/60 transition-colors text-lg leading-none"
+            className="text-white/42 hover:text-white/75 transition-colors text-xl leading-none"
           >
             ✕
           </button>
@@ -114,14 +114,14 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
               onChange={(e) => setPersist(e.target.checked)}
               className="w-3.5 h-3.5 accent-violet-500 cursor-pointer"
             />
-            <span className="text-[11px] text-white/30 group-hover:text-white/45 transition-colors select-none">
+            <span className="text-xs text-white/50 group-hover:text-white/65 transition-colors select-none">
               Don&apos;t show this again
             </span>
           </label>
 
           <button
             onClick={() => onClose(persist)}
-            className="px-5 py-2 rounded-xl text-xs font-semibold text-white shrink-0 transition-all"
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white shrink-0 transition-all"
             style={{
               background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
               boxShadow: "0 0 16px rgba(124,58,237,0.3)",

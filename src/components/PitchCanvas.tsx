@@ -40,6 +40,8 @@ const PAD_BOTTOM_MIN = 50;
  * screens so the bands stay tightly grouped rather than filling all space.
  */
 const MAX_SLOT_H = 68;
+/** Left padding before dashed band line — keeps line clear of note/name/Hz labels */
+const LINE_START_X = 118;
 
 /**
  * Compute the Y positions of the Root (bottom) and Crown (top) bands given
@@ -199,24 +201,24 @@ export default function PitchCanvas({
       const highlighted =
         !highlightIdsRef.current ||
         highlightIdsRef.current.includes(chakra.id);
-      const dim = highlighted ? 1 : 0.2;
+      const dim = highlighted ? 1 : 0.4;
 
       // Band fill — feathered gradient centred on cy
       const grad = ctx.createLinearGradient(0, cy - bh, 0, cy + bh);
-      const bandAlpha = (active ? 0.22 : 0.13) * dim;
+      const bandAlpha = (active ? 0.28 : 0.18) * dim;
       grad.addColorStop(0, `rgba(${chakra.rgb}, 0)`);
       grad.addColorStop(0.5, `rgba(${chakra.rgb}, ${bandAlpha})`);
       grad.addColorStop(1, `rgba(${chakra.rgb}, 0)`);
       ctx.fillStyle = grad;
       ctx.fillRect(0, cy - bh, W, bh * 2);
 
-      // Dashed centre line (full width)
+      // Dashed centre line (starts after labels to avoid overlap)
       ctx.save();
       ctx.setLineDash([3, 7]);
-      ctx.strokeStyle = `rgba(${chakra.rgb}, ${(active ? 0.6 : 0.38) * dim})`;
+      ctx.strokeStyle = `rgba(${chakra.rgb}, ${(active ? 0.7 : 0.5) * dim})`;
       ctx.lineWidth = active ? 1.5 : 1;
       ctx.beginPath();
-      ctx.moveTo(0, cy);
+      ctx.moveTo(LINE_START_X, cy);
       ctx.lineTo(W, cy);
       ctx.stroke();
       ctx.restore();
@@ -225,18 +227,18 @@ export default function PitchCanvas({
       ctx.textAlign = "left";
 
       // Note letter — large, acts as a musical anchor
-      ctx.font = `700 17px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 1 : 0.82) * dim})`;
+      ctx.font = `700 19px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 1 : 0.88) * dim})`;
       ctx.fillText(chakra.note, 12, cy + 3);
 
       // Chakra name — medium, stacked to the right of the note
-      ctx.font = `600 13px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.9 : 0.7) * dim})`;
+      ctx.font = `600 14px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.95 : 0.8) * dim})`;
       ctx.fillText(chakra.name.toUpperCase(), 32, cy - 4);
 
       // Frequency — small and muted, below the name
-      ctx.font = `400 10px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.65 : 0.45) * dim})`;
+      ctx.font = `400 11px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${chakra.rgb}, ${(active ? 0.75 : 0.55) * dim})`;
       ctx.fillText(`${chakra.frequencyHz} Hz`, 32, cy + 9);
     }
 
