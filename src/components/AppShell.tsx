@@ -119,7 +119,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/"
               className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
-                pathname === "/" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
+                pathname === "/" || pathname.startsWith("/journey")
+                  ? "bg-violet-600 text-white"
+                  : "text-white/55 hover:text-white/85"
               }`}
             >
               Journey

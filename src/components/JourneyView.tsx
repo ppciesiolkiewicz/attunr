@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
 import { HeadphonesNotice } from "./TabInfoModal";
@@ -402,7 +403,7 @@ function ExerciseInfoModal({
 
 // ── Journey Exercise (simplified) ─────────────────────────────────────────────
 
-function JourneyExercise({
+export function JourneyExercise({
   stageId,
   settings,
   pitchHz,
@@ -644,26 +645,9 @@ export default function JourneyView({
   onSettingsUpdate,
   onOpenSettings,
 }: JourneyViewProps) {
+  const router = useRouter();
   /** Stage currently shown in the exercise info modal (null = no modal) */
   const [pendingStageId, setPendingStageId] = useState<number | null>(null);
-  /** Stage currently open in the exercise view (null = list) */
-  const [selectedStageId, setSelectedStageId] = useState<number | null>(null);
-
-  if (selectedStageId !== null) {
-    return (
-      <JourneyExercise
-        stageId={selectedStageId}
-        settings={settings}
-        pitchHz={pitchHz}
-        pitchHzRef={pitchHzRef}
-        onPlayTone={onPlayTone}
-        onSettingsUpdate={onSettingsUpdate}
-        onOpenSettings={onOpenSettings}
-        onBack={() => setSelectedStageId(null)}
-        onNext={setSelectedStageId}
-      />
-    );
-  }
 
   return (
     <div className="h-full">
@@ -678,7 +662,7 @@ export default function JourneyView({
           stageId={pendingStageId}
           settings={settings}
           onStart={() => {
-            setSelectedStageId(pendingStageId);
+            router.push(`/journey/${pendingStageId}`);
             setPendingStageId(null);
           }}
           onDismiss={() => setPendingStageId(null)}
