@@ -259,7 +259,7 @@ function JourneyList({
 
         <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
           <p>
-            This is where your journey begins. You&apos;ll be guided through learning and practice — from chakra tones and vocal warmups to sustaining each tone, building sequences, and exploring techniques like mantras and vowels.
+            This is where your journey begins. You&apos;ll be guided through learning and practice — from vocal warmups to sustaining each tone, building sequences, and exploring techniques like mantras and vowels.
           </p>
           <p>
             When you&apos;ve built confidence, switch to Explore for freeform practice — any tone, any order.
