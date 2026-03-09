@@ -32,6 +32,7 @@ export default function ExercisePage() {
       onOpenSettings={openSettings}
       onBack={() => router.push("/")}
       onNext={(nextId) => router.push(`/journey/${nextId}`)}
+      onPrev={(prevId) => router.push(`/journey/${prevId}`)}
     />
   );
 }

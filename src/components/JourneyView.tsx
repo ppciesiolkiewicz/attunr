@@ -39,6 +39,8 @@ interface JourneyViewProps {
 const LOW_RANGE_IDS = ["root", "sacral", "solar-plexus"] as const;
 const HIGH_RANGE_IDS = ["throat", "third-eye", "crown"] as const;
 
+const JOURNEY_EXERCISE_INFO_SKIP_KEY = "attunr.journeyExerciseInfoSkipped";
+
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
 function getStepInPart(stageId: number): {
@@ -441,6 +443,7 @@ function ExerciseInfoModal({
   onStart,
   onDismiss,
   onAdvanceWithoutExercise,
+  showDontShowAgain,
 }: {
   stageId: number;
   settings: Settings;
@@ -448,7 +451,10 @@ function ExerciseInfoModal({
   onDismiss: () => void;
   /** For technique_intro: mark complete and advance to next stage (no canvas) */
   onAdvanceWithoutExercise?: () => void;
+  /** Show checkbox to skip this screen when navigating between exercises */
+  showDontShowAgain?: boolean;
 }) {
+  const [dontShowAgain, setDontShowAgain] = useState(false);
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
   const isTechniqueIntro = stage.type === "technique_intro";
 
@@ -473,6 +479,13 @@ function ExerciseInfoModal({
         : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
 
   function handleBegin() {
+    if (showDontShowAgain && dontShowAgain) {
+      try {
+        localStorage.setItem(JOURNEY_EXERCISE_INFO_SKIP_KEY, "1");
+      } catch {
+        /* ignore */
+      }
+    }
     if (isTechniqueIntro && onAdvanceWithoutExercise) {
       onAdvanceWithoutExercise();
     } else {
@@ -528,9 +541,10 @@ function ExerciseInfoModal({
 
         {/* Scrollable content */}
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1">
-          {/* Chakra detail — skip for lip-roll sequences (warmup focus), else show card */}
+          {/* Chakra detail — skip for lip-roll sequences, voice warmups (Low U, Hoo hoo), else show card */}
           {!isTechniqueIntro &&
             stage.chakraIds.length > 0 &&
+            !stage.useRainbowLabel &&
             !(
               stage.technique === "lip-rolls" &&
               (stage.type === "sequence" || stage.type === "slide")
@@ -585,6 +599,26 @@ function ExerciseInfoModal({
             {settings.tuning}
           </p>
         </div>
+
+        {/* Don't show again checkbox — when navigating between exercises */}
+        {showDontShowAgain && (
+          <div className="px-5 py-2 flex flex-col gap-1">
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={dontShowAgain}
+                onChange={(e) => setDontShowAgain(e.target.checked)}
+                className="w-4 h-4 rounded border-white/30 bg-white/5 text-violet-500 focus:ring-violet-500/50"
+              />
+              <span className="text-sm text-white/58">
+                Don&apos;t show this information again
+              </span>
+            </label>
+            <p className="text-xs text-white/40 pl-6">
+              You can always bring it back by clicking the (i) icon on the screen
+            </p>
+          </div>
+        )}
 
         {/* Begin button */}
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
@@ -697,6 +731,7 @@ export function JourneyExercise({
   onOpenSettings,
   onBack,
   onNext,
+  onPrev,
 }: {
   stageId: number;
   settings: Settings;
@@ -710,6 +745,7 @@ export function JourneyExercise({
   onOpenSettings: () => void;
   onBack: () => void;
   onNext: (nextStageId: number) => void;
+  onPrev?: (prevStageId: number) => void;
 }) {
   const highestCompleted = settings.journeyStage;
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
@@ -752,7 +788,19 @@ export function JourneyExercise({
     tip: string;
   } | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [pendingNavigateStageId, setPendingNavigateStageId] = useState<
+    number | null
+  >(null);
   const rafRef = useRef<number | null>(null);
+
+  function shouldShowInfoBeforeNavigate(): boolean {
+    if (typeof window === "undefined") return true;
+    try {
+      return !localStorage.getItem(JOURNEY_EXERCISE_INFO_SKIP_KEY);
+    } catch {
+      return true;
+    }
+  }
 
   const resetProgress = useCallback(() => {
     holdRef.current = 0;
@@ -861,16 +909,20 @@ export function JourneyExercise({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCurrentStage, stageComplete, stageId]);
 
-  function doAdvance() {
-    if (stageId < TOTAL_JOURNEY_STAGES) {
-      onNext(stageId + 1);
-    } else {
-      onBack();
-    }
+  function navigateTo(targetId: number) {
+    if (targetId < 1) return;
+    onNext(targetId);
   }
 
-  function handleComplete() {
-    onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
+  function navigateToPrev(targetId: number) {
+    if (targetId < 1) return;
+    onPrev?.(targetId);
+  }
+
+  function goToNextStage(markComplete: boolean) {
+    if (markComplete) {
+      onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
+    }
     if (isLastStageOfPart(stageId)) {
       const content = PART_COMPLETE_CONTENT[stage.part];
       const partName = PART_NAMES[stage.part] ?? "";
@@ -881,13 +933,63 @@ export function JourneyExercise({
         tip: content.tip,
       });
     } else {
-      doAdvance();
+      const nextId = stageId + 1;
+      if (shouldShowInfoBeforeNavigate()) {
+        setPendingNavigateStageId(nextId);
+      } else {
+        navigateTo(nextId);
+      }
     }
+  }
+
+  function goToPrevStage() {
+    const prevId = stageId - 1;
+    if (prevId < 1) return;
+    if (onPrev && shouldShowInfoBeforeNavigate()) {
+      setPendingNavigateStageId(-prevId);
+    } else if (onPrev) {
+      navigateToPrev(prevId);
+    }
+  }
+
+  function doAdvance() {
+    if (stageId < TOTAL_JOURNEY_STAGES) {
+      const nextId = stageId + 1;
+      if (shouldShowInfoBeforeNavigate()) {
+        setPendingNavigateStageId(nextId);
+      } else {
+        navigateTo(nextId);
+      }
+    } else {
+      onBack();
+    }
+  }
+
+  /** Skip: advance without marking complete. Show info modal when navigating. */
+  function handleSkip() {
+    goToNextStage(false);
+  }
+
+  /** Complete: mark as done and advance. Show info modal when navigating. */
+  function handleComplete() {
+    goToNextStage(true);
   }
 
   function handlePartCompleteContinue() {
     setPartCompleteData(null);
     doAdvance();
+  }
+
+  function handlePendingModalStart() {
+    const id = pendingNavigateStageId;
+    setPendingNavigateStageId(null);
+    if (!id) return;
+    const targetId = id > 0 ? id : -id;
+    if (id > 0) {
+      navigateTo(targetId);
+    } else {
+      navigateToPrev(targetId);
+    }
   }
 
   function handleHearTone() {
@@ -941,13 +1043,24 @@ export function JourneyExercise({
         </button>
       </div>
 
-      {/* Info modal — re-open from exercise */}
-      {showInfoModal && (
+      {/* Info modal — re-open from exercise (i) button */}
+      {showInfoModal && !pendingNavigateStageId && (
         <ExerciseInfoModal
           stageId={stageId}
           settings={settings}
           onStart={() => setShowInfoModal(false)}
           onDismiss={() => setShowInfoModal(false)}
+        />
+      )}
+
+      {/* Info modal — before navigating next/prev */}
+      {pendingNavigateStageId !== null && (
+        <ExerciseInfoModal
+          stageId={Math.abs(pendingNavigateStageId)}
+          settings={settings}
+          onStart={handlePendingModalStart}
+          onDismiss={() => setPendingNavigateStageId(null)}
+          showDontShowAgain
         />
       )}
 
@@ -1057,35 +1170,48 @@ export function JourneyExercise({
           <span className="text-base text-white/48">Completed</span>
         )}
 
-        <div className="flex gap-2 ml-auto">
-          {isCurrentStage && !stageComplete && (
-            <button
-              onClick={handleComplete}
-              className="px-3 py-2 rounded-lg text-xs font-medium text-white/50 hover:text-violet-400 border border-white/15 hover:border-violet-500/40 transition-colors"
-              title="Skip this step"
-            >
-              Skip
-            </button>
-          )}
+        <div className="flex items-center gap-3 ml-auto">
           <button
             onClick={handleHearTone}
-            className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
+            className="px-6 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
           >
             ▶ Hear {stageChakras.length > 1 ? "tones" : "tone"}
           </button>
-
-          {(stageComplete || (isCompleted && !isCurrentStage)) && (
-            <button
-              onClick={handleComplete}
-              className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all"
-              style={{
-                background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
-                boxShadow: "0 0 16px rgba(124,58,237,0.4)",
-              }}
-            >
-              {stageId < TOTAL_JOURNEY_STAGES ? "Next →" : "Complete ✓"}
-            </button>
-          )}
+          <div className="flex gap-2">
+            {stageId > 1 && onPrev && (
+              <button
+                onClick={goToPrevStage}
+                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30 transition-all min-w-[6.5rem]"
+                title="Previous exercise"
+              >
+                ← Previous
+              </button>
+            )}
+            {(stageComplete || isCompleted) ? (
+              <button
+                onClick={handleComplete}
+                className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all min-w-[6.5rem]"
+                style={{
+                  background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+                  boxShadow: "0 0 16px rgba(124,58,237,0.4)",
+                }}
+              >
+                {stageId < TOTAL_JOURNEY_STAGES ? "Next →" : "Complete ✓"}
+              </button>
+            ) : (
+              <button
+                onClick={handleSkip}
+                className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all min-w-[6.5rem]"
+                style={{
+                  background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+                  boxShadow: "0 0 16px rgba(124,58,237,0.4)",
+                }}
+                title="Skip this step (won't mark as complete)"
+              >
+                Skip →
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
