@@ -6,8 +6,8 @@ import type { ChakraId } from "@/constants/chakras";
 interface ChakraDetailCardProps {
   chakraIds: ChakraId[];
   frequencyOverrides?: Partial<Record<ChakraId, number>>;
-  /** "full" = name, mantra, element, longDescription; "brief" = mantra + interestingFact; "minimal" = tone only (warmups) */
-  style?: "full" | "brief" | "minimal";
+  /** "full" = name, mantra, element, longDescription; "brief" = mantra + interestingFact; "minimal" = tone only (lip-rolls); "rainbow" = tone + rainbow bar, no mantra (warmups like Low U, Hoo hoo) */
+  style?: "full" | "brief" | "minimal" | "rainbow";
 }
 
 export default function ChakraDetailCard({
@@ -17,6 +17,8 @@ export default function ChakraDetailCard({
 }: ChakraDetailCardProps) {
   const items = chakraIds.map((id) => CHAKRAS.find((c) => c.id === id)!);
 
+  const isRainbow = style === "rainbow";
+
   return (
     <div
       className="rounded-xl px-5 py-4 flex flex-col gap-3"
@@ -25,7 +27,22 @@ export default function ChakraDetailCard({
         border: "1px solid rgba(255,255,255,0.07)",
       }}
     >
-      {items.map((chakra) => {
+      {isRainbow ? (
+        /* Voice focus: tone + chest/head cue, no chakra name/mantra */
+        <div className="flex flex-col gap-2">
+          <span className="text-base font-semibold tabular-nums text-white/85">
+            {items
+              .map((c) => (frequencyOverrides[c.id] ?? c.frequencyHz) + " Hz")
+              .join(" · ")}
+          </span>
+          <p className="text-sm text-white/58">
+            {chakraIds[0] === "root"
+              ? "Find your chest voice"
+              : "Find your head voice"}
+          </p>
+        </div>
+      ) : (
+      items.map((chakra) => {
         const displayHz = frequencyOverrides[chakra.id] ?? chakra.frequencyHz;
         const isMinimal = style === "minimal";
         return (
@@ -85,7 +102,7 @@ export default function ChakraDetailCard({
             </div>
           </div>
         );
-      })}
+      })) }
     </div>
   );
 }

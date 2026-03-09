@@ -199,11 +199,13 @@ function StageCard({
         className="w-[3px] shrink-0"
         style={{
           background:
-            stageChakras.length === 1
-              ? primaryColor
-              : stageChakras.length > 1
-                ? `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`
-                : "linear-gradient(to bottom, #7c3aed, #6d28d9)",
+            stage.useRainbowLabel
+              ? `linear-gradient(to bottom, ${CHAKRAS.map((c) => c.color).join(", ")})`
+              : stageChakras.length === 1
+                ? primaryColor
+                : stageChakras.length > 1
+                  ? `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`
+                  : "linear-gradient(to bottom, #7c3aed, #6d28d9)",
           opacity: !isUnlocked ? 0.65 : 1,
         }}
       />
@@ -233,10 +235,11 @@ function StageCard({
           </span>
         </div>
 
-        {/* Part I: mantra + element (single chakra) — skip for lip-roll warmups */}
+        {/* Part I: mantra + element (single chakra) — skip for lip-roll warmups and rainbow-label warmups */}
         {stageChakras.length === 1 &&
           stage.type !== "technique_intro" &&
-          stage.technique !== "lip-rolls" && (
+          stage.technique !== "lip-rolls" &&
+          !stage.useRainbowLabel && (
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <span
                 className="text-xs font-mono font-medium tracking-wider"
@@ -258,6 +261,14 @@ function StageCard({
               </span>
             </div>
           )}
+        {/* Voice focus label: chest or head (no chakra-specific mantra) */}
+        {stage.useRainbowLabel && (
+          <p className="text-xs text-white/58 mt-0.5">
+            {stage.chakraIds[0] === "root"
+              ? "Find your chest voice"
+              : "Find your head voice"}
+          </p>
+        )}
         {/* Lip-roll individual: minimal cue */}
         {stageChakras.length === 1 &&
           stage.type !== "technique_intro" &&
@@ -482,21 +493,19 @@ function ExerciseInfoModal({
         {/* Header */}
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
-            <p className="text-xs uppercase tracking-widest text-white/45 mb-1 flex items-center gap-1.5">
+            <p className="text-xs text-white/45 mb-1 flex items-center gap-1.5">
               {isTechniqueIntro && <BookIcon className="opacity-70" />}
-              Step {getStepInPart(stageId).stepIndex} of{" "}
-              {getStepInPart(stageId).stepsInPart} —{" "}
-              {isTechniqueIntro
-                ? "Learn"
-                : stage.part === 2
-                  ? "Warmup"
-                  : stage.type === "slide"
-                    ? "Slide"
-                    : stage.type === "sequence"
-                      ? "Sequence"
-                      : stage.part >= 5
-                        ? "Technique"
-                        : "Individual"}
+              <span className="uppercase tracking-widest">
+                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_NAMES[stage.part]}
+              </span>
+              <span className="text-white/35">·</span>
+              <span>
+                Step {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
+              </span>
+              <span className="text-white/35">·</span>
+              <span>
+                {isTechniqueIntro ? "Learn" : stage.part === 2 ? "Warmup" : stage.type === "slide" ? "Slide" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
+              </span>
             </p>
             <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
             <p className="text-sm mt-1" style={{ color: primaryColor }}>
@@ -771,8 +780,8 @@ export function JourneyExercise({
         const freqs = stageChakras.map((c) => c.frequencyHz);
         const minFreq = Math.min(...freqs);
         const maxFreq = Math.max(...freqs);
-        const highThreshold = maxFreq * 0.85;
-        const lowThreshold = minFreq * 1.15;
+        const highThreshold = maxFreq * 0.75;
+        const lowThreshold = minFreq * 1.25;
         const inHigh = hz >= highThreshold;
         const inLow = hz <= lowThreshold;
         let lastZone = slideLastZoneRef.current;
@@ -937,7 +946,11 @@ export function JourneyExercise({
                 style={{ color: `${closestChakra.color}cc` }}
               >
                 {locked ? "✓ " : "→ "}
-                {closestChakra.name}
+                {stage.useRainbowLabel
+                  ? stage.chakraIds[0] === "root"
+                    ? "Low tone"
+                    : "High tone"
+                  : closestChakra.name}
               </div>
             )}
           </div>
