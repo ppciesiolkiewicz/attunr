@@ -478,6 +478,7 @@ function ExerciseInfoModal({
   showDontShowAgain?: boolean;
 }) {
   const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
   const isTechniqueIntro = stage.type === "technique_intro";
 
@@ -502,25 +503,43 @@ function ExerciseInfoModal({
         : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
 
   function handleBegin() {
-    if (showDontShowAgain && dontShowAgain) {
-      addSkippedInfoStageId(stageId);
-    }
-    if (isTechniqueIntro && onAdvanceWithoutExercise) {
-      onAdvanceWithoutExercise();
-    } else {
-      onStart();
-    }
+    if (isClosing) return;
+    setIsClosing(true);
   }
+
+  const commitBeginRef = useRef<() => void>(() => {});
+  useEffect(() => {
+    commitBeginRef.current = () => {
+      if (showDontShowAgain && dontShowAgain) addSkippedInfoStageId(stageId);
+      if (isTechniqueIntro && onAdvanceWithoutExercise) onAdvanceWithoutExercise();
+      else onStart();
+    };
+  });
+
+  useEffect(() => {
+    if (!isClosing) return;
+    const id = setTimeout(() => commitBeginRef.current(), 280);
+    return () => clearTimeout(id);
+  }, [isClosing]);
+
+  // When navigating (showDontShowAgain), keep backdrop opaque so we don't reveal old content
+  const hideBackdropOnClose = !showDontShowAgain;
 
   return (
     <div
-      className="fixed inset-0 z-30 flex items-end sm:items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.75)", backdropFilter: "blur(8px)" }}
-      onClick={onDismiss}
+      className={`fixed inset-0 z-30 flex items-end sm:items-center justify-center p-4 transition-opacity duration-300 ease-out ${isClosing ? "pointer-events-none" : ""}`}
+      style={{
+        background: "rgba(0,0,0,0.75)",
+        backdropFilter: "blur(8px)",
+        opacity: isClosing && hideBackdropOnClose ? 0 : 1,
+      }}
+      onClick={isClosing ? undefined : onDismiss}
     >
       <div
-        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col"
+        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out"
         style={{
+          opacity: isClosing ? 0 : 1,
+          transform: isClosing ? "scale(0.96)" : "scale(1)",
           background: "#0f0f1a",
           border: "1px solid rgba(255,255,255,0.1)",
           boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
@@ -645,7 +664,8 @@ function ExerciseInfoModal({
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
           <button
             onClick={handleBegin}
-            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all"
+            disabled={isClosing}
+            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all disabled:opacity-70"
             style={{
               background: `linear-gradient(135deg, #7c3aed, #6d28d9)`,
               boxShadow: "0 0 28px rgba(124,58,237,0.35)",
@@ -674,6 +694,8 @@ function PartCompleteModal({
   tip: string;
   onContinue: () => void;
 }) {
+  const [isClosing, setIsClosing] = useState(false);
+
   useEffect(() => {
     confetti({
       particleCount: 80,
@@ -682,17 +704,30 @@ function PartCompleteModal({
     });
   }, []);
 
+  useEffect(() => {
+    if (!isClosing) return;
+    const id = setTimeout(() => onContinue(), 280);
+    return () => clearTimeout(id);
+  }, [isClosing, onContinue]);
+
+  // Keep backdrop opaque during close to avoid revealing old content before navigation
   return (
     <div
-      className="fixed inset-0 z-40 flex items-end sm:items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+      className={`fixed inset-0 z-40 flex items-end sm:items-center justify-center p-4 transition-opacity duration-300 ease-out ${isClosing ? "pointer-events-none" : ""}`}
+      style={{
+        background: "rgba(0,0,0,0.85)",
+        backdropFilter: "blur(8px)",
+        opacity: 1, // never fade backdrop — hides old content until new page loads
+      }}
     >
       <div
-        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col"
+        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out"
         style={{
           background: "#0f0f1a",
           border: "1px solid rgba(255,255,255,0.12)",
           boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+          opacity: isClosing ? 0 : 1,
+          transform: isClosing ? "scale(0.96)" : "scale(1)",
         }}
       >
         <div className="px-5 pt-5 pb-4 flex flex-col items-center gap-3">
@@ -727,8 +762,9 @@ function PartCompleteModal({
         </div>
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06]">
           <button
-            onClick={onContinue}
-            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all"
+            onClick={() => !isClosing && setIsClosing(true)}
+            disabled={isClosing}
+            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all disabled:opacity-70"
             style={{
               background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
               boxShadow: "0 0 28px rgba(124,58,237,0.35)",
@@ -770,6 +806,7 @@ export function JourneyExercise({
   onNext: (nextStageId: number) => void;
   onPrev?: (prevStageId: number) => void;
 }) {
+  const router = useRouter();
   const highestCompleted = settings.journeyStage;
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
   const isCompleted = stageId <= highestCompleted;
@@ -828,6 +865,25 @@ export function JourneyExercise({
     number | null
   >(null);
   const rafRef = useRef<number | null>(null);
+
+  // Prefetch next page so it’s ready when the modal closes
+  useEffect(() => {
+    if (pendingNavigateStageId !== null) {
+      const targetId = Math.abs(pendingNavigateStageId);
+      router.prefetch(`/journey/${targetId}`);
+    }
+  }, [pendingNavigateStageId, router]);
+
+  useEffect(() => {
+    if (partCompleteData !== null) {
+      const nextId = stageId + 1;
+      if (nextId <= TOTAL_JOURNEY_STAGES) {
+        router.prefetch(`/journey/${nextId}`);
+      } else {
+        router.prefetch("/");
+      }
+    }
+  }, [partCompleteData, stageId, router]);
 
   function shouldShowInfoBeforeNavigate(targetStageId: number): boolean {
     return !getSkippedInfoStageIds().has(targetStageId);
