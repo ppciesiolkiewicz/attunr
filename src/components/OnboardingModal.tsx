@@ -66,11 +66,12 @@ interface OnboardingModalProps {
   pitchHz: number | null;
   status: PitchDetectionStatus;
   onBegin: (voiceId: VoiceTypeId) => void;
+  onRetryMic: () => void;
 }
 
 type Phase = "select" | "detecting" | "detected";
 
-export default function OnboardingModal({ pitchHz, status, onBegin }: OnboardingModalProps) {
+export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }: OnboardingModalProps) {
   const [phase, setPhase] = useState<Phase>("select");
   const [selectedVoiceId, setSelectedVoiceId] = useState<VoiceTypeId>("tenor");
   const [detectedVoiceId, setDetectedVoiceId] = useState<VoiceTypeId | null>(null);
@@ -162,8 +163,16 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
         {/* Chakra spectrum */}
         <div className="flex items-center gap-2.5">
           {CHAKRA_COLORS.map((color, i) => (
-            <div key={i} className="rounded-full"
-              style={{ width: 9, height: 9, backgroundColor: color, boxShadow: `0 0 7px ${color}88` }} />
+            <div
+              key={i}
+              className="rounded-full"
+              style={{
+                width: 9,
+                height: 9,
+                backgroundColor: color,
+                boxShadow: "0 0 7px " + color + "88",
+              }}
+            />
           ))}
         </div>
 
@@ -211,8 +220,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
             </div>
 
             <button
-              onClick={startDetection}
-              disabled={!isListening}
+              onClick={isError ? onRetryMic : startDetection}
+              disabled={isLoading && !isError}
               className="w-full py-3 rounded-xl text-base font-medium border transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               style={{
                 borderColor: "rgba(124,58,237,0.45)",
@@ -226,7 +235,10 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
                   {status === "requesting-mic" ? "Requesting microphone…" : "Loading pitch model…"}
                 </span>
               ) : isError ? (
-                "Microphone unavailable"
+                <span className="inline-flex items-center justify-center gap-2">
+                  <MicrophoneIcon />
+                  Retry microphone
+                </span>
               ) : (
                 <span className="inline-flex items-center justify-center gap-2">
                   <MicrophoneIcon />
@@ -266,7 +278,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
               </span>
               <span className="text-sm tabular-nums"
                 style={{ color: pitchHz !== null ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.1)" }}>
-                {pitchHz !== null ? `${Math.round(pitchHz)} Hz` : "— Hz"}
+                {pitchHz !== null ? Math.round(pitchHz) + " Hz" : "— Hz"}
               </span>
               {liveVoiceType && (
                 <span className="text-sm text-violet-400/82 mt-1 fade-in">
@@ -340,11 +352,11 @@ export default function OnboardingModal({ pitchHz, status, onBegin }: Onboarding
         <div className="flex flex-col items-center gap-2.5 w-full">
           <button
             onClick={() => onBegin(phase === "detected" ? (detectedVoiceId ?? selectedVoiceId) : selectedVoiceId)}
-            disabled={isLoading || phase === "detecting"}
+            disabled={isLoading || phase === "detecting" || isError}
             className="w-full py-4 rounded-xl font-medium text-base text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-wait"
             style={{
               background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
-              boxShadow: (isLoading || phase === "detecting")
+              boxShadow: (isLoading || phase === "detecting" || isError)
                 ? "none"
                 : "0 0 24px rgba(124,58,237,0.35), 0 2px 8px rgba(0,0,0,0.4)",
             }}>

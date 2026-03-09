@@ -84,6 +84,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           pitchHz={pitchHz}
           status={status}
           onBegin={handleOnboardingBegin}
+          onRetryMic={startListening}
         />
       )}
 

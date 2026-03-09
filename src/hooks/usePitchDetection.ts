@@ -74,10 +74,20 @@ export function usePitchDetection(): PitchDetectionState {
       setError(null);
       setStatus("requesting-mic");
 
-      const stream = await navigator.mediaDevices.getUserMedia({
-        audio: { echoCancellation: false, noiseSuppression: false },
-        video: false,
-      });
+      if (!navigator.mediaDevices?.getUserMedia) {
+        throw new Error("Microphone not supported. Use HTTPS and a modern browser.");
+      }
+
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: false, noiseSuppression: false },
+          video: false,
+        });
+      } catch {
+        // Fallback: simpler constraints for mobile (iOS/Safari can reject strict constraints)
+        stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+      }
       streamRef.current = stream;
 
       setStatus("loading-model");
