@@ -149,6 +149,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 min-h-0">
         {children}
       </main>
+
+      <footer className="shrink-0 px-5 py-2 border-t border-white/[0.04]">
+        <Link
+          href="/articles"
+          className="text-xs text-white/40 hover:text-white/60 transition-colors"
+        >
+          Articles
+        </Link>
+      </footer>
     </div>
     </AppContext.Provider>
   );

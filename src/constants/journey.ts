@@ -43,7 +43,7 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     noteSeconds: 0,
     technique: "lip-rolls",
     instruction:
-      "Let your lips loosely buzz while you sing — like a motorboat. Sustain the buzz on each tone. Do this before every session; aim for at least a few minutes. It loosens the jaw, warms the voice, and gets you ready to sing.",
+      "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you.",
   },
   {
     id: 2,

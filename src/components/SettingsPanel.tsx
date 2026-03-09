@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { VOICE_TYPES, TUNING_OPTIONS } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 import type { VoiceTypeId, TuningStandard } from "@/constants/chakras";
@@ -120,6 +121,13 @@ export default function SettingsPanel({
               Try each and keep the one that feels right for your practice.
               Tuning applies in voice-based mode.
             </p>
+            <Link
+              href="/articles/tuning"
+              onClick={onClose}
+              className="text-sm text-violet-400/65 hover:text-violet-400 transition-colors"
+            >
+              Learn about tuning →
+            </Link>
           </Section>
 
           <div className="h-px bg-white/[0.06]" />
@@ -130,14 +138,13 @@ export default function SettingsPanel({
               Your microphone is used only for real-time pitch detection.
               Nothing is ever recorded or stored outside your device.
             </p>
-            <a
-              href="https://en.wikipedia.org/wiki/Solfeggio_frequencies"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/articles/solfeggio-frequencies"
+              onClick={onClose}
               className="text-sm text-violet-400/65 hover:text-violet-400 transition-colors"
             >
               What are Solfeggio frequencies? →
-            </a>
+            </Link>
           </Section>
         </div>
       </div>
