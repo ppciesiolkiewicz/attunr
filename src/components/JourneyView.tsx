@@ -2,10 +2,17 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import confetti from "canvas-confetti";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
 import { HeadphonesNotice } from "./TabInfoModal";
-import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES } from "@/constants/journey";
+import {
+  JOURNEY_STAGES,
+  TOTAL_JOURNEY_STAGES,
+  LAST_STAGE_ID_PER_PART,
+  isLastStageOfPart,
+  PART_COMPLETE_CONTENT,
+} from "@/constants/journey";
 import type { JourneyStage } from "@/constants/journey";
 import {
   CHAKRAS,
@@ -27,6 +34,14 @@ interface JourneyViewProps {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
+function getStepInPart(stageId: number): { stepIndex: number; stepsInPart: number } {
+  const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
+  if (!stage) return { stepIndex: 1, stepsInPart: 1 };
+  const partStages = JOURNEY_STAGES.filter((s) => s.part === stage.part);
+  const stepIndex = partStages.findIndex((s) => s.id === stageId) + 1;
+  return { stepIndex, stepsInPart: partStages.length };
+}
+
 function voiceTypeLabel(id: string) {
   const map: Record<string, string> = {
     bass: "Bass", baritone: "Baritone", tenor: "Tenor", alto: "Alto", soprano: "Soprano",
@@ -36,11 +51,19 @@ function voiceTypeLabel(id: string) {
 
 // ── Icons ────────────────────────────────────────────────────────────────────
 
-function BookIcon({ className }: { className?: string }) {
+function BookIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
-    <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg className={className} style={style} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
       <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  );
+}
+
+function BadgeIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg className={className} style={style} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2l3 7h7l-5.5 5 2 7-6.5-4.5L5.5 21l2-7-5.5-5h7z" />
     </svg>
   );
 }
@@ -134,7 +157,6 @@ function StageCard({
             )}
             {stage.title}
           </span>
-          <span className="text-xs text-white/58 shrink-0">Exercise {stage.id}</span>
         </div>
 
         {/* Part I: mantra + element (single chakra) — skip for lip-roll warmups */}
@@ -184,8 +206,12 @@ function StageCard({
           </div>
         )}
         {/* Lip-roll sequence: minimal cue */}
-        {stageChakras.length > 1 && stage.technique === "lip-rolls" && (
+        {stageChakras.length > 1 && stage.technique === "lip-rolls" && stage.type === "sequence" && (
           <p className="text-xs text-white/58">Full range · 2 s per tone</p>
+        )}
+        {/* Lip-roll slide: minimal cue */}
+        {stage.type === "slide" && (
+          <p className="text-xs text-white/58">Continuous glide · slide 2–3 times</p>
         )}
       </div>
 
@@ -233,7 +259,7 @@ function JourneyList({
 
         <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
           <p>
-            Start with the introduction and vocal warmups, then sustain (one chakra at a time), sequences, and vocal techniques like mantras and vowels.
+            This is where your journey begins. You&apos;ll be guided through learning and practice — from chakra tones and vocal warmups to sustaining each tone, building sequences, and exploring techniques like mantras and vowels.
           </p>
           <p>
             When you&apos;ve built confidence, switch to Explore for freeform practice — any tone, any order.
@@ -244,11 +270,16 @@ function JourneyList({
           const stages = JOURNEY_STAGES.filter((s) => s.part === partNum);
           if (stages.length === 0) return null;
           const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][partNum - 1];
+          const lastStageId = LAST_STAGE_ID_PER_PART[partNum];
+          const partComplete = highestCompleted >= lastStageId;
           return (
             <section key={partNum} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
-                <span className="text-xs uppercase tracking-widest text-white/58 shrink-0">
+                <span className="text-xs uppercase tracking-widest text-white/58 shrink-0 flex items-center gap-1.5">
                   Part {roman} — {PART_NAMES[partNum]}
+                  {partComplete && (
+                    <BadgeIcon className="text-violet-400/90" style={{ width: 12, height: 12 }} />
+                  )}
                 </span>
                 <div className="flex-1 h-px bg-white/[0.05]" />
               </header>
@@ -303,6 +334,8 @@ function ExerciseInfoModal({
       ? "Learn the technique"
       : stage.type === "individual"
       ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
+      : stage.type === "slide"
+      ? "Slide smoothly through the range two or three times — detection is loose"
       : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
 
   function handleBegin() {
@@ -334,8 +367,8 @@ function ExerciseInfoModal({
           <div>
             <p className="text-xs uppercase tracking-widest text-white/45 mb-1 flex items-center gap-1.5">
               {isTechniqueIntro && <BookIcon className="opacity-70" />}
-              Exercise {stageId} of {TOTAL_JOURNEY_STAGES} —{" "}
-              {isTechniqueIntro ? "Learn" : stage.part === 2 ? "Warmup" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
+              Step {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart} —{" "}
+              {isTechniqueIntro ? "Learn" : stage.part === 2 ? "Warmup" : stage.type === "slide" ? "Slide" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
             </p>
             <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
             <p className="text-sm mt-1" style={{ color: primaryColor }}>
@@ -354,7 +387,7 @@ function ExerciseInfoModal({
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1">
 
           {/* Chakra detail — skip for lip-roll sequences (warmup focus), else show card */}
-          {!isTechniqueIntro && stage.chakraIds.length > 0 && !(stage.technique === "lip-rolls" && stage.type === "sequence") && (
+          {!isTechniqueIntro && stage.chakraIds.length > 0 && !(stage.technique === "lip-rolls" && (stage.type === "sequence" || stage.type === "slide")) && (
             <ChakraDetailCard
               chakraIds={stage.chakraIds}
               frequencyOverrides={freqOverrides}
@@ -417,6 +450,80 @@ function ExerciseInfoModal({
   );
 }
 
+// ── Part Complete Modal ──────────────────────────────────────────────────────
+
+function PartCompleteModal({
+  part,
+  partName,
+  learned,
+  tip,
+  onContinue,
+}: {
+  part: number;
+  partName: string;
+  learned: string;
+  tip: string;
+  onContinue: () => void;
+}) {
+  useEffect(() => {
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+    });
+  }, []);
+
+  return (
+    <div
+      className="fixed inset-0 z-40 flex items-end sm:items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+    >
+      <div
+        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col"
+        style={{
+          background: "#0f0f1a",
+          border: "1px solid rgba(255,255,255,0.12)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+        }}
+      >
+        <div className="px-5 pt-5 pb-4 flex flex-col items-center gap-3">
+          <div
+            className="w-12 h-12 rounded-full flex items-center justify-center"
+            style={{ background: "rgba(124,58,237,0.2)" }}
+          >
+            <BadgeIcon className="text-violet-400" style={{ width: 24, height: 24 }} />
+          </div>
+          <h2 className="text-xl font-semibold text-white text-center">
+            Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][part - 1]} Complete
+          </h2>
+          <p className="text-sm text-white/72 text-center">{partName}</p>
+        </div>
+        <div className="px-5 py-4 border-t border-white/[0.06] flex flex-col gap-3">
+          <div>
+            <p className="text-xs uppercase tracking-widest text-white/45 mb-1">What you learnt</p>
+            <p className="text-sm text-white/85">{learned}</p>
+          </div>
+          <p className="text-sm font-medium" style={{ color: "#a78bfa" }}>
+            {tip}
+          </p>
+        </div>
+        <div className="px-5 pb-5 pt-3 border-t border-white/[0.06]">
+          <button
+            onClick={onContinue}
+            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all"
+            style={{
+              background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+              boxShadow: "0 0 28px rgba(124,58,237,0.35)",
+            }}
+          >
+            Continue →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Journey Exercise (simplified) ─────────────────────────────────────────────
 
 export function JourneyExercise({
@@ -458,9 +565,18 @@ export function JourneyExercise({
   const seqIndexRef = useRef(0);
   const noteHoldRef = useRef(0);
   const lastTickRef = useRef(0);
+  const slideCountRef = useRef(0);
+  const slideLastZoneRef = useRef<"high" | "low" | null>(null);
   const [progress, setProgress] = useState(0);
   const [seqIndex, setSeqIndex] = useState(0);
+  const [slideCount, setSlideCount] = useState(0);
   const [stageComplete, setStageComplete] = useState(false);
+  const [partCompleteData, setPartCompleteData] = useState<{
+    part: number;
+    partName: string;
+    learned: string;
+    tip: string;
+  } | null>(null);
   const rafRef = useRef<number | null>(null);
 
   const resetProgress = useCallback(() => {
@@ -468,8 +584,11 @@ export function JourneyExercise({
     seqIndexRef.current = 0;
     noteHoldRef.current = 0;
     lastTickRef.current = 0;
+    slideCountRef.current = 0;
+    slideLastZoneRef.current = null;
     setProgress(0);
     setSeqIndex(0);
+    setSlideCount(0);
     setStageComplete(false);
   }, []);
 
@@ -495,6 +614,41 @@ export function JourneyExercise({
         const p = holdRef.current / stage.holdSeconds;
         setProgress(p);
         if (p >= 1) setStageComplete(true);
+      } else if (stage.type === "slide" && stage.slideDirection && hz !== null) {
+        const freqs = stageChakras.map((c) => c.frequencyHz);
+        const minFreq = Math.min(...freqs);
+        const maxFreq = Math.max(...freqs);
+        const highThreshold = maxFreq * 0.85;
+        const lowThreshold = minFreq * 1.15;
+        const inHigh = hz >= highThreshold;
+        const inLow = hz <= lowThreshold;
+        let lastZone = slideLastZoneRef.current;
+        let count = slideCountRef.current;
+        if (stage.slideDirection === "high-to-low") {
+          if (inHigh) lastZone = "high";
+          else if (inLow) {
+            if (lastZone === "high") {
+              count++;
+              slideCountRef.current = count;
+              setSlideCount(count);
+            }
+            lastZone = "low";
+          }
+        } else {
+          if (inLow) lastZone = "low";
+          else if (inHigh) {
+            if (lastZone === "low") {
+              count++;
+              slideCountRef.current = count;
+              setSlideCount(count);
+            }
+            lastZone = "high";
+          }
+        }
+        slideLastZoneRef.current = lastZone;
+        const REQUIRED_SLIDES = 2;
+        setProgress(count / REQUIRED_SLIDES);
+        if (count >= REQUIRED_SLIDES) setStageComplete(true);
       } else {
         const idx = seqIndexRef.current;
         const target = stageChakras[idx];
@@ -527,13 +681,33 @@ export function JourneyExercise({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCurrentStage, stageComplete, stageId]);
 
-  function handleComplete() {
-    onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
+  function doAdvance() {
     if (stageId < TOTAL_JOURNEY_STAGES) {
       onNext(stageId + 1);
     } else {
       onBack();
     }
+  }
+
+  function handleComplete() {
+    onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
+    if (isLastStageOfPart(stageId)) {
+      const content = PART_COMPLETE_CONTENT[stage.part];
+      const partName = PART_NAMES[stage.part] ?? "";
+      setPartCompleteData({
+        part: stage.part,
+        partName,
+        learned: content.learned,
+        tip: content.tip,
+      });
+    } else {
+      doAdvance();
+    }
+  }
+
+  function handlePartCompleteContinue() {
+    setPartCompleteData(null);
+    doAdvance();
   }
 
   function handleHearTone() {
@@ -557,10 +731,13 @@ export function JourneyExercise({
           ← Journey
         </button>
         <span className="text-white/25">|</span>
-        <span className="text-sm text-white/52">Exercise {stageId} of {TOTAL_JOURNEY_STAGES}</span>
+        <span className="text-sm text-white/52">
+          Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_NAMES[stage.part]}
+        </span>
+        <span className="text-white/25">·</span>
+        <span className="text-sm text-white/52">Step {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}</span>
         <span className="text-white/25">—</span>
         <span className="text-sm text-white/72 font-medium">{stage.title}</span>
-        {stage.part === 2 && <span className="text-xs text-white/45">♪</span>}
         <button
           onClick={onOpenSettings}
           className="ml-auto text-xs text-white/45 hover:text-white/72 transition-colors"
@@ -595,6 +772,25 @@ export function JourneyExercise({
         )}
 
         {/* Sequence step indicator */}
+        {stage.type === "slide" && isCurrentStage && !stageComplete && (
+          <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
+            {[1, 2].map((i) => {
+              const done = i <= slideCount;
+              return (
+                <div
+                  key={i}
+                  className="rounded-full transition-all"
+                  style={{
+                    width: 10,
+                    height: 10,
+                    backgroundColor: done ? "#a78bfa" : "rgba(255,255,255,0.15)",
+                  }}
+                />
+              );
+            })}
+            <span className="text-xs text-white/55 ml-1">slide {slideCount}/2</span>
+          </div>
+        )}
         {stage.type === "sequence" && isCurrentStage && !stageComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
             {stageChakras.map((c, i) => {
@@ -619,13 +815,27 @@ export function JourneyExercise({
 
       {/* ── Bottom panel ──────────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-2.5 pb-1.5 flex items-center gap-4 shrink-0">
-        {isCurrentStage && !stageComplete && <ProgressArc progress={progress} />}
+        {isCurrentStage && !stageComplete && stage.type !== "slide" && <ProgressArc progress={progress} />}
+        {isCurrentStage && !stageComplete && stage.type === "slide" && (
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-sm text-white/55">Slide {slideCount}/2</span>
+          </div>
+        )}
         {stageComplete && <span className="text-2xl">✓</span>}
         {isCompleted && !isCurrentStage && (
           <span className="text-base text-white/48">Completed</span>
         )}
 
         <div className="flex gap-2 ml-auto">
+          {process.env.NODE_ENV === "development" && isCurrentStage && !stageComplete && (
+            <button
+              onClick={handleComplete}
+              className="px-3 py-2 rounded-lg text-xs font-medium text-white/50 hover:text-violet-400 border border-white/15 hover:border-violet-500/40 transition-colors"
+              title="Dev: Complete without exercising"
+            >
+              ✓ Skip
+            </button>
+          )}
           <button
             onClick={handleHearTone}
             className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
@@ -647,6 +857,16 @@ export function JourneyExercise({
           )}
         </div>
       </div>
+
+      {partCompleteData && (
+        <PartCompleteModal
+          part={partCompleteData.part}
+          partName={partCompleteData.partName}
+          learned={partCompleteData.learned}
+          tip={partCompleteData.tip}
+          onContinue={handlePartCompleteContinue}
+        />
+      )}
     </div>
   );
 }

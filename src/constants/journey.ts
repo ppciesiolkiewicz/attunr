@@ -1,6 +1,8 @@
 import type { ChakraId } from "./chakras";
 
-export type JourneyStageType = "technique_intro" | "individual" | "sequence";
+export type JourneyStageType = "technique_intro" | "individual" | "sequence" | "slide";
+
+export type SlideDirection = "high-to-low" | "low-to-high";
 
 export type TechniqueId =
   | "sustain"
@@ -27,11 +29,65 @@ export interface JourneyStage {
   chakraDetailStyle?: ChakraDetailStyle;
   /** Optional card subtitle; overrides technique display for technique_intro */
   cardCue?: string;
+  /** For slide type: direction of continuous glide */
+  slideDirection?: SlideDirection;
   holdSeconds: number;
   noteSeconds: number;
 }
 
 export const TOTAL_JOURNEY_STAGES = 45;
+
+/** Last stage id of each part (1–9) */
+export const LAST_STAGE_ID_PER_PART: Record<number, number> = {
+  1: 1, 2: 5, 3: 13, 4: 19, 5: 27, 6: 35, 7: 39, 8: 41, 9: 45,
+};
+
+export function isLastStageOfPart(stageId: number): boolean {
+  const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
+  return stage ? LAST_STAGE_ID_PER_PART[stage.part] === stageId : false;
+}
+
+export const PART_COMPLETE_CONTENT: Record<
+  number,
+  { learned: string; tip: string }
+> = {
+  1: {
+    learned: "Chakra tones and their connection to grounding, creativity, and presence.",
+    tip: "Repeat these concepts and combine exercises into longer sessions.",
+  },
+  2: {
+    learned: "Lip rolls to relax your jaw and warm your voice.",
+    tip: "Always warm up before each practice session!",
+  },
+  3: {
+    learned: "Holding each chakra tone steadily and feeling where it resonates.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+  4: {
+    learned: "Singing chakra sequences for full alignment.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+  5: {
+    learned: "The U vowel (uuu) across all seven chakras.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+  6: {
+    learned: "Chakra seed syllables — LAM, VAM, RAM, YAM, HAM, OM, AH.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+  7: {
+    learned: "The bright EE vowel for shifting resonance higher.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+  8: {
+    learned: "Gliding from U to EE for vocal flexibility.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+  9: {
+    learned: "Breath control with puffy cheeks.",
+    tip: "Repeat and combine exercises into longer sessions.",
+  },
+};
 
 export const JOURNEY_STAGES: JourneyStage[] = [
   // ── Part 1: Chakra tones (foundation) ──────────────────────────────────────
@@ -65,26 +121,28 @@ export const JOURNEY_STAGES: JourneyStage[] = [
   {
     id: 3,
     part: 2,
-    type: "sequence",
+    type: "slide",
     title: "Lip rolls — high to low",
     chakraIds: ["crown", "third-eye", "throat", "heart", "solar-plexus", "sacral", "root"],
     holdSeconds: 0,
-    noteSeconds: 2,
+    noteSeconds: 0,
     technique: "lip-rolls",
+    slideDirection: "high-to-low",
     instruction:
-      "Lip roll from high to low. Two seconds per tone. Descending first — easier when your voice is cold.",
+      "Slide smoothly from high to low — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
   },
   {
     id: 4,
     part: 2,
-    type: "sequence",
+    type: "slide",
     title: "Lip rolls — low to high",
     chakraIds: ["root", "sacral", "solar-plexus", "heart", "throat", "third-eye", "crown"],
     holdSeconds: 0,
-    noteSeconds: 2,
+    noteSeconds: 0,
     technique: "lip-rolls",
+    slideDirection: "low-to-high",
     instruction:
-      "Lip roll from low to high. Two seconds per tone. Each pitch once.",
+      "Slide smoothly from low to high — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
   },
   {
     id: 5,
