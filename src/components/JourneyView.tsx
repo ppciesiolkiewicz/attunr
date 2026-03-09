@@ -827,13 +827,13 @@ export function JourneyExercise({
         )}
 
         <div className="flex gap-2 ml-auto">
-          {process.env.NODE_ENV === "development" && isCurrentStage && !stageComplete && (
+          {isCurrentStage && !stageComplete && (
             <button
               onClick={handleComplete}
               className="px-3 py-2 rounded-lg text-xs font-medium text-white/50 hover:text-violet-400 border border-white/15 hover:border-violet-500/40 transition-colors"
-              title="Dev: Complete without exercising"
+              title="Skip this step"
             >
-              ✓ Skip
+              Skip
             </button>
           )}
           <button
