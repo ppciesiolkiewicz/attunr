@@ -28,19 +28,12 @@ export default function ChakraDetailCard({
       }}
     >
       {isRainbow ? (
-        /* Voice focus: tone + chest/head cue, no chakra name/mantra */
-        <div className="flex flex-col gap-2">
-          <span className="text-base font-semibold tabular-nums text-white/85">
-            {items
-              .map((c) => (frequencyOverrides[c.id] ?? c.frequencyHz) + " Hz")
-              .join(" · ")}
-          </span>
-          <p className="text-sm text-white/58">
-            {chakraIds[0] === "root"
-              ? "Find your chest voice"
-              : "Find your head voice"}
-          </p>
-        </div>
+        /* Voice focus: low/high only, no specific frequency */
+        <p className="text-sm text-white/58">
+          {chakraIds[0] === "root"
+            ? "Low tone — Find your chest voice"
+            : "High tone — Find your head voice"}
+        </p>
       ) : (
       items.map((chakra) => {
         const displayHz = frequencyOverrides[chakra.id] ?? chakra.frequencyHz;

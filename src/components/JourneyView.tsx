@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
-import { HeadphonesNotice } from "./TabInfoModal";
+import { HeadphonesNotice, InfoButton } from "./TabInfoModal";
 import {
   JOURNEY_STAGES,
   TOTAL_JOURNEY_STAGES,
@@ -34,6 +34,10 @@ interface JourneyViewProps {
   ) => void;
   onOpenSettings: () => void;
 }
+
+// Low/high range chakra IDs for voice warmups (no specific frequency)
+const LOW_RANGE_IDS = ["root", "sacral", "solar-plexus"] as const;
+const HIGH_RANGE_IDS = ["throat", "third-eye", "crown"] as const;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -200,7 +204,9 @@ function StageCard({
         style={{
           background:
             stage.useRainbowLabel
-              ? `linear-gradient(to bottom, ${CHAKRAS.map((c) => c.color).join(", ")})`
+              ? stage.chakraIds[0] === "root"
+                ? `linear-gradient(to bottom, ${LOW_RANGE_IDS.map((id) => CHAKRAS.find((c) => c.id === id)!.color).join(", ")})`
+                : `linear-gradient(to bottom, ${HIGH_RANGE_IDS.map((id) => CHAKRAS.find((c) => c.id === id)!.color).join(", ")})`
               : stageChakras.length === 1
                 ? primaryColor
                 : stageChakras.length > 1
@@ -718,6 +724,16 @@ export function JourneyExercise({
     .map((id) => allChakras.find((c) => c.id === id))
     .filter((c): c is Chakra => c != null);
 
+  // For voice warmups (Low U, Hoo hoo): use low/high range, not specific frequency
+  const rangeChakraIds = stage.useRainbowLabel
+    ? stage.chakraIds[0] === "root"
+      ? [...LOW_RANGE_IDS]
+      : [...HIGH_RANGE_IDS]
+    : stage.chakraIds;
+  const rangeChakras = rangeChakraIds
+    .map((id) => allChakras.find((c) => c.id === id))
+    .filter((c): c is Chakra => c != null);
+
   // ── Success tracking ──────────────────────────────────────────────────────
   const holdRef = useRef(0);
   const seqIndexRef = useRef(0);
@@ -735,6 +751,7 @@ export function JourneyExercise({
     learned: string;
     tip: string;
   } | null>(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const rafRef = useRef<number | null>(null);
 
   const resetProgress = useCallback(() => {
@@ -765,10 +782,9 @@ export function JourneyExercise({
       const hz = pitchHzRef.current;
 
       if (stage.type === "individual") {
-        const target = stageChakras[0];
-        if (hz !== null && target && isInTune(hz, target.frequencyHz)) {
-          holdRef.current += dt;
-        }
+        const targets = stage.useRainbowLabel ? rangeChakras : stageChakras;
+        const inTune = hz !== null && targets.some((t) => isInTune(hz, t.frequencyHz));
+        if (inTune) holdRef.current += dt;
         const p = holdRef.current / stage.holdSeconds;
         setProgress(p);
         if (p >= 1) setStageComplete(true);
@@ -880,8 +896,9 @@ export function JourneyExercise({
     });
   }
 
+  const detectionChakras = stage.useRainbowLabel ? rangeChakras : stageChakras;
   const closestChakra = pitchHz
-    ? findClosestChakra(pitchHz, stageChakras)
+    ? findClosestChakra(pitchHz, detectionChakras)
     : null;
   const locked =
     closestChakra && pitchHz
@@ -915,6 +932,7 @@ export function JourneyExercise({
         </span>
         <span className="text-white/25">—</span>
         <span className="text-sm text-white/72 font-medium">{stage.title}</span>
+        <InfoButton onClick={() => setShowInfoModal(true)} />
         <button
           onClick={onOpenSettings}
           className="ml-auto text-xs text-white/45 hover:text-white/72 transition-colors"
@@ -923,35 +941,53 @@ export function JourneyExercise({
         </button>
       </div>
 
+      {/* Info modal — re-open from exercise */}
+      {showInfoModal && (
+        <ExerciseInfoModal
+          stageId={stageId}
+          settings={settings}
+          onStart={() => setShowInfoModal(false)}
+          onDismiss={() => setShowInfoModal(false)}
+        />
+      )}
+
       {/* ── Canvas (full remaining height) ────────────────────────────────────── */}
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
           chakras={allChakras}
           currentHzRef={pitchHzRef}
-          highlightIds={stage.chakraIds}
+          highlightIds={rangeChakraIds}
         />
 
         {/* Pitch overlay */}
         {pitchHz !== null && (
           <div className="pointer-events-none absolute top-3 left-4 fade-in">
-            <div
-              className="text-3xl font-light tabular-nums"
-              style={{ color: closestChakra?.color ?? "#fff" }}
-            >
-              {Math.round(pitchHz)} Hz
-            </div>
-            {closestChakra && (
+            {stage.useRainbowLabel ? (
               <div
-                className="text-sm mt-0.5"
-                style={{ color: `${closestChakra.color}cc` }}
+                className="text-2xl font-light"
+                style={{ color: closestChakra?.color ?? "#fff" }}
               >
-                {locked ? "✓ " : "→ "}
-                {stage.useRainbowLabel
-                  ? stage.chakraIds[0] === "root"
-                    ? "Low tone"
-                    : "High tone"
-                  : closestChakra.name}
+                {locked ? "✓ " : ""}
+                {stage.chakraIds[0] === "root" ? "Low tone" : "High tone"}
               </div>
+            ) : (
+              <>
+                <div
+                  className="text-3xl font-light tabular-nums"
+                  style={{ color: closestChakra?.color ?? "#fff" }}
+                >
+                  {Math.round(pitchHz)} Hz
+                </div>
+                {closestChakra && (
+                  <div
+                    className="text-sm mt-0.5"
+                    style={{ color: `${closestChakra.color}cc` }}
+                  >
+                    {locked ? "✓ " : "→ "}
+                    {closestChakra.name}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

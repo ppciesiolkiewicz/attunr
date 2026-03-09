@@ -53,16 +53,16 @@ export function InfoButton({ onClick }: { onClick: () => void }) {
 export function HeadphonesNotice() {
   return (
     <div
-      className="flex flex-col items-center text-center gap-2 rounded-xl px-4 py-3"
+      className="flex items-center gap-3 rounded-xl px-4 py-3"
       style={{
         background: "rgba(255,255,255,0.06)",
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <span className="text-white/52">
+      <span className="text-white/52 shrink-0 flex items-center justify-center">
         <HeadphonesIcon />
       </span>
-      <p className="text-sm text-white/58 leading-relaxed">
+      <p className="text-sm text-white/58 leading-relaxed text-left">
         For the best experience, use headphones — they keep the playback out of your
         mic so we can hear your voice clearly.
       </p>
