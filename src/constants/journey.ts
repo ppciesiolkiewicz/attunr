@@ -55,7 +55,7 @@ export const PART_COMPLETE_CONTENT: Record<
 > = {
   1: {
     learned: "Chakra tones and their connection to grounding, creativity, and presence.",
-    tip: "Repeat these concepts and combine exercises into longer sessions.",
+    tip: "",
   },
   2: {
     learned: "Lip rolls, low U, and hoo hoo — gentle warmups for jaw, lower register, and head voice.",

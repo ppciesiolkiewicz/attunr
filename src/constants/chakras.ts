@@ -189,6 +189,9 @@ export function isInTune(detectedHz: number, targetHz: number): boolean {
 }
 
 export function findClosestChakra(hz: number, chakras: Chakra[]): Chakra {
+  if (chakras.length === 0) {
+    throw new Error("findClosestChakra requires at least one chakra");
+  }
   return chakras.reduce((best, c) =>
     Math.abs(c.frequencyHz - hz) < Math.abs(best.frequencyHz - hz) ? c : best
   );

@@ -698,9 +698,11 @@ function PartCompleteModal({
             </p>
             <p className="text-sm text-white/85">{learned}</p>
           </div>
-          <p className="text-sm font-medium" style={{ color: "#a78bfa" }}>
-            {tip}
-          </p>
+          {tip && (
+            <p className="text-sm font-medium" style={{ color: "#a78bfa" }}>
+              {tip}
+            </p>
+          )}
         </div>
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06]">
           <button
@@ -787,7 +789,9 @@ export function JourneyExercise({
     learned: string;
     tip: string;
   } | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showInfoModal, setShowInfoModal] = useState(
+    stage.type !== "technique_intro",
+  );
   const [pendingNavigateStageId, setPendingNavigateStageId] = useState<
     number | null
   >(null);
@@ -934,10 +938,13 @@ export function JourneyExercise({
       });
     } else {
       const nextId = stageId + 1;
-      if (shouldShowInfoBeforeNavigate()) {
-        setPendingNavigateStageId(nextId);
-      } else {
+      const nextStage = JOURNEY_STAGES.find((s) => s.id === nextId);
+      const skipModal =
+        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate();
+      if (skipModal) {
         navigateTo(nextId);
+      } else {
+        setPendingNavigateStageId(nextId);
       }
     }
   }
@@ -945,20 +952,27 @@ export function JourneyExercise({
   function goToPrevStage() {
     const prevId = stageId - 1;
     if (prevId < 1) return;
-    if (onPrev && shouldShowInfoBeforeNavigate()) {
-      setPendingNavigateStageId(-prevId);
-    } else if (onPrev) {
+    if (!onPrev) return;
+    const prevStage = JOURNEY_STAGES.find((s) => s.id === prevId);
+    const skipModal =
+      prevStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate();
+    if (skipModal) {
       navigateToPrev(prevId);
+    } else {
+      setPendingNavigateStageId(-prevId);
     }
   }
 
   function doAdvance() {
     if (stageId < TOTAL_JOURNEY_STAGES) {
       const nextId = stageId + 1;
-      if (shouldShowInfoBeforeNavigate()) {
-        setPendingNavigateStageId(nextId);
-      } else {
+      const nextStage = JOURNEY_STAGES.find((s) => s.id === nextId);
+      const skipModal =
+        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate();
+      if (skipModal) {
         navigateTo(nextId);
+      } else {
+        setPendingNavigateStageId(nextId);
       }
     } else {
       onBack();
@@ -999,9 +1013,10 @@ export function JourneyExercise({
   }
 
   const detectionChakras = stage.useRainbowLabel ? rangeChakras : stageChakras;
-  const closestChakra = pitchHz
-    ? findClosestChakra(pitchHz, detectionChakras)
-    : null;
+  const closestChakra =
+    pitchHz && detectionChakras.length > 0
+      ? findClosestChakra(pitchHz, detectionChakras)
+      : null;
   const locked =
     closestChakra && pitchHz
       ? isInTune(pitchHz, closestChakra.frequencyHz)
@@ -1034,7 +1049,9 @@ export function JourneyExercise({
         </span>
         <span className="text-white/25">—</span>
         <span className="text-sm text-white/72 font-medium">{stage.title}</span>
-        <InfoButton onClick={() => setShowInfoModal(true)} />
+        {stage.type !== "technique_intro" && (
+          <InfoButton onClick={() => setShowInfoModal(true)} />
+        )}
         <button
           onClick={onOpenSettings}
           className="ml-auto text-xs text-white/45 hover:text-white/72 transition-colors"
@@ -1043,8 +1060,8 @@ export function JourneyExercise({
         </button>
       </div>
 
-      {/* Info modal — re-open from exercise (i) button */}
-      {showInfoModal && !pendingNavigateStageId && (
+      {/* Info modal — re-open from exercise (i) button — skip for technique_intro */}
+      {stage.type !== "technique_intro" && showInfoModal && !pendingNavigateStageId && (
         <ExerciseInfoModal
           stageId={stageId}
           settings={settings}
@@ -1053,18 +1070,62 @@ export function JourneyExercise({
         />
       )}
 
-      {/* Info modal — before navigating next/prev */}
-      {pendingNavigateStageId !== null && (
-        <ExerciseInfoModal
-          stageId={Math.abs(pendingNavigateStageId)}
-          settings={settings}
-          onStart={handlePendingModalStart}
-          onDismiss={() => setPendingNavigateStageId(null)}
-          showDontShowAgain
-        />
-      )}
+      {/* Info modal — before navigating next/prev — skip when target is technique_intro */}
+      {pendingNavigateStageId !== null &&
+        JOURNEY_STAGES.find((s) => s.id === Math.abs(pendingNavigateStageId))
+          ?.type !== "technique_intro" && (
+          <ExerciseInfoModal
+            stageId={Math.abs(pendingNavigateStageId)}
+            settings={settings}
+            onStart={handlePendingModalStart}
+            onDismiss={() => setPendingNavigateStageId(null)}
+            showDontShowAgain
+          />
+        )}
 
-      {/* ── Canvas (full remaining height) ────────────────────────────────────── */}
+      {/* ── Main content: inline info for technique_intro, canvas for exercises ─── */}
+      {stage.type === "technique_intro" ? (
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <div className="max-w-lg mx-auto px-5 py-6 flex flex-col gap-6">
+            {/* Part header — shown for every learning section */}
+            <div className="pb-2 border-b border-white/[0.08]">
+              <h2 className="text-xl font-semibold text-white">
+                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_NAMES[stage.part]}
+              </h2>
+              <p className="text-sm text-white/55 mt-0.5">{stage.title}</p>
+            </div>
+            <div className="flex flex-col gap-1">
+              {stage.instruction.split("\n").map((line, i) => (
+                <p
+                  key={i}
+                  className="text-base leading-relaxed"
+                  style={{
+                    color:
+                      i === 0
+                        ? "rgba(255,255,255,0.88)"
+                        : "rgba(255,255,255,0.55)",
+                  }}
+                >
+                  {line}
+                </p>
+              ))}
+            </div>
+            <div
+              className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px dashed rgba(255,255,255,0.15)",
+              }}
+            >
+              <span className="text-2xl opacity-50">▶</span>
+              <p className="text-sm text-white/45 font-medium">Video coming soon</p>
+            </div>
+            <p className="text-xs text-white/45">
+              Practising as {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
+            </p>
+          </div>
+        </div>
+      ) : (
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
           chakras={allChakras}
@@ -1154,9 +1215,34 @@ export function JourneyExercise({
           </div>
         )}
       </div>
+      )}
 
       {/* ── Bottom panel ──────────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-2.5 pb-1.5 flex items-center gap-4 shrink-0">
+        {stage.type === "technique_intro" ? (
+          <div className="flex items-center gap-3 ml-auto w-full justify-end">
+            {stageId > 1 && onPrev && (
+              <button
+                onClick={goToPrevStage}
+                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30 transition-all min-w-[6.5rem]"
+                title="Previous"
+              >
+                ← Previous
+              </button>
+            )}
+            <button
+              onClick={handleComplete}
+              className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all min-w-[6.5rem]"
+              style={{
+                background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+                boxShadow: "0 0 16px rgba(124,58,237,0.4)",
+              }}
+            >
+              {stageId < TOTAL_JOURNEY_STAGES ? "Next →" : "Complete ✓"}
+            </button>
+          </div>
+        ) : (
+          <>
         {isCurrentStage && !stageComplete && stage.type !== "slide" && (
           <ProgressArc progress={progress} />
         )}
@@ -1213,6 +1299,8 @@ export function JourneyExercise({
             )}
           </div>
         </div>
+          </>
+        )}
       </div>
 
       {partCompleteData && (
@@ -1239,36 +1327,13 @@ export default function JourneyView({
   onOpenSettings,
 }: JourneyViewProps) {
   const router = useRouter();
-  /** Stage currently shown in the exercise info modal (null = no modal) */
-  const [pendingStageId, setPendingStageId] = useState<number | null>(null);
 
   return (
     <div className="h-full">
-      <JourneyList settings={settings} onSelect={setPendingStageId} />
-
-      {/* Exercise info modal — shown when a stage card is tapped */}
-      {pendingStageId !== null && (
-        <ExerciseInfoModal
-          stageId={pendingStageId}
-          settings={settings}
-          onStart={() => {
-            router.push(`/journey/${pendingStageId}`);
-            setPendingStageId(null);
-          }}
-          onDismiss={() => setPendingStageId(null)}
-          onAdvanceWithoutExercise={() => {
-            const stage = JOURNEY_STAGES.find((s) => s.id === pendingStageId)!;
-            if (stage.type === "technique_intro") {
-              onSettingsUpdate(
-                "journeyStage",
-                Math.max(settings.journeyStage, pendingStageId),
-              );
-              const nextId = pendingStageId + 1;
-              setPendingStageId(nextId <= TOTAL_JOURNEY_STAGES ? nextId : null);
-            }
-          }}
-        />
-      )}
+      <JourneyList
+        settings={settings}
+        onSelect={(stageId) => router.push(`/journey/${stageId}`)}
+      />
     </div>
   );
 }
