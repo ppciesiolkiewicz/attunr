@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
-import { HeadphonesNotice, InfoButton } from "./TabInfoModal";
+import { HeadphonesNotice, InfoButton, InfoIcon } from "./TabInfoModal";
 import {
   JOURNEY_STAGES,
   TOTAL_JOURNEY_STAGES,
@@ -40,6 +40,29 @@ const LOW_RANGE_IDS = ["root", "sacral", "solar-plexus"] as const;
 const HIGH_RANGE_IDS = ["throat", "third-eye", "crown"] as const;
 
 const JOURNEY_EXERCISE_INFO_SKIP_KEY = "attunr.journeyExerciseInfoSkipped";
+const JOURNEY_JUST_SAW_INFO_KEY = "attunr.journeyJustSawInfo";
+
+function getSkippedInfoStageIds(): Set<number> {
+  if (typeof window === "undefined") return new Set();
+  try {
+    const raw = localStorage.getItem(JOURNEY_EXERCISE_INFO_SKIP_KEY);
+    if (!raw) return new Set();
+    const parsed = JSON.parse(raw) as unknown;
+    return new Set(Array.isArray(parsed) ? parsed.filter((n): n is number => typeof n === "number") : []);
+  } catch {
+    return new Set();
+  }
+}
+
+function addSkippedInfoStageId(stageId: number) {
+  try {
+    const ids = getSkippedInfoStageIds();
+    ids.add(stageId);
+    localStorage.setItem(JOURNEY_EXERCISE_INFO_SKIP_KEY, JSON.stringify([...ids]));
+  } catch {
+    /* ignore */
+  }
+}
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -480,11 +503,7 @@ function ExerciseInfoModal({
 
   function handleBegin() {
     if (showDontShowAgain && dontShowAgain) {
-      try {
-        localStorage.setItem(JOURNEY_EXERCISE_INFO_SKIP_KEY, "1");
-      } catch {
-        /* ignore */
-      }
+      addSkippedInfoStageId(stageId);
     }
     if (isTechniqueIntro && onAdvanceWithoutExercise) {
       onAdvanceWithoutExercise();
@@ -614,8 +633,10 @@ function ExerciseInfoModal({
                 Don&apos;t show this information again
               </span>
             </label>
-            <p className="text-xs text-white/40 pl-6">
-              You can always bring it back by clicking the (i) icon on the screen
+            <p className="text-xs text-white/40 pl-6 flex items-center gap-1.5 flex-wrap">
+              You can always bring it back by clicking the{" "}
+              <InfoIcon size={12} className="inline-block opacity-70 shrink-0" />{" "}
+              icon on the screen
             </p>
           </div>
         )}
@@ -789,21 +810,27 @@ export function JourneyExercise({
     learned: string;
     tip: string;
   } | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(
-    stage.type !== "technique_intro",
-  );
+  const [showInfoModal, setShowInfoModal] = useState(() => {
+    if (stage.type === "technique_intro") return false;
+    if (typeof window === "undefined") return true;
+    try {
+      const saw = sessionStorage.getItem(JOURNEY_JUST_SAW_INFO_KEY);
+      if (saw === String(stageId)) {
+        sessionStorage.removeItem(JOURNEY_JUST_SAW_INFO_KEY);
+        return false; // just showed this in pending modal before nav
+      }
+    } catch {
+      /* ignore */
+    }
+    return true;
+  });
   const [pendingNavigateStageId, setPendingNavigateStageId] = useState<
     number | null
   >(null);
   const rafRef = useRef<number | null>(null);
 
-  function shouldShowInfoBeforeNavigate(): boolean {
-    if (typeof window === "undefined") return true;
-    try {
-      return !localStorage.getItem(JOURNEY_EXERCISE_INFO_SKIP_KEY);
-    } catch {
-      return true;
-    }
+  function shouldShowInfoBeforeNavigate(targetStageId: number): boolean {
+    return !getSkippedInfoStageIds().has(targetStageId);
   }
 
   const resetProgress = useCallback(() => {
@@ -940,7 +967,7 @@ export function JourneyExercise({
       const nextId = stageId + 1;
       const nextStage = JOURNEY_STAGES.find((s) => s.id === nextId);
       const skipModal =
-        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate();
+        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate(nextId);
       if (skipModal) {
         navigateTo(nextId);
       } else {
@@ -955,7 +982,7 @@ export function JourneyExercise({
     if (!onPrev) return;
     const prevStage = JOURNEY_STAGES.find((s) => s.id === prevId);
     const skipModal =
-      prevStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate();
+      prevStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate(prevId);
     if (skipModal) {
       navigateToPrev(prevId);
     } else {
@@ -968,7 +995,7 @@ export function JourneyExercise({
       const nextId = stageId + 1;
       const nextStage = JOURNEY_STAGES.find((s) => s.id === nextId);
       const skipModal =
-        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate();
+        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate(nextId);
       if (skipModal) {
         navigateTo(nextId);
       } else {
@@ -999,6 +1026,11 @@ export function JourneyExercise({
     setPendingNavigateStageId(null);
     if (!id) return;
     const targetId = id > 0 ? id : -id;
+    try {
+      sessionStorage.setItem(JOURNEY_JUST_SAW_INFO_KEY, String(targetId));
+    } catch {
+      /* ignore */
+    }
     if (id > 0) {
       navigateTo(targetId);
     } else {

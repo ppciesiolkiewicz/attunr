@@ -20,6 +20,26 @@ function HeadphonesIcon() {
   );
 }
 
+export function InfoIcon({ className, size = 12 }: { className?: string; size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="16" x2="12" y2="12" />
+      <circle cx="12" cy="8" r="0.5" fill="currentColor" />
+    </svg>
+  );
+}
+
 export function InfoButton({ onClick }: { onClick: () => void }) {
   return (
     <button
@@ -40,12 +60,7 @@ export function InfoButton({ onClick }: { onClick: () => void }) {
         (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.5)";
       }}
     >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-        strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="16" x2="12" y2="12" />
-        <circle cx="12" cy="8" r="0.5" fill="currentColor" />
-      </svg>
+      <InfoIcon size={14} />
     </button>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { JourneyExercise } from "@/components/JourneyView";
 import { useApp } from "@/context/AppContext";
@@ -8,10 +8,18 @@ import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES } from "@/constants/journey";
 
 export default function ExercisePage() {
   const params = useParams();
+  const pathname = usePathname();
   const router = useRouter();
   const { settings, pitchHz, pitchHzRef, playTone, updateSettings, openSettings } = useApp();
 
-  const id = typeof params.id === "string" ? parseInt(params.id, 10) : NaN;
+  // useParams can be empty on first render (Next.js 15+); fallback to parsing from pathname
+  const idFromParams = typeof params?.id === "string" ? parseInt(params.id, 10) : NaN;
+  const idFromPath = (() => {
+    const match = pathname?.match(/^\/journey\/(\d+)$/);
+    return match ? parseInt(match[1], 10) : NaN;
+  })();
+  const id = !isNaN(idFromParams) ? idFromParams : idFromPath;
+
   const isValid = !isNaN(id) && id >= 1 && id <= TOTAL_JOURNEY_STAGES;
   const stageExists = isValid && JOURNEY_STAGES.some((s) => s.id === id);
 
