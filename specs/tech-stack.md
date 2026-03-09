@@ -79,6 +79,8 @@ inTune = |detected − target| / target ≤ 0.03
 
 ## File structure
 
+Keep files small; split large configs by logical unit (e.g. journey stages per part). See [Code Organization](./code-organization.md).
+
 ```
 src/
 ├── app/

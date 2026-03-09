@@ -42,34 +42,33 @@ Part 1 is vocal warmups (lip rolls) — start with Crown→Root, then Root→Cro
 - **Full** — Name, mantra, element, frequency, longDescription. Used for first encounter with each chakra.
 - **Brief** — Mantra + interestingFact. Used in Part 4+ technique exercises; avoids repetition.
 
-### Part 1 — Vocal warmups (4 stages)
-
-Do before every session; aim for at least a few minutes. Focus on warming up the voice, not chakra lore.
+### Part 1 — Foundation + Vocal warmups (5 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 1 | Technique intro | Lip rolls |
-| 2 | Sequence | Lip rolls — high to low |
-| 3 | Sequence | Lip rolls — low to high |
-| 4 | Individual | Sustain a lip roll (5 s on one tone) |
+| 1 | Technique intro | Chakra tones — what they are, why they're good |
+| 2 | Technique intro | Lip rolls |
+| 3 | Sequence | Lip rolls — high to low |
+| 4 | Sequence | Lip rolls — low to high |
+| 5 | Individual | Sustain a lip roll (5 s on one tone) |
 
 ### Part 2 — Sustain (8 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 5 | Technique intro | Sustain |
-| 6–12 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown |
+| 6 | Technique intro | Sustain |
+| 7–13 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown |
 
 ### Part 3 — Sequences (6 stages)
 
 | Stage | Sequence |
 |-------|----------|
-| 13 | Root → Sacral |
-| 14 | Root → Solar Plexus |
-| 15 | Root to Heart |
-| 16 | Heart to Third Eye |
-| 17 | Third Eye & Crown |
-| 18 | Full Alignment |
+| 14 | Root → Sacral |
+| 15 | Root → Solar Plexus |
+| 16 | Root to Heart |
+| 17 | Heart to Third Eye |
+| 18 | Third Eye & Crown |
+| 19 | Full Alignment |
 
 ### Part 4 — Vowel U (8 stages)
 
@@ -77,36 +76,36 @@ Uuu is the easiest vowel to start with (easier than eee or aaa).
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 19 | Technique intro | Vowel U |
-| 20–26 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown — U |
+| 20 | Technique intro | Vowel U |
+| 21–27 | Individual | Root, Sacral, Solar Plexus, Heart, Throat, Third Eye, Crown — U |
 
 ### Part 5 — Mantra (8 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 27 | Technique intro | Mantra |
-| 28–34 | Individual | Root—LAM, Sacral—VAM, Solar Plexus—RAM, Heart—YAM, Throat—HAM, Third Eye—OM, Crown—AH |
+| 28 | Technique intro | Mantra |
+| 29–35 | Individual | Root—LAM, Sacral—VAM, Solar Plexus—RAM, Heart—YAM, Throat—HAM, Third Eye—OM, Crown—AH |
 
 ### Part 6 — Vowel EE (4 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 35 | Technique intro | Vowel EE |
-| 36–38 | Individual | Root, Heart, Crown — EE |
+| 36 | Technique intro | Vowel EE |
+| 37–39 | Individual | Root, Heart, Crown — EE |
 
 ### Part 7 — Vowel flow (2 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 39 | Technique intro | Vowel flow U → EE |
-| 40 | Individual | Heart — U to EE |
+| 40 | Technique intro | Vowel flow U → EE |
+| 41 | Individual | Heart — U to EE |
 
 ### Part 8 — Puffy cheeks (4 stages)
 
 | Stage | Type | Title |
 |-------|------|-------|
-| 41 | Technique intro | Puffy cheeks |
-| 42–44 | Individual | Root, Heart, Crown — Puffy cheeks |
+| 42 | Technique intro | Puffy cheeks |
+| 43–45 | Individual | Root, Heart, Crown — Puffy cheeks |
 
 **Mantra stage:** Requires singing the actual seed syllable (LAM, VAM, RAM, etc.) on each chakra's tone — not just sustaining or using generic vowels.
 
@@ -114,7 +113,7 @@ Uuu is the easiest vowel to start with (easier than eee or aaa).
 
 - Technique intros: modal with instruction + Video coming soon. "Continue" marks complete and opens next stage modal.
 - Brief chakra cards show mantra + interestingFact (from chakras.ts).
-- Progress key: `attunr.journeyStage` 0–44.
+- Progress key: `attunr.journeyStage` 0–45.
 
 ---
 
@@ -207,7 +206,7 @@ Add to `constants/chakras.ts`:
 ## Progress persistence
 
 Journey progress (highest completed stage) is saved to `localStorage`.
-Key: `attunr.journeyStage` — integer 0–44.
+Key: `attunr.journeyStage` — integer 0–45.
 
 ---
 

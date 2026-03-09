@@ -7,7 +7,7 @@ export interface Settings {
   voiceType: VoiceTypeId;
   tuning: TuningStandard;
   freqBase: FrequencyBase;
-  journeyStage: number; // 0 = none completed, 1–44 = highest completed
+  journeyStage: number; // 0 = none completed, 1–45 = highest completed
 }
 
 const DEFAULTS: Settings = {

@@ -34,6 +34,17 @@ function voiceTypeLabel(id: string) {
   return map[id] ?? id;
 }
 
+// ── Icons ────────────────────────────────────────────────────────────────────
+
+function BookIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    </svg>
+  );
+}
+
 // ── Progress Arc ──────────────────────────────────────────────────────────────
 
 function ProgressArc({ progress }: { progress: number }) {
@@ -115,9 +126,12 @@ function StageCard({
       <div className="flex-1 px-3.5 py-3 min-w-0">
         <div className="flex items-baseline justify-between gap-2 mb-1.5">
           <span
-            className="text-base font-semibold"
+            className="text-base font-semibold flex items-center gap-1.5"
             style={{ color: !isUnlocked ? "rgba(255,255,255,0.65)" : "rgba(255,255,255,0.95)" }}
           >
+            {stage.type === "technique_intro" && (
+              <BookIcon className="shrink-0 opacity-70" style={{ color: isUnlocked ? "rgba(255,255,255,0.6)" : "rgba(255,255,255,0.45)" }} />
+            )}
             {stage.title}
           </span>
           <span className="text-xs text-white/58 shrink-0">Exercise {stage.id}</span>
@@ -143,9 +157,9 @@ function StageCard({
           <p className="text-xs text-white/58">Hold the buzz 5 seconds</p>
         )}
 
-        {/* Technique intro: show technique name */}
+        {/* Technique intro: show cardCue or technique name */}
         {stage.type === "technique_intro" && (
-          <p className="text-xs text-white/58">{stage.technique?.replace(/-/g, " ") ?? "Learn"}</p>
+          <p className="text-xs text-white/58">{stage.cardCue ?? stage.technique?.replace(/-/g, " ") ?? "Learn"}</p>
         )}
         {/* Part II: chakra sequence — skip for lip-roll (use title instead) */}
         {stageChakras.length > 1 && stage.technique !== "lip-rolls" && (
@@ -192,14 +206,15 @@ function StageCard({
 // ── Journey List ──────────────────────────────────────────────────────────────
 
 const PART_NAMES: Record<number, string> = {
-  1: "Vocal warmups",
-  2: "Sustain",
-  3: "Sequences",
-  4: "Vowel U",
-  5: "Mantra",
-  6: "Vowel EE",
-  7: "Vowel flow",
-  8: "Puffy cheeks",
+  1: "Introduction",
+  2: "Vocal warmups",
+  3: "Sustain",
+  4: "Sequences",
+  5: "Vowel U",
+  6: "Mantra",
+  7: "Vowel EE",
+  8: "Vowel flow",
+  9: "Puffy cheeks",
 };
 
 function JourneyList({
@@ -210,7 +225,7 @@ function JourneyList({
   onSelect: (stageId: number) => void;
 }) {
   const { journeyStage: highestCompleted } = settings;
-  const parts = [1, 2, 3, 4, 5, 6, 7, 8] as const;
+  const parts = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
 
   return (
     <div className="h-full overflow-y-auto">
@@ -218,7 +233,7 @@ function JourneyList({
 
         <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
           <p>
-            Start with vocal warmups (lip rolls), then foundations (one chakra), sequences, and vocal techniques like mantras and vowels.
+            Start with the introduction and vocal warmups, then sustain (one chakra at a time), sequences, and vocal techniques like mantras and vowels.
           </p>
           <p>
             When you&apos;ve built confidence, switch to Explore for freeform practice — any tone, any order.
@@ -228,7 +243,7 @@ function JourneyList({
         {parts.map((partNum) => {
           const stages = JOURNEY_STAGES.filter((s) => s.part === partNum);
           if (stages.length === 0) return null;
-          const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"][partNum - 1];
+          const roman = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][partNum - 1];
           return (
             <section key={partNum} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
@@ -317,9 +332,10 @@ function ExerciseInfoModal({
         {/* Header */}
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
-            <p className="text-xs uppercase tracking-widest text-white/45 mb-1">
+            <p className="text-xs uppercase tracking-widest text-white/45 mb-1 flex items-center gap-1.5">
+              {isTechniqueIntro && <BookIcon className="opacity-70" />}
               Exercise {stageId} of {TOTAL_JOURNEY_STAGES} —{" "}
-              {stage.part === 2 ? "Sequence" : stage.part >= 3 ? "Technique" : isTechniqueIntro ? "Learn" : "Individual"}
+              {isTechniqueIntro ? "Learn" : stage.part === 2 ? "Warmup" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
             </p>
             <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
             <p className="text-sm mt-1" style={{ color: primaryColor }}>

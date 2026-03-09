@@ -16,7 +16,7 @@ export type ChakraDetailStyle = "full" | "brief" | "minimal";
 
 export interface JourneyStage {
   id: number;
-  part: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  part: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   title: string;
   instruction: string;
   chakraIds: ChakraId[];
@@ -25,29 +25,46 @@ export interface JourneyStage {
   technique?: TechniqueId;
   /** For chakra exercises: show full chakra card or brief (mantra + interesting fact) */
   chakraDetailStyle?: ChakraDetailStyle;
+  /** Optional card subtitle; overrides technique display for technique_intro */
+  cardCue?: string;
   holdSeconds: number;
   noteSeconds: number;
 }
 
-export const TOTAL_JOURNEY_STAGES = 44;
+export const TOTAL_JOURNEY_STAGES = 45;
 
 export const JOURNEY_STAGES: JourneyStage[] = [
-  // ── Part 1: Vocal warmups (lip rolls) ──────────────────────────────────────
+  // ── Part 1: Chakra tones (foundation) ──────────────────────────────────────
   {
     id: 1,
     part: 1,
+    type: "technique_intro",
+    title: "Chakra tones",
+    chakraIds: [],
+    holdSeconds: 0,
+    noteSeconds: 0,
+    technique: "sustain",
+    cardCue: "Discover chakra tones and how they support grounding, creativity, and presence",
+    instruction:
+      "Chakra tones are specific frequencies aligned with the seven energy centres in your body — from Root at the base of the spine to Crown at the top of the head. Many traditions use the Solfeggio scale (396 Hz, 417 Hz, 528 Hz, and so on) as a starting point.\n\nPractising these tones through singing helps you tune into each chakra, notice where tension or ease lives in your body, and develop a deeper connection between voice and awareness. They can support grounding, creativity, confidence, compassion, expression, clarity, and a sense of presence. The goal is not perfection, but presence — feeling where the sound lands and how it shifts your state.",
+  },
+  // ── Part 2: Vocal warmups (lip rolls) ──────────────────────────────────────
+  {
+    id: 2,
+    part: 2,
     type: "technique_intro",
     title: "Lip rolls",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "lip-rolls",
+    cardCue: "Gentle warmup to relax your jaw and warm your voice",
     instruction:
       "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you.",
   },
   {
-    id: 2,
-    part: 1,
+    id: 3,
+    part: 2,
     type: "sequence",
     title: "Lip rolls — high to low",
     chakraIds: ["crown", "third-eye", "throat", "heart", "solar-plexus", "sacral", "root"],
@@ -58,8 +75,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Lip roll from high to low. Two seconds per tone. Descending first — easier when your voice is cold.",
   },
   {
-    id: 3,
-    part: 1,
+    id: 4,
+    part: 2,
     type: "sequence",
     title: "Lip rolls — low to high",
     chakraIds: ["root", "sacral", "solar-plexus", "heart", "throat", "third-eye", "crown"],
@@ -70,8 +87,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Lip roll from low to high. Two seconds per tone. Each pitch once.",
   },
   {
-    id: 4,
-    part: 1,
+    id: 5,
+    part: 2,
     type: "individual",
     title: "Sustain a lip roll",
     chakraIds: ["heart"],
@@ -83,22 +100,23 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Hold one tone and sustain the lip roll for five seconds. Keep the buzz steady — lips vibrating without force. Feel the sound in your chest.",
   },
 
-  // ── Part 2: Sustain (foundation) ───────────────────────────────────────────
+  // ── Part 3: Sustain (foundation) ───────────────────────────────────────────
   {
-    id: 5,
-    part: 2,
+    id: 6,
+    part: 3,
     type: "technique_intro",
     title: "Sustain",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "sustain",
+    cardCue: "Hold each tone steadily and feel where it resonates",
     instruction:
       "Sing and hold each tone steadily. Feel where it resonates in your body — lower tones in the chest, higher in the head. There's no rush. Let the sound settle.",
   },
   {
-    id: 6,
-    part: 2,
+    id: 7,
+    part: 3,
     type: "individual",
     title: "Root",
     chakraIds: ["root"],
@@ -110,8 +128,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Root chakra tone — LAM.\nSing it and feel steady and grounded.\nThis can help you feel safe, present, and at home in your body.",
   },
   {
-    id: 7,
-    part: 2,
+    id: 8,
+    part: 3,
     type: "individual",
     title: "Sacral",
     chakraIds: ["sacral"],
@@ -123,8 +141,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Sacral chakra tone — VAM.\nMatch it and let the sound flow naturally.\nThis can support creativity, flow, and emotional ease.",
   },
   {
-    id: 8,
-    part: 2,
+    id: 9,
+    part: 3,
     type: "individual",
     title: "Solar Plexus",
     chakraIds: ["solar-plexus"],
@@ -136,8 +154,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Solar Plexus chakra tone — RAM.\nSing with purpose and feel your centre.\nThis can support confidence and personal power.",
   },
   {
-    id: 9,
-    part: 2,
+    id: 10,
+    part: 3,
     type: "individual",
     title: "Heart",
     chakraIds: ["heart"],
@@ -149,8 +167,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Heart chakra tone — YAM.\nTake a soft breath and sing openly.\nThis can support compassion, connection, and emotional balance.",
   },
   {
-    id: 10,
-    part: 2,
+    id: 11,
+    part: 3,
     type: "individual",
     title: "Throat",
     chakraIds: ["throat"],
@@ -162,8 +180,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Throat chakra tone — HAM.\nSing clearly and let your voice be heard.\nThis can support honest expression and clear communication.",
   },
   {
-    id: 11,
-    part: 2,
+    id: 12,
+    part: 3,
     type: "individual",
     title: "Third Eye",
     chakraIds: ["third-eye"],
@@ -175,8 +193,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Third Eye chakra tone — OM.\nSing gently and turn your attention inward.\nThis can support intuition, clarity, and expanded perception.",
   },
   {
-    id: 12,
-    part: 2,
+    id: 13,
+    part: 3,
     type: "individual",
     title: "Crown",
     chakraIds: ["crown"],
@@ -188,10 +206,10 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "This is the Crown chakra tone — AH.\nStay soft as you move into this higher tone.\nThis can support a sense of peace, presence, and unity.",
   },
 
-  // ── Part 3: Sequences ──────────────────────────────────────────────────────
+  // ── Part 4: Sequences ──────────────────────────────────────────────────────
   {
-    id: 13,
-    part: 3,
+    id: 14,
+    part: 4,
     type: "sequence",
     title: "Root & Sacral",
     chakraIds: ["root", "sacral"],
@@ -202,8 +220,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Root, then Sacral.\nMove from stability into flow.\nThis can help balance grounded energy with creativity.",
   },
   {
-    id: 14,
-    part: 3,
+    id: 15,
+    part: 4,
     type: "sequence",
     title: "Root to Solar Plexus",
     chakraIds: ["root", "sacral", "solar-plexus"],
@@ -214,8 +232,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Root, Sacral, then Solar Plexus.\nFeel the energy rise from grounding into power.\nThis can build inner strength from the base up.",
   },
   {
-    id: 15,
-    part: 3,
+    id: 16,
+    part: 4,
     type: "sequence",
     title: "Root to Heart",
     chakraIds: ["root", "sacral", "solar-plexus", "heart"],
@@ -226,8 +244,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Root through Heart in order.\nKeep each tone smooth and connected.\nThis can help build inner balance from base to heart.",
   },
   {
-    id: 16,
-    part: 3,
+    id: 17,
+    part: 4,
     type: "sequence",
     title: "Heart to Third Eye",
     chakraIds: ["heart", "throat", "third-eye"],
@@ -238,8 +256,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Heart, Throat, then Third Eye.\nLet the tones rise naturally from feeling to vision.\nThis can support emotional openness, expression, and clarity.",
   },
   {
-    id: 17,
-    part: 3,
+    id: 18,
+    part: 4,
     type: "sequence",
     title: "Third Eye & Crown",
     chakraIds: ["third-eye", "crown"],
@@ -250,8 +268,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Third Eye, then Crown.\nStay gentle as you move into the higher tones.\nThis can support clarity, insight, and expanded awareness.",
   },
   {
-    id: 18,
-    part: 3,
+    id: 19,
+    part: 4,
     type: "sequence",
     title: "Full Alignment",
     chakraIds: ["root", "sacral", "solar-plexus", "heart", "throat", "third-eye", "crown"],
@@ -262,22 +280,23 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing all seven chakras from Root to Crown.\nMove slowly and keep your breath relaxed.\nThis can support full-spectrum alignment and integration.",
   },
 
-  // ── Part 4: Vowel U (easiest vowel — uuu first) ─────────────────────────────
+  // ── Part 5: Vowel U (easiest vowel — uuu first) ─────────────────────────────
   {
-    id: 19,
-    part: 4,
+    id: 20,
+    part: 5,
     type: "technique_intro",
     title: "Vowel U",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "vowel-u",
+    cardCue: "Sing with rounded lips — the easiest vowel to start",
     instruction:
       "Sing uuu (as in 'moon') — lips rounded, tongue back. U is the easiest vowel to start with. It tends to resonate lower in the body. Hold the tone and feel where it lands.",
   },
   {
-    id: 20,
-    part: 4,
+    id: 21,
+    part: 5,
     type: "individual",
     title: "Root — U",
     chakraIds: ["root"],
@@ -289,8 +308,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Root tone.\nFeel the tone in your lower body.",
   },
   {
-    id: 21,
-    part: 4,
+    id: 22,
+    part: 5,
     type: "individual",
     title: "Sacral — U",
     chakraIds: ["sacral"],
@@ -302,8 +321,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Sacral tone.\nLet the sound flow from your lower belly.",
   },
   {
-    id: 22,
-    part: 4,
+    id: 23,
+    part: 5,
     type: "individual",
     title: "Solar Plexus — U",
     chakraIds: ["solar-plexus"],
@@ -315,8 +334,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Solar Plexus tone.\nFeel the power in your centre.",
   },
   {
-    id: 23,
-    part: 4,
+    id: 24,
+    part: 5,
     type: "individual",
     title: "Heart — U",
     chakraIds: ["heart"],
@@ -328,8 +347,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Heart tone.\nOpen and soft — feel it in your chest.",
   },
   {
-    id: 24,
-    part: 4,
+    id: 25,
+    part: 5,
     type: "individual",
     title: "Throat — U",
     chakraIds: ["throat"],
@@ -341,8 +360,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Throat tone.\nClear and true — let your voice be heard.",
   },
   {
-    id: 25,
-    part: 4,
+    id: 26,
+    part: 5,
     type: "individual",
     title: "Third Eye — U",
     chakraIds: ["third-eye"],
@@ -354,8 +373,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Third Eye tone.\nGentle and inward.",
   },
   {
-    id: 26,
-    part: 4,
+    id: 27,
+    part: 5,
     type: "individual",
     title: "Crown — U",
     chakraIds: ["crown"],
@@ -367,22 +386,23 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing uuu on the Crown tone.\nStay soft and open at the top.",
   },
 
-  // ── Part 5: Mantra ────────────────────────────────────────────────────────
+  // ── Part 6: Mantra ────────────────────────────────────────────────────────
   {
-    id: 27,
-    part: 5,
+    id: 28,
+    part: 6,
     type: "technique_intro",
     title: "Mantra",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "mantra",
+    cardCue: "Sing each chakra's seed syllable — LAM, VAM, RAM, and more",
     instruction:
       "Each chakra has a seed syllable, or mantra. Sing that sound on the tone — LAM for Root, VAM for Sacral, RAM for Solar Plexus, YAM for Heart, HAM for Throat, OM for Third Eye, AH for Crown. The mantra helps focus the vibration in that chakra.",
   },
   {
-    id: 28,
-    part: 5,
+    id: 29,
+    part: 6,
     type: "individual",
     title: "Root — LAM",
     chakraIds: ["root"],
@@ -394,8 +414,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing LAM on the Root tone. Feel the 'L' and 'M' shape the sound, the 'ah' in the middle carries the pitch.",
   },
   {
-    id: 29,
-    part: 5,
+    id: 30,
+    part: 6,
     type: "individual",
     title: "Sacral — VAM",
     chakraIds: ["sacral"],
@@ -407,8 +427,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing VAM on the Sacral tone. Let the sound flow from your lower belly.",
   },
   {
-    id: 30,
-    part: 5,
+    id: 31,
+    part: 6,
     type: "individual",
     title: "Solar Plexus — RAM",
     chakraIds: ["solar-plexus"],
@@ -420,8 +440,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing RAM on the Solar Plexus tone. Feel the power in the 'R' — purpose and centre.",
   },
   {
-    id: 31,
-    part: 5,
+    id: 32,
+    part: 6,
     type: "individual",
     title: "Heart — YAM",
     chakraIds: ["heart"],
@@ -433,8 +453,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing YAM on the Heart tone. Open and soft — the bridge between body and mind.",
   },
   {
-    id: 32,
-    part: 5,
+    id: 33,
+    part: 6,
     type: "individual",
     title: "Throat — HAM",
     chakraIds: ["throat"],
@@ -446,8 +466,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing HAM on the Throat tone. Clear and true — let your voice be heard.",
   },
   {
-    id: 33,
-    part: 5,
+    id: 34,
+    part: 6,
     type: "individual",
     title: "Third Eye — OM",
     chakraIds: ["third-eye"],
@@ -459,8 +479,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing OM on the Third Eye tone. Gentle and inward — clarity and insight.",
   },
   {
-    id: 34,
-    part: 5,
+    id: 35,
+    part: 6,
     type: "individual",
     title: "Crown — AH",
     chakraIds: ["crown"],
@@ -472,22 +492,23 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing AH on the Crown tone. Soft and open — presence and unity.",
   },
 
-  // ── Part 6: Vowel EE ──────────────────────────────────────────────────────
+  // ── Part 7: Vowel EE ──────────────────────────────────────────────────────
   {
-    id: 35,
-    part: 6,
+    id: 36,
+    part: 7,
     type: "technique_intro",
     title: "Vowel EE",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "vowel-ee",
+    cardCue: "Bright, forward vowel — feel the resonance shift higher",
     instruction:
       "Sing with EE (as in 'see') — lips spread, tongue forward. EE lifts the resonance higher. It can feel brighter and more energising. Contrast with U to feel the shift.",
   },
   {
-    id: 36,
-    part: 6,
+    id: 37,
+    part: 7,
     type: "individual",
     title: "Root — EE",
     chakraIds: ["root"],
@@ -499,8 +520,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Root with EE.\nA low tone with a forward vowel — notice the blend.",
   },
   {
-    id: 37,
-    part: 6,
+    id: 38,
+    part: 7,
     type: "individual",
     title: "Heart — EE",
     chakraIds: ["heart"],
@@ -512,8 +533,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Sing Heart with EE.\nFeel the openness in the chest with this vowel.",
   },
   {
-    id: 38,
-    part: 6,
+    id: 39,
+    part: 7,
     type: "individual",
     title: "Crown — EE",
     chakraIds: ["crown"],
@@ -524,22 +545,23 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     instruction:
       "Sing Crown with EE.\nA high, bright tone — let it lift.",
   },
-  // ── Part 7: Vowel flow ────────────────────────────────────────────────────
+  // ── Part 8: Vowel flow ────────────────────────────────────────────────────
   {
-    id: 39,
-    part: 7,
+    id: 40,
+    part: 8,
     type: "technique_intro",
     title: "Vowel flow U → EE",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "vowel-flow",
+    cardCue: "Glide from U to EE on one tone to build vocal flexibility",
     instruction:
       "Hold one tone and smoothly move from U to EE (or back). Keep the pitch steady — only the mouth shape changes. This builds vocal flexibility and awareness of resonance.",
   },
   {
-    id: 40,
-    part: 7,
+    id: 41,
+    part: 8,
     type: "individual",
     title: "Heart — U to EE",
     chakraIds: ["heart"],
@@ -550,22 +572,23 @@ export const JOURNEY_STAGES: JourneyStage[] = [
     instruction:
       "Sing Heart and flow from U to EE. Hold the tone steady, let the vowel glide. Five seconds in tune.",
   },
-  // ── Part 8: Puffy cheeks ──────────────────────────────────────────────────
+  // ── Part 9: Puffy cheeks ──────────────────────────────────────────────────
   {
-    id: 41,
-    part: 8,
+    id: 42,
+    part: 9,
     type: "technique_intro",
     title: "Puffy cheeks",
     chakraIds: [],
     holdSeconds: 0,
     noteSeconds: 0,
     technique: "puffy-cheeks",
+    cardCue: "Build breath control by singing with cheeks full of air",
     instruction:
       "Fill your cheeks with air, then sing the tone without releasing. Your cheeks stay rounded. Hold for a few seconds, then release gently. This develops breath control and teaches you to sing without jaw tension.",
   },
   {
-    id: 42,
-    part: 8,
+    id: 43,
+    part: 9,
     type: "individual",
     title: "Root — Puffy cheeks",
     chakraIds: ["root"],
@@ -577,8 +600,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Root with puffy cheeks. LAM — feel the grounding while you hold the breath in your cheeks.",
   },
   {
-    id: 43,
-    part: 8,
+    id: 44,
+    part: 9,
     type: "individual",
     title: "Heart — Puffy cheeks",
     chakraIds: ["heart"],
@@ -590,8 +613,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
       "Heart with puffy cheeks. YAM — stay open in the chest.",
   },
   {
-    id: 44,
-    part: 8,
+    id: 45,
+    part: 9,
     type: "individual",
     title: "Crown — Puffy cheeks",
     chakraIds: ["crown"],

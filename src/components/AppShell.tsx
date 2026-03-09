@@ -115,11 +115,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </span>
         </h1>
 
-        <div className="flex items-center gap-1">
-          <nav className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-2">
+        <div className="flex items-center gap-2">
+          <nav className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-1">
             <Link
               href="/"
-              className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
                 pathname === "/" || pathname.startsWith("/journey")
                   ? "bg-violet-600 text-white"
                   : "text-white/55 hover:text-white/85"
@@ -129,13 +129,19 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             </Link>
             <Link
               href="/explore"
-              className={`px-3.5 py-1.5 rounded-md text-sm font-medium capitalize transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
                 pathname === "/explore" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
               }`}
             >
               Explore
             </Link>
           </nav>
+          <Link
+            href="/articles"
+            className="px-3 py-1.5 text-sm font-medium text-white/35 hover:text-white/55 transition-colors"
+          >
+            Learn
+          </Link>
 
           <button
             onClick={() => setSettingsOpen(true)}
@@ -150,14 +156,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <footer className="shrink-0 px-5 py-2 border-t border-white/[0.04]">
-        <Link
-          href="/articles"
-          className="text-xs text-white/40 hover:text-white/60 transition-colors"
-        >
-          Articles
-        </Link>
-      </footer>
+      <footer className="shrink-0 px-5 py-2 border-t border-white/[0.04]" />
     </div>
     </AppContext.Provider>
   );

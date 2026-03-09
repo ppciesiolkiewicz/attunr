@@ -3,6 +3,8 @@
 Web edition of attunr, built with Next.js 16 + Turbopack, deployed on Vercel.
 Shares the same product vision and language principles as `attunr-expo`.
 
+**Conventions:** Keep files small (under ~300 lines). Split large files by logical unit (e.g. exercise config per part). See [Code Organization](./code-organization.md).
+
 ## Specs index
 
 | Spec | Description |
@@ -16,6 +18,7 @@ Shares the same product vision and language principles as `attunr-expo`.
 | [Audio Engine](./audio-engine.md) | Binaural beats (always on), waveform ring |
 | [Settings](./settings.md) | Tuning, voice type, localStorage persistence |
 | [Tech Stack](./tech-stack.md) | Next.js 16, Tailwind v4, ml5 CREPE, Web Audio API |
+| [Code Organization](./code-organization.md) | File size limits, splitting strategy (e.g. exercise config per part) |
 
 ## Current build status
 
