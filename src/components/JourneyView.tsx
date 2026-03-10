@@ -588,7 +588,7 @@ function ExerciseInfoModal({
         </div>
 
         {/* Scrollable content */}
-        <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1">
+        <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1 min-h-0">
           {/* Chakra detail — skip for lip-roll sequences, voice warmups (Low U, Hoo hoo), else show card */}
           {!isTechniqueIntro &&
             stage.chakraIds.length > 0 &&
@@ -703,7 +703,7 @@ function ExerciseInfoModal({
 
         {/* Don't show again checkbox — when navigating between exercises */}
         {showDontShowAgain && (
-          <div className="px-5 py-2 flex flex-col gap-1">
+          <div className="px-5 py-2 flex flex-col gap-1 shrink-0 border-t border-white/[0.06]">
             <label className="flex items-center gap-2.5 cursor-pointer select-none">
               <input
                 type="checkbox"
@@ -943,8 +943,15 @@ export function JourneyExercise({
   const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
 
+  // Auto-show info modal before exercise (farinelli always; others unless user skipped)
   useEffect(() => {
-    if (stage.type === "farinelli") setShowInfoModal(true);
+    if (stage.type === "technique_intro") return;
+    if (stage.type === "farinelli") {
+      setShowInfoModal(true);
+      return;
+    }
+    const skipped = getSkippedInfoStageIds();
+    if (!skipped.has(stageId)) setShowInfoModal(true);
   }, [stageId, stage.type]);
 
   // Prefetch next page so it’s ready when the modal closes
@@ -1212,6 +1219,7 @@ export function JourneyExercise({
           settings={settings}
           onStart={() => setShowInfoModal(false)}
           onDismiss={() => setShowInfoModal(false)}
+          showDontShowAgain={stage.type !== "farinelli"}
         />
       )}
 
