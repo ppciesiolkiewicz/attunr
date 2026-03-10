@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Vision
+
+Voice is one of the most powerful tools humans have for regulating emotions and breathing.
+
+**Problem:** Modern adults rarely sing, even though vocalization has measurable benefits for mood, breathing, and nervous system regulation. Voice is an underused human capability.
+
+**Solution:** We're building tools that make vocal practice simple and accessible through interactive exercises and real-time feedback.
+
+Voice-based wellbeing — not singing lessons. Think: meditation/breathwork apps, not music education.
+
 ## Getting Started
 
 First, run the development server:
