@@ -5,9 +5,11 @@ import AppShell from "@/components/AppShell";
 const baseUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const base = new URL(baseUrl);
+const ogImageUrl = new URL("/web-app-manifest-512x512.png", base).href;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
+  metadataBase: base,
   title: {
     default: "attunr — align your voice",
     template: "%s — attunr",
@@ -32,7 +34,7 @@ export const metadata: Metadata = {
       "Real-time chakra tone practice. Sing into your mic and find your frequency. Explore chakra tones, vocal warmups, and breathwork.",
     images: [
       {
-        url: "/web-app-manifest-512x512.png",
+        url: ogImageUrl,
         width: 512,
         height: 512,
         alt: "attunr — align your voice",
@@ -44,7 +46,7 @@ export const metadata: Metadata = {
     title: "attunr — align your voice",
     description:
       "Real-time chakra tone practice. Sing into your mic and find your frequency.",
-    images: ["/web-app-manifest-512x512.png"],
+    images: [ogImageUrl],
   },
 };
 
