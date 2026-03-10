@@ -29,6 +29,26 @@ export default function TermsPage() {
             By using attunr, you agree to use it at your own risk. We are not
             liable for any harm resulting from use of the app.
           </p>
+          <p className="pt-2 border-t border-white/[0.08] mt-6">
+            attunr uses{" "}
+            <a
+              href="https://ml5js.org/license"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 underline"
+            >
+              ml5.js
+            </a>{" "}
+            for pitch detection. ml5.js is licensed under the{" "}
+            <a
+              href="https://ml5js.org/license"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-violet-400 hover:text-violet-300 underline"
+            >
+              ml5.js license
+            </a>.
+          </p>
         </div>
       </div>
     </div>
