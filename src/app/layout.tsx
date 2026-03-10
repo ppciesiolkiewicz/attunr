@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     template: "%s — attunr",
   },
   description:
-    "Real-time chakra tone practice. Sing into your mic and find your frequency. Explore chakra tones, vocal warmups, and breathwork.",
+    "Find your frequency. Real-time chakra tone practice—sing into your mic and align your voice.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     siteName: "attunr",
     title: "attunr — align your voice",
     description:
-      "Real-time chakra tone practice. Sing into your mic and find your frequency. Explore chakra tones, vocal warmups, and breathwork.",
+      "Find your frequency. Real-time chakra tone practice—sing into your mic and align your voice.",
     images: [
       {
         url: ogImageUrl,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "attunr — align your voice",
     description:
-      "Real-time chakra tone practice. Sing into your mic and find your frequency.",
+      "Find your frequency. Real-time chakra tone practice—sing into your mic and align your voice.",
     images: [ogImageUrl],
   },
 };
