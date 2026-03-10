@@ -712,7 +712,7 @@ function ExerciseInfoModal({
                 className="w-4 h-4 rounded border-white/30 bg-white/5 text-violet-500 focus:ring-violet-500/50"
               />
               <span className="text-sm text-white/58">
-                Don&apos;t show this information again
+                Don&apos;t show for this exercise again
               </span>
             </label>
             <p className="text-xs text-white/40 pl-6 flex items-center gap-1.5 flex-wrap">
