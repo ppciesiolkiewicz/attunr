@@ -9,8 +9,10 @@ export async function generateMetadata({ params }: Props) {
     return { title: "Journey" };
   }
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
+  if (!stage) return { title: "Journey" };
+  const prefix = stage.type === "technique_intro" ? "Learn" : "Exercise";
   return {
-    title: stage ? stage.title : "Journey",
+    title: `${prefix} · ${stage.title}`,
   };
 }
 

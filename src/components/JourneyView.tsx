@@ -439,7 +439,7 @@ function JourneyList({
             <section key={partNum} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
                 <span className="text-xs uppercase tracking-widest text-white/58 shrink-0 flex items-center gap-1.5">
-                  Part {roman} — {PART_NAMES[partNum]}
+                  Part {roman}
                   {partComplete && (
                     <BadgeIcon
                       className="text-violet-400/90"
@@ -562,11 +562,11 @@ function ExerciseInfoModal({
             <p className="text-xs text-white/45 mb-1 flex items-center gap-1.5">
               {isTechniqueIntro && <BookIcon className="opacity-70" />}
               <span className="uppercase tracking-widest">
-                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_NAMES[stage.part]}
+                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]}
               </span>
               <span className="text-white/35">·</span>
               <span>
-                Step {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
+                {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
               </span>
               <span className="text-white/35">·</span>
               <span>
@@ -1146,36 +1146,37 @@ export function JourneyExercise({
   return (
     <div className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/[0.06] shrink-0">
+      <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border-b border-white/[0.06] shrink-0 overflow-x-auto">
         <button
           onClick={onBack}
-          className="flex items-center gap-2 text-sm text-white/58 hover:text-white/85 transition-colors"
+          className="flex items-center shrink-0 text-xs sm:text-sm text-white/58 hover:text-white/85 transition-colors"
         >
           ← Journey
         </button>
         <span className="text-white/25">|</span>
-        <span className="text-sm text-white/52">
+        <span className="text-xs sm:text-sm text-white/52 shrink-0">
           Part{" "}
           {
             ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][
               stage.part - 1
             ]
-          }{" "}
-          — {PART_NAMES[stage.part]}
+          }
         </span>
         <span className="text-white/25">·</span>
-        <span className="text-sm text-white/52">
-          Step {getStepInPart(stageId).stepIndex} of{" "}
+        <span className="text-xs sm:text-sm text-white/52 shrink-0">
+          {getStepInPart(stageId).stepIndex} of{" "}
           {getStepInPart(stageId).stepsInPart}
         </span>
         <span className="text-white/25">—</span>
-        <span className="text-sm text-white/72 font-medium">{stage.title}</span>
+        <span className="text-xs sm:text-sm text-white/72 font-medium truncate min-w-0">
+          {stage.title}
+        </span>
         {stage.type !== "technique_intro" && (
           <InfoButton onClick={() => setShowInfoModal(true)} />
         )}
         <button
           onClick={onOpenSettings}
-          className="ml-auto text-xs text-white/45 hover:text-white/72 transition-colors"
+          className="ml-auto shrink-0 text-xs text-white/45 hover:text-white/72 transition-colors"
         >
           {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
         </button>
@@ -1198,10 +1199,10 @@ export function JourneyExercise({
             {/* Part header — shown for every learning section */}
             <div className="pb-2 border-b border-white/[0.08]">
               <h2 className="text-xl font-semibold text-white">
-                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_NAMES[stage.part]}
+                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]}
               </h2>
               <p className="text-sm text-white/55 mt-0.5">
-                {stage.title} · Step {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
+                {stage.title} · {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
               </p>
             </div>
             <div className="flex flex-col gap-1">
@@ -1336,21 +1337,21 @@ export function JourneyExercise({
       )}
 
       {/* ── Bottom panel ──────────────────────────────────────────────────────── */}
-      <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-2.5 pb-1.5 flex items-center gap-4 shrink-0">
+      <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">
         {stage.type === "technique_intro" ? (
-          <div className="flex items-center gap-3 ml-auto w-full justify-end">
+          <div className="flex items-center gap-2 sm:gap-3 ml-auto w-full sm:w-auto justify-end">
             {stageId > 1 && onPrev && (
               <button
                 onClick={goToPrevStage}
-                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30 transition-all min-w-[6.5rem]"
+                className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30 transition-all min-w-0"
                 title="Previous"
               >
-                ← Previous
+                ← Prev
               </button>
             )}
             <button
               onClick={handleComplete}
-              className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all min-w-[6.5rem]"
+              className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-white transition-all min-w-0"
               style={{
                 background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
                 boxShadow: "0 0 16px rgba(124,58,237,0.4)",
@@ -1362,41 +1363,44 @@ export function JourneyExercise({
         ) : (
           <>
         {isCurrentStage && !stageComplete && stage.type !== "slide" && stage.type !== "farinelli" && (
-          <ProgressArc progress={progress} />
-        )}
-        {isCurrentStage && !stageComplete && stage.type === "slide" && (
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="text-sm text-white/55">Slide {slideCount}/2</span>
+          <div className="shrink-0 order-first sm:order-none">
+            <ProgressArc progress={progress} />
           </div>
         )}
-        {stageComplete && <span className="text-2xl">✓</span>}
+        {isCurrentStage && !stageComplete && stage.type === "slide" && (
+          <div className="flex items-center gap-2 shrink-0 text-xs sm:text-sm text-white/55">
+            Slide {slideCount}/2
+          </div>
+        )}
+        {stageComplete && <span className="text-xl sm:text-2xl shrink-0">✓</span>}
         {isCompleted && !isCurrentStage && (
-          <span className="text-base text-white/48">Completed</span>
+          <span className="text-sm sm:text-base text-white/48 shrink-0">Completed</span>
         )}
 
-        <div className="flex items-center gap-3 ml-auto">
+        <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
           {stage.type !== "farinelli" && (
           <button
             onClick={handleHearTone}
-            className="px-6 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
+            className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
+            title="Play the target tone"
           >
-            ▶ Hear {stageChakras.length > 1 ? "tones" : "tone"}
+            ▶ Play {stageChakras.length > 1 ? "tones" : "tone"}
           </button>
           )}
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
             {stageId > 1 && onPrev && (
               <button
                 onClick={goToPrevStage}
-                className="px-5 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30 transition-all min-w-[6.5rem]"
+                className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30 transition-all min-w-0"
                 title="Previous exercise"
               >
-                ← Previous
+                ← Prev
               </button>
             )}
             {(stageComplete || isCompleted) ? (
               <button
                 onClick={handleComplete}
-                className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all min-w-[6.5rem]"
+                className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-white transition-all min-w-0"
                 style={{
                   background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
                   boxShadow: "0 0 16px rgba(124,58,237,0.4)",
@@ -1407,7 +1411,7 @@ export function JourneyExercise({
             ) : (
               <button
                 onClick={handleSkip}
-                className="px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all min-w-[6.5rem]"
+                className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium text-white transition-all min-w-0"
                 style={{
                   background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
                   boxShadow: "0 0 16px rgba(124,58,237,0.4)",

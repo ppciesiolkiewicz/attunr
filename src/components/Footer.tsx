@@ -24,7 +24,7 @@ export default function Footer() {
             Terms
           </Link>
         </div>
-        <span>Align your voice · find your frequency</span>
+        <span className="hidden sm:inline">Align your voice · find your frequency</span>
       </div>
     </footer>
   );
