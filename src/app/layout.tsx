@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
 
+// Production domain for OG/twitter - Messenger/Facebook require accessible image URLs.
+// Vercel preview URLs can expire; always use production for link previews.
+const SITE_URL = "https://www.attunr.app";
 const baseUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  process.env.NEXT_PUBLIC_SITE_URL ?? SITE_URL;
 const base = new URL(baseUrl);
-const ogImageUrl = new URL("/web-app-manifest-512x512.png", base).href;
+const ogImageUrl = `${SITE_URL}/web-app-manifest-512x512.png`;
 
 export const metadata: Metadata = {
   metadataBase: base,
@@ -28,6 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en",
+    url: SITE_URL,
     siteName: "attunr",
     title: "attunr — align your voice",
     description:
