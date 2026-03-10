@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
-import { FarinelliExercise } from "./FarinelliExercise";
+import { FarinelliExercise, FARINELLI_ADVICES } from "./FarinelliExercise";
 import { HeadphonesNotice, InfoButton, InfoIcon } from "./TabInfoModal";
 import {
   JOURNEY_STAGES,
@@ -357,7 +357,7 @@ function StageCard({
         {/* Farinelli breathwork */}
         {stage.type === "farinelli" && (
           <p className="text-xs text-white/58">
-            Breathwork · cycles 4–{stage.farinelliMaxCount ?? 10}
+            {stage.cardCue ?? `Breathwork · cycles 4–${stage.farinelliMaxCount ?? 10}`}
           </p>
         )}
       </div>
@@ -504,7 +504,7 @@ function ExerciseInfoModal({
   const objective = isTechniqueIntro
     ? "Learn the technique"
     : stage.type === "farinelli"
-      ? `Complete breath cycles from 4 to ${stage.farinelliMaxCount ?? 10}`
+      ? `Complete 7 cycles — each a bit longer than the last`
       : stage.type === "individual"
         ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
         : stage.type === "slide"
@@ -621,10 +621,22 @@ function ExerciseInfoModal({
                 <span className="text-2xl opacity-50">▶</span>
                 <p className="text-sm text-white/45 font-medium">Video coming soon</p>
               </div>
-              <div className="flex flex-col gap-1">
-                <p className="text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
-                  {stage.instruction.split("\n\n")[1]}
+              <div className="flex flex-col gap-3">
+                <p className="text-sm font-medium text-white/70 tracking-wide uppercase">
+                  Key tips
                 </p>
+                <ul className="flex flex-col gap-2.5">
+                  {FARINELLI_ADVICES.map((tip, i) => (
+                    <li
+                      key={i}
+                      className="flex gap-2.5 text-[15px] leading-relaxed"
+                      style={{ color: "rgba(255,255,255,0.72)" }}
+                    >
+                      <span className="mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full bg-violet-400/70" />
+                      <span>{tip}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
               <div
                 className="rounded-xl px-4 py-3"

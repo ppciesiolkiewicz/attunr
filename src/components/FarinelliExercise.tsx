@@ -40,6 +40,19 @@ export interface FarinelliExerciseProps {
 
 type FarinelliStatus = "ready" | "countdown" | "running" | "complete";
 
+export const FARINELLI_ADVICES = [
+  "Stay relaxed — that matters more than hitting the highest count. Tension defeats the purpose.",
+  "Don't aim for 100% — fill to roughly 80% each cycle. This is about control, not inflating to the top.",
+  "Same amount of breath each cycle — but as the count grows, inhale more slowly. That's the control.",
+  "The hold isn't about stopping breathing — it's about keeping your lungs inflated. Keep ribs expanded; small top-up breaths are fine.",
+  "Let it all out — exhale fully each time so you're ready for the next breath.",
+  "You're training your diaphragm. Control builds over time — go at your own pace.",
+  "If you feel lightheaded or unwell, stop and breathe normally.",
+];
+
+const FARINELLI_INSTRUCTIONS =
+  "Inhale, hold, and exhale for the same count. Each cycle adds one. No pause between cycles.";
+
 export function FarinelliExercise({
   startCount = 4,
   maxCount,
@@ -52,6 +65,7 @@ export function FarinelliExercise({
   const [cycleCount, setCycleCount] = useState(startCount);
   const [currentTick, setCurrentTick] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [adviceIndex, setAdviceIndex] = useState(0);
 
   function handleStart() {
     setStatus("countdown");
@@ -87,6 +101,7 @@ export function FarinelliExercise({
         onComplete?.();
         return;
       }
+      setAdviceIndex((i) => (i + 1) % FARINELLI_ADVICES.length);
       setCycleCount((c) => c + 1);
       setPhase("inhale");
       setCurrentTick(0);
@@ -173,9 +188,14 @@ export function FarinelliExercise({
               </span>
             )}
           </CircleWrapper>
-          <div className="h-8 mt-8 flex items-center justify-center min-w-[12rem]">
-            {status === "ready" && (
-              <p className="text-sm text-white/50">Tap when you&apos;re ready to begin</p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 min-w-[12rem] max-w-[300px] px-4">
+            {status === "ready" ? (
+              <p className="text-sm text-white/50">Get comfortable, then tap when you&apos;re ready</p>
+            ) : (
+              <>
+                <p className="text-xs text-white/55 text-center">{FARINELLI_INSTRUCTIONS}</p>
+                <p className="text-xs text-white/45 text-center">{FARINELLI_ADVICES[0]}</p>
+              </>
             )}
           </div>
         </div>
@@ -188,9 +208,9 @@ export function FarinelliExercise({
       <div className="flex flex-col items-center justify-center h-full gap-4 text-white">
         <span className="text-5xl">✓</span>
         <p className="text-xl font-medium">Well done</p>
-        <p className="text-white/60 text-sm">Farinelli breathwork complete</p>
+        <p className="text-white/60 text-sm">You completed all 7 cycles</p>
         <p className="text-white/45 text-xs text-center max-w-[260px]">
-          Keep practising — breath control grows gently over time.
+          Your diaphragm got a great workout — control builds gently over time with practice.
         </p>
       </div>
     );
@@ -239,11 +259,11 @@ export function FarinelliExercise({
         </div>
       </div>
 
-      <p className="text-xs text-white/45 text-center max-w-[280px]">
-        Inhale, hold, and exhale for the same count. Each cycle adds one. No pause between cycles.
+      <p className="text-xs text-white/55 text-center max-w-[280px]">
+        {FARINELLI_INSTRUCTIONS}
       </p>
-      <p className="text-xs text-white/40 text-center max-w-[280px]">
-        Stay relaxed — that matters more than reaching the highest number. Breath control improves over time.
+      <p className="text-xs text-white/45 text-center max-w-[280px]">
+        {FARINELLI_ADVICES[adviceIndex]}
       </p>
     </div>
   );

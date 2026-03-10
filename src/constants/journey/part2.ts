@@ -52,8 +52,9 @@ export const PART_2_STAGES: JourneyStage[] = [
     holdSeconds: 0,
     noteSeconds: 0,
     farinelliMaxCount: 10,
+    cardCue: "Calm your nervous system and build steady diaphragm control",
     instruction:
-      "A classic breathing exercise for breath control and nervous system regulation. Inhale, hold, and exhale for the same count — then add one count each cycle. No pause between cycles. Keep the same amount of breath; only the timing changes.\n\nDon't be too hard on yourself if you can't reach higher numbers at first. Breath control improves with practice. It's more important to stay relaxed than to hit the target — tension defeats the purpose. Go at your own pace.",
+      "Build diaphragm control and calm your nervous system — a favourite of singers and performers for centuries. Inhale, hold, and exhale for the same count; each cycle adds one. No pause between cycles.",
   },
   {
     id: 6,
