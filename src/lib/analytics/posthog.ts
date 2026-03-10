@@ -8,6 +8,8 @@ export function initPostHog() {
       api_host: host,
       person_profiles: "identified_only",
       capture_pageview: false, // We track manually for SPA navigation
+      disable_session_recording: true, // Not using; reduces cost & bundle
+      disable_surveys: true, // Not using; reduces bundle size
     });
   }
 }
