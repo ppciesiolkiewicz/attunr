@@ -53,9 +53,16 @@ export const metadata: Metadata = {
   },
 };
 
+const fbAppId = process.env.NEXT_PUBLIC_FB_APP_ID;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="h-full">
+      <head>
+        {fbAppId && (
+          <meta property="fb:app_id" content={fbAppId} />
+        )}
+      </head>
       <body className="h-full overflow-hidden">
         <AppShell>{children}</AppShell>
       </body>
