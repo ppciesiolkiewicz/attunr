@@ -939,6 +939,8 @@ export function JourneyExercise({
     tip: string;
   } | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [isTonePlaying, setIsTonePlaying] = useState(false);
+  const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -964,6 +966,11 @@ export function JourneyExercise({
     lastTickRef.current = 0;
     slideCountRef.current = 0;
     slideLastZoneRef.current = null;
+    if (toneTimeoutRef.current) {
+      clearTimeout(toneTimeoutRef.current);
+      toneTimeoutRef.current = null;
+    }
+    setIsTonePlaying(false);
     setProgress(0);
     setSeqIndex(0);
     setSlideCount(0);
@@ -1131,10 +1138,21 @@ export function JourneyExercise({
     doAdvance();
   }
 
+  const TONE_DURATION_MS = 1800;
+  const TONE_GAP_MS = 2000;
+
   function handleHearTone() {
+    if (isTonePlaying) return;
+    setIsTonePlaying(true);
     stageChakras.forEach((chakra, i) => {
-      setTimeout(() => onPlayTone(chakra), i * 2000);
+      setTimeout(() => onPlayTone(chakra), i * TONE_GAP_MS);
     });
+    const totalMs = (stageChakras.length - 1) * TONE_GAP_MS + TONE_DURATION_MS;
+    if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
+    toneTimeoutRef.current = setTimeout(() => {
+      toneTimeoutRef.current = null;
+      setIsTonePlaying(false);
+    }, totalMs);
   }
 
   const detectionChakras = stage.useRainbowLabel ? rangeChakras : stageChakras;
@@ -1386,10 +1404,27 @@ export function JourneyExercise({
           {stage.type !== "farinelli" && (
           <button
             onClick={handleHearTone}
-            className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
-            title="Play the target tone"
+            disabled={isTonePlaying}
+            className={`shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm font-medium border transition-all flex items-center gap-2 ${
+              isTonePlaying
+                ? "border-violet-500/50 bg-violet-600/30 text-white cursor-default"
+                : "border-white/20 text-white/65 hover:text-white/90 hover:border-white/35"
+            }`}
+            title={isTonePlaying ? "Playing…" : "Play the target tone"}
           >
-            ▶ Play {stageChakras.length > 1 ? "tones" : "tone"}
+            {isTonePlaying ? (
+              <>
+                <span className="inline-flex gap-0.5">
+                  <span className="w-0.5 h-3 bg-current rounded-full animate-pulse" style={{ animationDelay: "0ms" }} />
+                  <span className="w-0.5 h-4 bg-current rounded-full animate-pulse" style={{ animationDelay: "150ms" }} />
+                  <span className="w-0.5 h-3 bg-current rounded-full animate-pulse" style={{ animationDelay: "300ms" }} />
+                  <span className="w-0.5 h-2 bg-current rounded-full animate-pulse" style={{ animationDelay: "75ms" }} />
+                </span>
+                Playing…
+              </>
+            ) : (
+              <>▶ Play {stageChakras.length > 1 ? "tones" : "tone"}</>
+            )}
           </button>
           )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
