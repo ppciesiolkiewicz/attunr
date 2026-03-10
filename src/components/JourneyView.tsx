@@ -13,6 +13,7 @@ import {
   isLastStageOfPart,
   PART_COMPLETE_CONTENT,
 } from "@/constants/journey";
+import { analytics } from "@/lib/analytics";
 import type { JourneyStage } from "@/constants/journey";
 import {
   CHAKRAS,
@@ -907,6 +908,10 @@ export function JourneyExercise({
   }, [stageId, resetProgress]);
 
   useEffect(() => {
+    analytics.journeyExerciseStarted(stageId, stage.part, PART_NAMES[stage.part] ?? "");
+  }, [stageId, stage.part]);
+
+  useEffect(() => {
     if (!isCurrentStage || stageComplete) return;
 
     function tick() {
@@ -1009,10 +1014,12 @@ export function JourneyExercise({
   function goToNextStage(markComplete: boolean) {
     if (markComplete) {
       onSettingsUpdate("journeyStage", Math.max(highestCompleted, stageId));
+      analytics.journeyStageCompleted(stageId, stage.part);
     }
     if (isLastStageOfPart(stageId)) {
       const content = PART_COMPLETE_CONTENT[stage.part];
       const partName = PART_NAMES[stage.part] ?? "";
+      analytics.journeyPartCompleted(stage.part, partName);
       setPartCompleteData({
         part: stage.part,
         partName,

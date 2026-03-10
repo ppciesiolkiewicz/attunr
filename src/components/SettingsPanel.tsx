@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { VOICE_TYPES, TUNING_OPTIONS } from "@/constants/chakras";
+import { analytics } from "@/lib/analytics";
 import type { Settings } from "@/hooks/useSettings";
 import type { VoiceTypeId, TuningStandard } from "@/constants/chakras";
 // binaural is always on — no toggle needed
@@ -72,7 +73,10 @@ export default function SettingsPanel({
               {VOICE_TYPES.map((v) => (
                 <button
                   key={v.id}
-                  onClick={() => onUpdate("voiceType", v.id as VoiceTypeId)}
+                  onClick={() => {
+                    onUpdate("voiceType", v.id as VoiceTypeId);
+                    analytics.settingsVoiceChanged(v.id);
+                  }}
                   className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
                   style={{
                     backgroundColor: settings.voiceType === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
@@ -100,7 +104,10 @@ export default function SettingsPanel({
               {TUNING_OPTIONS.map((t) => (
                 <button
                   key={t.id}
-                  onClick={() => onUpdate("tuning", t.id as TuningStandard)}
+                  onClick={() => {
+                    onUpdate("tuning", t.id as TuningStandard);
+                    analytics.settingsTuningChanged(t.id);
+                  }}
                   className="flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-left transition-all"
                   style={{
                     backgroundColor: settings.tuning === t.id ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.02)",

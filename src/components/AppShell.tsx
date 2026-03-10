@@ -6,11 +6,12 @@ import { usePathname } from "next/navigation";
 import SettingsPanel from "./SettingsPanel";
 import OnboardingModal from "./OnboardingModal";
 import Footer from "./Footer";
-import CookieConsent from "./CookieConsent";
+import PostHogPageView from "./PostHogPageView";
 import { useSettings } from "@/hooks/useSettings";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { AppContext } from "@/context/AppContext";
+import { analytics } from "@/lib/analytics";
 import type { Chakra, VoiceTypeId } from "@/constants/chakras";
 
 function SettingsIcon() {
@@ -53,6 +54,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   // Binaural is always on — no user toggle needed
   function handlePlayTone(chakra: Chakra) {
     playTone(chakra.frequencyHz, { chakraId: chakra.id, binaural: true });
+    analytics.tonePlayed(chakra.id, pathname?.startsWith("/explore") ? "explore" : "journey");
+  }
+
+  function handleOpenSettings() {
+    setSettingsOpen(true);
+    analytics.settingsOpened();
   }
 
   const contextValue = {
@@ -63,14 +70,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     playTone: handlePlayTone,
     pitchStatus: status,
     startListening,
-    openSettings: () => setSettingsOpen(true),
+    openSettings: handleOpenSettings,
   };
 
-  function handleOnboardingBegin(voiceId: VoiceTypeId) {
+  function handleOnboardingBegin(voiceId: VoiceTypeId, detected?: boolean) {
     update("voiceType", voiceId);
     setShowOnboarding(false);
     setRedetect(false);
     localStorage.setItem("attunr.onboarded", "1");
+    analytics.onboardingCompleted(voiceId, detected);
   }
 
   const chakraSpectrum = [
@@ -146,7 +154,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </Link>
 
           <button
-            onClick={() => setSettingsOpen(true)}
+            onClick={handleOpenSettings}
             className="p-2.5 rounded-lg text-white/55 hover:text-white/90 hover:bg-white/[0.08] transition-all"
           >
             <SettingsIcon />
@@ -159,7 +167,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </main>
 
       <Footer />
-      <CookieConsent />
+      <PostHogPageView />
     </div>
     </AppContext.Provider>
   );

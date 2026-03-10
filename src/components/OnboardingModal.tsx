@@ -65,7 +65,7 @@ function MicrophoneIcon() {
 interface OnboardingModalProps {
   pitchHz: number | null;
   status: PitchDetectionStatus;
-  onBegin: (voiceId: VoiceTypeId) => void;
+  onBegin: (voiceId: VoiceTypeId, detected?: boolean) => void;
   onRetryMic: () => void;
 }
 
@@ -351,7 +351,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
         {/* CTA */}
         <div className="flex flex-col items-center gap-2.5 w-full">
           <button
-            onClick={() => onBegin(phase === "detected" ? (detectedVoiceId ?? selectedVoiceId) : selectedVoiceId)}
+            onClick={() => onBegin(phase === "detected" ? (detectedVoiceId ?? selectedVoiceId) : selectedVoiceId, phase === "detected")}
             disabled={isLoading || phase === "detecting" || isError}
             className="w-full py-4 rounded-xl font-medium text-base text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-wait"
             style={{

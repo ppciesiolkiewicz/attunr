@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ARTICLES, getArticleBySlug } from "@/data/articles";
+import ArticleViewTracker from "@/components/ArticleViewTracker";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,6 +26,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="h-full overflow-y-auto">
+      <ArticleViewTracker slug={article.slug} title={article.title} />
       <div className="max-w-xl mx-auto px-5 py-8">
         <Link
           href="/articles"
