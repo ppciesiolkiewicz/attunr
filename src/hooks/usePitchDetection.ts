@@ -102,6 +102,11 @@ export function usePitchDetection(): PitchDetectionState {
       const audioCtx = new AudioCtx();
       audioCtxRef.current = audioCtx;
 
+      // iOS Safari: AudioContext starts suspended; must resume (often needs user gesture)
+      if (audioCtx.state === "suspended") {
+        await audioCtx.resume();
+      }
+
       const ml5 = await import("ml5");
       activeRef.current = true;
 

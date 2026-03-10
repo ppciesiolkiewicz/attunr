@@ -39,17 +39,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     if (!localStorage.getItem("attunr.onboarded")) setShowOnboarding(true);
   }, []);
 
-  // Auto-start mic when onboarding is shown
-  useEffect(() => {
-    if (showOnboarding && status === "idle") startListening();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showOnboarding]);
-
-  // Auto-start mic for returning users (no onboarding)
-  useEffect(() => {
-    if (!showOnboarding && status === "idle") startListening();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Mic is NEVER auto-started — iOS/mobile require getUserMedia to be triggered by a user tap.
+  // Onboarding: user taps "Detect my voice type" to request mic.
+  // Returning users: MicGate overlay prompts "Tap to enable" on pitch-dependent routes.
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(chakra: Chakra) {
@@ -85,9 +77,47 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     "#ef4444","#f97316","#eab308","#22c55e","#3b82f6","#6366f1","#a855f7",
   ];
 
+  const needsMic = pathname === "/" || pathname?.startsWith("/journey") || pathname === "/explore";
+  const showMicGate =
+    !(showOnboarding || redetect) &&
+    needsMic &&
+    status === "idle";
+
+  function MicGateOverlay() {
+    return (
+      <div
+        className="absolute inset-0 z-40 flex items-center justify-center p-6"
+        style={{
+          backgroundColor: "rgba(5,5,12,0.85)",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <div className="flex flex-col items-center gap-5 text-center max-w-xs">
+          <p className="text-base text-white/85">
+            Tap to enable your microphone for pitch detection
+          </p>
+          <button
+            type="button"
+            onClick={() => startListening()}
+            className="px-8 py-4 rounded-xl font-medium text-white transition-all active:scale-[0.98]"
+            style={{
+              background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
+              boxShadow: "0 0 24px rgba(124,58,237,0.35)",
+            }}
+          >
+            Enable microphone
+          </button>
+          <p className="text-xs text-white/45">
+            Used only for real-time pitch. Nothing is recorded.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <AppContext.Provider value={contextValue}>
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full relative">
 
       {(showOnboarding || redetect) && (
         <OnboardingModal
@@ -162,8 +192,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1 min-h-0">
+      <main className="flex-1 min-h-0 relative">
         {children}
+        {showMicGate && <MicGateOverlay />}
       </main>
 
       <Footer />

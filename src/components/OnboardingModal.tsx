@@ -85,6 +85,15 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
   const isError = status === "error";
   const isListening = status === "listening";
 
+  // When user taps "Detect" and mic becomes ready, auto-start detection
+  // (iOS/mobile require mic request to be triggered by user gesture — we get that from the Detect tap)
+  useEffect(() => {
+    if (phase === "select" && isListening) {
+      startDetection();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, isListening]);
+
   // ── Detection timer via RAF ───────────────────────────────────────────────
   useEffect(() => {
     if (phase !== "detecting") {
@@ -220,7 +229,13 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
             </div>
 
             <button
-              onClick={isError ? onRetryMic : startDetection}
+              onClick={
+                isError
+                  ? onRetryMic
+                  : status === "idle"
+                    ? () => onRetryMic() // User gesture required for mic on iOS — tap here first
+                    : startDetection
+              }
               disabled={isLoading && !isError}
               className="w-full py-3 rounded-xl text-base font-medium border transition-all disabled:opacity-30 disabled:cursor-not-allowed"
               style={{
