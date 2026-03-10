@@ -20,6 +20,7 @@ import {
   CHAKRAS,
   getChakraFrequencies,
   findClosestChakra,
+  isInChakraRange,
   isInTune,
 } from "@/constants/chakras";
 import type { Chakra } from "@/constants/chakras";
@@ -988,8 +989,11 @@ export function JourneyExercise({
       const hz = pitchHzRef.current;
 
       if (stage.type === "individual") {
-        const targets = stage.useRainbowLabel ? rangeChakras : stageChakras;
-        const inTune = hz !== null && targets.some((t) => isInTune(hz, t.frequencyHz));
+        const inTune =
+          hz !== null &&
+          (stage.useRainbowLabel
+            ? isInChakraRange(hz, rangeChakras)
+            : stageChakras.some((t) => isInTune(hz, t.frequencyHz)));
         if (inTune) holdRef.current += dt;
         const p = holdRef.current / stage.holdSeconds;
         setProgress(p);
@@ -1139,9 +1143,10 @@ export function JourneyExercise({
       ? findClosestChakra(pitchHz, detectionChakras)
       : null;
   const locked =
-    closestChakra && pitchHz
-      ? isInTune(pitchHz, closestChakra.frequencyHz)
-      : false;
+    pitchHz &&
+    (stage.useRainbowLabel
+      ? isInChakraRange(pitchHz, detectionChakras)
+      : closestChakra && isInTune(pitchHz, closestChakra.frequencyHz));
 
   return (
     <div className="flex flex-col h-full">

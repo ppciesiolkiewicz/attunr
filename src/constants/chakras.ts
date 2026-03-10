@@ -188,6 +188,18 @@ export function isInTune(detectedHz: number, targetHz: number): boolean {
   return Math.abs(detectedHz - targetHz) / targetHz <= 0.03;
 }
 
+/** Check if pitch is within the frequency range of the given chakras (e.g. first 3 or last 3). Uses ±5% buffer at edges. */
+export function isInChakraRange(detectedHz: number, chakras: Chakra[]): boolean {
+  if (chakras.length === 0) return false;
+  const freqs = chakras.map((c) => c.frequencyHz);
+  const minHz = Math.min(...freqs);
+  const maxHz = Math.max(...freqs);
+  const buffer = 0.05; // ±5% at edges
+  const low = minHz * (1 - buffer);
+  const high = maxHz * (1 + buffer);
+  return detectedHz >= low && detectedHz <= high;
+}
+
 export function findClosestChakra(hz: number, chakras: Chakra[]): Chakra {
   if (chakras.length === 0) {
     throw new Error("findClosestChakra requires at least one chakra");

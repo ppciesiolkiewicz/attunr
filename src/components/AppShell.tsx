@@ -13,6 +13,7 @@ import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { AppContext } from "@/context/AppContext";
 import { analytics } from "@/lib/analytics";
 import type { Chakra, VoiceTypeId } from "@/constants/chakras";
+import Logo from "./Logo";
 
 function SettingsIcon() {
   return (
@@ -120,10 +121,6 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     analytics.onboardingCompleted(voiceId, detected);
   }
 
-  const chakraSpectrum = [
-    "#ef4444","#f97316","#eab308","#22c55e","#3b82f6","#6366f1","#a855f7",
-  ];
-
   const needsMic = pathname === "/" || pathname?.startsWith("/journey") || pathname === "/explore";
   const showMicGate =
     !(showOnboarding || redetect) &&
@@ -189,17 +186,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 border-b border-white/[0.06] shrink-0">
-        <h1 className="flex items-center gap-2 sm:gap-3 text-lg sm:text-2xl font-semibold tracking-tight text-white leading-none">
-          <span>attunr</span>
-          <span
-            className="inline-flex items-center gap-1.5 sm:gap-2 shrink-0"
-            style={{ transform: "translateY(2px)" }}
-          >
-            {chakraSpectrum.map((color, i) => (
-              <span key={i} className="block w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full opacity-80"
-                style={{ backgroundColor: color }} />
-            ))}
-          </span>
+        <h1 className="text-lg sm:text-2xl">
+          <Logo layout="horizontal" size="default" />
         </h1>
 
         {/* Desktop nav */}
@@ -276,20 +264,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 pt-6 pb-4 border-b border-white/[0.06]">
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-semibold text-white">attunr</span>
-                <span
-                  className="inline-flex items-center gap-1"
-                  style={{ transform: "translateY(2px)" }}
-                >
-                  {chakraSpectrum.map((color, i) => (
-                    <span
-                      key={i}
-                      className="block w-2 h-2 rounded-full opacity-80"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </span>
+              <div className="text-lg">
+                <Logo layout="horizontal" size="sm" />
               </div>
               <button
                 onClick={() => setMenuOpen(false)}
