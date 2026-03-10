@@ -112,7 +112,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-3 border-b border-white/[0.06] shrink-0">
-        <h1 className="flex items-center gap-4 text-2xl font-semibold tracking-tight text-white leading-none">
+        <h1 className="flex items-center gap-3 text-2xl font-semibold tracking-tight text-white leading-none">
           <span>attunr</span>
           <span
             className="inline-flex items-center gap-2 shrink-0"
