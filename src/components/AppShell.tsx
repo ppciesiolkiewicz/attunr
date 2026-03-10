@@ -39,9 +39,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     if (!localStorage.getItem("attunr.onboarded")) setShowOnboarding(true);
   }, []);
 
-  // Mic is NEVER auto-started — iOS/mobile require getUserMedia to be triggered by a user tap.
-  // Onboarding: user taps "Detect my voice type" to request mic.
-  // Returning users: MicGate overlay prompts "Tap to enable" on pitch-dependent routes.
+  // Auto-start mic when app loads
+  useEffect(() => {
+    if (status === "idle") startListening();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(chakra: Chakra) {
