@@ -3,7 +3,7 @@ import type { JourneyStage } from "./types";
 /** Part 9: Puffy cheeks */
 export const PART_9_STAGES: JourneyStage[] = [
   {
-    id: 45,
+    id: 46,
     part: 9,
     type: "technique_intro",
     title: "Puffy cheeks",
@@ -16,7 +16,7 @@ export const PART_9_STAGES: JourneyStage[] = [
       "Fill your cheeks with air, then sing the tone without releasing. Your cheeks stay rounded. Hold for a few seconds, then release gently. This develops breath control and teaches you to sing without jaw tension.",
   },
   {
-    id: 46,
+    id: 47,
     part: 9,
     type: "individual",
     title: "Root — Puffy cheeks",
@@ -29,7 +29,7 @@ export const PART_9_STAGES: JourneyStage[] = [
       "Root with puffy cheeks. LAM — feel the grounding while you hold the breath in your cheeks.",
   },
   {
-    id: 47,
+    id: 48,
     part: 9,
     type: "individual",
     title: "Heart — Puffy cheeks",
@@ -42,7 +42,7 @@ export const PART_9_STAGES: JourneyStage[] = [
       "Heart with puffy cheeks. YAM — stay open in the chest.",
   },
   {
-    id: 48,
+    id: 49,
     part: 9,
     type: "individual",
     title: "Crown — Puffy cheeks",

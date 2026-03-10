@@ -46,6 +46,18 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 5,
     part: 2,
+    type: "farinelli",
+    title: "Farinelli breathwork",
+    chakraIds: [],
+    holdSeconds: 0,
+    noteSeconds: 0,
+    farinelliMaxCount: 10,
+    instruction:
+      "A classic breathing exercise for breath control and nervous system regulation. Inhale, hold, and exhale for the same count — then add one count each cycle. No pause between cycles. Keep the same amount of breath; only the timing changes.\n\nDon't be too hard on yourself if you can't reach higher numbers at first. Breath control improves with practice. It's more important to stay relaxed than to hit the target — tension defeats the purpose. Go at your own pace.",
+  },
+  {
+    id: 6,
+    part: 2,
     type: "technique_intro",
     title: "Lip rolls",
     chakraIds: [],
@@ -57,7 +69,7 @@ export const PART_2_STAGES: JourneyStage[] = [
       "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. In the next exercises, you'll slide your voice from high to low and low to high — a smooth, continuous glide through your range, not separate notes. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you.",
   },
   {
-    id: 6,
+    id: 7,
     part: 2,
     type: "slide",
     title: "Lip rolls — high to low",
@@ -70,7 +82,7 @@ export const PART_2_STAGES: JourneyStage[] = [
       "Slide smoothly from high to low — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
   },
   {
-    id: 7,
+    id: 8,
     part: 2,
     type: "slide",
     title: "Lip rolls — low to high",
@@ -83,7 +95,7 @@ export const PART_2_STAGES: JourneyStage[] = [
       "Slide smoothly from low to high — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
   },
   {
-    id: 8,
+    id: 9,
     part: 2,
     type: "individual",
     title: "Sustain a lip roll",

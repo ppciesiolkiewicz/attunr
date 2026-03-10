@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import PitchCanvas from "./PitchCanvas";
 import ChakraDetailCard from "./ChakraDetailCard";
+import { FarinelliExercise } from "./FarinelliExercise";
 import { HeadphonesNotice, InfoButton, InfoIcon } from "./TabInfoModal";
 import {
   JOURNEY_STAGES,
@@ -353,6 +354,12 @@ function StageCard({
             Continuous glide · slide 2–3 times
           </p>
         )}
+        {/* Farinelli breathwork */}
+        {stage.type === "farinelli" && (
+          <p className="text-xs text-white/58">
+            Breathwork · cycles 4–{stage.farinelliMaxCount ?? 10}
+          </p>
+        )}
       </div>
 
       {/* Status */}
@@ -496,11 +503,13 @@ function ExerciseInfoModal({
 
   const objective = isTechniqueIntro
     ? "Learn the technique"
-    : stage.type === "individual"
-      ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
-      : stage.type === "slide"
-        ? "Slide smoothly through the range two or three times — detection is loose"
-        : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
+    : stage.type === "farinelli"
+      ? `Complete breath cycles from 4 to ${stage.farinelliMaxCount ?? 10}`
+      : stage.type === "individual"
+        ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
+        : stage.type === "slide"
+          ? "Slide smoothly through the range two or three times — detection is loose"
+          : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
 
   function handleBegin() {
     if (isClosing) return;
@@ -561,7 +570,7 @@ function ExerciseInfoModal({
               </span>
               <span className="text-white/35">·</span>
               <span>
-                {isTechniqueIntro ? "Learn" : stage.part === 2 ? "Warmup" : stage.type === "slide" ? "Slide" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
+                {isTechniqueIntro ? "Learn" : stage.type === "farinelli" ? "Breathwork" : stage.part === 2 ? "Warmup" : stage.type === "slide" ? "Slide" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
               </span>
             </p>
             <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
@@ -594,42 +603,83 @@ function ExerciseInfoModal({
               />
             )}
 
-          {/* Instructions */}
-          <div className="flex flex-col gap-1">
-            {stage.instruction.split("\n").map((line, i) => (
-              <p
-                key={i}
-                className="text-base leading-relaxed"
+          {/* Instructions — farinelli: intro, then video, then forgiving para, then before you begin */}
+          {stage.type === "farinelli" ? (
+            <>
+              <div className="flex flex-col gap-1">
+                <p className="text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.88)" }}>
+                  {stage.instruction.split("\n\n")[0]}
+                </p>
+              </div>
+              <div
+                className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
                 style={{
-                  color:
-                    i === 0
-                      ? "rgba(255,255,255,0.88)"
-                      : "rgba(255,255,255,0.55)",
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px dashed rgba(255,255,255,0.15)",
                 }}
               >
-                {line}
-              </p>
-            ))}
-          </div>
+                <span className="text-2xl opacity-50">▶</span>
+                <p className="text-sm text-white/45 font-medium">Video coming soon</p>
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className="text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+                  {stage.instruction.split("\n\n")[1]}
+                </p>
+              </div>
+              <div
+                className="rounded-xl px-4 py-3"
+                style={{
+                  border: "2px solid rgba(251,191,36,0.6)",
+                  background: "rgba(251,191,36,0.08)",
+                }}
+              >
+                <p className="text-sm font-semibold text-amber-400/95 mb-1.5">
+                  Before you begin
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed">
+                  If you have heart or respiratory conditions, or are pregnant, check with your doctor first. Stop immediately if you feel dizzy, lightheaded, or unwell at any time.
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex flex-col gap-1">
+                {stage.instruction.split("\n").map((line, i) => (
+                  <p
+                    key={i}
+                    className="text-base leading-relaxed"
+                    style={{
+                      color:
+                        i === 0
+                          ? "rgba(255,255,255,0.88)"
+                          : "rgba(255,255,255,0.55)",
+                    }}
+                  >
+                    {line}
+                  </p>
+                ))}
+              </div>
 
-          {/* Video coming soon — for technique intros */}
-          {isTechniqueIntro && (
-            <div
-              className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px dashed rgba(255,255,255,0.15)",
-              }}
-            >
-              <span className="text-2xl opacity-50">▶</span>
-              <p className="text-sm text-white/45 font-medium">
-                Video coming soon
-              </p>
-            </div>
+              {/* Video coming soon — for technique intros */}
+              {isTechniqueIntro && (
+                <div
+                  className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
+                  style={{
+                    background: "rgba(255,255,255,0.04)",
+                    border: "1px dashed rgba(255,255,255,0.15)",
+                  }}
+                >
+                  <span className="text-2xl opacity-50">▶</span>
+                  <p className="text-sm text-white/45 font-medium">
+                    Video coming soon
+                  </p>
+                </div>
+              )}
+            </>
           )}
 
-          {/* Headphones notice — only for exercises with canvas */}
-          {!isTechniqueIntro && <HeadphonesNotice />}
+          {/* Headphones notice — only for exercises with pitch canvas (not breathwork) */}
+          {!isTechniqueIntro && stage.type !== "farinelli" && <HeadphonesNotice />}
 
           {/* Voice / tuning context */}
           <p className="text-xs text-white/45 text-center">
@@ -695,13 +745,31 @@ function PartCompleteModal({
   onContinue: () => void;
 }) {
   const [isClosing, setIsClosing] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const el = headerRef.current;
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          const x = (rect.left + rect.width / 2) / window.innerWidth;
+          const y = (rect.top + rect.height / 2) / window.innerHeight;
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { x, y },
+          });
+        } else {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.35 },
+          });
+        }
+      });
     });
+    return () => cancelAnimationFrame(id);
   }, []);
 
   useEffect(() => {
@@ -728,7 +796,10 @@ function PartCompleteModal({
           boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
         }}
       >
-        <div className="px-5 pt-5 pb-4 flex flex-col items-center gap-3">
+        <div
+          ref={headerRef}
+          className="px-5 pt-5 pb-4 flex flex-col items-center gap-3"
+        >
           <div
             className="w-12 h-12 rounded-full flex items-center justify-center"
             style={{ background: "rgba(124,58,237,0.2)" }}
@@ -857,6 +928,10 @@ export function JourneyExercise({
   const [showInfoModal, setShowInfoModal] = useState(false);
   const rafRef = useRef<number | null>(null);
 
+  useEffect(() => {
+    if (stage.type === "farinelli") setShowInfoModal(true);
+  }, [stageId, stage.type]);
+
   // Prefetch next page so it’s ready when the modal closes
   useEffect(() => {
     if (partCompleteData !== null) {
@@ -891,7 +966,7 @@ export function JourneyExercise({
   }, [stageId, stage.part]);
 
   useEffect(() => {
-    if (!isCurrentStage || stageComplete) return;
+    if (!isCurrentStage || stageComplete || stage.type === "farinelli") return;
 
     function tick() {
       const now = performance.now();
@@ -1104,7 +1179,7 @@ export function JourneyExercise({
         />
       )}
 
-      {/* ── Main content: inline info for technique_intro, canvas for exercises ─── */}
+      {/* ── Main content: technique_intro, farinelli, or canvas for exercises ─── */}
       {stage.type === "technique_intro" ? (
         <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="max-w-lg mx-auto px-5 py-6 flex flex-col gap-6">
@@ -1147,6 +1222,14 @@ export function JourneyExercise({
               Practising as {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
             </p>
           </div>
+        </div>
+      ) : stage.type === "farinelli" ? (
+        <div className="relative flex-1 min-h-0 flex items-center justify-center">
+          <FarinelliExercise
+            maxCount={stage.farinelliMaxCount ?? 10}
+            startCount={4}
+            onComplete={() => setStageComplete(true)}
+          />
         </div>
       ) : (
       <div className="relative flex-1 min-h-0">
@@ -1266,7 +1349,7 @@ export function JourneyExercise({
           </div>
         ) : (
           <>
-        {isCurrentStage && !stageComplete && stage.type !== "slide" && (
+        {isCurrentStage && !stageComplete && stage.type !== "slide" && stage.type !== "farinelli" && (
           <ProgressArc progress={progress} />
         )}
         {isCurrentStage && !stageComplete && stage.type === "slide" && (
@@ -1280,12 +1363,14 @@ export function JourneyExercise({
         )}
 
         <div className="flex items-center gap-3 ml-auto">
+          {stage.type !== "farinelli" && (
           <button
             onClick={handleHearTone}
             className="px-6 py-2.5 rounded-xl text-sm font-medium border border-white/20 text-white/65 hover:text-white/90 hover:border-white/35 transition-all"
           >
             ▶ Hear {stageChakras.length > 1 ? "tones" : "tone"}
           </button>
+          )}
           <div className="flex gap-2">
             {stageId > 1 && onPrev && (
               <button

@@ -3,7 +3,7 @@ import type { JourneyStage } from "./types";
 /** Part 5: Vowel U (easiest vowel — uuu first) */
 export const PART_5_STAGES: JourneyStage[] = [
   {
-    id: 23,
+    id: 24,
     part: 5,
     type: "technique_intro",
     title: "Vowel U",
@@ -16,7 +16,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu (as in 'moon') — lips rounded, tongue back. U is the easiest vowel to start with. It tends to resonate lower in the body. Hold the tone and feel where it lands.",
   },
   {
-    id: 24,
+    id: 25,
     part: 5,
     type: "individual",
     title: "Root — U",
@@ -29,7 +29,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu on the Root tone.\nFeel the tone in your lower body.",
   },
   {
-    id: 25,
+    id: 26,
     part: 5,
     type: "individual",
     title: "Sacral — U",
@@ -42,7 +42,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu on the Sacral tone.\nLet the sound flow from your lower belly.",
   },
   {
-    id: 26,
+    id: 27,
     part: 5,
     type: "individual",
     title: "Solar Plexus — U",
@@ -55,7 +55,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu on the Solar Plexus tone.\nFeel the power in your centre.",
   },
   {
-    id: 27,
+    id: 28,
     part: 5,
     type: "individual",
     title: "Heart — U",
@@ -68,7 +68,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu on the Heart tone.\nOpen and soft — feel it in your chest.",
   },
   {
-    id: 28,
+    id: 29,
     part: 5,
     type: "individual",
     title: "Throat — U",
@@ -81,7 +81,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu on the Throat tone.\nClear and true — let your voice be heard.",
   },
   {
-    id: 29,
+    id: 30,
     part: 5,
     type: "individual",
     title: "Third Eye — U",
@@ -94,7 +94,7 @@ export const PART_5_STAGES: JourneyStage[] = [
       "Sing uuu on the Third Eye tone.\nGentle and inward.",
   },
   {
-    id: 30,
+    id: 31,
     part: 5,
     type: "individual",
     title: "Crown — U",

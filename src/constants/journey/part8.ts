@@ -3,7 +3,7 @@ import type { JourneyStage } from "./types";
 /** Part 8: Vowel flow U → EE */
 export const PART_8_STAGES: JourneyStage[] = [
   {
-    id: 43,
+    id: 44,
     part: 8,
     type: "technique_intro",
     title: "Vowel flow U → EE",
@@ -16,7 +16,7 @@ export const PART_8_STAGES: JourneyStage[] = [
       "Hold one tone and smoothly move from U to EE (or back). Keep the pitch steady — only the mouth shape changes. This builds vocal flexibility and awareness of resonance.",
   },
   {
-    id: 44,
+    id: 45,
     part: 8,
     type: "individual",
     title: "Heart — U to EE",

@@ -29,11 +29,11 @@ export const JOURNEY_STAGES: JourneyStage[] = [
   ...PART_9_STAGES,
 ];
 
-export const TOTAL_JOURNEY_STAGES = 48;
+export const TOTAL_JOURNEY_STAGES = 49;
 
 /** Last stage id of each part (1–9) */
 export const LAST_STAGE_ID_PER_PART: Record<number, number> = {
-  1: 1, 2: 8, 3: 16, 4: 22, 5: 30, 6: 38, 7: 42, 8: 44, 9: 48,
+  1: 1, 2: 9, 3: 17, 4: 23, 5: 31, 6: 39, 7: 43, 8: 45, 9: 49,
 };
 
 export function isLastStageOfPart(stageId: number): boolean {
@@ -50,7 +50,7 @@ export const PART_COMPLETE_CONTENT: Record<
     tip: "",
   },
   2: {
-    learned: "Lip rolls, low U, and hoo hoo — gentle warmups for jaw, lower register, and head voice.",
+    learned: "Farinelli breathwork, lip rolls, low U, and hoo hoo — breath control and gentle warmups for jaw, lower register, and head voice.",
     tip: "Always warm up before each practice session!",
   },
   3: {

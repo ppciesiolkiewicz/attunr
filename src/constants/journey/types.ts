@@ -1,6 +1,11 @@
 import type { ChakraId } from "../chakras";
 
-export type JourneyStageType = "technique_intro" | "individual" | "sequence" | "slide";
+export type JourneyStageType =
+  | "technique_intro"
+  | "individual"
+  | "sequence"
+  | "slide"
+  | "farinelli";
 
 export type SlideDirection = "high-to-low" | "low-to-high";
 
@@ -33,6 +38,8 @@ export interface JourneyStage {
   cardCue?: string;
   /** For slide type: direction of continuous glide */
   slideDirection?: SlideDirection;
+  /** For farinelli type: max count per cycle (e.g. 10 = cycles 4–10) */
+  farinelliMaxCount?: number;
   holdSeconds: number;
   noteSeconds: number;
 }

@@ -3,7 +3,7 @@ import type { JourneyStage } from "./types";
 /** Part 6: Mantra */
 export const PART_6_STAGES: JourneyStage[] = [
   {
-    id: 31,
+    id: 32,
     part: 6,
     type: "technique_intro",
     title: "Mantra",
@@ -16,7 +16,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Each chakra has a seed syllable, or mantra. Sing that sound on the tone — LAM for Root, VAM for Sacral, RAM for Solar Plexus, YAM for Heart, HAM for Throat, OM for Third Eye, AH for Crown. The mantra helps focus the vibration in that chakra.",
   },
   {
-    id: 32,
+    id: 33,
     part: 6,
     type: "individual",
     title: "Root — LAM",
@@ -29,7 +29,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Sing LAM on the Root tone. Feel the 'L' and 'M' shape the sound, the 'ah' in the middle carries the pitch.",
   },
   {
-    id: 33,
+    id: 34,
     part: 6,
     type: "individual",
     title: "Sacral — VAM",
@@ -42,7 +42,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Sing VAM on the Sacral tone. Let the sound flow from your lower belly.",
   },
   {
-    id: 34,
+    id: 35,
     part: 6,
     type: "individual",
     title: "Solar Plexus — RAM",
@@ -55,7 +55,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Sing RAM on the Solar Plexus tone. Feel the power in the 'R' — purpose and centre.",
   },
   {
-    id: 35,
+    id: 36,
     part: 6,
     type: "individual",
     title: "Heart — YAM",
@@ -68,7 +68,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Sing YAM on the Heart tone. Open and soft — the bridge between body and mind.",
   },
   {
-    id: 36,
+    id: 37,
     part: 6,
     type: "individual",
     title: "Throat — HAM",
@@ -81,7 +81,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Sing HAM on the Throat tone. Clear and true — let your voice be heard.",
   },
   {
-    id: 37,
+    id: 38,
     part: 6,
     type: "individual",
     title: "Third Eye — OM",
@@ -94,7 +94,7 @@ export const PART_6_STAGES: JourneyStage[] = [
       "Sing OM on the Third Eye tone. Gentle and inward — clarity and insight.",
   },
   {
-    id: 38,
+    id: 39,
     part: 6,
     type: "individual",
     title: "Crown — AH",
