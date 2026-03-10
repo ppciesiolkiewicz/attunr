@@ -41,6 +41,7 @@ export const metadata: Metadata = {
         width: 512,
         height: 512,
         alt: "attunr — align your voice",
+        type: "image/png",
       },
     ],
   },
