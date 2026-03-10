@@ -7,9 +7,9 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const article = getArticleBySlug(slug);
-  if (!article) return { title: "Article — attunr" };
+  if (!article) return { title: "Article" };
   return {
-    title: `${article.title} — attunr`,
+    title: article.title,
     description: article.excerpt,
   };
 }

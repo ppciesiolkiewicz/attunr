@@ -3,7 +3,10 @@ import "./globals.css";
 import AppShell from "@/components/AppShell";
 
 export const metadata: Metadata = {
-  title: "attunr — align your voice",
+  title: {
+    default: "attunr — align your voice",
+    template: "%s — attunr",
+  },
   description: "Real-time chakra tone practice. Sing into your mic and find your frequency.",
   icons: {
     icon: [

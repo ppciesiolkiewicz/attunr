@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ARTICLES } from "@/data/articles";
 
 export const metadata = {
-  title: "Articles — attunr",
+  title: "Articles",
   description:
     "Learn about chakra tones, vocal warmups, Solfeggio frequencies, and sound healing.",
 };

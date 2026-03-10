@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SettingsPanel from "./SettingsPanel";
 import OnboardingModal from "./OnboardingModal";
+import Footer from "./Footer";
+import CookieConsent from "./CookieConsent";
 import { useSettings } from "@/hooks/useSettings";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
@@ -156,7 +158,8 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         {children}
       </main>
 
-      <footer className="shrink-0 px-5 py-2 border-t border-white/[0.04]" />
+      <Footer />
+      <CookieConsent />
     </div>
     </AppContext.Provider>
   );
