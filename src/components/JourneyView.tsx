@@ -41,7 +41,6 @@ const LOW_RANGE_IDS = ["root", "sacral", "solar-plexus"] as const;
 const HIGH_RANGE_IDS = ["throat", "third-eye", "crown"] as const;
 
 const JOURNEY_EXERCISE_INFO_SKIP_KEY = "attunr.journeyExerciseInfoSkipped";
-const JOURNEY_JUST_SAW_INFO_KEY = "attunr.journeyJustSawInfo";
 
 function getSkippedInfoStageIds(): Set<number> {
   if (typeof window === "undefined") return new Set();
@@ -714,7 +713,7 @@ function PartCompleteModal({
   // Keep backdrop opaque during close to avoid revealing old content before navigation
   return (
     <div
-      className={`fixed inset-0 z-40 flex items-end sm:items-center justify-center p-4 transition-opacity duration-300 ease-out ${isClosing ? "pointer-events-none" : ""}`}
+      className={`fixed inset-0 z-40 flex items-end sm:items-center justify-center p-4 ${isClosing ? "pointer-events-none" : ""}`}
       style={{
         background: "rgba(0,0,0,0.85)",
         backdropFilter: "blur(8px)",
@@ -722,13 +721,11 @@ function PartCompleteModal({
       }}
     >
       <div
-        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col transition-all duration-300 ease-out"
+        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col"
         style={{
           background: "#0f0f1a",
           border: "1px solid rgba(255,255,255,0.12)",
           boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
-          opacity: isClosing ? 0 : 1,
-          transform: isClosing ? "scale(0.96)" : "scale(1)",
         }}
       >
         <div className="px-5 pt-5 pb-4 flex flex-col items-center gap-3">
@@ -765,7 +762,7 @@ function PartCompleteModal({
           <button
             onClick={() => !isClosing && setIsClosing(true)}
             disabled={isClosing}
-            className="w-full py-4 rounded-xl text-base font-semibold text-white transition-all disabled:opacity-70"
+            className="w-full py-4 rounded-xl text-base font-semibold text-white disabled:opacity-70"
             style={{
               background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
               boxShadow: "0 0 28px rgba(124,58,237,0.35)",
@@ -779,7 +776,16 @@ function PartCompleteModal({
   );
 }
 
-// ── Journey Exercise (simplified) ─────────────────────────────────────────────
+// ── Journey Exercise ───────────────────────────────────────────────────────────
+//
+// URL-driven flow:
+// 1. User visits /journey/[id] → page gets step id from URL
+// 2. We find the stage in JOURNEY_STAGES
+// 3. We render background/content by step type:
+//    - Exercises (individual, sequence, slide): PitchCanvas + exercise UI
+//    - Learn steps (technique_intro): plain background + scrollable content
+// 4. PartCompleteModal shows when finishing the last step of a part
+// 5. Continue → onNext(nextId) → router.push → new URL → flow repeats from 1
 
 export function JourneyExercise({
   stageId,
@@ -848,33 +854,10 @@ export function JourneyExercise({
     learned: string;
     tip: string;
   } | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState(() => {
-    if (stage.type === "technique_intro") return false;
-    if (typeof window === "undefined") return true;
-    try {
-      const saw = sessionStorage.getItem(JOURNEY_JUST_SAW_INFO_KEY);
-      if (saw === String(stageId)) {
-        sessionStorage.removeItem(JOURNEY_JUST_SAW_INFO_KEY);
-        return false; // just showed this in pending modal before nav
-      }
-    } catch {
-      /* ignore */
-    }
-    return true;
-  });
-  const [pendingNavigateStageId, setPendingNavigateStageId] = useState<
-    number | null
-  >(null);
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const rafRef = useRef<number | null>(null);
 
   // Prefetch next page so it’s ready when the modal closes
-  useEffect(() => {
-    if (pendingNavigateStageId !== null) {
-      const targetId = Math.abs(pendingNavigateStageId);
-      router.prefetch(`/journey/${targetId}`);
-    }
-  }, [pendingNavigateStageId, router]);
-
   useEffect(() => {
     if (partCompleteData !== null) {
       const nextId = stageId + 1;
@@ -885,10 +868,6 @@ export function JourneyExercise({
       }
     }
   }, [partCompleteData, stageId, router]);
-
-  function shouldShowInfoBeforeNavigate(targetStageId: number): boolean {
-    return !getSkippedInfoStageIds().has(targetStageId);
-  }
 
   const resetProgress = useCallback(() => {
     holdRef.current = 0;
@@ -1027,15 +1006,7 @@ export function JourneyExercise({
         tip: content.tip,
       });
     } else {
-      const nextId = stageId + 1;
-      const nextStage = JOURNEY_STAGES.find((s) => s.id === nextId);
-      const skipModal =
-        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate(nextId);
-      if (skipModal) {
-        navigateTo(nextId);
-      } else {
-        setPendingNavigateStageId(nextId);
-      }
+      navigateTo(stageId + 1);
     }
   }
 
@@ -1043,27 +1014,12 @@ export function JourneyExercise({
     const prevId = stageId - 1;
     if (prevId < 1) return;
     if (!onPrev) return;
-    const prevStage = JOURNEY_STAGES.find((s) => s.id === prevId);
-    const skipModal =
-      prevStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate(prevId);
-    if (skipModal) {
-      navigateToPrev(prevId);
-    } else {
-      setPendingNavigateStageId(-prevId);
-    }
+    navigateToPrev(prevId);
   }
 
   function doAdvance() {
     if (stageId < TOTAL_JOURNEY_STAGES) {
-      const nextId = stageId + 1;
-      const nextStage = JOURNEY_STAGES.find((s) => s.id === nextId);
-      const skipModal =
-        nextStage?.type === "technique_intro" || !shouldShowInfoBeforeNavigate(nextId);
-      if (skipModal) {
-        navigateTo(nextId);
-      } else {
-        setPendingNavigateStageId(nextId);
-      }
+      navigateTo(stageId + 1);
     } else {
       onBack();
     }
@@ -1082,23 +1038,6 @@ export function JourneyExercise({
   function handlePartCompleteContinue() {
     setPartCompleteData(null);
     doAdvance();
-  }
-
-  function handlePendingModalStart() {
-    const id = pendingNavigateStageId;
-    setPendingNavigateStageId(null);
-    if (!id) return;
-    const targetId = id > 0 ? id : -id;
-    try {
-      sessionStorage.setItem(JOURNEY_JUST_SAW_INFO_KEY, String(targetId));
-    } catch {
-      /* ignore */
-    }
-    if (id > 0) {
-      navigateTo(targetId);
-    } else {
-      navigateToPrev(targetId);
-    }
   }
 
   function handleHearTone() {
@@ -1156,7 +1095,7 @@ export function JourneyExercise({
       </div>
 
       {/* Info modal — re-open from exercise (i) button — skip for technique_intro */}
-      {stage.type !== "technique_intro" && showInfoModal && !pendingNavigateStageId && (
+      {stage.type !== "technique_intro" && showInfoModal && (
         <ExerciseInfoModal
           stageId={stageId}
           settings={settings}
@@ -1164,19 +1103,6 @@ export function JourneyExercise({
           onDismiss={() => setShowInfoModal(false)}
         />
       )}
-
-      {/* Info modal — before navigating next/prev — skip when target is technique_intro */}
-      {pendingNavigateStageId !== null &&
-        JOURNEY_STAGES.find((s) => s.id === Math.abs(pendingNavigateStageId))
-          ?.type !== "technique_intro" && (
-          <ExerciseInfoModal
-            stageId={Math.abs(pendingNavigateStageId)}
-            settings={settings}
-            onStart={handlePendingModalStart}
-            onDismiss={() => setPendingNavigateStageId(null)}
-            showDontShowAgain
-          />
-        )}
 
       {/* ── Main content: inline info for technique_intro, canvas for exercises ─── */}
       {stage.type === "technique_intro" ? (
@@ -1187,7 +1113,9 @@ export function JourneyExercise({
               <h2 className="text-xl font-semibold text-white">
                 Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_NAMES[stage.part]}
               </h2>
-              <p className="text-sm text-white/55 mt-0.5">{stage.title}</p>
+              <p className="text-sm text-white/55 mt-0.5">
+                {stage.title} · Step {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
+              </p>
             </div>
             <div className="flex flex-col gap-1">
               {stage.instruction.split("\n").map((line, i) => (

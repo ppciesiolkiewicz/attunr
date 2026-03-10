@@ -13,7 +13,7 @@ Shares the same product vision and language principles as `attunr-expo`.
 | [Language & Messaging](./language-and-messaging.md) | Tone of voice, terminology, approved copy |
 | [Chakra Trainer](./chakra-trainer.md) | Shared canvas + audio; navigation overview |
 | [Train Tab](./train-tab.md) | Free-form practice view |
-| [Journey](./journey.md) | Guided progressive stages (individual + sequence exercises) |
+| [Journey](./journey.md) | URL-driven guided path — 48 stages, 9 parts (learn + exercises) |
 | [Pitch Canvas](./pitch-canvas.md) | Canvas rendering — dot trail, log-scale, waveform ring |
 | [Audio Engine](./audio-engine.md) | Binaural beats (always on), waveform ring |
 | [Settings](./settings.md) | Tuning, voice type, localStorage persistence |
@@ -34,7 +34,7 @@ Shares the same product vision and language principles as `attunr-expo`.
 | Binaural beats (always on) | ✓ |
 | Waveform ring | ✓ |
 | App navigation (Train / Journey tabs) | ✓ |
-| Journey — 13 stages | ✓ |
+| Journey — 48 stages | ✓ |
 | Chakra detail card | ✓ |
 | Settings panel (slide-over) | ✓ |
 | localStorage persistence | ✓ |

@@ -1,0 +1,98 @@
+import type { JourneyStage } from "./types";
+
+/** Part 2: Vocal warmups */
+export const PART_2_STAGES: JourneyStage[] = [
+  {
+    id: 2,
+    part: 2,
+    type: "technique_intro",
+    title: "Chest and head voice",
+    chakraIds: [],
+    holdSeconds: 0,
+    noteSeconds: 0,
+    technique: "vowel-u",
+    cardCue: "Find your chest and head voice",
+    instruction:
+      "Your voice has different resonances: chest voice (lower, fuller, felt in the chest) and head voice (lighter, higher, felt in the head and face). The next two exercises help you find them. Low U warms up your chest voice on a low tone. Hoo hoo introduces head voice — a light, owl-like sound on a high tone. Feel where each lands in your body.",
+  },
+  {
+    id: 3,
+    part: 2,
+    type: "individual",
+    title: "Low U",
+    chakraIds: ["root"],
+    holdSeconds: 4,
+    noteSeconds: 0,
+    technique: "vowel-u",
+    chakraDetailStyle: "rainbow",
+    useRainbowLabel: true,
+    instruction:
+      "Sing uuuu (as in 'moon') on a low tone. Keep it relaxed and steady. This warms up your lower register and grounds the voice.",
+  },
+  {
+    id: 4,
+    part: 2,
+    type: "individual",
+    title: "Hoo hoo",
+    chakraIds: ["crown"],
+    holdSeconds: 4,
+    noteSeconds: 0,
+    technique: "sustain",
+    chakraDetailStyle: "rainbow",
+    useRainbowLabel: true,
+    instruction:
+      "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
+  },
+  {
+    id: 5,
+    part: 2,
+    type: "technique_intro",
+    title: "Lip rolls",
+    chakraIds: [],
+    holdSeconds: 0,
+    noteSeconds: 0,
+    technique: "lip-rolls",
+    cardCue: "Gentle warmup to relax your jaw and warm your voice",
+    instruction:
+      "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. In the next exercises, you'll slide your voice from high to low and low to high — a smooth, continuous glide through your range, not separate notes. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you.",
+  },
+  {
+    id: 6,
+    part: 2,
+    type: "slide",
+    title: "Lip rolls — high to low",
+    chakraIds: ["crown", "third-eye", "throat", "heart", "solar-plexus", "sacral", "root"],
+    holdSeconds: 0,
+    noteSeconds: 0,
+    technique: "lip-rolls",
+    slideDirection: "high-to-low",
+    instruction:
+      "Slide smoothly from high to low — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
+  },
+  {
+    id: 7,
+    part: 2,
+    type: "slide",
+    title: "Lip rolls — low to high",
+    chakraIds: ["root", "sacral", "solar-plexus", "heart", "throat", "third-eye", "crown"],
+    holdSeconds: 0,
+    noteSeconds: 0,
+    technique: "lip-rolls",
+    slideDirection: "low-to-high",
+    instruction:
+      "Slide smoothly from low to high — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
+  },
+  {
+    id: 8,
+    part: 2,
+    type: "individual",
+    title: "Sustain a lip roll",
+    chakraIds: ["heart"],
+    holdSeconds: 5,
+    noteSeconds: 0,
+    technique: "lip-rolls",
+    chakraDetailStyle: "minimal",
+    instruction:
+      "Hold one tone and sustain the lip roll for five seconds. Keep the buzz steady — lips vibrating without force. Feel the sound in your chest.",
+  },
+];

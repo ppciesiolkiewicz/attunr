@@ -6,6 +6,13 @@ import { JourneyExercise } from "@/components/JourneyView";
 import { useApp } from "@/context/AppContext";
 import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES } from "@/constants/journey";
 
+/**
+ * Journey step page — URL-driven: /journey/[id]
+ * 1. Get step id from URL
+ * 2. Validate & find stage
+ * 3. Render JourneyExercise (exercise or learn content by stage type)
+ * 4. PartCompleteModal on last step of part → Continue navigates to next URL
+ */
 export default function ExercisePage() {
   const params = useParams();
   const pathname = usePathname();

@@ -55,7 +55,7 @@ plus a **Settings** panel.
 | Drone accompaniment | ✓ Specced |
 | Waveform ring | ✓ Specced |
 | Train tab (free-form, no tuning on screen) | ✓ Specced |
-| Journey (13 guided stages) | ✓ Specced |
+| Journey (48 guided stages) | ✓ Built |
 | Settings panel with localStorage | ✓ Specced |
 | Login / accounts | Out of scope |
 
