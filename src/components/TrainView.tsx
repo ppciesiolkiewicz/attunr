@@ -141,17 +141,6 @@ export default function TrainView({
         </div>
       </div>
 
-      {/* Voice disclaimer */}
-      {freqBase === "voice" && (
-        <div className="px-5 py-1.5 border-b border-white/[0.04]">
-          <p className="text-xs text-white/45">
-            Frequencies adjusted for{" "}
-            {VOICE_TYPES.find((v) => v.id === settings.voiceType)?.label}.{" "}
-            Change voice type in Settings.
-          </p>
-        </div>
-      )}
-
       {/* ── Canvas ───────────────────────────────────────────────────────── */}
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
@@ -213,7 +202,7 @@ export default function TrainView({
 
       {/* ── Explore info modal ────────────────────────────────────────────── */}
       {showInfo && (
-        <TabInfoModal title="Explore" onClose={handleCloseInfo}>
+        <TabInfoModal title="Train" onClose={handleCloseInfo}>
           <p className="text-base text-white/65 leading-relaxed">
             Free-form chakra tone practice. No goals, no instructions — just sing and
             explore your voice against the canvas.

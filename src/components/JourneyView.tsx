@@ -414,7 +414,7 @@ function JourneyList({
             and exploring techniques like mantras and vowels.
           </p>
           <p>
-            When you&apos;ve built confidence, switch to Explore for freeform
+            When you&apos;ve built confidence, switch to Train for freeform
             practice — any tone, any order.
           </p>
         </div>

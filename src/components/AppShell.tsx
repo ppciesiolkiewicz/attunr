@@ -143,7 +143,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 pathname === "/explore" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
               }`}
             >
-              Explore
+              Train
             </Link>
           </nav>
           <Link

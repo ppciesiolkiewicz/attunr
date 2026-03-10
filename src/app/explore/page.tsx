@@ -1,7 +1,7 @@
 import ExplorePage from "./ExplorePage";
 
 export const metadata = {
-  title: "Explore",
+  title: "Train",
 };
 
 export default function Explore() {
