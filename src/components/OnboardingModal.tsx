@@ -188,7 +188,7 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
         {/* Wordmark */}
         <div>
           <h1 className="text-[2.1rem] font-semibold tracking-tight text-white leading-none">attunr</h1>
-          <p className="mt-1.5 text-xs text-white/52 tracking-widest uppercase">chakra frequency trainer</p>
+          <p className="mt-1.5 text-xs text-white/52 tracking-widest uppercase">vocal placement trainer</p>
         </div>
 
         <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />

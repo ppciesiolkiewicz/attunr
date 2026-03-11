@@ -7,13 +7,13 @@ export interface Article {
 
 export const ARTICLES: Article[] = [
   {
-    slug: "chakra-tones",
-    title: "What are chakra tones?",
+    slug: "vocal-placement",
+    title: "What is vocal placement?",
     excerpt:
-      "Specific frequencies aligned with the body's energy centres — and why singing them can deepen presence and body awareness.",
-    content: `Chakra tones are specific frequencies aligned with the seven main energy centres in the body — from Root at the base of the spine to Crown at the top of the head. Many traditions use the Solfeggio scale (396 Hz for Root, 417 Hz for Sacral, 528 Hz for Solar Plexus, and so on) as a starting point. Your voice type adjusts these to fit your natural range.
+      "Directing your voice to resonate in different parts of your body — and why it deepens presence and body awareness.",
+    content: `Vocal placement is the practice of directing your voice to resonate in specific parts of your body. Lower tones naturally settle in the chest, mid-range tones open in the throat and mouth, and higher tones lift into the sinuses and crown of the head.
 
-When you sing these tones, you're not just listening — you're creating the vibration from within. That can help you tune into each chakra, notice where tension or ease lives in your body, and develop a deeper connection between voice and awareness. Some people feel grounding in the lower tones, clarity in the higher ones, or a sense of flow moving between them.
+Each of the seven chakras corresponds to a tone and a body region. By singing through them, you train awareness of where sound lives in your body. Some people feel grounding in the lower placements, clarity in the higher ones, or a sense of flow moving between them.
 
 The goal is not perfection, but presence. Feel where the sound lands. Notice how it shifts your state. Even a few minutes of practice can bring you more into your body and out of your head.`,
   },
@@ -33,9 +33,9 @@ Try a few minutes before each practice. Start high and glide down, or low and gl
     title: "Solfeggio frequencies and sound healing",
     excerpt:
       "The Solfeggio scale — 396 to 963 Hz — has roots in sacred music and offers a coherent framework for vocal practice.",
-    content: `The Solfeggio frequencies — 396, 417, 528, 639, 741, 852 Hz (and 963 Hz for Crown) — appear in ancient Gregorian chant and later sound healing traditions. Each is said to correspond to a chakra: 396 Hz for Root, 417 for Sacral, 528 for Solar Plexus, 639 for Heart, 741 for Throat, 852 for Third Eye, 963 for Crown.
+    content: `The Solfeggio frequencies — 396, 417, 528, 639, 741, 852 Hz (and 963 Hz for Crown) — appear in ancient Gregorian chant and later sound healing traditions. attunr uses a zodiac/planetary frequency system that assigns each chakra a specific musical note (Bb, Eb, F#, C, G, D, A) and adjusts the octave to fit your voice type.
 
-Some traditions assign qualities to each: 396 for liberation from guilt, 528 as the "miracle" or "love" tone, and so on. Whether you take those claims literally or not, these frequencies form a coherent scale that fits the human voice. They offer a structured way to explore resonance from your belly to the top of your head.
+Whether you follow a specific tradition or not, these frequencies form a coherent framework that maps onto the human voice. They offer a structured way to explore resonance from your chest to the top of your head.
 
 Practising them can deepen body awareness, improve vocal control, and give you a simple framework for daily sound work. No belief system required — just curiosity and a willingness to feel.`,
   },

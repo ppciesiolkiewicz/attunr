@@ -46,7 +46,7 @@ export const PART_COMPLETE_CONTENT: Record<
   { learned: string; tip: string }
 > = {
   1: {
-    learned: "Chakra tones and their connection to grounding, creativity, and presence.",
+    learned: "Vocal placement and its connection to grounding, creativity, and presence.",
     tip: "",
   },
   2: {
@@ -54,11 +54,11 @@ export const PART_COMPLETE_CONTENT: Record<
     tip: "Always warm up before each practice session!",
   },
   3: {
-    learned: "Holding each chakra tone steadily and feeling where it resonates.",
+    learned: "Holding each tone steadily and feeling where it resonates in the body.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
   4: {
-    learned: "Singing chakra sequences for full alignment.",
+    learned: "Singing placement sequences for full alignment.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
   5: {
@@ -66,7 +66,7 @@ export const PART_COMPLETE_CONTENT: Record<
     tip: "Repeat and combine exercises into longer sessions.",
   },
   6: {
-    learned: "Chakra seed syllables — LAM, VAM, RAM, YAM, HAM, OM, AH.",
+    learned: "Seed syllables — LAM, VAM, RAM, YAM, HAM, OM, AH — placed through the body.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
   7: {

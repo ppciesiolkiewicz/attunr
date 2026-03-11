@@ -604,9 +604,26 @@ function ExerciseInfoModal({
               />
             )}
 
-          {/* Instructions — farinelli: intro, then video, then forgiving para, then before you begin */}
+          {/* Instructions — farinelli: before you begin first, then intro, video, key tips */}
           {stage.type === "farinelli" ? (
             <>
+              <div
+                className="rounded-xl px-4 py-3"
+                style={{
+                  border: "2px solid rgba(251,191,36,0.6)",
+                  background: "rgba(251,191,36,0.08)",
+                }}
+              >
+                <p className="text-sm font-semibold text-amber-400/95 mb-1.5">
+                  Before you begin
+                </p>
+                <p className="text-sm text-white/75 leading-relaxed">
+                  If you have heart or respiratory conditions, or are pregnant, check with your doctor first. Stop immediately if you feel dizzy, lightheaded, or unwell at any time.
+                </p>
+              </div>
+              <div className="flex items-center justify-center py-3">
+                <span className="text-white/45 text-[0.5em] leading-none">●</span>
+              </div>
               <div className="flex flex-col gap-1">
                 <p className="text-base leading-relaxed" style={{ color: "rgba(255,255,255,0.88)" }}>
                   {stage.instruction.split("\n\n")[0]}
@@ -638,20 +655,6 @@ function ExerciseInfoModal({
                     </li>
                   ))}
                 </ul>
-              </div>
-              <div
-                className="rounded-xl px-4 py-3"
-                style={{
-                  border: "2px solid rgba(251,191,36,0.6)",
-                  background: "rgba(251,191,36,0.08)",
-                }}
-              >
-                <p className="text-sm font-semibold text-amber-400/95 mb-1.5">
-                  Before you begin
-                </p>
-                <p className="text-sm text-white/75 leading-relaxed">
-                  If you have heart or respiratory conditions, or are pregnant, check with your doctor first. Stop immediately if you feel dizzy, lightheaded, or unwell at any time.
-                </p>
               </div>
             </>
           ) : (

@@ -26,8 +26,8 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "root",
     name: "Root",
-    note: "C",
-    frequencyHz: 396,
+    note: "Bb",
+    frequencyHz: 228,
     color: "#ef4444",
     rgb: "239, 68, 68",
     mantra: "LAM",
@@ -40,8 +40,8 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "sacral",
     name: "Sacral",
-    note: "D",
-    frequencyHz: 417,
+    note: "Eb",
+    frequencyHz: 303,
     color: "#f97316",
     rgb: "249, 115, 22",
     mantra: "VAM",
@@ -54,8 +54,8 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "solar-plexus",
     name: "Solar Plexus",
-    note: "E",
-    frequencyHz: 528,
+    note: "F#",
+    frequencyHz: 182,
     color: "#eab308",
     rgb: "234, 179, 8",
     mantra: "RAM",
@@ -68,8 +68,8 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "heart",
     name: "Heart",
-    note: "F",
-    frequencyHz: 639,
+    note: "C",
+    frequencyHz: 128,
     color: "#22c55e",
     rgb: "34, 197, 94",
     mantra: "YAM",
@@ -83,7 +83,7 @@ export const CHAKRAS: Chakra[] = [
     id: "throat",
     name: "Throat",
     note: "G",
-    frequencyHz: 741,
+    frequencyHz: 192,
     color: "#3b82f6",
     rgb: "59, 130, 246",
     mantra: "HAM",
@@ -96,8 +96,8 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "third-eye",
     name: "Third Eye",
-    note: "A",
-    frequencyHz: 852,
+    note: "D",
+    frequencyHz: 144,
     color: "#6366f1",
     rgb: "99, 102, 241",
     mantra: "OM",
@@ -110,8 +110,8 @@ export const CHAKRAS: Chakra[] = [
   {
     id: "crown",
     name: "Crown",
-    note: "B",
-    frequencyHz: 963,
+    note: "A",
+    frequencyHz: 216,
     color: "#a855f7",
     rgb: "168, 85, 247",
     mantra: "AH",
@@ -130,15 +130,15 @@ export type VoiceTypeId = "bass" | "baritone" | "tenor" | "alto" | "soprano";
 export interface VoiceType {
   id: VoiceTypeId;
   label: string;
-  sacredFactor: number;
+  rangeHz: [number, number];
 }
 
 export const VOICE_TYPES: VoiceType[] = [
-  { id: "bass",     label: "Bass",     sacredFactor: 0.35 },
-  { id: "baritone", label: "Baritone", sacredFactor: 0.45 },
-  { id: "tenor",    label: "Tenor",    sacredFactor: 0.50 },
-  { id: "alto",     label: "Alto",     sacredFactor: 0.65 },
-  { id: "soprano",  label: "Soprano",  sacredFactor: 0.90 },
+  { id: "bass",     label: "Bass",     rangeHz: [82, 330] },
+  { id: "baritone", label: "Baritone", rangeHz: [98, 392] },
+  { id: "tenor",    label: "Tenor",    rangeHz: [131, 523] },
+  { id: "alto",     label: "Alto",     rangeHz: [175, 698] },
+  { id: "soprano",  label: "Soprano",  rangeHz: [262, 1047] },
 ];
 
 // ── Tuning ────────────────────────────────────────────────────────────────────
@@ -156,12 +156,20 @@ export const TUNING_OPTIONS: {
   { id: "A528", label: "A528 Hz", description: '"Miracle tone" — popular in sound healing' },
 ];
 
-const TUNING_FACTORS: Record<TuningStandard, number> = {
-  A432: 432 / 440,
-  A440: 1,
-  A444: 444 / 440,
-  A528: 528 / 440,
+export const TUNING_A_HZ: Record<TuningStandard, number> = {
+  A432: 432,
+  A440: 440,
+  A444: 444,
+  A528: 528,
 };
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function fitToRange(hz: number, low: number, high: number): number {
+  while (hz < low) hz *= 2;
+  while (hz > high) hz /= 2;
+  return hz;
+}
 
 // ── Frequency modes ───────────────────────────────────────────────────────────
 
@@ -172,16 +180,25 @@ export function getChakraFrequencies(
   voiceId: VoiceTypeId,
   tuning: TuningStandard
 ): Chakra[] {
-  if (base === "absolute") return CHAKRAS;
+  const tuningScale = TUNING_A_HZ[tuning] / 432;
+
+  if (base === "absolute") {
+    return CHAKRAS.map((c) => ({
+      ...c,
+      frequencyHz: Math.round(c.frequencyHz * tuningScale),
+    }));
+  }
+
   const voice = VOICE_TYPES.find((v) => v.id === voiceId) ?? VOICE_TYPES[2];
-  const factor = TUNING_FACTORS[tuning];
+  const [low, high] = voice.rangeHz;
+
   return CHAKRAS.map((c) => ({
     ...c,
-    frequencyHz: Math.round(c.frequencyHz * voice.sacredFactor * factor),
+    frequencyHz: Math.round(fitToRange(c.frequencyHz * tuningScale, low, high)),
   }));
 }
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// ── Pitch utilities ───────────────────────────────────────────────────────────
 
 /** ±3% tolerance — roughly ±50 cents */
 export function isInTune(detectedHz: number, targetHz: number): boolean {
@@ -194,7 +211,7 @@ export function isInChakraRange(detectedHz: number, chakras: Chakra[]): boolean 
   const freqs = chakras.map((c) => c.frequencyHz);
   const minHz = Math.min(...freqs);
   const maxHz = Math.max(...freqs);
-  const buffer = 0.1; // ±10% at edges — loose, any pitch in spectrum counts
+  const buffer = 0.1;
   const low = minHz * (1 - buffer);
   const high = maxHz * (1 + buffer);
   return detectedHz >= low && detectedHz <= high;

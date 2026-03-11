@@ -361,7 +361,7 @@ export default function PitchCanvas({
       ref={canvasRef}
       onClick={handleClick}
       className="block w-full h-full cursor-pointer"
-      aria-label="Chakra frequency pitch visualiser"
+      aria-label="Vocal placement pitch visualiser"
     />
   );
 }

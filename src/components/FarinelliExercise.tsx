@@ -1,6 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+
+function shuffle<T>(arr: T[]): T[] {
+  const out = [...arr];
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
 
 function playCountdownClick() {
   try {
@@ -63,36 +72,39 @@ export function FarinelliExercise({
   const [countdown, setCountdown] = useState(3);
   const [phase, setPhase] = useState<FarinelliPhase>("inhale");
   const [cycleCount, setCycleCount] = useState(startCount);
-  const [currentTick, setCurrentTick] = useState(0);
+  const [displayCount, setDisplayCount] = useState(startCount);
   const [isComplete, setIsComplete] = useState(false);
   const [adviceIndex, setAdviceIndex] = useState(0);
+  const [shuffledAdvice, setShuffledAdvice] = useState<string[]>([]);
 
-  function handleStart() {
-    setStatus("countdown");
-    setCountdown(3);
-  }
+  const countdownTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   useEffect(() => {
-    if (status !== "countdown") return;
+    return () => countdownTimers.current.forEach(clearTimeout);
+  }, []);
+
+  function handleStart() {
+    setShuffledAdvice(shuffle(FARINELLI_ADVICES));
+    setStatus("countdown");
+    setCountdown(3);
     playCountdownClick();
-    if (countdown <= 0) {
-      setStatus("running");
-      return;
-    }
-    const id = setTimeout(() => setCountdown((c) => c - 1), 1000);
-    return () => clearTimeout(id);
-  }, [status, countdown]);
+
+    countdownTimers.current = [
+      setTimeout(() => { setCountdown(2); playCountdownClick(); }, 1000),
+      setTimeout(() => { setCountdown(1); playCountdownClick(); }, 2000),
+      setTimeout(() => { setStatus("running"); setDisplayCount(startCount); }, 3000),
+    ];
+  }
 
   const phaseDuration = cycleCount * secondsPerCount;
-  const tickInterval = 100; // update UI every 100ms
 
   const advancePhase = useCallback(() => {
     if (phase === "inhale") {
       setPhase("hold");
-      setCurrentTick(0);
+      setDisplayCount(cycleCount);
     } else if (phase === "hold") {
       setPhase("exhale");
-      setCurrentTick(0);
+      setDisplayCount(cycleCount);
     } else {
       // exhale done — next cycle or complete
       if (cycleCount >= maxCount) {
@@ -101,29 +113,33 @@ export function FarinelliExercise({
         onComplete?.();
         return;
       }
-      setAdviceIndex((i) => (i + 1) % FARINELLI_ADVICES.length);
-      setCycleCount((c) => c + 1);
+      // Advance tip every 2 cycles (change less often)
+      const nextCycle = cycleCount + 1;
+      if ((nextCycle - startCount) % 2 === 0) {
+        setAdviceIndex((i) => {
+          const list = shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES;
+          return (i + 1) % list.length;
+        });
+      }
+      setCycleCount(nextCycle);
       setPhase("inhale");
-      setCurrentTick(0);
+      setDisplayCount(nextCycle);
     }
-  }, [phase, cycleCount, maxCount, onComplete]);
+  }, [phase, cycleCount, maxCount, onComplete, shuffledAdvice]);
 
+  // Phase timing: setTimeout to advance when duration elapses (independent from animation)
   useEffect(() => {
     if (isComplete || status !== "running") return;
-    const interval = setInterval(() => {
-      setCurrentTick((t) => {
-        const next = t + tickInterval / 1000;
-        if (next >= phaseDuration) {
-          advancePhase();
-          return 0;
-        }
-        return next;
-      });
-    }, tickInterval);
-    return () => clearInterval(interval);
+    const id = setTimeout(advancePhase, phaseDuration * 1000);
+    return () => clearTimeout(id);
   }, [phase, phaseDuration, advancePhase, isComplete, status]);
 
-  const progress = phaseDuration > 0 ? Math.min(currentTick / phaseDuration, 1) : 0;
+  // Count tick-down: independent interval during running
+  useEffect(() => {
+    if (isComplete || status !== "running") return;
+    const id = setInterval(() => setDisplayCount((c) => Math.max(1, c - 1)), secondsPerCount * 1000);
+    return () => clearInterval(id);
+  }, [status, isComplete, secondsPerCount]);
 
   const phaseLabel =
     phase === "inhale"
@@ -146,7 +162,7 @@ export function FarinelliExercise({
       return (
         <button
           type="button"
-          className="relative w-40 h-40 cursor-pointer select-none border-none bg-transparent rounded-full overflow-visible focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-[#0f0f1a] before:content-[''] before:absolute before:inset-0 before:rounded-full before:border-[3px] before:border-[rgba(167,139,250,0.8)] before:bg-transparent before:scale-100 before:origin-center before:transition-[transform] before:duration-200 before:ease-out before:pointer-events-none hover:before:scale-105 active:before:scale-95"
+          className="relative w-40 h-40 cursor-pointer select-none border-none bg-transparent rounded-full overflow-visible focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:ring-offset-2 focus:ring-offset-[#0f0f1a] before:content-[''] before:absolute before:inset-0 before:rounded-full before:border-[3px] before:border-[rgba(167,139,250,0.8)] before:bg-transparent before:pointer-events-none"
           onClick={() => onClick()}
         >
           <span className="flex items-center justify-center w-full h-full">
@@ -175,29 +191,35 @@ export function FarinelliExercise({
     );
   };
 
+  const topSlotMinH = "min-h-[4.5rem]";
+  const bottomSlotMinH = "min-h-[4.5rem]";
+
   if (status === "ready" || status === "countdown") {
     return (
-      <div className="flex flex-col items-center justify-center h-full">
-        <div className="flex flex-col items-center shrink-0">
+      <div className="flex flex-col items-center justify-center h-full gap-8 px-6">
+        <div className={`${topSlotMinH} w-full flex flex-col items-center justify-end`} />
+        <div className="shrink-0">
           <CircleWrapper onClick={status === "ready" ? handleStart : undefined}>
-            {status === "ready" ? (
-              <span className="text-xl font-semibold text-white">Start</span>
-            ) : (
-              <span className="text-6xl font-light tabular-nums text-white">
-                {countdown > 0 ? countdown : ""}
-              </span>
-            )}
-          </CircleWrapper>
-          <div className="mt-8 flex flex-col items-center justify-center gap-3 min-w-[12rem] max-w-[300px] px-4">
-            {status === "ready" ? (
-              <p className="text-sm text-white/50">Get comfortable, then tap when you&apos;re ready</p>
-            ) : (
-              <>
-                <p className="text-xs text-white/55 text-center">{FARINELLI_INSTRUCTIONS}</p>
-                <p className="text-xs text-white/45 text-center">{FARINELLI_ADVICES[0]}</p>
-              </>
-            )}
-          </div>
+          {status === "ready" ? (
+            <span className="text-xl font-semibold text-white">Start</span>
+          ) : (
+            <span className="text-6xl font-light tabular-nums text-white">
+              {countdown > 0 ? countdown : ""}
+            </span>
+          )}
+        </CircleWrapper>
+        </div>
+        <div className={`${bottomSlotMinH} flex flex-col items-center justify-start gap-2 min-w-[12rem] max-w-[300px] px-4 text-center`}>
+          {status === "ready" ? (
+            <>
+              <p className="text-sm text-white/60">{FARINELLI_INSTRUCTIONS}</p>
+              <p className="text-xs text-white/45">Get comfortable, then tap when you&apos;re ready</p>
+            </>
+          ) : (
+            <p className="text-xs text-white/55">
+              Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES)[adviceIndex]}
+            </p>
+          )}
         </div>
       </div>
     );
@@ -218,7 +240,7 @@ export function FarinelliExercise({
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8 px-6">
-      <div className="text-center">
+      <div className={`${topSlotMinH} w-full flex flex-col items-center justify-end text-center`}>
         <p className="text-2xl font-medium text-white mb-1">{phaseLabel}</p>
         <p className="text-white/55 text-sm">
           Cycle {cycleCount - startCount + 1} of {maxCount - startCount + 1} · {cycleCount} counts
@@ -226,7 +248,7 @@ export function FarinelliExercise({
       </div>
 
       {/* Progress ring */}
-      <div className="relative w-40 h-40">
+      <div className="relative w-40 h-40 shrink-0">
         <svg
           className="w-full h-full -rotate-90"
           viewBox="0 0 100 100"
@@ -240,6 +262,7 @@ export function FarinelliExercise({
             strokeWidth="6"
           />
           <circle
+            key={`${phase}-${cycleCount}`}
             cx="50"
             cy="50"
             r="42"
@@ -247,24 +270,26 @@ export function FarinelliExercise({
             stroke="rgba(167,139,250,0.9)"
             strokeWidth="6"
             strokeLinecap="round"
-            strokeDasharray={`${2 * Math.PI * 42}`}
-            strokeDashoffset={`${2 * Math.PI * 42 * (1 - progress)}`}
-            style={{ transition: "stroke-dashoffset 0.1s linear" }}
+            strokeDasharray={2 * Math.PI * 42}
+            strokeDashoffset={2 * Math.PI * 42}
+            style={{
+              animation: `farinelli-fill ${phaseDuration}s linear forwards`,
+              animationTimingFunction: "linear",
+            }}
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="text-4xl font-light tabular-nums text-white">
-            {Math.max(1, Math.ceil(cycleCount - currentTick / secondsPerCount))}
+            {displayCount}
           </span>
         </div>
       </div>
 
-      <p className="text-xs text-white/55 text-center max-w-[280px]">
-        {FARINELLI_INSTRUCTIONS}
-      </p>
-      <p className="text-xs text-white/45 text-center max-w-[280px]">
-        {FARINELLI_ADVICES[adviceIndex]}
-      </p>
+      <div className={`${bottomSlotMinH} flex flex-col items-center justify-start max-w-[280px]`}>
+        <p className="text-xs text-white/55 text-center">
+          Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES)[adviceIndex]}
+        </p>
+      </div>
     </div>
   );
 }

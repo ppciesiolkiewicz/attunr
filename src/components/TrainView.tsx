@@ -204,7 +204,7 @@ export default function TrainView({
       {showInfo && (
         <TabInfoModal title="Train" onClose={handleCloseInfo}>
           <p className="text-base text-white/65 leading-relaxed">
-            Free-form chakra tone practice. No goals, no instructions — just sing and
+            Free-form vocal placement practice. No goals, no instructions — just sing and
             explore your voice against the canvas.
           </p>
 

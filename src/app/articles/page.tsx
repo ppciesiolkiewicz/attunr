@@ -4,7 +4,7 @@ import { ARTICLES } from "@/data/articles";
 export const metadata = {
   title: "Articles",
   description:
-    "Learn about chakra tones, vocal warmups, Solfeggio frequencies, and sound healing.",
+    "Learn about vocal placement, vocal warmups, frequencies, and sound healing.",
 };
 
 export default function ArticlesPage() {
@@ -13,7 +13,7 @@ export default function ArticlesPage() {
       <div className="max-w-xl mx-auto px-5 py-8">
         <h1 className="text-xl font-semibold text-white mb-1">Articles</h1>
         <p className="text-sm text-white/55 mb-6">
-          Short reads on chakra tones, voice, and sound.
+          Short reads on vocal placement, voice, and sound.
         </p>
         <div className="flex flex-col gap-4">
           {ARTICLES.map((a) => (

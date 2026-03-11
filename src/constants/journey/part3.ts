@@ -26,7 +26,7 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Root chakra tone — LAM.\nSing it and feel steady and grounded.\nThis can help you feel safe, present, and at home in your body.",
+      "Root placement — LAM.\nSing low and feel the tone settle in your chest.\nThis can help you feel safe, present, and at home in your body.",
   },
   {
     id: 12,
@@ -39,7 +39,7 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Sacral chakra tone — VAM.\nMatch it and let the sound flow naturally.\nThis can support creativity, flow, and emotional ease.",
+      "Sacral placement — VAM.\nLet the sound flow from your lower belly.\nThis can support creativity, flow, and emotional ease.",
   },
   {
     id: 13,
@@ -52,7 +52,7 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Solar Plexus chakra tone — RAM.\nSing with purpose and feel your centre.\nThis can support confidence and personal power.",
+      "Solar Plexus placement — RAM.\nSing with purpose and feel your centre.\nThis can support confidence and personal power.",
   },
   {
     id: 14,
@@ -65,7 +65,7 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Heart chakra tone — YAM.\nTake a soft breath and sing openly.\nThis can support compassion, connection, and emotional balance.",
+      "Heart placement — YAM.\nTake a soft breath and sing openly from the chest.\nThis can support compassion, connection, and emotional balance.",
   },
   {
     id: 15,
@@ -78,7 +78,7 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Throat chakra tone — HAM.\nSing clearly and let your voice be heard.\nThis can support honest expression and clear communication.",
+      "Throat placement — HAM.\nSing clearly and feel the resonance in your throat.\nThis can support honest expression and clear communication.",
   },
   {
     id: 16,
@@ -91,7 +91,7 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Third Eye chakra tone — OM.\nSing gently and turn your attention inward.\nThis can support intuition, clarity, and expanded perception.",
+      "Third Eye placement — OM.\nSing gently and feel the tone behind your forehead.\nThis can support intuition, clarity, and expanded perception.",
   },
   {
     id: 17,
@@ -104,6 +104,6 @@ export const PART_3_STAGES: JourneyStage[] = [
     technique: "sustain",
     chakraDetailStyle: "full",
     instruction:
-      "This is the Crown chakra tone — AH.\nStay soft as you move into this higher tone.\nThis can support a sense of peace, presence, and unity.",
+      "Crown placement — AH.\nStay soft and feel the tone at the top of your head.\nThis can support a sense of peace, presence, and unity.",
   },
 ];
