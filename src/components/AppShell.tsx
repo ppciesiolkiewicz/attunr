@@ -12,7 +12,7 @@ import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { AppContext } from "@/context/AppContext";
 import { analytics } from "@/lib/analytics";
-import type { Chakra, VoiceTypeId } from "@/constants/chakras";
+import type { Band } from "@/constants/chakras";
 import Logo from "./Logo";
 
 function SettingsIcon() {
@@ -92,9 +92,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Binaural is always on — no user toggle needed
-  function handlePlayTone(chakra: Chakra) {
-    playTone(chakra.frequencyHz, { chakraId: chakra.id, binaural: true });
-    analytics.tonePlayed(chakra.id, pathname?.startsWith("/explore") ? "explore" : "journey");
+  function handlePlayTone(band: Band) {
+    playTone(band.frequencyHz, { chakraId: band.chakraId, binaural: true });
+    analytics.tonePlayed(band.id, pathname?.startsWith("/train") ? "explore" : "journey");
   }
 
   function handleOpenSettings() {
@@ -113,15 +113,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     openSettings: handleOpenSettings,
   };
 
-  function handleOnboardingBegin(voiceId: VoiceTypeId, detected?: boolean) {
-    update("voiceType", voiceId);
+  function handleOnboardingBegin(result: { lowHz: number; highHz: number; voiceType: string }) {
+    update("vocalRangeLowHz", result.lowHz);
+    update("vocalRangeHighHz", result.highHz);
     setShowOnboarding(false);
     setRedetect(false);
     localStorage.setItem("attunr.onboarded", "1");
-    analytics.onboardingCompleted(voiceId, detected);
+    analytics.onboardingCompleted(result.voiceType, true, result.lowHz, result.highHz);
   }
 
-  const needsMic = pathname === "/" || pathname?.startsWith("/journey") || pathname === "/explore";
+  const needsMic = pathname === "/" || pathname?.startsWith("/journey") || pathname === "/train";
   const showMicGate =
     !(showOnboarding || redetect) &&
     needsMic &&
@@ -204,9 +205,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               Journey
             </Link>
             <Link
-              href="/explore"
+              href="/train"
               className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
-                pathname === "/explore" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
+                pathname === "/train" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
               }`}
             >
               Train
@@ -294,13 +295,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
                 Journey
               </Link>
               <Link
-                href="/explore"
+                href="/train"
                 className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${
-                  pathname === "/explore" ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20" : "text-white/80 hover:bg-white/[0.06] active:bg-white/[0.08]"
+                  pathname === "/train" ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20" : "text-white/80 hover:bg-white/[0.06] active:bg-white/[0.08]"
                 }`}
                 onClick={() => setMenuOpen(false)}
               >
-                <span className={pathname === "/explore" ? "text-white" : "text-white/60"}>
+                <span className={pathname === "/train" ? "text-white" : "text-white/60"}>
                   <MenuTrainIcon />
                 </span>
                 Train

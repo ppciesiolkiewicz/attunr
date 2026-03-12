@@ -4,16 +4,14 @@ import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
 import TabInfoModal, { InfoButton, HeadphonesNotice } from "./TabInfoModal";
 import {
-  VOICE_TYPES,
-  getChakraFrequencies,
-  findClosestChakra,
+  getScaleNotesForRange,
+  findClosestBand,
   isInTune,
 } from "@/constants/chakras";
-import type { Chakra, FrequencyBase, VoiceTypeId } from "@/constants/chakras";
+import type { Band } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 
 const STORAGE_KEY = "attunr.exploreInfoSeen";
-const ABSOLUTE_STORAGE_KEY = "attunr.absoluteInfoSeen";
 
 function PlayIcon() {
   return (
@@ -38,7 +36,7 @@ interface TrainViewProps {
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  onPlayTone: (chakra: Chakra) => void;
+  onPlayTone: (band: Band) => void;
   onSettingsUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
 }
 
@@ -47,34 +45,42 @@ export default function TrainView({
   pitchHz,
   pitchHzRef,
   onPlayTone,
-  onSettingsUpdate,
 }: TrainViewProps) {
-  const [freqBase, setFreqBase] = useState<FrequencyBase>(settings.freqBase);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState(false);
-  const [showAbsoluteModal, setShowAbsoluteModal] = useState(false);
 
   // Auto-show on first visit
   useEffect(() => {
     if (!localStorage.getItem(STORAGE_KEY)) setShowInfo(true);
   }, []);
 
-  const chakras = useMemo(
-    () => getChakraFrequencies(freqBase, settings.voiceType, settings.tuning),
-    [freqBase, settings.voiceType, settings.tuning]
+  const allBands = useMemo(
+    () =>
+      getScaleNotesForRange(
+        settings.vocalRangeLowHz,
+        settings.vocalRangeHighHz,
+        settings.tuning,
+      ),
+    [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
 
-  const closestChakra: Chakra | null = pitchHz
-    ? findClosestChakra(pitchHz, chakras)
+  // Only show chakra-slot bands as buttons (avoid 13+ buttons for all notes)
+  const chakraSlotBands = useMemo(
+    () => allBands.filter((b) => b.isChakraSlot),
+    [allBands],
+  );
+
+  const closestBand: Band | null = pitchHz
+    ? findClosestBand(pitchHz, allBands)
     : null;
   const locked =
-    closestChakra && pitchHz
-      ? isInTune(pitchHz, closestChakra.frequencyHz)
+    closestBand && pitchHz
+      ? isInTune(pitchHz, closestBand.frequencyHz)
       : false;
 
-  function handlePlay(chakra: Chakra) {
-    setPlayingId(chakra.id);
-    onPlayTone(chakra);
+  function handlePlay(band: Band) {
+    setPlayingId(band.id);
+    onPlayTone(band);
     setTimeout(() => setPlayingId(null), 1800);
   }
 
@@ -83,70 +89,20 @@ export default function TrainView({
     setShowInfo(false);
   }
 
-  function handleAbsoluteClick() {
-    if (localStorage.getItem(ABSOLUTE_STORAGE_KEY)) {
-      setFreqBase("absolute");
-    } else {
-      setShowAbsoluteModal(true);
-    }
-  }
-
-  function handleCloseAbsoluteModal(persist: boolean) {
-    if (persist) localStorage.setItem(ABSOLUTE_STORAGE_KEY, "1");
-    setShowAbsoluteModal(false);
-    setFreqBase("absolute");
-  }
-
   return (
     <div className="flex flex-col h-full">
 
       {/* ── Controls bar ─────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap items-center gap-2 px-5 py-3 border-b border-white/[0.06] pr-4">
-        <div className="flex items-center gap-1 bg-white/[0.05] rounded-lg p-1">
-          {(["absolute", "voice"] as FrequencyBase[]).map((b) => (
-            <button
-              key={b}
-              onClick={() => b === "absolute" ? handleAbsoluteClick() : setFreqBase(b)}
-              className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
-                freqBase === b
-                  ? "bg-violet-600 text-white"
-                  : "text-white/62 hover:text-white/88"
-              }`}
-            >
-              {b === "absolute" ? "Absolute" : "By voice"}
-            </button>
-          ))}
-        </div>
-
-        {freqBase === "voice" && (
-          <div className="flex items-center gap-1 bg-white/[0.05] rounded-lg p-1">
-            {VOICE_TYPES.map((v) => (
-              <button
-                key={v.id}
-                onClick={() => onSettingsUpdate("voiceType", v.id as VoiceTypeId)}
-                className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
-                  settings.voiceType === v.id
-                    ? "bg-violet-600 text-white"
-                    : "text-white/62 hover:text-white/88"
-                }`}
-              >
-                {v.label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="ml-auto">
-          <InfoButton onClick={() => setShowInfo(true)} />
-        </div>
+      <div className="flex items-center justify-end px-5 py-3 border-b border-white/6">
+        <InfoButton onClick={() => setShowInfo(true)} />
       </div>
 
       {/* ── Canvas ───────────────────────────────────────────────────────── */}
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
-          chakras={chakras}
+          bands={allBands}
           currentHzRef={pitchHzRef}
-          onChakraClick={handlePlay}
+          onBandClick={handlePlay}
         />
 
         {/* Pitch overlay */}
@@ -154,17 +110,17 @@ export default function TrainView({
           <div className="pointer-events-none absolute top-4 left-5 fade-in">
             <div
               className="text-3xl font-light tabular-nums tracking-tight"
-              style={{ color: closestChakra?.color ?? "#fff" }}
+              style={{ color: closestBand?.color ?? "#fff" }}
             >
               {Math.round(pitchHz)} Hz
             </div>
-            {closestChakra && (
+            {closestBand && (
               <div
                 className="text-sm font-medium mt-0.5"
-                style={{ color: closestChakra.color + "aa" }}
+                style={{ color: closestBand.color + "aa" }}
               >
                 {locked ? "✓ " : "→ "}
-                {closestChakra.name} · {closestChakra.frequencyHz} Hz
+                {closestBand.frequencyHz} Hz
               </div>
             )}
           </div>
@@ -175,32 +131,31 @@ export default function TrainView({
       {/* ── Bottom panel ─────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-3 pb-4 flex flex-col gap-3">
         <div className="flex flex-wrap gap-2 justify-center">
-          {chakras.map((chakra) => {
-            const isPlaying = playingId === chakra.id;
-            const isActive = locked && closestChakra?.id === chakra.id;
+          {chakraSlotBands.map((band) => {
+            const isPlaying = playingId === band.id;
+            const isActive = locked && closestBand?.id === band.id;
             return (
               <button
-                key={chakra.id}
-                onClick={() => handlePlay(chakra)}
-                title={`${chakra.name} — ${chakra.frequencyHz} Hz\n${chakra.description}`}
+                key={band.id}
+                onClick={() => handlePlay(band)}
+                title={`${band.name} — ${band.frequencyHz} Hz\n${band.description ?? ""}`}
                 className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all"
                 style={{
-                  borderColor: isActive || isPlaying ? chakra.color : `${chakra.color}40`,
-                  color: isActive || isPlaying ? chakra.color : `${chakra.color}99`,
-                  backgroundColor: isActive || isPlaying ? `${chakra.color}18` : "transparent",
-                  boxShadow: isActive ? `0 0 12px ${chakra.color}40` : "none",
+                  borderColor: isActive || isPlaying ? band.color : `${band.color}40`,
+                  color: isActive || isPlaying ? band.color : `${band.color}99`,
+                  backgroundColor: isActive || isPlaying ? `${band.color}18` : "transparent",
+                  boxShadow: isActive ? `0 0 12px ${band.color}40` : "none",
                 }}
               >
                 <PlayIcon />
-                {chakra.name}
-                <span className="opacity-65">{chakra.frequencyHz}</span>
+                <span className="opacity-65">{band.frequencyHz} Hz</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* ── Explore info modal ────────────────────────────────────────────── */}
+      {/* ── Train info modal ──────────────────────────────────────────────── */}
       {showInfo && (
         <TabInfoModal title="Train" onClose={handleCloseInfo}>
           <p className="text-base text-white/65 leading-relaxed">
@@ -220,11 +175,11 @@ export default function TrainView({
               },
               {
                 icon: "▶",
-                text: "Tap a chakra button at the bottom or click on a band to hear its tone",
+                text: "Tap a tone button at the bottom or click on a band to hear it played",
               },
               {
                 icon: "⚙",
-                text: "Switch between Absolute (universal Hz) and By voice (scaled to your range) in the controls above",
+                text: "Change your tuning (A432, A440…) and vocal range in Settings",
               },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
@@ -238,40 +193,6 @@ export default function TrainView({
         </TabInfoModal>
       )}
 
-      {/* ── Absolute mode info modal ──────────────────────────────────────── */}
-      {showAbsoluteModal && (
-        <TabInfoModal title="Absolute frequencies" onClose={handleCloseAbsoluteModal}>
-          <p className="text-base text-white/65 leading-relaxed">
-            Many of these notes sit outside the range most people can sing — and that&apos;s okay.
-          </p>
-          <p className="text-base text-white/65 leading-relaxed">
-            Breathe out through slightly parted lips. For lower tones, use a soft, slow exhale; as the
-            tone rises, increase the pressure and speed of your breath. Keep the tone playing and
-            imagine it resonating in that chakra&apos;s area — your body responds even without singing.
-          </p>
-          <div
-            className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
-            style={{
-              background: "rgba(255,255,255,0.04)",
-              border: "1px dashed rgba(255,255,255,0.15)",
-            }}
-          >
-            <span className="text-2xl opacity-50">▶</span>
-            <p className="text-sm text-white/45 font-medium">Video coming soon</p>
-          </div>
-          <div
-            className="rounded-xl px-4 py-3"
-            style={{
-              background: "rgba(239,68,68,0.08)",
-              border: "1px solid rgba(239,68,68,0.2)",
-            }}
-          >
-            <p className="text-sm text-white/75 leading-relaxed text-center">
-              Never push your voice. If anything feels strained or painful, stop and switch to By voice.
-            </p>
-          </div>
-        </TabInfoModal>
-      )}
     </div>
   );
 }

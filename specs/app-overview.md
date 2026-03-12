@@ -1,68 +1,81 @@
 # App Overview
 
-> Adapted from `attunr-expo/specs/app-overview.md` for the web platform.
-
 ## Vision
 
-Attunr helps people learn to sing with a **spiritual undertone**. It blends vocal
-technique with intentional, resonant practice — so singing becomes both a skill
-and a mindful practice.
+Voice is one of the most powerful tools humans have for regulating emotions and breathing.
 
-The web edition brings this experience to the browser with no install, no account,
-and no friction. Open the page and sing.
+**Problem:** Modern adults rarely use their voice intentionally, even though vocalization has measurable benefits for mood, breathing, and nervous system regulation.
 
-## Spiritual positioning
+**Solution:** Guided vocal and breathwork exercises with real-time pitch feedback — somatic wellbeing through voice, not singing lessons.
 
-### 1. Solfeggio / Chakra tones
+The core concept is **vocal placement**: feeling where sound resonates in the body, and using that connection deliberately. Keywords: somatic, meditation, feeling, regulation.
 
-The seven chakra tones form the core of the experience:
+**Future direction:** A growing library of short, varied exercises. Think Candy Crush Saga: structured progression alongside quick creative variety. Low barrier, high return.
 
-| Chakra | Hz | Note | Element | Mantra |
-|--------|----|------|---------|--------|
-| Root | 396 | C | Earth | LAM |
-| Sacral | 417 | D | Water | VAM |
-| Solar Plexus | 528 | E | Fire | RAM |
-| Heart | 639 | F | Air | YAM |
-| Throat | 741 | G | Sound | HAM |
-| Third Eye | 852 | A | Light | OM |
-| Crown | 963 | B | Thought | AH |
+No install, no account. Open the page and begin.
 
-These are the classical Solfeggio frequencies, shared with `attunr-expo`.
+## Tone system
 
-### 2. Tuning
+Exercises use tones fitted to the user's vocal range, detected during onboarding. Low tones resonate in the chest, high tones in the head. Frequencies scale to a comfortable range for any voice type.
 
-Four tuning standards are available (in Settings):
+Four tuning standards are available in Settings: A432 (default, warmer), A440 (standard Western), A444, A528.
 
-| Standard | Hz | Character |
-|----------|----|-----------|
-| A432 | 432 | Healing-focused, softer — default |
-| A440 | 440 | Standard Western |
-| A444 | 444 | Natural tuning, sacred music traditions |
-| A528 | 528 | "Miracle tone", sound healing |
+## App structure
 
-See [Language & Messaging](./language-and-messaging.md) for approved copy.
+Three main views accessed via bottom nav:
 
-## Scope
+| View        | Route        | Description                                          |
+| ----------- | ------------ | ---------------------------------------------------- |
+| **Journey** | `/`          | Guided 49-stage progression through vocal techniques |
+| **Train**   | (tab)        | Free-form practice — any tone, any order              |
+| **Explore** | `/explore`   | Same as Train, accessed via separate route            |
 
-The web app has two views — **Train** (free-form) and **Journey** (guided) —
-plus a **Settings** panel.
+Plus **Settings** (slide-up panel), and **Onboarding** (first launch only).
 
-| Feature | Status |
-|---------|--------|
-| Chakra frequency trainer (canvas + mic) | ✓ Built |
-| Onboarding with voice type detection | ✓ Built |
-| Tone playback with binaural beats | ✓ Specced |
-| Drone accompaniment | ✓ Specced |
-| Waveform ring | ✓ Specced |
-| Train tab (free-form, no tuning on screen) | ✓ Specced |
-| Journey (48 guided stages) | ✓ Built |
-| Settings panel with localStorage | ✓ Specced |
-| Login / accounts | Out of scope |
+## Feature status
 
-## What makes the web version different
+| Feature                                 | Status  |
+| --------------------------------------- | ------- |
+| Pitch detection (ml5 / CREPE)           | ✓ Built |
+| Onboarding with vocal range detection   | ✓ Built |
+| Tone playback with binaural beats       | ✓ Built |
+| Train tab (free-form)                   | ✓ Built |
+| Journey (49 guided stages, 9 parts)     | ✓ Built |
+| Settings panel with localStorage        | ✓ Built |
+| Farinelli breathwork exercise           | ✓ Built |
+| Mantra/sound cards (Part 9 only)        | ✓ Built |
+| Drone accompaniment                     | Not built |
+| Waveform ring visualiser                | Not built |
+| Login / accounts                        | Out of scope |
 
-- **No install** — works in any modern browser
-- **ml5 CREPE pitch detection** — deep-learning model, more accurate for voice
-- **Binaural beats** — each chakra tone is rendered binaurally, not a plain sine
-- **Full-screen canvas** — immersive, calming visualiser
-- **Vercel deployment** — globally distributed, fast via Turbopack builds
+## Journey structure
+
+49 stages across 9 parts:
+
+| Part | Name                       | Stages  | Focus                              |
+| ---- | -------------------------- | ------- | ---------------------------------- |
+| I    | Introduction               | 1       | Vocal placement concept            |
+| II   | Vocal warmups              | 2–9     | Farinelli, lip rolls, Low U, Hoo hoo |
+| III  | Sustain                    | 10–17   | Hold each of the 7 tones           |
+| IV   | Sequences                  | 18–23   | Multi-tone sequences               |
+| V    | Vowel U                    | 24–31   | Uuu across all 7 tones             |
+| VI   | Vowel EE                   | 32–35   | EE on low, mid, high               |
+| VII  | Vowel flow U→EE            | 36–37   | Vowel transition on one tone       |
+| VIII | Puffy cheeks               | 38–41   | Breath control technique           |
+| IX   | Sounds and Mantras         | 42–49   | Mantras (LAM–AH) on each tone      |
+
+## Stage types
+
+| stageTypeId              | Description                                            |
+| ------------------------ | ------------------------------------------------------ |
+| `intro`                  | Instructional card, no exercise                        |
+| `pitch-detection`        | Hold one or more tones in sequence                     |
+| `pitch-detection-slide`  | Continuous glide between two tones                     |
+| `breathwork`             | Farinelli breathing cycles (no pitch detection)        |
+
+## Tech highlights
+
+- **ml5 CREPE** — deep-learning pitch detection, accurate for voice
+- **Web Audio API** — binaural tone playback
+- **Next.js / Vercel** — fast global delivery, no install
+- **localStorage** — all settings and progress persisted client-side, no account needed

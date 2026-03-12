@@ -1,31 +1,45 @@
 import type { JourneyStage } from "./types";
 
-/** Part 8: Vowel flow U → EE */
+/** Part 8: Puffy cheeks */
 export const PART_8_STAGES: JourneyStage[] = [
   {
-    id: 44,
+    id: 38,
     part: 8,
-    type: "technique_intro",
-    title: "Vowel flow U → EE",
-    chakraIds: [],
-    holdSeconds: 0,
-    noteSeconds: 0,
-    technique: "vowel-flow",
-    cardCue: "Glide from U to EE on one tone to build vocal flexibility",
+    stageTypeId: "intro",
+    title: "Puffy cheeks",
+    technique: "puffy-cheeks",
+    cardCue: "Build breath control by singing with cheeks full of air",
     instruction:
-      "Hold one tone and smoothly move from U to EE (or back). Keep the pitch steady — only the mouth shape changes. This builds vocal flexibility and awareness of resonance.",
+      "Fill your cheeks with air, then sing the tone without releasing. Your cheeks stay rounded. Hold for a few seconds, then release gently. This develops breath control and teaches you to sing without jaw tension.",
   },
   {
-    id: 45,
+    id: 39,
     part: 8,
-    type: "individual",
-    title: "Heart — U to EE",
-    chakraIds: ["heart"],
-    holdSeconds: 5,
-    noteSeconds: 0,
-    technique: "vowel-flow",
-    chakraDetailStyle: "brief",
+    stageTypeId: "pitch-detection",
+    title: "Low — Puffy cheeks",
+    subtitle: "Puffy cheeks · 3 seconds",
+    notes: [{ target: { kind: "slot", n: 1 }, seconds: 3 }],
     instruction:
-      "Sing Heart and flow from U to EE. Hold the tone steady, let the vowel glide. Five seconds in tune.",
+      "Sing your lowest tone with puffy cheeks.\nFeel the grounding while you hold the breath in your cheeks.",
+  },
+  {
+    id: 40,
+    part: 8,
+    stageTypeId: "pitch-detection",
+    title: "Mid — Puffy cheeks",
+    subtitle: "Puffy cheeks · 3 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 3 }],
+    instruction:
+      "Sing the mid tone with puffy cheeks.\nStay open in the chest.",
+  },
+  {
+    id: 41,
+    part: 8,
+    stageTypeId: "pitch-detection",
+    title: "High — Puffy cheeks",
+    subtitle: "Puffy cheeks · 3 seconds",
+    notes: [{ target: { kind: "slot", n: 7 }, seconds: 3 }],
+    instruction:
+      "Sing your highest tone with puffy cheeks.\nKeep it soft at the top.",
   },
 ];

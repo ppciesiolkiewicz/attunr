@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props) {
   }
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
   if (!stage) return { title: "Journey" };
-  const prefix = stage.type === "technique_intro" ? "Learn" : "Exercise";
+  const prefix = stage.stageTypeId === "intro" ? "Learn" : "Exercise";
   return {
     title: `${prefix} · ${stage.title}`,
   };

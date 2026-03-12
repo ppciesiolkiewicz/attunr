@@ -2,24 +2,23 @@
 
 ## Binaural beats (always on)
 
-Every chakra tone is rendered as a **binaural pair** rather than a plain mono sine.
+Every tone is rendered as a **binaural pair** rather than a plain mono sine.
 This is not a user setting — it is always active.
 
 Left ear receives the base frequency; right ear receives base + a small offset.
-The brain perceives the difference as a slow rhythmic pulse that entrains brainwaves
-toward a target state for each chakra.
+The brain perceives the difference as a slow rhythmic pulse.
 
 ### Beat frequencies
 
-| Chakra | Base Hz | Beat Hz | Brainwave | Effect |
-|--------|---------|---------|-----------|--------|
-| Root | 396 | 3 | Delta | Grounding, safety |
-| Sacral | 417 | 6 | Theta | Creativity, emotion |
-| Solar Plexus | 528 | 10 | Alpha | Confidence, flow |
-| Heart | 639 | 8 | Alpha | Calm, openness |
-| Throat | 741 | 14 | Alpha/Beta | Focus, clarity |
-| Third Eye | 852 | 6 | Theta | Intuition, insight |
-| Crown | 963 | 4 | Theta | Expanded awareness |
+| Base Hz | Beat Hz | Brainwave | Effect |
+|---------|---------|-----------|--------|
+| 396 | 3 | Delta | Grounding, safety |
+| 417 | 6 | Theta | Creativity, emotion |
+| 528 | 10 | Alpha | Confidence, flow |
+| 639 | 8 | Alpha | Calm, openness |
+| 741 | 14 | Alpha/Beta | Focus, clarity |
+| 852 | 6 | Theta | Intuition, insight |
+| 963 | 4 | Theta | Expanded awareness |
 
 > Use stereo headphones for the binaural effect. It has no perceptual benefit
 > through a mono speaker, but the sound is still pleasant.

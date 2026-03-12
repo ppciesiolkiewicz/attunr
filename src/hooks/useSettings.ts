@@ -1,40 +1,40 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { VoiceTypeId, TuningStandard, FrequencyBase } from "@/constants/chakras";
+import type { TuningStandard } from "@/constants/chakras";
 
 export interface Settings {
-  voiceType: VoiceTypeId;
   tuning: TuningStandard;
-  freqBase: FrequencyBase;
-  journeyStage: number; // 0 = none completed, 1–45 = highest completed
+  journeyStage: number; // 0 = none completed, 1–49 = highest completed
+  vocalRangeLowHz: number;  // detected low comfortable Hz (0 = not set)
+  vocalRangeHighHz: number; // detected high comfortable Hz (0 = not set)
 }
 
 const DEFAULTS: Settings = {
-  voiceType: "tenor",
   tuning: "A432",
-  freqBase: "voice",
   journeyStage: 0,
+  vocalRangeLowHz: 0,
+  vocalRangeHighHz: 0,
 };
 
 const KEYS: Record<keyof Settings, string> = {
-  voiceType:    "attunr.voiceType",
-  tuning:       "attunr.tuning",
-  freqBase:     "attunr.freqBase",
-  journeyStage: "attunr.journeyStage",
+  tuning:           "attunr.tuning",
+  journeyStage:     "attunr.journeyStage",
+  vocalRangeLowHz:  "attunr.vocalRangeLowHz",
+  vocalRangeHighHz: "attunr.vocalRangeHighHz",
 };
 
 function readStorage(): Partial<Settings> {
   try {
-    const voiceType = localStorage.getItem(KEYS.voiceType) as VoiceTypeId | null;
-    const tuning    = localStorage.getItem(KEYS.tuning)    as TuningStandard | null;
-    const freqBase  = localStorage.getItem(KEYS.freqBase)  as FrequencyBase | null;
+    const tuning    = localStorage.getItem(KEYS.tuning) as TuningStandard | null;
     const stageRaw  = localStorage.getItem(KEYS.journeyStage);
+    const lowRaw    = localStorage.getItem(KEYS.vocalRangeLowHz);
+    const highRaw   = localStorage.getItem(KEYS.vocalRangeHighHz);
     return {
-      ...(voiceType && { voiceType }),
       ...(tuning    && { tuning }),
-      ...(freqBase  && { freqBase }),
       ...(stageRaw  && { journeyStage: parseInt(stageRaw, 10) }),
+      ...(lowRaw    && { vocalRangeLowHz: parseFloat(lowRaw) }),
+      ...(highRaw   && { vocalRangeHighHz: parseFloat(highRaw) }),
     };
   } catch {
     return {};

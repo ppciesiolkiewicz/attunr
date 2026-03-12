@@ -1,6 +1,6 @@
 # Journey
 
-A guided, progressive path through the seven chakra tones. Replaces the free-form trainer with a structured sequence of stages — first mastering each chakra individually, then combining them into flowing tunes.
+A guided, progressive path through vocal technique. Replaces the free-form trainer with a structured sequence of stages — first mastering individual tones, then combining them into flowing exercises.
 
 ---
 
@@ -9,11 +9,12 @@ A guided, progressive path through the seven chakra tones. Replaces the free-for
 Journey is **URL-driven**: each step has its own URL. The flow is deterministic and shareable.
 
 1. **User visits** `/journey/[id]` (e.g. `/journey/10`)
-2. **Page** parses step id from URL, validates (1–48), finds the stage in `JOURNEY_STAGES`
-3. **Render** by step type:
-   - **Exercises** (`individual`, `sequence`, `slide`): PitchCanvas + exercise UI (detection, progress, Hear tone, Next/Skip)
-   - **Learn steps** (`technique_intro`): Plain background + scrollable content (instructions, "Video coming soon", Previous/Next)
-4. **Part complete modal**: When the user finishes the **last step of a part**, a congratulations modal appears (confetti, no fadeout). "Continue" navigates to the next step URL.
+2. **Page** parses step id from URL, validates (1–49), finds the stage in `JOURNEY_STAGES`
+3. **Render** by stage type:
+   - **`pitch-detection`** / **`pitch-detection-slide`**: PitchCanvas + exercise UI (detection, progress, Hear tone, Next/Skip)
+   - **`breathwork`**: Breathing cycle UI (no pitch detection)
+   - **`intro`**: Plain background + scrollable content (instructions, Previous/Next)
+4. **Part complete modal**: When the user finishes the **last step of a part**, a congratulations modal appears (confetti). "Continue" navigates to the next step URL.
 5. **Loop**: New URL → flow repeats from step 1.
 
 Direct links work: sharing `/journey/16` opens that step. Navigation uses `router.push` — no client-side state for "current step"; the URL is the source of truth.
@@ -22,88 +23,83 @@ Direct links work: sharing `/journey/16` opens that step. Navigation uses `route
 
 ## Navigation & access
 
-Journey is a separate view from the Train tab, accessible from the app header. The app has two top-level views: **Train** and **Journey**.
-
-From the Journey list view, tapping a stage navigates to `/journey/[id]`. From a step, "← Journey" returns to the list; Previous/Next move between steps via URL.
+Journey is a separate view from the Train tab, accessible from the bottom navigation. From the Journey list view, tapping a stage navigates to `/journey/[id]`. From a step, "← Journey" returns to the list; Previous/Next move between steps via URL.
 
 ---
 
-## Step types
+## Stage types
 
-| Type | Rendering | Purpose |
-|------|-----------|---------|
-| **technique_intro** | Learn — plain background, scrollable text, "Video coming soon" placeholder | Introduce a technique before exercises |
-| **individual** | Exercise — PitchCanvas, single-chakra hold | Hold one tone in tune |
-| **sequence** | Exercise — PitchCanvas, multiple chakras in order | Sing tones in sequence (2s per tone) |
-| **slide** | Exercise — PitchCanvas, continuous glide | Slide high→low or low→high (e.g. lip rolls) |
+| stageTypeId | Rendering | Purpose |
+|-------------|-----------|---------|
+| `intro` | Plain background, scrollable text | Introduce a technique or part before exercises |
+| `pitch-detection` | PitchCanvas, hold one or more tones in sequence | Hold one tone or sing tones in sequence |
+| `pitch-detection-slide` | PitchCanvas, continuous glide | Slide between two tones (e.g. lip rolls) |
+| `breathwork` | Breathing cycle UI | Farinelli breathing cycles — no pitch detection |
 
-**Learn steps** have no canvas. "Next" or "Complete" advances to the next stage; "Previous" goes back. **Exercises** show the pitch canvas, detection, and success criteria.
+**Intro stages** have no canvas. **Exercise stages** (`pitch-detection`, `pitch-detection-slide`, `breathwork`) show the relevant UI and success criteria.
 
 ---
 
-## Part structure (9 parts, 48 stages)
+## Part structure (9 parts, 49 stages)
 
-| Part | Name | Stages | Last stage |
-|------|------|--------|------------|
-| 1 | Chakra tones | 1 | 1 |
-| 2 | Vocal warmups | 2–8 | 8 |
-| 3 | Sustain | 9–16 | 16 |
-| 4 | Sequences | 17–22 | 22 |
-| 5 | Vowel U | 23–30 | 30 |
-| 6 | Mantra | 31–38 | 38 |
-| 7 | Vowel EE | 39–42 | 42 |
-| 8 | Vowel flow U → EE | 43–44 | 44 |
-| 9 | Puffy cheeks | 45–48 | 48 |
+| Part | Name | Stages | Focus |
+|------|------|--------|-------|
+| I | Introduction | 1 | Vocal placement concept |
+| II | Vocal Warmups | 2–9 | Farinelli, lip rolls, Low U, Hoo hoo |
+| III | Sustain | 10–17 | Hold each of the 7 tones |
+| IV | Sequences | 18–23 | Multi-tone sequences |
+| V | Vowel U | 24–31 | Uuu across all 7 tones |
+| VI | Vowel EE | 32–35 | EE on low, mid, high |
+| VII | Vowel Flow U → EE | 36–37 | Vowel transition on one tone |
+| VIII | Puffy Cheeks | 38–41 | Breath control technique |
+| IX | Sounds and Mantras | 42–49 | Mantras (LAM–AH) on each tone |
 
-Each part starts with a `technique_intro` (learn) followed by exercises. Stage ids are sequential.
+Each part starts with an `intro` stage followed by exercises.
 
 ---
 
 ## Part complete modal
 
-When the user completes the **last step of a part** (e.g. stage 16 for Part 3):
+When the user completes the **last step of a part** (e.g. stage 9 for Part II):
 
 - A modal appears: "Part [I–IX] Complete", part name, "What you learnt", optional tip
-- **Confetti** plays on open (no fadeout animation)
+- **Confetti** plays on open
 - "Continue →" closes the modal and navigates to the next step URL
 
-The modal is shown *within* the last step — same page, overlay. Continue triggers `router.push` to the next URL.
+The modal is shown within the last step — same page, overlay.
 
 ---
 
 ## Stage screen layout
 
-### Learn step (technique_intro)
+### Intro step
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  ← Journey   Part II · Step 2 of 7   [Settings]  │
+│  ← Journey   Part II · Vocal Warmups   [Settings] │
 ├──────────────────────────────────────────────────┤
-│  Part II — Vocal warmups                         │
-│  Chest and head voice · Step 2 of 7              │
-│  ─────────────────────────────────────────────  │
 │  [instruction text]                               │
-│  [Video coming soon]                              │
 ├──────────────────────────────────────────────────┤
 │  [← Previous]                    [Next →]         │
 └──────────────────────────────────────────────────┘
 ```
 
-### Exercise step (individual, sequence, slide)
+### Exercise step (pitch-detection, slide, breathwork)
 
 ```
 ┌──────────────────────────────────────────────────┐
-│  ← Journey   Part III — Sustain · Step 2 of 8 (i)│
+│  ← Journey   Part III — Sustain   (i)  [Settings] │
 ├──────────────────────────────────────────────────┤
 │         Pitch Canvas (target bands)               │
-│         [pitch overlay: Hz / chakra]              │
-│         [sequence/slide indicators if applicable] │
+│         [pitch overlay: Hz / tone]                │
 ├──────────────────────────────────────────────────┤
-│  [▶ Hear tone]  [← Previous]  [Next →] or [Skip →]│
+│  [▶ Hear tone]  [← Previous]  [Next →] or [Skip]  │
 └──────────────────────────────────────────────────┘
 ```
 
-The **(i)** button opens the ExerciseInfoModal with chakra details, instructions, and "Begin" to dismiss.
+The **(i)** button opens the ExerciseInfoModal with instructions and "Begin" to dismiss.
+
+On desktop, the part name is shown alongside the stage title in the header.
 
 ---
 
@@ -111,20 +107,12 @@ The **(i)** button opens the ExerciseInfoModal with chakra details, instructions
 
 | Type | Criteria |
 |------|----------|
-| **individual** | Pitch within ±3% of target for cumulative hold time (e.g. 3–5s). Progress arc fills. |
-| **sequence** | Each tone held 2s in order. Step indicator shows current tone. |
-| **slide** | Glide high→low (or low→high) twice. Loose detection; focus on warming up. |
+| `pitch-detection` (single note) | Pitch within ±3% of target for cumulative hold time (configurable per stage via `notes[0].time`). Progress arc fills. |
+| `pitch-detection` (multi-note sequence) | Each tone held for its configured time in order. Step indicator shows current tone. |
+| `pitch-detection-slide` | Glide between the two tones. Loose detection; focus on warming up. |
+| `breathwork` | Complete the configured number of breathing cycles (`maxCount`). |
 
 "Complete" appears when criteria are met. "Skip" advances without marking complete.
-
----
-
-## Locked settings
-
-When Journey is active:
-
-- Frequency base and voice type are locked to onboarding/Settings
-- A small label shows "Practising as [Tenor] · [A432]" — tap to open Settings
 
 ---
 
@@ -133,18 +121,16 @@ When Journey is active:
 | Location | Purpose |
 |----------|---------|
 | `src/constants/journey/` | Stage data (one file per part) |
-| `src/constants/journey/types.ts` | JourneyStage, TechniqueId, etc. |
-| `src/constants/journey/index.ts` | Re-exports `JOURNEY_STAGES`, `TOTAL_JOURNEY_STAGES`, etc. |
+| `src/constants/journey/types.ts` | `JourneyStage`, `StageTypeId`, `Note`, `TechniqueId`, etc. |
+| `src/constants/journey/index.ts` | Re-exports `JOURNEY_STAGES`, `TOTAL_JOURNEY_STAGES`, part titles, etc. |
 | `src/app/journey/[id]/page.tsx` | Route: parse id, validate, render JourneyExercise |
 | `src/components/JourneyView.tsx` | JourneyExercise, PartCompleteModal, ExerciseInfoModal |
-
-See [Code Organization](./code-organization.md) for the splitting strategy.
 
 ---
 
 ## Progress persistence
 
-Journey progress (highest completed stage) is stored in Settings. Key: `attunr.journeyStage` — integer 1–48. Used to show "Completed" on past steps and to track the current frontier.
+Journey progress (highest completed stage) is stored in localStorage. Key: `attunr.journeyStage` — integer 1–49. Used to show "Completed" on past steps and to track the current frontier.
 
 ---
 

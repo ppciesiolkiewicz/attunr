@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { VOICE_TYPES, TUNING_OPTIONS } from "@/constants/chakras";
+import { TUNING_OPTIONS, hzToNoteName } from "@/constants/chakras";
 import { analytics } from "@/lib/analytics";
 import type { Settings } from "@/hooks/useSettings";
-import type { VoiceTypeId, TuningStandard } from "@/constants/chakras";
-// binaural is always on — no toggle needed
+import type { TuningStandard } from "@/constants/chakras";
 
 interface SettingsPanelProps {
   open: boolean;
@@ -18,7 +17,7 @@ interface SettingsPanelProps {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-xs uppercase tracking-widest text-white/42 font-medium">{title}</p>
+      <p className="text-xs uppercase tracking-widest font-medium text-white/38">{title}</p>
       {children}
     </div>
   );
@@ -55,11 +54,11 @@ export default function SettingsPanel({
         }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">
-          <span className="text-base font-semibold text-white">Settings</span>
+        <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <span className="text-base font-semibold text-white/90">Settings</span>
           <button
             onClick={onClose}
-            className="text-white/58 hover:text-white transition-colors text-xl leading-none"
+            className="transition-colors text-xl leading-none text-white/55 hover:text-white/80"
           >
             ✕
           </button>
@@ -67,32 +66,38 @@ export default function SettingsPanel({
 
         <div className="flex flex-col gap-7 px-6 py-6 flex-1">
 
-          {/* ── Voice ──────────────────────────────────────────────────────── */}
-          <Section title="Voice">
-            <div className="flex flex-wrap gap-1.5">
-              {VOICE_TYPES.map((v) => (
-                <button
-                  key={v.id}
-                  onClick={() => {
-                    onUpdate("voiceType", v.id as VoiceTypeId);
-                    analytics.settingsVoiceChanged(v.id);
-                  }}
-                  className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
-                  style={{
-                    backgroundColor: settings.voiceType === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
-                    borderColor: settings.voiceType === v.id ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.1)",
-                    color: settings.voiceType === v.id ? "#c4b5fd" : "rgba(255,255,255,0.45)",
-                  }}
+          {/* ── Vocal range ────────────────────────────────────────────────── */}
+          <Section title="Vocal range">
+            {settings.vocalRangeLowHz > 0 && settings.vocalRangeHighHz > 0 ? (
+              <div className="flex items-center gap-3">
+                <div
+                  className="px-3.5 py-2 rounded-lg border"
+                  style={{ backgroundColor: "rgba(239,139,90,0.1)", borderColor: "rgba(239,139,90,0.35)" }}
                 >
-                  {v.label}
-                </button>
-              ))}
-            </div>
+                  <span className="text-sm font-medium" style={{ color: "#ef8b5a" }}>
+                    {hzToNoteName(settings.vocalRangeLowHz)}
+                  </span>
+                  <span className="text-xs ml-1.5 text-white/38">{settings.vocalRangeLowHz} Hz</span>
+                </div>
+                <span className="text-white/38">→</span>
+                <div
+                  className="px-3.5 py-2 rounded-lg border"
+                  style={{ backgroundColor: "rgba(129,140,248,0.1)", borderColor: "rgba(129,140,248,0.35)" }}
+                >
+                  <span className="text-sm font-medium" style={{ color: "#818cf8" }}>
+                    {hzToNoteName(settings.vocalRangeHighHz)}
+                  </span>
+                  <span className="text-xs ml-1.5 text-white/38">{settings.vocalRangeHighHz} Hz</span>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-white/55">Not yet detected</p>
+            )}
             <button
               onClick={onRedetect}
               className="text-sm text-violet-400/75 hover:text-violet-400 transition-colors text-left"
             >
-              Re-detect my voice type →
+              Re-detect my range →
             </button>
           </Section>
 
@@ -110,21 +115,21 @@ export default function SettingsPanel({
                   }}
                   className="flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-left transition-all"
                   style={{
-                    backgroundColor: settings.tuning === t.id ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.02)",
-                    borderColor: settings.tuning === t.id ? "rgba(255,255,255,0.2)" : "rgba(255,255,255,0.06)",
+                    backgroundColor: settings.tuning === t.id ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.04)",
+                    borderColor: settings.tuning === t.id ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)",
                   }}
                 >
                   <div>
-                    <p className="text-sm font-medium text-white/85">{t.label}</p>
-                    <p className="text-xs text-white/52 mt-0.5">{t.description}</p>
+                    <p className="text-sm font-medium text-white/90">{t.label}</p>
+                    <p className="text-xs mt-0.5 text-white/55">{t.description}</p>
                   </div>
                   {settings.tuning === t.id && (
-                    <span className="text-white/65 text-sm ml-2">✓</span>
+                    <span className="text-sm ml-2 text-white/55">✓</span>
                   )}
                 </button>
               ))}
             </div>
-            <p className="text-xs text-white/42 leading-relaxed">
+            <p className="text-xs leading-relaxed text-white/38">
               Try each and keep the one that feels right for your practice.
               Tuning applies in voice-based mode.
             </p>
@@ -141,7 +146,7 @@ export default function SettingsPanel({
 
           {/* ── About ──────────────────────────────────────────────────────── */}
           <Section title="About">
-            <p className="text-xs text-white/42 leading-relaxed">
+            <p className="text-xs leading-relaxed text-white/38">
               Your microphone is used only for real-time pitch detection.
               Nothing is ever recorded or stored outside your device.
             </p>

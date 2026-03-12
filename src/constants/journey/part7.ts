@@ -1,57 +1,24 @@
 import type { JourneyStage } from "./types";
 
-/** Part 7: Vowel EE */
+/** Part 7: Vowel flow U → EE */
 export const PART_7_STAGES: JourneyStage[] = [
   {
-    id: 40,
+    id: 36,
     part: 7,
-    type: "technique_intro",
-    title: "Vowel EE",
-    chakraIds: [],
-    holdSeconds: 0,
-    noteSeconds: 0,
-    technique: "vowel-ee",
-    cardCue: "Bright, forward vowel — feel the resonance shift higher",
+    stageTypeId: "intro",
+    title: "Vowel flow U → EE",
+    cardCue: "Glide from U to EE on one tone to build vocal flexibility",
     instruction:
-      "Sing with EE (as in 'see') — lips spread, tongue forward. EE lifts the resonance higher. It can feel brighter and more energising. Contrast with U to feel the shift.",
+      "Hold one tone and smoothly move from U to EE (or back). Keep the pitch steady — only the mouth shape changes. This builds vocal flexibility and awareness of resonance.",
   },
   {
-    id: 41,
+    id: 37,
     part: 7,
-    type: "individual",
-    title: "Root — EE",
-    chakraIds: ["root"],
-    holdSeconds: 3,
-    noteSeconds: 0,
-    technique: "vowel-ee",
-    chakraDetailStyle: "brief",
+    stageTypeId: "pitch-detection",
+    title: "Mid — U to EE",
+    subtitle: "Flow from U to EE · 5 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 5 }],
     instruction:
-      "Sing Root with EE.\nA low tone with a forward vowel — notice the blend.",
-  },
-  {
-    id: 42,
-    part: 7,
-    type: "individual",
-    title: "Heart — EE",
-    chakraIds: ["heart"],
-    holdSeconds: 3,
-    noteSeconds: 0,
-    technique: "vowel-ee",
-    chakraDetailStyle: "brief",
-    instruction:
-      "Sing Heart with EE.\nFeel the openness in the chest with this vowel.",
-  },
-  {
-    id: 43,
-    part: 7,
-    type: "individual",
-    title: "Crown — EE",
-    chakraIds: ["crown"],
-    holdSeconds: 3,
-    noteSeconds: 0,
-    technique: "vowel-ee",
-    chakraDetailStyle: "brief",
-    instruction:
-      "Sing Crown with EE.\nA high, bright tone — let it lift.",
+      "Sing the mid tone and flow from U to EE. Hold the pitch steady, let the vowel glide. Five seconds in tune.",
   },
 ];

@@ -1,9 +1,5 @@
 # Language & Messaging
 
-> Adapted from `attunr-expo/specs/language-and-messaging.md` for the web platform.
-> The brand voice principles and core terminology are identical — only the
-> platform-specific references have been updated.
-
 ## Brand voice principles
 
 - **User-friendly, engaging, and easy to understand** — copy should be inviting, clear, and accessible to all
@@ -18,10 +14,9 @@
 
 | Prefer | Avoid | Why |
 |--------|-------|-----|
-| **Chakra tones** | "Solfeggio frequencies" in UI | Chakra language is more user-facing |
 | **Standard tuning (A440 Hz)** | A440 alone without context | Explain the practical meaning |
 | **Healing-focused tuning (A432 Hz)** | Mystical claims without guardrails | Keep spiritual framing credible |
-| **Voice-based frequencies** | "Transposed", "scaled", "sacredFactor" | Keep technical jargon out of the UI |
+| **Voice-fitted frequencies** | "Transposed", "scaled", "sacredFactor" | Keep technical jargon out of the UI |
 | **Sing and watch** | "Pitch feedback", "Detected pitch" | Inviting, human-friendly |
 
 ## Tuning messaging
@@ -44,23 +39,6 @@
 
 ## Recommended copy by feature
 
-### Frequency mode selector
-
-| Mode | Label | Sub-label |
-|------|-------|-----------|
-| Absolute | **Absolute sacred** | "396–963 Hz, the same for everyone" |
-| Voice-based | **By voice** | "Adjusted to your vocal range" |
-
-### Absolute mode — info modal (shown when switching to Absolute)
-
-Many absolute frequencies are outside normal singing range. Show a modal that:
-
-1. **Explains the limitation** — "Many of these notes are outside the range most people can sing."
-2. **Offers an alternative** — "You can blow air instead: lower notes use a gentle breath, higher notes a stronger flow. Visualise matching the tone — your body responds even when you're not singing."
-3. **Safety disclaimer** — "Never push your voice. If anything feels strained or painful, stop and switch to By voice."
-
-Copy should stay user-friendly, engaging, and easy to understand.
-
 ### Voice type disclaimer (shown only in voice-based mode)
 
 Pattern: "Frequencies adjusted for [Voice type]. You can change this above."
@@ -80,19 +58,11 @@ When the mic is not yet started, show an inviting prompt instead of a technical 
 
 ### In-tune confirmation
 
-When pitch locks to a chakra:
+When pitch locks to a tone:
 
-- ✓ "✓ Heart — 639 Hz"
+- ✓ "✓ Tone name · Hz" (e.g. "✓ 639 Hz")
 - ✗ "MATCH DETECTED"
 - ✗ "In tolerance"
-
-### Chakra band labels (canvas)
-
-Each band shows two lines of right-aligned text:
-1. Chakra name in small caps (e.g. `HEART`)
-2. Frequency in muted text (e.g. `639 Hz`)
-
-Left side shows the note letter (e.g. `F`).
 
 ### Model loading copy
 

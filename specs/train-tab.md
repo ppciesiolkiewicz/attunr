@@ -1,6 +1,6 @@
 # Train Tab
 
-Free-form chakra practice. No instructions, no completion gates, no progression.
+Free-form vocal practice. No instructions, no completion gates, no progression.
 The user sings whatever they like and gets real-time pitch feedback.
 
 This is the default landing view after onboarding (before Journey is introduced).
@@ -23,56 +23,61 @@ This is the default landing view after onboarding (before Journey is introduced)
 ┌──────────────────────────────────────────────────┐
 │  Header: attunr · [Train] [Journey]  [⚙ Settings]│
 ├──────────────────────────────────────────────────┤
-│  Controls: [Absolute · By voice]  [Voice type?]  │
+│  Controls:                              [ℹ Info] │
 ├──────────────────────────────────────────────────┤
 │                                                  │
 │              Pitch Canvas                        │
 │                                                  │
 ├──────────────────────────────────────────────────┤
-│  [Root] [Sacral] [Solar] [Heart] [Throat]…      │
+│  [▶ 396 Hz] [▶ 417 Hz] [▶ 528 Hz] …             │
 └──────────────────────────────────────────────────┘
 ```
 
-**Tuning (A432, A440, A444, A528) lives in Settings — not shown here.**
+**Tuning (A432, A440, A444, A528) and vocal range live in Settings — not shown here.**
 
 ---
 
 ## Controls bar
 
-Two controls only:
+Info button only. No mode toggle, no voice type selector.
 
-### 1. Frequency base
-- **Absolute** — canonical Solfeggio Hz (396–963), same for everyone
-- **By voice** — scaled to the user's voice type
-
-### 2. Voice type (voice mode only)
-Shown only when "By voice" is selected. Pills: Bass · Baritone · Tenor · Alto · Soprano.
-
-When voice mode is active, show disclaimer:
-"Frequencies adjusted for [Voice type]. You can change your voice type in Settings."
+Frequencies are always scaled to the user's detected vocal range (`getChakraFrequenciesForRange`).
 
 ---
 
 ## Canvas behaviour (Train-specific)
 
 - All 7 bands always visible and equally emphasised
-- Clicking a band plays that chakra's tone
+- Clicking a band plays that tone
 - No target highlighting — every band reacts equally to the detected pitch
 - Dot trail and live cursor behave as specified in [Pitch Canvas](./pitch-canvas.md)
 
 ---
 
+## Pitch overlay
+
+Shown while mic detects a pitch:
+- Large Hz readout coloured by closest band
+- Smaller line: `✓ 528 Hz` (in tune) or `→ 528 Hz` (approaching)
+- No chakra/band name shown
+
+---
+
 ## Tone buttons
 
-Same as current implementation: one pill per chakra, Root → Crown.
-Playing state and in-tune glow both apply.
+One pill per tone. Each shows:
+- Play icon
+- Frequency in Hz (e.g. `528 Hz`)
 
-Tapping a button plays the tone at the current voice-adjusted frequency.
+No chakra name. Playing state and in-tune glow both apply.
 
 ---
 
 ## What Train does NOT have
 
+- Mode toggle (Absolute / By voice removed)
+- Voice type selector
+- Chakra / band names on buttons or overlay
 - Tuning selector (moved to Settings)
 - Completion indicators
 - Step-by-step instructions

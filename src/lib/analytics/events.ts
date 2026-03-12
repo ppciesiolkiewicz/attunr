@@ -10,8 +10,8 @@ export const analytics = {
   pageView: (url: string) => capture("$pageview", { $current_url: url }),
 
   // Onboarding
-  onboardingCompleted: (voiceType: string, detected?: boolean) =>
-    capture("onboarding_completed", { voice_type: voiceType, detected: !!detected }),
+  onboardingCompleted: (voiceType: string, detected?: boolean, lowHz?: number, highHz?: number) =>
+    capture("onboarding_completed", { voice_type: voiceType, detected: !!detected, low_hz: lowHz, high_hz: highHz }),
 
   // Journey
   journeyExerciseStarted: (stageId: number, part: number, partName: string) =>

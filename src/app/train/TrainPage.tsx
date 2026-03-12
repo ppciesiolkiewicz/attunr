@@ -5,7 +5,7 @@ import TrainView from "@/components/TrainView";
 import { useApp } from "@/context/AppContext";
 import { analytics } from "@/lib/analytics";
 
-export default function ExplorePage() {
+export default function TrainPage() {
   const { settings, pitchHz, pitchHzRef, playTone, updateSettings } = useApp();
 
   useEffect(() => {

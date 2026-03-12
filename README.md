@@ -1,46 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# attunr
 
-## Vision
+Wellbeing through voice and breathwork — guided somatic exercises for mood, breath, and body awareness. No install, no account. Open the page and begin.
 
-Voice is one of the most powerful tools humans have for regulating emotions and breathing.
+Built with Next.js / Vercel. See [`specs/`](./specs/) for product documentation.
 
-**Problem:** Modern adults rarely sing, even though vocalization has measurable benefits for mood, breathing, and nervous system regulation. Voice is an underused human capability.
-
-**Solution:** We're building tools that make vocal practice simple and accessible through interactive exercises and real-time feedback.
-
-Voice-based wellbeing — not singing lessons. Think: meditation/breathwork apps, not music education.
-
-## Getting Started
-
-First, run the development server:
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Concern | Solution |
+|---------|----------|
+| Framework | Next.js (App Router) + Turbopack |
+| Styling | Tailwind CSS v4 |
+| Pitch detection | ml5 CREPE (deep-learning, voice-optimised) |
+| Tone playback | Web Audio API — binaural beats, synthesised |
+| Persistence | localStorage — no backend, no account |
+| Deployment | Vercel (push to `main` → auto-deploy) |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    — Next.js App Router pages + layout
+├── components/             — UI components (JourneyView, TrainView, etc.)
+├── constants/
+│   ├── chakras.ts          — frequency table, voice types, tuning math
+│   └── journey/            — 49-stage config (one file per part)
+└── hooks/                  — usePitchDetection, useTonePlayer
+specs/                      — product specs and design docs
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Specs
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+See [`specs/README.md`](./specs/README.md) for the full index. Key docs:
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [App Overview](./specs/app-overview.md) — vision, tone system, feature status
+- [Journey](./specs/journey.md) — 49-stage guided path
+- [Tech Stack](./specs/tech-stack.md) — architecture decisions

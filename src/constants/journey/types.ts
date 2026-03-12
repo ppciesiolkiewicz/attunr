@@ -1,45 +1,69 @@
-import type { ChakraId } from "../chakras";
+export type StageTypeId = "intro" | "pitch-detection" | "pitch-detection-slide" | "breathwork";
 
-export type JourneyStageType =
-  | "technique_intro"
-  | "individual"
-  | "sequence"
-  | "slide"
-  | "farinelli";
+// ── Band targeting ─────────────────────────────────────────────────────────────
 
-export type SlideDirection = "high-to-low" | "low-to-high";
+/**
+ * Describes which band(s) in the user's vocal scale an exercise targets.
+ *
+ * - slot: one of 7 evenly-spaced chakra reference points (n=1 lowest / root, n=7 highest / crown)
+ * - index: 0-based position in allBands; negative counts from end (-1 = last note)
+ * - range: inclusive index range (negative indices supported); used for loose detection exercises
+ */
+export type BandTarget =
+  | { kind: "slot"; n: 1 | 2 | 3 | 4 | 5 | 6 | 7 }
+  | { kind: "index"; i: number }
+  | { kind: "range"; from: number; to: number };
 
-export type TechniqueId =
-  | "sustain"
-  | "mantra"
-  | "vowel-u"
-  | "vowel-ee"
-  | "vowel-flow"
-  | "puffy-cheeks"
-  | "lip-rolls";
+/** Config for a single sustained pitch — used in pitch-detection stages. */
+export type SustainNoteConfig = { target: BandTarget; seconds: number };
 
-/** For chakra exercises: full (first time), brief (mantra + fact), minimal (warmup — tone only), rainbow (warmup — tone + rainbow bar, no mantra) */
-export type ChakraDetailStyle = "full" | "brief" | "minimal" | "rainbow";
+/** Config for a slide — used in pitch-detection-slide stages. */
+export type SlideConfig = { from: BandTarget; to: BandTarget };
 
-export interface JourneyStage {
+export type TechniqueId = "sustain" | "mantra" | "lip-rolls" | "puffy-cheeks";
+
+// ── Layer 1: Base ─────────────────────────────────────────────────────────────
+
+export interface BaseJourneyStage {
   id: number;
+  stageTypeId: StageTypeId;
   part: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   title: string;
-  instruction: string;
-  chakraIds: ChakraId[];
-  type: JourneyStageType;
-  /** For technique_intro: technique being introduced. For others: technique to use. */
-  technique?: TechniqueId;
-  /** For chakra exercises: show full chakra card or brief (mantra + interesting fact) */
-  chakraDetailStyle?: ChakraDetailStyle;
-  /** Use rainbow label (all 7 colors) instead of chakra name/mantra — for non-chakra warmups */
-  useRainbowLabel?: boolean;
-  /** Optional card subtitle; overrides technique display for technique_intro */
-  cardCue?: string;
-  /** For slide type: direction of continuous glide */
-  slideDirection?: SlideDirection;
-  /** For farinelli type: max count per cycle (e.g. 10 = cycles 4–10) */
-  farinelliMaxCount?: number;
-  holdSeconds: number;
-  noteSeconds: number;
+  subtitle?: string;
 }
+
+// ── Layer 2: Specific stage types ─────────────────────────────────────────────
+
+export interface IntroStage extends BaseJourneyStage {
+  stageTypeId: "intro";
+  technique?: TechniqueId;
+  instruction: string;
+  cardCue?: string;
+}
+
+export interface PitchDetectionStage extends BaseJourneyStage {
+  stageTypeId: "pitch-detection";
+  technique?: TechniqueId;
+  notes: SustainNoteConfig[];
+  instruction: string;
+}
+
+export interface PitchDetectionSlideStage extends BaseJourneyStage {
+  stageTypeId: "pitch-detection-slide";
+  technique?: TechniqueId;
+  notes: SlideConfig[];
+  instruction: string;
+}
+
+export interface BreathworkStage extends BaseJourneyStage {
+  stageTypeId: "breathwork";
+  maxCount: number;
+  instruction: string;
+  cardCue?: string;
+}
+
+export type JourneyStage =
+  | IntroStage
+  | PitchDetectionStage
+  | PitchDetectionSlideStage
+  | BreathworkStage;

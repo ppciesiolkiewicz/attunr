@@ -84,18 +84,23 @@ Keep files small; split large configs by logical unit (e.g. journey stages per p
 ```
 src/
 ├── app/
-│   ├── layout.tsx       — root layout, metadata, global CSS import
-│   ├── page.tsx         — header + <ChakraTrainer />
-│   └── globals.css      — Tailwind v4 import + @theme + @keyframes
+│   ├── layout.tsx            — root layout, metadata, global CSS import
+│   ├── page.tsx              — root route (Journey list)
+│   ├── globals.css           — Tailwind v4 import + @theme + @keyframes
+│   ├── journey/[id]/page.tsx — individual Journey stage route
+│   └── explore/page.tsx      — Explore route (same canvas as Train)
 ├── components/
-│   ├── ChakraTrainer.tsx — state owner; renders controls, canvas, bottom panel
-│   └── PitchCanvas.tsx   — pure canvas component; owns RAF loop and dot trail
+│   ├── AppShell.tsx          — app-level shell: nav, settings, onboarding
+│   ├── TrainView.tsx         — free-form practice (pitch canvas + tone buttons)
+│   ├── JourneyView.tsx       — guided stages (StageCard, ExerciseInfoModal, etc.)
+│   └── PitchCanvas.tsx       — pure canvas component; owns RAF loop and dot trail
 ├── constants/
-│   └── chakras.ts        — CHAKRAS[], VOICE_TYPES[], getChakraFrequencies(),
-│                           isInTune(), findClosestChakra()
+│   ├── chakras.ts            — CHAKRAS[], VOICE_TYPES[], getChakraFrequencies(),
+│   │                           isInTune(), findClosestChakra()
+│   └── journey/              — 49-stage config split by part; types.ts for JourneyStage
 └── hooks/
-    ├── usePitchDetection.ts — ml5 CREPE lifecycle (idle → mic → model → poll)
-    └── useTonePlayer.ts     — Web Audio oscillator with fade envelope
+    ├── usePitchDetection.ts  — ml5 CREPE lifecycle (idle → mic → model → poll)
+    └── useTonePlayer.ts      — Web Audio oscillator with fade envelope
 ```
 
 ## Dependencies

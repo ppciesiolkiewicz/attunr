@@ -1,6 +1,6 @@
 # Analytics (PostHog)
 
-PostHog is used for product analytics. Events are tracked client-side via `posthog-js`. No voice or pitch data is ever sent — only usage metadata (e.g. which chakra, which page).
+PostHog is used for product analytics. Events are tracked client-side via `posthog-js`. No voice or pitch data is ever sent — only usage metadata (e.g. which tone, which page).
 
 ## Configuration
 
@@ -23,7 +23,7 @@ Tracked automatically on every route change via `PostHogPageView`:
 | `journey_exercise_started` | User enters a journey exercise screen | `stage_id`, `part`, `part_name` |
 | `journey_stage_completed` | User completes a stage (clicks Next/Complete) | `stage_id`, `part` |
 | `journey_part_completed` | User completes the last stage of a part | `part`, `part_name` |
-| `tone_played` | User plays a chakra tone | `chakra_id`, `source` ("journey" \| "explore") |
+| `tone_played` | User plays a tone | `tone_id`, `source` ("journey" \| "explore") |
 | `explore_viewed` | User opens Explore page | — |
 | `article_viewed` | User views an article | `slug`, `title` |
 | `login_code_sent` | User requests magic link / OTP | — |

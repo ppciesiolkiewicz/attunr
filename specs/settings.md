@@ -56,7 +56,6 @@ Tuning applies to voice-based mode only. In Absolute mode, tuning has no effect
 ### 3. About
 
 - App version
-- Link: "What are Solfeggio frequencies?" (external, opens in new tab)
 - Link: "Privacy — your mic is never recorded"
 
 ---
@@ -90,7 +89,7 @@ On app load, read all keys and hydrate state before first render to avoid flicke
 
 ## What Settings does NOT include
 
-- Custom frequency values per chakra (out of scope)
+- Custom frequency values per tone (out of scope)
 - Account / login
 - Notification preferences
 - Language selection

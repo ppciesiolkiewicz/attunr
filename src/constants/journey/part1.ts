@@ -1,15 +1,12 @@
-import type { JourneyStage } from "./types";
+import type { IntroStage } from "./types";
 
 /** Part 1: Vocal placement (foundation) */
-export const PART_1_STAGES: JourneyStage[] = [
+export const PART_1_STAGES: IntroStage[] = [
   {
     id: 1,
     part: 1,
-    type: "technique_intro",
+    stageTypeId: "intro",
     title: "Vocal placement",
-    chakraIds: [],
-    holdSeconds: 0,
-    noteSeconds: 0,
     technique: "sustain",
     cardCue: "Discover vocal placement and how it connects voice to body awareness",
     instruction:

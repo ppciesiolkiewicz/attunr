@@ -1,47 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { VOICE_TYPES } from "@/constants/chakras";
+import { hzToNoteName, deriveVoiceType } from "@/constants/chakras";
 import type { VoiceTypeId } from "@/constants/chakras";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
-// ── Music theory helpers ──────────────────────────────────────────────────────
-const NOTE_NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-
-function hzToNoteName(hz: number): string {
-  const midi = Math.round(12 * Math.log2(hz / 440) + 69);
-  const name = NOTE_NAMES[((midi % 12) + 12) % 12];
-  const octave = Math.floor(midi / 12) - 1;
-  return `${name}${octave}`;
-}
-
-// Comfortable mid-range MIDI note for each voice type
-// (the note someone naturally hums when asked to "sing something easy")
-const VOICE_MIDI_CENTERS: Record<VoiceTypeId, number> = {
-  bass:     46,  // Bb2 · ~116 Hz
-  baritone: 50,  // D3  · ~147 Hz
-  tenor:    55,  // G3  · ~196 Hz
-  alto:     62,  // D4  · ~294 Hz
-  soprano:  69,  // A4  · ~440 Hz
-} as const;
-
-function detectVoiceType(medianHz: number): VoiceTypeId {
-  const medianMidi = 12 * Math.log2(medianHz / 440) + 69;
-  let best: VoiceTypeId = "tenor";
-  let bestDist = Infinity;
-  for (const [id, center] of Object.entries(VOICE_MIDI_CENTERS)) {
-    const dist = Math.abs(center - medianMidi);
-    if (dist < bestDist) { bestDist = dist; best = id as VoiceTypeId; }
-  }
-  return best;
-}
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-const DETECTION_MS = 5000;
-const DETECTION_STEPS = 10;
+const HOLD_SECONDS = 3;
 const CHAKRA_COLORS = ["#ef4444","#f97316","#eab308","#22c55e","#3b82f6","#6366f1","#a855f7"];
 
-// ── Icons ─────────────────────────────────────────────────────────────────────
 function Spinner() {
   return (
     <svg className="spin" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -61,70 +27,86 @@ function MicrophoneIcon() {
   );
 }
 
-// ── Props ─────────────────────────────────────────────────────────────────────
 interface OnboardingModalProps {
   pitchHz: number | null;
   status: PitchDetectionStatus;
-  onBegin: (voiceId: VoiceTypeId, detected?: boolean) => void;
+  onBegin: (result: { lowHz: number; highHz: number; voiceType: VoiceTypeId }) => void;
   onRetryMic: () => void;
 }
 
-type Phase = "select" | "detecting" | "detected";
+type Phase = "welcome" | "detect-low" | "detect-high" | "result";
 
 export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }: OnboardingModalProps) {
-  const [phase, setPhase] = useState<Phase>("select");
-  const [selectedVoiceId, setSelectedVoiceId] = useState<VoiceTypeId>("tenor");
-  const [detectedVoiceId, setDetectedVoiceId] = useState<VoiceTypeId | null>(null);
-  const [progress, setProgress] = useState(0); // 0–DETECTION_STEPS
+  const [phase, setPhase] = useState<Phase>("welcome");
+  const [holdProgress, setHoldProgress] = useState(0);
+  const [detectedLowHz, setDetectedLowHz] = useState<number | null>(null);
+  const [detectedHighHz, setDetectedHighHz] = useState<number | null>(null);
 
   const samplesRef = useRef<number[]>([]);
-  const startTimeRef = useRef<number>(0);
+  const holdTimeRef = useRef(0);
+  const lastTickRef = useRef(0);
+  const lastPitchTimeRef = useRef(0);
   const rafRef = useRef<number | null>(null);
 
   const isLoading = status === "requesting-mic" || status === "loading-model";
   const isError = status === "error";
   const isListening = status === "listening";
 
-  // When user taps "Detect" and mic becomes ready, auto-start detection
-  // (iOS/mobile require mic request to be triggered by user gesture — we get that from the Detect tap)
+  const currentNote = pitchHz !== null ? hzToNoteName(pitchHz) : null;
+
+  // When mic becomes ready while on welcome, transition to detect-low
   useEffect(() => {
-    if (phase === "select" && isListening) {
-      startDetection();
+    if (phase === "welcome" && isListening) {
+      setPhase("detect-low");
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, isListening]);
 
-  // ── Detection timer via RAF ───────────────────────────────────────────────
+  // RAF hold-detection loop for both low and high phases
   useEffect(() => {
-    if (phase !== "detecting") {
+    if (phase !== "detect-low" && phase !== "detect-high") {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
 
-    startTimeRef.current = performance.now();
+    holdTimeRef.current = 0;
+    lastTickRef.current = 0;
+    lastPitchTimeRef.current = 0;
     samplesRef.current = [];
+    setHoldProgress(0);
 
     function tick() {
-      const elapsed = performance.now() - startTimeRef.current;
-      const step = Math.min(
-        Math.floor((elapsed / DETECTION_MS) * DETECTION_STEPS),
-        DETECTION_STEPS
-      );
-      setProgress(step);
+      const now = performance.now();
+      const dt = lastTickRef.current ? (now - lastTickRef.current) / 1000 : 0;
+      lastTickRef.current = now;
 
-      if (elapsed >= DETECTION_MS) {
-        // Finalise detection
+      const hasPitch = lastPitchTimeRef.current > 0 && (now - lastPitchTimeRef.current < 200);
+
+      if (hasPitch) {
+        holdTimeRef.current += dt;
+      } else {
+        holdTimeRef.current = Math.max(0, holdTimeRef.current - dt * 2);
+      }
+
+      const p = holdTimeRef.current / HOLD_SECONDS;
+      setHoldProgress(Math.min(p, 1));
+
+      if (p >= 1) {
         const buf = samplesRef.current;
         if (buf.length > 0) {
           const sorted = [...buf].sort((a, b) => a - b);
           const median = sorted[Math.floor(sorted.length / 2)];
-          const detected = detectVoiceType(median);
-          setDetectedVoiceId(detected);
-          setSelectedVoiceId(detected);
+          
+          if (phase === "detect-low") {
+            setDetectedLowHz(Math.round(median));
+            setPhase("detect-high");
+          } else {
+            setDetectedHighHz(Math.round(median));
+            setPhase("result");
+          }
         }
-        setPhase("detected");
         return;
       }
+
       rafRef.current = requestAnimationFrame(tick);
     }
 
@@ -132,34 +114,38 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [phase]);
 
-  // Collect pitch samples during detection
+  // Collect pitch samples and track recency
   useEffect(() => {
-    if (phase === "detecting" && pitchHz !== null) {
+    if ((phase === "detect-low" || phase === "detect-high") && pitchHz !== null) {
       samplesRef.current.push(pitchHz);
+      lastPitchTimeRef.current = performance.now();
     }
   }, [pitchHz, phase]);
 
-  function startDetection() {
-    samplesRef.current = [];
-    setProgress(0);
-    setPhase("detecting");
+  function handleStart() {
+    if (isError) {
+      onRetryMic();
+    } else if (status === "idle") {
+      onRetryMic();
+    }
+    // If already listening, transition happens via the useEffect above
   }
 
-  function cancelDetection() {
-    setPhase("select");
-    setProgress(0);
+  function handleFinish() {
+    if (!detectedLowHz || !detectedHighHz) return;
+    const voiceType = deriveVoiceType(detectedLowHz, detectedHighHz);
+    onBegin({ lowHz: detectedLowHz, highHz: detectedHighHz, voiceType });
   }
 
-  // Current note name (shown live during detection)
-  const currentNote = pitchHz !== null ? hzToNoteName(pitchHz) : null;
-  const liveVoiceType = pitchHz !== null
-    ? VOICE_TYPES.find(v => v.id === detectVoiceType(pitchHz))?.label
-    : null;
+  const isDetecting = phase === "detect-low" || phase === "detect-high";
+  const detectingLow = phase === "detect-low";
+  const accentColor = detectingLow ? "#ef8b5a" : "#818cf8";
+  const accentGlow = detectingLow ? "rgba(239,139,90,0.3)" : "rgba(129,140,248,0.3)";
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: "rgba(5,5,12,0.9)", backdropFilter: "blur(14px)" }}
+      style={{ backgroundColor: "rgba(5,5,12,0.92)", backdropFilter: "blur(14px)" }}
     >
       <div
         className="fade-in w-full max-w-sm rounded-2xl flex flex-col items-center gap-5 px-7 py-9 text-center"
@@ -193,55 +179,23 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
 
         <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
 
-        {/* ── Phase: SELECT ─────────────────────────────────────────────────── */}
-        {phase === "select" && (
+        {/* ── Phase: WELCOME ──────────────────────────────────────────────── */}
+        {phase === "welcome" && (
           <div className="flex flex-col items-center gap-4 w-full">
             <div>
-              <p className="text-base font-medium text-white/88">What&apos;s your voice type?</p>
-              <p className="text-sm text-white/55 mt-1">Choose one, or let us detect it for you.</p>
-            </div>
-
-            {/* Voice type pills — 3 + 2 layout */}
-            <div className="flex flex-col items-center gap-1.5 w-full">
-              {[VOICE_TYPES.slice(0, 3), VOICE_TYPES.slice(3)].map((row, ri) => (
-                <div key={ri} className="flex justify-center gap-1.5">
-                  {row.map((v) => (
-                    <button key={v.id} onClick={() => setSelectedVoiceId(v.id)}
-                      className="px-4 py-2 rounded-full text-sm font-medium transition-all border"
-                      style={{
-                        backgroundColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.25)" : "rgba(255,255,255,0.04)",
-                        borderColor: selectedVoiceId === v.id ? "rgba(124,58,237,0.8)" : "rgba(255,255,255,0.1)",
-                        color: selectedVoiceId === v.id ? "#c4b5fd" : "rgba(255,255,255,0.45)",
-                        boxShadow: selectedVoiceId === v.id ? "0 0 10px rgba(124,58,237,0.3)" : "none",
-                      }}>
-                      {v.label}
-                    </button>
-                  ))}
-                </div>
-              ))}
-            </div>
-
-            {/* Detect button */}
-            <div className="flex items-center gap-3 w-full">
-              <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
-              <span className="text-xs text-white/42">or</span>
-              <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+              <p className="text-base font-medium text-white/88">Let&apos;s find your voice</p>
+              <p className="text-sm text-white/55 mt-1.5 leading-relaxed px-2">
+                We&apos;ll listen to you hum low and high to map your comfortable range. Takes about 10 seconds.
+              </p>
             </div>
 
             <button
-              onClick={
-                isError
-                  ? onRetryMic
-                  : status === "idle"
-                    ? () => onRetryMic() // User gesture required for mic on iOS — tap here first
-                    : startDetection
-              }
-              disabled={isLoading && !isError}
-              className="w-full py-3 rounded-xl text-base font-medium border transition-all disabled:opacity-30 disabled:cursor-not-allowed"
+              onClick={handleStart}
+              disabled={isLoading}
+              className="w-full py-4 rounded-xl font-medium text-base text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-wait"
               style={{
-                borderColor: "rgba(124,58,237,0.45)",
-                color: "#a78bfa",
-                backgroundColor: "rgba(124,58,237,0.08)",
+                background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
+                boxShadow: isLoading ? "none" : "0 0 24px rgba(124,58,237,0.35), 0 2px 8px rgba(0,0,0,0.4)",
               }}
             >
               {isLoading ? (
@@ -257,130 +211,175 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
               ) : (
                 <span className="inline-flex items-center justify-center gap-2">
                   <MicrophoneIcon />
-                  Detect my voice type
+                  Begin
                 </span>
               )}
             </button>
+
+            <p className="text-xs text-white/42 leading-relaxed px-2">
+              Microphone used only for real-time pitch detection. Nothing is recorded.
+            </p>
           </div>
         )}
 
-        {/* ── Phase: DETECTING ──────────────────────────────────────────────── */}
-        {phase === "detecting" && (
+        {/* ── Phase: DETECT-LOW / DETECT-HIGH ─────────────────────────────── */}
+        {isDetecting && (
           <div className="flex flex-col items-center gap-4 w-full">
+            {/* Body zone indicator */}
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center"
+              style={{
+                background: detectingLow
+                  ? "radial-gradient(circle, rgba(239,139,90,0.25) 0%, rgba(239,68,68,0.1) 100%)"
+                  : "radial-gradient(circle, rgba(129,140,248,0.25) 0%, rgba(99,102,241,0.1) 100%)",
+                border: `2px solid ${accentColor}40`,
+                boxShadow: `0 0 20px ${accentGlow}`,
+              }}
+            >
+              <span className="text-2xl">
+                {detectingLow ? "🫁" : "🧠"}
+              </span>
+            </div>
+
             <div>
-              <p className="text-base font-medium text-white/88">Sing comfortably for a few seconds…</p>
-              <p className="text-sm text-white/55 mt-1">Any note that feels easy and natural.</p>
+              <p className="text-base font-medium text-white/88">
+                {detectingLow
+                  ? "Hum low and steady"
+                  : "Now go high — hoo hoo!"}
+              </p>
+              <p className="text-sm text-white/55 mt-1 leading-relaxed">
+                {detectingLow
+                  ? "Feel the vibration in your chest and belly. Hold for 3 seconds."
+                  : "Feel it in your head and face. Hold for 3 seconds."}
+              </p>
             </div>
 
-            {/* Progress dots */}
-            <div className="flex items-center gap-1.5">
-              {Array.from({ length: DETECTION_STEPS }).map((_, i) => (
-                <div key={i} className="rounded-full transition-all"
-                  style={{
-                    width: i < progress ? 8 : 6,
-                    height: i < progress ? 8 : 6,
-                    backgroundColor: i < progress ? "#7c3aed" : "rgba(255,255,255,0.12)",
-                    boxShadow: i < progress ? "0 0 6px rgba(124,58,237,0.6)" : "none",
-                  }} />
-              ))}
-            </div>
-
-            {/* Live note display */}
-            <div className="flex flex-col items-center gap-1 py-2">
-              <span className="text-4xl font-light tracking-tight"
-                style={{ color: pitchHz !== null ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.1)" }}>
-                {currentNote ?? "—"}
-              </span>
-              <span className="text-sm tabular-nums"
-                style={{ color: pitchHz !== null ? "rgba(255,255,255,0.35)" : "rgba(255,255,255,0.1)" }}>
-                {pitchHz !== null ? Math.round(pitchHz) + " Hz" : "— Hz"}
-              </span>
-              {liveVoiceType && (
-                <span className="text-sm text-violet-400/82 mt-1 fade-in">
-                  → {liveVoiceType}
+            {/* Hold progress ring */}
+            <div className="relative">
+              <svg width={80} height={80} viewBox="0 0 80 80">
+                <circle
+                  cx={40} cy={40} r={34}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.08)"
+                  strokeWidth={4}
+                />
+                <circle
+                  cx={40} cy={40} r={34}
+                  fill="none"
+                  stroke={accentColor}
+                  strokeWidth={4}
+                  strokeDasharray={`${2 * Math.PI * 34 * holdProgress} ${2 * Math.PI * 34}`}
+                  strokeLinecap="round"
+                  transform="rotate(-90 40 40)"
+                  style={{ transition: "stroke-dasharray 0.15s" }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span
+                  className="text-xl font-light tabular-nums"
+                  style={{ color: pitchHz ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.15)" }}
+                >
+                  {currentNote ?? "—"}
                 </span>
-              )}
+                <span
+                  className="text-xs tabular-nums"
+                  style={{ color: pitchHz ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.1)" }}
+                >
+                  {pitchHz ? `${Math.round(pitchHz)} Hz` : "— Hz"}
+                </span>
+              </div>
             </div>
 
-            <button onClick={cancelDetection}
-              className="text-sm text-white/45 hover:text-white/72 transition-colors">
-              Cancel
-            </button>
+            {/* Step indicator */}
+            <div className="flex items-center gap-2">
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: detectingLow ? accentColor : "#22c55e",
+                  boxShadow: detectingLow ? `0 0 6px ${accentGlow}` : "0 0 6px rgba(34,197,94,0.4)",
+                }}
+              />
+              <div
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor: phase === "detect-high" ? accentColor : "rgba(255,255,255,0.15)",
+                  boxShadow: phase === "detect-high" ? `0 0 6px ${accentGlow}` : "none",
+                }}
+              />
+            </div>
+
+            <p className="text-xs text-white/38">
+              Step {detectingLow ? "1" : "2"} of 2
+            </p>
           </div>
         )}
 
-        {/* ── Phase: DETECTED ───────────────────────────────────────────────── */}
-        {phase === "detected" && (
-          <div className="flex flex-col items-center gap-4 w-full">
+        {/* ── Phase: RESULT ───────────────────────────────────────────────── */}
+        {phase === "result" && detectedLowHz && detectedHighHz && (
+          <div className="flex flex-col items-center gap-5 w-full">
             <div>
-              <p className="text-base font-medium text-white/88">Sounds like you&apos;re a…</p>
-              <p className="text-sm text-white/55 mt-1">You can change this any time.</p>
+              <p className="text-base font-medium text-white/88">Your vocal range</p>
+              <p className="text-sm text-white/55 mt-1">Here&apos;s what we heard.</p>
             </div>
 
-            {/* Detected result */}
-            {detectedVoiceId && (
-              <div className="fade-in flex flex-col items-center gap-1">
-                <div className="px-8 py-3 rounded-xl border"
+            {/* Range display */}
+            <div className="w-full flex items-center justify-center gap-4">
+              {/* Low */}
+              <div className="flex flex-col items-center gap-1.5">
+                <div
+                  className="px-5 py-3 rounded-xl border"
                   style={{
-                    backgroundColor: "rgba(124,58,237,0.2)",
-                    borderColor: "rgba(124,58,237,0.7)",
-                    boxShadow: "0 0 20px rgba(124,58,237,0.25)",
-                  }}>
-                  <span className="text-xl font-semibold text-violet-300">
-                    {VOICE_TYPES.find(v => v.id === detectedVoiceId)?.label}
+                    backgroundColor: "rgba(239,139,90,0.12)",
+                    borderColor: "rgba(239,139,90,0.5)",
+                  }}
+                >
+                  <span className="text-lg font-semibold" style={{ color: "#ef8b5a" }}>
+                    {hzToNoteName(detectedLowHz)}
                   </span>
                 </div>
+                <span className="text-xs text-white/48">{detectedLowHz} Hz · Low</span>
               </div>
-            )}
 
-            {/* Override pills — same 3+2 split, minus the detected one */}
-            {(() => {
-              const others = VOICE_TYPES.filter(v => v.id !== detectedVoiceId);
-              const rows = [others.slice(0, 3), others.slice(3)];
-              return (
-                <div className="flex flex-col items-center gap-1.5 w-full">
-                  {rows.map((row, ri) => (
-                    <div key={ri} className="flex justify-center gap-1.5">
-                      {row.map((v) => (
-                        <button key={v.id}
-                          onClick={() => { setSelectedVoiceId(v.id); setDetectedVoiceId(v.id); }}
-                          className="px-4 py-2 rounded-full text-sm font-medium border transition-all"
-                          style={{
-                            borderColor: "rgba(255,255,255,0.1)",
-                            color: "rgba(255,255,255,0.35)",
-                            backgroundColor: "rgba(255,255,255,0.03)",
-                          }}>
-                          {v.label}
-                        </button>
-                      ))}
-                    </div>
-                  ))}
+              {/* Arrow */}
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-white/25 text-lg">→</span>
+              </div>
+
+              {/* High */}
+              <div className="flex flex-col items-center gap-1.5">
+                <div
+                  className="px-5 py-3 rounded-xl border"
+                  style={{
+                    backgroundColor: "rgba(129,140,248,0.12)",
+                    borderColor: "rgba(129,140,248,0.5)",
+                  }}
+                >
+                  <span className="text-lg font-semibold" style={{ color: "#818cf8" }}>
+                    {hzToNoteName(detectedHighHz)}
+                  </span>
                 </div>
-              );
-            })()}
+                <span className="text-xs text-white/48">{detectedHighHz} Hz · High</span>
+              </div>
+            </div>
+
+            <p className="text-sm text-white/48 leading-relaxed px-2">
+              Exercises will be tuned to your range. You can always re-detect later in settings.
+            </p>
+
+            <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+
+            <button
+              onClick={handleFinish}
+              className="w-full py-4 rounded-xl font-medium text-base text-white transition-all active:scale-[0.98]"
+              style={{
+                background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
+                boxShadow: "0 0 24px rgba(124,58,237,0.35), 0 2px 8px rgba(0,0,0,0.4)",
+              }}
+            >
+              Let&apos;s go →
+            </button>
           </div>
         )}
-
-        <div className="w-full h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
-
-        {/* CTA */}
-        <div className="flex flex-col items-center gap-2.5 w-full">
-          <button
-            onClick={() => onBegin(phase === "detected" ? (detectedVoiceId ?? selectedVoiceId) : selectedVoiceId, phase === "detected")}
-            disabled={isLoading || phase === "detecting" || isError}
-            className="w-full py-4 rounded-xl font-medium text-base text-white transition-all active:scale-[0.98] disabled:opacity-40 disabled:cursor-wait"
-            style={{
-              background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
-              boxShadow: (isLoading || phase === "detecting" || isError)
-                ? "none"
-                : "0 0 24px rgba(124,58,237,0.35), 0 2px 8px rgba(0,0,0,0.4)",
-            }}>
-            Let&apos;s go →
-          </button>
-          <p className="text-xs text-white/42 leading-relaxed px-2">
-            Microphone used only for real-time pitch detection. Nothing is recorded.
-          </p>
-        </div>
       </div>
     </div>
   );

@@ -13,24 +13,26 @@ import {
   LAST_STAGE_ID_PER_PART,
   isLastStageOfPart,
   PART_COMPLETE_CONTENT,
+  PART_TITLES,
 } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
-import type { JourneyStage } from "@/constants/journey";
+import type { JourneyStage, BandTarget } from "@/constants/journey";
+import type { ChakraId, Band } from "@/constants/chakras";
 import {
   CHAKRAS,
-  getChakraFrequencies,
-  findClosestChakra,
-  isInChakraRange,
+  BAND_ID_ORDER,
+  getScaleNotesForRange,
+  findClosestBand,
+  isInBandRange,
   isInTune,
 } from "@/constants/chakras";
-import type { Chakra } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 
 interface JourneyViewProps {
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  onPlayTone: (chakra: Chakra) => void;
+  onPlayTone: (band: Band) => void;
   onSettingsUpdate: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
@@ -38,9 +40,77 @@ interface JourneyViewProps {
   onOpenSettings: () => void;
 }
 
-// Low/high range chakra IDs for voice warmups (no specific frequency)
-const LOW_RANGE_IDS = ["root", "sacral", "solar-plexus"] as const;
-const HIGH_RANGE_IDS = ["throat", "third-eye", "crown"] as const;
+// ── Band target resolution ────────────────────────────────────────────────────
+
+/** Resolve a BandTarget to concrete Band(s) from the user's vocal scale. */
+function resolveBandTarget(target: BandTarget, allBands: Band[]): Band[] {
+  const n = allBands.length;
+  if (n === 0) return [];
+
+  if (target.kind === "slot") {
+    const chakraId = BAND_ID_ORDER[target.n - 1];
+    const band = allBands.find((b) => b.isChakraSlot && b.chakraId === chakraId);
+    return band ? [band] : [];
+  }
+
+  if (target.kind === "index") {
+    const i = target.i < 0 ? n + target.i : target.i;
+    return i >= 0 && i < n ? [allBands[i]] : [];
+  }
+
+  if (target.kind === "range") {
+    const from = target.from < 0 ? n + target.from : target.from;
+    const to = target.to < 0 ? n + target.to : target.to;
+    const lo = Math.max(0, Math.min(from, to));
+    const hi = Math.min(n - 1, Math.max(from, to));
+    return allBands.slice(lo, hi + 1);
+  }
+
+  return [];
+}
+
+/** Get display colors for a stage (for StageCard color strip). Uses static CHAKRAS. */
+function getStageDisplayColors(stage: JourneyStage): string[] {
+  if (stage.stageTypeId === "pitch-detection") {
+    const colors: string[] = [];
+    for (const nc of stage.notes) {
+      const t = nc.target;
+      if (t.kind === "slot") {
+        const chakra = CHAKRAS.find((c) => c.id === BAND_ID_ORDER[t.n - 1]);
+        if (chakra) colors.push(chakra.color);
+      }
+    }
+    if (colors.length > 0) return colors;
+    return ["#7c3aed", "#6d28d9"];
+  }
+  if (stage.stageTypeId === "pitch-detection-slide") {
+    return ["#7c3aed", "#6d28d9"];
+  }
+  return ["#7c3aed"];
+}
+
+/** Get the chakra for a single-slot stage (Part 9 mantra display). */
+function getStageSlotChakra(stage: JourneyStage) {
+  if (stage.stageTypeId !== "pitch-detection") return null;
+  if (stage.notes.length !== 1) return null;
+  const t = stage.notes[0].target;
+  if (t.kind !== "slot") return null;
+  return CHAKRAS.find((c) => c.id === BAND_ID_ORDER[t.n - 1]) ?? null;
+}
+
+/** Extract ChakraId[] from slot targets (for ChakraDetailCard). */
+function getStageChakraIds(stage: JourneyStage): ChakraId[] {
+  if (stage.stageTypeId === "pitch-detection") {
+    const ids: ChakraId[] = [];
+    for (const n of stage.notes) {
+      if (n.target.kind === "slot") {
+        ids.push(BAND_ID_ORDER[n.target.n - 1]);
+      }
+    }
+    return ids;
+  }
+  return [];
+}
 
 const JOURNEY_EXERCISE_INFO_SKIP_KEY = "attunr.journeyExerciseInfoSkipped";
 
@@ -77,17 +147,6 @@ function getStepInPart(stageId: number): {
   const partStages = JOURNEY_STAGES.filter((s) => s.part === stage.part);
   const stepIndex = partStages.findIndex((s) => s.id === stageId) + 1;
   return { stepIndex, stepsInPart: partStages.length };
-}
-
-function voiceTypeLabel(id: string) {
-  const map: Record<string, string> = {
-    bass: "Bass",
-    baritone: "Baritone",
-    tenor: "Tenor",
-    alto: "Alto",
-    soprano: "Soprano",
-  };
-  return map[id] ?? id;
 }
 
 // ── Icons ────────────────────────────────────────────────────────────────────
@@ -200,12 +259,9 @@ function StageCard({
   const isCurrent = stage.id === highestCompleted + 1;
   const isUnlocked = stage.id <= highestCompleted + 1;
 
-  const stageChakras = stage.chakraIds
-    .map((id) => CHAKRAS.find((c) => c.id === id))
-    .filter((c): c is Chakra => c != null);
-  const primaryColor =
-    stageChakras[0]?.color ??
-    (stage.type === "technique_intro" ? "#7c3aed" : "#7c3aed");
+  const stageColors = getStageDisplayColors(stage);
+  const primaryColor = stageColors[0] ?? "#7c3aed";
+  const slotChakra = getStageSlotChakra(stage);
 
   return (
     <button
@@ -230,15 +286,9 @@ function StageCard({
         className="w-[3px] shrink-0"
         style={{
           background:
-            stage.useRainbowLabel
-              ? stage.chakraIds[0] === "root"
-                ? `linear-gradient(to bottom, ${LOW_RANGE_IDS.map((id) => CHAKRAS.find((c) => c.id === id)!.color).join(", ")})`
-                : `linear-gradient(to bottom, ${HIGH_RANGE_IDS.map((id) => CHAKRAS.find((c) => c.id === id)!.color).join(", ")})`
-              : stageChakras.length === 1
-                ? primaryColor
-                : stageChakras.length > 1
-                  ? `linear-gradient(to bottom, ${stageChakras.map((c) => c.color).join(", ")})`
-                  : "linear-gradient(to bottom, #7c3aed, #6d28d9)",
+            stageColors.length === 1
+              ? primaryColor
+              : `linear-gradient(to bottom, ${stageColors.join(", ")})`,
           opacity: !isUnlocked ? 0.65 : 1,
         }}
       />
@@ -254,7 +304,7 @@ function StageCard({
                 : "rgba(255,255,255,0.95)",
             }}
           >
-            {stage.type === "technique_intro" && (
+            {stage.stageTypeId === "intro" && (
               <BookIcon
                 className="shrink-0 opacity-70"
                 style={{
@@ -268,11 +318,11 @@ function StageCard({
           </span>
         </div>
 
-        {/* Part I: mantra + element (single chakra) — skip for lip-roll warmups and rainbow-label warmups */}
-        {stageChakras.length === 1 &&
-          stage.type !== "technique_intro" &&
-          stage.technique !== "lip-rolls" &&
-          !stage.useRainbowLabel && (
+        {/* Part 9: mantra + element (single-slot chakra) */}
+        {slotChakra &&
+          stage.part === 9 &&
+          stage.stageTypeId === "pitch-detection" &&
+          stage.technique !== "lip-rolls" && (
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <span
                 className="text-xs font-mono font-medium tracking-wider"
@@ -282,84 +332,31 @@ function StageCard({
                     : "rgba(255,255,255,0.55)",
                 }}
               >
-                {stageChakras[0].mantra}
+                {slotChakra.mantra}
               </span>
               <span className="text-xs text-white/48">·</span>
               <span className="text-xs text-white/62">
-                {stageChakras[0].element}
+                {slotChakra.element}
               </span>
               <span className="text-xs text-white/48">·</span>
               <span className="text-xs text-white/68">
-                {stageChakras[0].description}
+                {slotChakra.description}
               </span>
             </div>
           )}
-        {/* Voice focus label: chest or head (no chakra-specific mantra) */}
-        {stage.useRainbowLabel && (
-          <p className="text-xs text-white/58 mt-0.5">
-            {stage.chakraIds[0] === "root"
-              ? "Find your chest voice"
-              : "Find your head voice"}
-          </p>
-        )}
-        {/* Lip-roll individual: minimal cue */}
-        {stageChakras.length === 1 &&
-          stage.type !== "technique_intro" &&
-          stage.technique === "lip-rolls" && (
-            <p className="text-xs text-white/58">Hold the buzz 5 seconds</p>
-          )}
-
-        {/* Technique intro: show cardCue or technique name */}
-        {stage.type === "technique_intro" && (
+        {/* Intro: cardCue */}
+        {stage.stageTypeId === "intro" && stage.cardCue && (
           <p className="text-xs text-white/58">
-            {stage.cardCue ?? stage.technique?.replace(/-/g, " ") ?? "Learn"}
+            {stage.cardCue}
           </p>
         )}
-        {/* Part II: chakra sequence — skip for lip-roll (use title instead) */}
-        {stageChakras.length > 1 && stage.technique !== "lip-rolls" && (
-          <div className="flex flex-wrap items-center gap-1">
-            {stageChakras.map((c, i) => (
-              <span key={c.id} className="flex items-center gap-1">
-                <span
-                  className="inline-block w-1.5 h-1.5 rounded-full shrink-0"
-                  style={{
-                    backgroundColor: isUnlocked
-                      ? c.color
-                      : "rgba(255,255,255,0.4)",
-                  }}
-                />
-                <span
-                  className="text-xs"
-                  style={{
-                    color: isUnlocked ? `${c.color}` : "rgba(255,255,255,0.55)",
-                  }}
-                >
-                  {c.name}
-                </span>
-                {i < stageChakras.length - 1 && (
-                  <span className="text-xs text-white/55 mx-0.5">›</span>
-                )}
-              </span>
-            ))}
-          </div>
+        {/* Breathwork: cardCue */}
+        {stage.stageTypeId === "breathwork" && stage.cardCue && (
+          <p className="text-xs text-white/58">{stage.cardCue}</p>
         )}
-        {/* Lip-roll sequence: minimal cue */}
-        {stageChakras.length > 1 &&
-          stage.technique === "lip-rolls" &&
-          stage.type === "sequence" && (
-            <p className="text-xs text-white/58">Full range · 2 s per tone</p>
-          )}
-        {/* Lip-roll slide: minimal cue */}
-        {stage.type === "slide" && (
-          <p className="text-xs text-white/58">
-            Continuous glide · slide 2–3 times
-          </p>
-        )}
-        {/* Farinelli breathwork */}
-        {stage.type === "farinelli" && (
-          <p className="text-xs text-white/58">
-            {stage.cardCue ?? `Breathwork · cycles 4–${stage.farinelliMaxCount ?? 10}`}
-          </p>
+        {/* Exercise subtitle */}
+        {(stage.stageTypeId === "pitch-detection" || stage.stageTypeId === "pitch-detection-slide") && stage.subtitle && (
+          <p className="text-xs text-white/58">{stage.subtitle}</p>
         )}
       </div>
 
@@ -382,18 +379,6 @@ function StageCard({
 }
 
 // ── Journey List ──────────────────────────────────────────────────────────────
-
-const PART_NAMES: Record<number, string> = {
-  1: "Introduction",
-  2: "Vocal warmups",
-  3: "Sustain",
-  4: "Sequences",
-  5: "Vowel U",
-  6: "Mantra",
-  7: "Vowel EE",
-  8: "Vowel flow",
-  9: "Puffy cheeks",
-};
 
 function JourneyList({
   settings,
@@ -439,15 +424,20 @@ function JourneyList({
           return (
             <section key={partNum} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
-                <span className="text-xs uppercase tracking-widest text-white/58 shrink-0 flex items-center gap-1.5">
-                  Part {roman}
+                <div className="flex items-center gap-2 shrink-0">
+                  <span className="text-xs uppercase tracking-widest text-white/45">
+                    Part {roman}
+                  </span>
+                  <span className="text-xs text-white/72 font-medium">
+                    {PART_TITLES[partNum]}
+                  </span>
                   {partComplete && (
                     <BadgeIcon
                       className="text-violet-400/90"
                       style={{ width: 12, height: 12 }}
                     />
                   )}
-                </span>
+                </div>
                 <div className="flex-1 h-px bg-white/[0.05]" />
               </header>
               {stages.map((stage) => (
@@ -488,29 +478,36 @@ function ExerciseInfoModal({
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
-  const isTechniqueIntro = stage.type === "technique_intro";
+  const isTechniqueIntro = stage.stageTypeId === "intro";
 
-  const allChakras = useMemo(
-    () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
-    [settings.voiceType, settings.tuning],
+  const allBands = useMemo(
+    () => getScaleNotesForRange(
+      settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131,
+      settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523,
+      settings.tuning,
+    ),
+    [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
-  const stageChakras = stage.chakraIds
-    .map((id) => allChakras.find((c) => c.id === id))
-    .filter((c): c is Chakra => c != null);
-  const freqOverrides = Object.fromEntries(
-    stageChakras.map((c) => [c.id, c.frequencyHz]),
-  );
-  const primaryColor = stageChakras[0]?.color ?? "#7c3aed";
+  const chakraIds = getStageChakraIds(stage);
+  const freqOverrides: Record<string, number> = {};
+  for (const cid of chakraIds) {
+    const band = allBands.find((b) => b.chakraId === cid);
+    if (band) freqOverrides[cid] = band.frequencyHz;
+  }
+  const stageColors = getStageDisplayColors(stage);
+  const primaryColor = stageColors[0] ?? "#7c3aed";
 
+  const noteTime = stage.stageTypeId === "pitch-detection" ? stage.notes[0]?.seconds ?? 0 : 0;
+  const isMultiNote = stage.stageTypeId === "pitch-detection" && stage.notes.length > 1;
   const objective = isTechniqueIntro
     ? "Learn the technique"
-    : stage.type === "farinelli"
+    : stage.stageTypeId === "breathwork"
       ? `Complete 7 cycles — each a bit longer than the last`
-      : stage.type === "individual"
-        ? `Hold the tone in tune for ${stage.holdSeconds} seconds`
-        : stage.type === "slide"
+      : stage.stageTypeId === "pitch-detection" && !isMultiNote
+        ? `Hold the tone in tune for ${noteTime} seconds`
+        : stage.stageTypeId === "pitch-detection-slide"
           ? "Slide smoothly through the range two or three times — detection is loose"
-          : `Sing each tone in sequence, ${stage.noteSeconds} seconds each`;
+          : `Sing each tone in sequence, ${noteTime} seconds each`;
 
   function handleBegin() {
     if (isClosing) return;
@@ -571,7 +568,7 @@ function ExerciseInfoModal({
               </span>
               <span className="text-white/35">·</span>
               <span>
-                {isTechniqueIntro ? "Learn" : stage.type === "farinelli" ? "Breathwork" : stage.part === 2 ? "Warmup" : stage.type === "slide" ? "Slide" : stage.type === "sequence" ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
+                {isTechniqueIntro ? "Learn" : stage.stageTypeId === "breathwork" ? "Breathwork" : stage.part === 2 ? "Warmup" : stage.stageTypeId === "pitch-detection-slide" ? "Slide" : isMultiNote ? "Sequence" : stage.part >= 5 ? "Technique" : "Individual"}
               </span>
             </p>
             <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
@@ -589,23 +586,23 @@ function ExerciseInfoModal({
 
         {/* Scrollable content */}
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1 min-h-0">
-          {/* Chakra detail — skip for lip-roll sequences, voice warmups (Low U, Hoo hoo), else show card */}
+          {/* Chakra detail — only for slot targets, skip for lip-roll sequences */}
           {!isTechniqueIntro &&
-            stage.chakraIds.length > 0 &&
-            !stage.useRainbowLabel &&
+            chakraIds.length > 0 &&
+            stage.stageTypeId !== "breathwork" &&
             !(
               stage.technique === "lip-rolls" &&
-              (stage.type === "sequence" || stage.type === "slide")
+              (stage.stageTypeId === "pitch-detection-slide" || isMultiNote)
             ) && (
               <ChakraDetailCard
-                chakraIds={stage.chakraIds}
+                chakraIds={chakraIds}
                 frequencyOverrides={freqOverrides}
-                style={stage.chakraDetailStyle ?? "full"}
+                style="full"
               />
             )}
 
           {/* Instructions — farinelli: before you begin first, then intro, video, key tips */}
-          {stage.type === "farinelli" ? (
+          {stage.stageTypeId === "breathwork" ? (
             <>
               <div
                 className="rounded-xl px-4 py-3"
@@ -695,12 +692,11 @@ function ExerciseInfoModal({
           )}
 
           {/* Headphones notice — only for exercises with pitch canvas (not breathwork) */}
-          {!isTechniqueIntro && stage.type !== "farinelli" && <HeadphonesNotice />}
+          {!isTechniqueIntro && stage.stageTypeId !== "breathwork" && <HeadphonesNotice />}
 
-          {/* Voice / tuning context */}
+          {/* Tuning context */}
           <p className="text-xs text-white/45 text-center">
-            Practising as {voiceTypeLabel(settings.voiceType)} ·{" "}
-            {settings.tuning}
+            Tuning: {settings.tuning}
           </p>
         </div>
 
@@ -890,7 +886,7 @@ export function JourneyExercise({
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  onPlayTone: (chakra: Chakra) => void;
+  onPlayTone: (band: Band) => void;
   onSettingsUpdate: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
@@ -906,23 +902,58 @@ export function JourneyExercise({
   const isCompleted = stageId <= highestCompleted;
   const isCurrentStage = stageId === highestCompleted + 1;
 
-  const allChakras = useMemo(
-    () => getChakraFrequencies("voice", settings.voiceType, settings.tuning),
-    [settings.voiceType, settings.tuning],
+  const allBands = useMemo(
+    () => getScaleNotesForRange(
+      settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131,
+      settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523,
+      settings.tuning,
+    ),
+    [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
-  const stageChakras = stage.chakraIds
-    .map((id) => allChakras.find((c) => c.id === id))
-    .filter((c): c is Chakra => c != null);
 
-  // For voice warmups (Low U, Hoo hoo): use low/high range, not specific frequency
-  const rangeChakraIds = stage.useRainbowLabel
-    ? stage.chakraIds[0] === "root"
-      ? [...LOW_RANGE_IDS]
-      : [...HIGH_RANGE_IDS]
-    : stage.chakraIds;
-  const rangeChakras = rangeChakraIds
-    .map((id) => allChakras.find((c) => c.id === id))
-    .filter((c): c is Chakra => c != null);
+  // Resolve exercise bands from BandTarget configs
+  const exerciseBands = useMemo(() => {
+    if (stage.stageTypeId === "pitch-detection") {
+      return stage.notes.flatMap((n) => resolveBandTarget(n.target, allBands));
+    }
+    if (stage.stageTypeId === "pitch-detection-slide") {
+      const fromBands = resolveBandTarget(stage.notes[0].from, allBands);
+      const toBands = resolveBandTarget(stage.notes[0].to, allBands);
+      const fromIdx = fromBands[0] ? allBands.indexOf(fromBands[0]) : 0;
+      const toIdx = toBands[0] ? allBands.indexOf(toBands[0]) : allBands.length - 1;
+      const lo = Math.min(fromIdx, toIdx);
+      const hi = Math.max(fromIdx, toIdx);
+      return allBands.slice(lo, hi + 1);
+    }
+    return [];
+  }, [stage, allBands]);
+
+  const isRangeTarget =
+    stage.stageTypeId === "pitch-detection" &&
+    stage.notes.length === 1 &&
+    stage.notes[0].target.kind === "range";
+
+  const highlightIds = useMemo(() => exerciseBands.map((b) => b.id), [exerciseBands]);
+
+  // Bands to play when user taps "Play tone"
+  const toneBands = useMemo(() => {
+    if (stage.stageTypeId === "pitch-detection") {
+      return stage.notes.flatMap((n) => resolveBandTarget(n.target, allBands));
+    }
+    if (stage.stageTypeId === "pitch-detection-slide") {
+      return [
+        ...resolveBandTarget(stage.notes[0].from, allBands),
+        ...resolveBandTarget(stage.notes[0].to, allBands),
+      ];
+    }
+    return [];
+  }, [stage, allBands]);
+
+  // Sequence step bands (for multi-note indicator dots)
+  const seqStepBands = useMemo(() => {
+    if (stage.stageTypeId !== "pitch-detection" || stage.notes.length <= 1) return [];
+    return stage.notes.map((n) => resolveBandTarget(n.target, allBands)[0]).filter(Boolean);
+  }, [stage, allBands]);
 
   // ── Success tracking ──────────────────────────────────────────────────────
   const holdRef = useRef(0);
@@ -946,16 +977,16 @@ export function JourneyExercise({
   const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
 
-  // Auto-show info modal before exercise (farinelli always; others unless user skipped)
+  // Auto-show info modal before exercise (breathwork always; others unless user skipped)
   useEffect(() => {
-    if (stage.type === "technique_intro") return;
-    if (stage.type === "farinelli") {
+    if (stage.stageTypeId === "intro") return;
+    if (stage.stageTypeId === "breathwork") {
       setShowInfoModal(true);
       return;
     }
     const skipped = getSkippedInfoStageIds();
     if (!skipped.has(stageId)) setShowInfoModal(true);
-  }, [stageId, stage.type]);
+  }, [stageId, stage.stageTypeId]);
 
   // Prefetch next page so it’s ready when the modal closes
   useEffect(() => {
@@ -992,11 +1023,11 @@ export function JourneyExercise({
   }, [stageId, resetProgress]);
 
   useEffect(() => {
-    analytics.journeyExerciseStarted(stageId, stage.part, PART_NAMES[stage.part] ?? "");
+    analytics.journeyExerciseStarted(stageId, stage.part, PART_TITLES[stage.part] ?? "");
   }, [stageId, stage.part]);
 
   useEffect(() => {
-    if (!isCurrentStage || stageComplete || stage.type === "farinelli") return;
+    if (!isCurrentStage || stageComplete || stage.stageTypeId === "breathwork") return;
 
     function tick() {
       const now = performance.now();
@@ -1005,22 +1036,25 @@ export function JourneyExercise({
 
       const hz = pitchHzRef.current;
 
-      if (stage.type === "individual") {
+      if (stage.stageTypeId === "pitch-detection" && stage.notes.length === 1) {
+        const holdSeconds = stage.notes[0].seconds;
+        const targetBands = resolveBandTarget(stage.notes[0].target, allBands);
         const inTune =
           hz !== null &&
-          (stage.useRainbowLabel
-            ? isInChakraRange(hz, rangeChakras)
-            : stageChakras.some((t) => isInTune(hz, t.frequencyHz)));
+          (stage.notes[0].target.kind === "range"
+            ? isInBandRange(hz, targetBands)
+            : targetBands.some((t) => isInTune(hz, t.frequencyHz)));
         if (inTune) holdRef.current += dt;
-        const p = holdRef.current / stage.holdSeconds;
+        const p = holdRef.current / holdSeconds;
         setProgress(p);
         if (p >= 1) setStageComplete(true);
-      } else if (
-        stage.type === "slide" &&
-        stage.slideDirection &&
-        hz !== null
-      ) {
-        const freqs = stageChakras.map((c) => c.frequencyHz);
+      } else if (stage.stageTypeId === "pitch-detection-slide" && hz !== null) {
+        const fromBands = resolveBandTarget(stage.notes[0].from, allBands);
+        const toBands = resolveBandTarget(stage.notes[0].to, allBands);
+        const fromHz = fromBands[0]?.frequencyHz ?? 0;
+        const toHz = toBands[0]?.frequencyHz ?? 0;
+        const isHighToLow = fromHz > toHz;
+        const freqs = exerciseBands.map((b) => b.frequencyHz);
         const minFreq = Math.min(...freqs);
         const maxFreq = Math.max(...freqs);
         const highThreshold = maxFreq * 0.75;
@@ -1029,24 +1063,16 @@ export function JourneyExercise({
         const inLow = hz <= lowThreshold;
         let lastZone = slideLastZoneRef.current;
         let count = slideCountRef.current;
-        if (stage.slideDirection === "high-to-low") {
+        if (isHighToLow) {
           if (inHigh) lastZone = "high";
           else if (inLow) {
-            if (lastZone === "high") {
-              count++;
-              slideCountRef.current = count;
-              setSlideCount(count);
-            }
+            if (lastZone === "high") { count++; slideCountRef.current = count; setSlideCount(count); }
             lastZone = "low";
           }
         } else {
           if (inLow) lastZone = "low";
           else if (inHigh) {
-            if (lastZone === "low") {
-              count++;
-              slideCountRef.current = count;
-              setSlideCount(count);
-            }
+            if (lastZone === "low") { count++; slideCountRef.current = count; setSlideCount(count); }
             lastZone = "high";
           }
         }
@@ -1054,16 +1080,19 @@ export function JourneyExercise({
         const REQUIRED_SLIDES = 2;
         setProgress(count / REQUIRED_SLIDES);
         if (count >= REQUIRED_SLIDES) setStageComplete(true);
-      } else {
+      } else if (stage.stageTypeId === "pitch-detection" && stage.notes.length > 1) {
         const idx = seqIndexRef.current;
-        const target = stageChakras[idx];
-        if (target && hz !== null && isInTune(hz, target.frequencyHz)) {
+        const noteConfig = stage.notes[idx];
+        if (!noteConfig) return;
+        const targetBands = resolveBandTarget(noteConfig.target, allBands);
+        const noteSeconds = noteConfig.seconds;
+        if (targetBands.length > 0 && hz !== null && targetBands.some((t) => isInTune(hz, t.frequencyHz))) {
           noteHoldRef.current += dt;
-          if (noteHoldRef.current >= stage.noteSeconds) {
+          if (noteHoldRef.current >= noteSeconds) {
             noteHoldRef.current = 0;
             seqIndexRef.current = idx + 1;
             setSeqIndex(idx + 1);
-            if (seqIndexRef.current >= stageChakras.length) {
+            if (seqIndexRef.current >= stage.notes.length) {
               setStageComplete(true);
               setProgress(1);
               return;
@@ -1073,8 +1102,8 @@ export function JourneyExercise({
           noteHoldRef.current = Math.max(0, noteHoldRef.current - dt * 0.5);
         }
         setProgress(
-          (seqIndexRef.current + noteHoldRef.current / stage.noteSeconds) /
-            stageChakras.length,
+          (seqIndexRef.current + noteHoldRef.current / noteSeconds) /
+            stage.notes.length,
         );
       }
 
@@ -1105,7 +1134,7 @@ export function JourneyExercise({
     }
     if (isLastStageOfPart(stageId)) {
       const content = PART_COMPLETE_CONTENT[stage.part];
-      const partName = PART_NAMES[stage.part] ?? "";
+      const partName = PART_TITLES[stage.part] ?? "";
       analytics.journeyPartCompleted(stage.part, partName);
       setPartCompleteData({
         part: stage.part,
@@ -1154,10 +1183,10 @@ export function JourneyExercise({
   function handleHearTone() {
     if (isTonePlaying) return;
     setIsTonePlaying(true);
-    stageChakras.forEach((chakra, i) => {
-      setTimeout(() => onPlayTone(chakra), i * TONE_GAP_MS);
+    toneBands.forEach((band, i) => {
+      setTimeout(() => onPlayTone(band), i * TONE_GAP_MS);
     });
-    const totalMs = (stageChakras.length - 1) * TONE_GAP_MS + TONE_DURATION_MS;
+    const totalMs = (toneBands.length - 1) * TONE_GAP_MS + TONE_DURATION_MS;
     if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
     toneTimeoutRef.current = setTimeout(() => {
       toneTimeoutRef.current = null;
@@ -1165,16 +1194,15 @@ export function JourneyExercise({
     }, totalMs);
   }
 
-  const detectionChakras = stage.useRainbowLabel ? rangeChakras : stageChakras;
-  const closestChakra =
-    pitchHz && detectionChakras.length > 0
-      ? findClosestChakra(pitchHz, detectionChakras)
+  const closestBand =
+    pitchHz && exerciseBands.length > 0
+      ? findClosestBand(pitchHz, exerciseBands)
       : null;
   const locked =
-    pitchHz &&
-    (stage.useRainbowLabel
-      ? isInChakraRange(pitchHz, detectionChakras)
-      : closestChakra && isInTune(pitchHz, closestChakra.frequencyHz));
+    pitchHz && closestBand &&
+    (isRangeTarget
+      ? isInBandRange(pitchHz, exerciseBands)
+      : isInTune(pitchHz, closestBand.frequencyHz));
 
   return (
     <div className="flex flex-col h-full">
@@ -1187,13 +1215,11 @@ export function JourneyExercise({
           ← Journey
         </button>
         <span className="text-white/25">|</span>
-        <span className="text-xs sm:text-sm text-white/52 shrink-0">
-          Part{" "}
-          {
-            ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][
-              stage.part - 1
-            ]
-          }
+        <span className="text-xs sm:text-sm text-white/45 shrink-0">
+          Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]}
+        </span>
+        <span className="hidden md:inline text-xs text-white/62 font-medium shrink-0">
+          — {PART_TITLES[stage.part]}
         </span>
         <span className="text-white/25">·</span>
         <span className="text-xs sm:text-sm text-white/52 shrink-0">
@@ -1204,36 +1230,36 @@ export function JourneyExercise({
         <span className="text-xs sm:text-sm text-white/72 font-medium truncate min-w-0">
           {stage.title}
         </span>
-        {stage.type !== "technique_intro" && (
+        {stage.stageTypeId !== "intro" && (
           <InfoButton onClick={() => setShowInfoModal(true)} />
         )}
         <button
           onClick={onOpenSettings}
           className="ml-auto shrink-0 text-xs text-white/45 hover:text-white/72 transition-colors"
         >
-          {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
+          {settings.tuning}
         </button>
       </div>
 
-      {/* Info modal — re-open from exercise (i) button — skip for technique_intro */}
-      {stage.type !== "technique_intro" && showInfoModal && (
+      {/* Info modal — re-open from exercise (i) button — skip for intro */}
+      {stage.stageTypeId !== "intro" && showInfoModal && (
         <ExerciseInfoModal
           stageId={stageId}
           settings={settings}
           onStart={() => setShowInfoModal(false)}
           onDismiss={() => setShowInfoModal(false)}
-          showDontShowAgain={stage.type !== "farinelli"}
+          showDontShowAgain={stage.stageTypeId !== "breathwork"}
         />
       )}
 
-      {/* ── Main content: technique_intro, farinelli, or canvas for exercises ─── */}
-      {stage.type === "technique_intro" ? (
+      {/* ── Main content: intro, breathwork, or canvas for exercises ─── */}
+      {stage.stageTypeId === "intro" ? (
         <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="max-w-lg mx-auto px-5 py-6 flex flex-col gap-6">
             {/* Part header — shown for every learning section */}
             <div className="pb-2 border-b border-white/[0.08]">
               <h2 className="text-xl font-semibold text-white">
-                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]}
+                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_TITLES[stage.part]}
               </h2>
               <p className="text-sm text-white/55 mt-0.5">
                 {stage.title} · {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
@@ -1266,14 +1292,14 @@ export function JourneyExercise({
               <p className="text-sm text-white/45 font-medium">Video coming soon</p>
             </div>
             <p className="text-xs text-white/45">
-              Practising as {voiceTypeLabel(settings.voiceType)} · {settings.tuning}
+              Tuning: {settings.tuning}
             </p>
           </div>
         </div>
-      ) : stage.type === "farinelli" ? (
+      ) : stage.stageTypeId === "breathwork" ? (
         <div className="relative flex-1 min-h-0 flex items-center justify-center">
           <FarinelliExercise
-            maxCount={stage.farinelliMaxCount ?? 10}
+            maxCount={stage.maxCount}
             startCount={4}
             onComplete={() => setStageComplete(true)}
           />
@@ -1281,37 +1307,38 @@ export function JourneyExercise({
       ) : (
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
-          chakras={allChakras}
+          bands={allBands}
           currentHzRef={pitchHzRef}
-          highlightIds={rangeChakraIds}
+          highlightIds={highlightIds}
+          showChakraLabels={stage.part === 9}
         />
 
         {/* Pitch overlay */}
         {pitchHz !== null && (
           <div className="pointer-events-none absolute top-3 left-4 fade-in">
-            {stage.useRainbowLabel ? (
+            {isRangeTarget ? (
               <div
                 className="text-2xl font-light"
-                style={{ color: closestChakra?.color ?? "#fff" }}
+                style={{ color: closestBand?.color ?? "#fff" }}
               >
                 {locked ? "✓ " : ""}
-                {stage.chakraIds[0] === "root" ? "Low tone" : "High tone"}
+                {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
               </div>
             ) : (
               <>
                 <div
                   className="text-3xl font-light tabular-nums"
-                  style={{ color: closestChakra?.color ?? "#fff" }}
+                  style={{ color: closestBand?.color ?? "#fff" }}
                 >
                   {Math.round(pitchHz)} Hz
                 </div>
-                {closestChakra && (
+                {closestBand && (
                   <div
                     className="text-sm mt-0.5"
-                    style={{ color: `${closestChakra.color}cc` }}
+                    style={{ color: `${closestBand.color}cc` }}
                   >
                     {locked ? "✓ " : "→ "}
-                    {closestChakra.name}
+                    {closestBand.name}
                   </div>
                 )}
               </>
@@ -1320,7 +1347,7 @@ export function JourneyExercise({
         )}
 
         {/* Sequence step indicator */}
-        {stage.type === "slide" && isCurrentStage && !stageComplete && (
+        {stage.stageTypeId === "pitch-detection-slide" && isCurrentStage && !stageComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
             {[1, 2].map((i) => {
               const done = i <= slideCount;
@@ -1343,24 +1370,24 @@ export function JourneyExercise({
             </span>
           </div>
         )}
-        {stage.type === "sequence" && isCurrentStage && !stageComplete && (
+        {stage.stageTypeId === "pitch-detection" && stage.notes.length > 1 && isCurrentStage && !stageComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
-            {stageChakras.map((c, i) => {
+            {seqStepBands.map((b, i) => {
               const done = i < seqIndex;
               const active = i === seqIndex;
               return (
                 <div
-                  key={c.id}
+                  key={b.id}
                   className="rounded-full transition-all"
                   style={{
                     width: active ? 10 : 7,
                     height: active ? 10 : 7,
                     backgroundColor: done
-                      ? c.color
+                      ? b.color
                       : active
-                        ? `${c.color}99`
+                        ? `${b.color}99`
                         : "rgba(255,255,255,0.15)",
-                    boxShadow: active ? `0 0 8px ${c.color}88` : "none",
+                    boxShadow: active ? `0 0 8px ${b.color}88` : "none",
                   }}
                 />
               );
@@ -1372,7 +1399,7 @@ export function JourneyExercise({
 
       {/* ── Bottom panel ──────────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">
-        {stage.type === "technique_intro" ? (
+        {stage.stageTypeId === "intro" ? (
           <div className="flex items-center gap-2 sm:gap-3 ml-auto w-full sm:w-auto justify-end">
             {stageId > 1 && onPrev && (
               <button
@@ -1396,12 +1423,12 @@ export function JourneyExercise({
           </div>
         ) : (
           <>
-        {isCurrentStage && !stageComplete && stage.type !== "slide" && stage.type !== "farinelli" && (
+        {isCurrentStage && !stageComplete && stage.stageTypeId !== "pitch-detection-slide" && stage.stageTypeId !== "breathwork" && (
           <div className="shrink-0 order-first sm:order-none">
             <ProgressArc progress={progress} />
           </div>
         )}
-        {isCurrentStage && !stageComplete && stage.type === "slide" && (
+        {isCurrentStage && !stageComplete && stage.stageTypeId === "pitch-detection-slide" && (
           <div className="flex items-center gap-2 shrink-0 text-xs sm:text-sm text-white/55">
             Slide {slideCount}/2
           </div>
@@ -1412,7 +1439,7 @@ export function JourneyExercise({
         )}
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
-          {stage.type !== "farinelli" && (
+          {stage.stageTypeId !== "breathwork" && (
           <button
             onClick={handleHearTone}
             disabled={isTonePlaying}
@@ -1434,7 +1461,7 @@ export function JourneyExercise({
                 Playing…
               </>
             ) : (
-              <>▶ Play {stageChakras.length > 1 ? "tones" : "tone"}</>
+              <>▶ Play {toneBands.length > 1 ? "tones" : "tone"}</>
             )}
           </button>
           )}

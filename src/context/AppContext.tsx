@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { Chakra } from "@/constants/chakras";
+import type { Band } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 
 export interface AppContextValue {
@@ -9,7 +9,7 @@ export interface AppContextValue {
   updateSettings: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  playTone: (chakra: Chakra) => void;
+  playTone: (band: Band) => void;
   pitchStatus: string;
   startListening: () => void;
   openSettings: () => void;

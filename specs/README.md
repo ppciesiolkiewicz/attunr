@@ -1,7 +1,6 @@
 # attunr (web) – Product Specifications
 
-Web edition of attunr, built with Next.js 16 + Turbopack, deployed on Vercel.
-Shares the same product vision and language principles as `attunr-expo`.
+Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 
 **Conventions:** Keep files small (under ~300 lines). Split large files by logical unit (e.g. exercise config per part). See [Code Organization](./code-organization.md).
 
@@ -9,16 +8,16 @@ Shares the same product vision and language principles as `attunr-expo`.
 
 | Spec | Description |
 | ---- | ----------- |
-| [App Overview](./app-overview.md) | Vision, spiritual positioning, scope |
+| [App Overview](./app-overview.md) | Vision, scope, tone system, feature status |
 | [Language & Messaging](./language-and-messaging.md) | Tone of voice, terminology, approved copy |
-| [Chakra Trainer](./chakra-trainer.md) | Shared canvas + audio; navigation overview |
+| [Practice View](./practice-view.md) | Shared pitch canvas + audio; navigation overview |
 | [Train Tab](./train-tab.md) | Free-form practice view |
-| [Journey](./journey.md) | URL-driven guided path — 48 stages, 9 parts (learn + exercises) |
-| [Pitch Canvas](./pitch-canvas.md) | Canvas rendering — dot trail, log-scale, waveform ring |
-| [Audio Engine](./audio-engine.md) | Binaural beats (always on), waveform ring |
+| [Journey](./journey.md) | Guided path — 49 stages, 9 parts |
+| [Pitch Canvas](./pitch-canvas.md) | Canvas rendering — dot trail, log-scale |
+| [Audio Engine](./audio-engine.md) | Binaural beats |
 | [Settings](./settings.md) | Tuning, voice type, localStorage persistence |
-| [Tech Stack](./tech-stack.md) | Next.js 16, Tailwind v4, ml5 CREPE, Web Audio API |
-| [Code Organization](./code-organization.md) | File size limits, splitting strategy (e.g. exercise config per part) |
+| [Tech Stack](./tech-stack.md) | Next.js, Tailwind v4, ml5 CREPE, Web Audio API |
+| [Code Organization](./code-organization.md) | File size limits, splitting strategy |
 
 ## Current build status
 
@@ -26,19 +25,18 @@ Shares the same product vision and language principles as `attunr-expo`.
 |---------|-------|
 | Pitch canvas (7 bands, dot trail, log-scale) | ✓ |
 | Real-time pitch detection (ml5 CREPE) | ✓ |
-| Chakra tone buttons | ✓ |
-| Frequency base toggle (Absolute / By voice) | ✓ |
-| Voice type selector + disclaimer | ✓ |
-| Pitch readout overlay | ✓ |
-| Onboarding with voice type detection | ✓ |
-| Binaural beats (always on) | ✓ |
-| Waveform ring | ✓ |
+| Tone buttons | ✓ |
+| Binaural beats | ✓ |
+| Onboarding with vocal range detection | ✓ |
 | App navigation (Train / Journey tabs) | ✓ |
-| Journey — 48 stages | ✓ |
-| Chakra detail card | ✓ |
+| Journey — 49 stages | ✓ |
 | Settings panel (slide-over) | ✓ |
 | localStorage persistence | ✓ |
-| A444 / A528 tuning options | ✓ |
+| A432 / A440 / A444 / A528 tuning | ✓ |
+| Farinelli breathwork exercise | ✓ |
+| Mantra/sound cards (Part 9) | ✓ |
+| Drone accompaniment | Not built |
+| Waveform ring | Not built |
 
 ## Relationship to attunr-expo
 
@@ -47,7 +45,7 @@ Shares the same product vision and language principles as `attunr-expo`.
 | Platform | React Native / Expo | Next.js / Vercel |
 | Pitch detection | pitchfinder YIN + expo-audio-studio | ml5 CREPE |
 | Canvas renderer | React Native Skia | HTML5 Canvas 2D |
-| Tone playback | expo-av / Web Audio | Web Audio API (binaural, always on) |
+| Tone playback | expo-av / Web Audio | Web Audio API (binaural) |
 | Journey path | ✓ | ✓ Built |
 | Onboarding | ✓ | ✓ Built |
 | Login / accounts | Planned | Out of scope |

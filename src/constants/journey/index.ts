@@ -11,10 +11,16 @@ import { PART_9_STAGES } from "./part9";
 
 export type {
   JourneyStage,
-  JourneyStageType,
-  SlideDirection,
+  StageTypeId,
   TechniqueId,
-  ChakraDetailStyle,
+  BandTarget,
+  SustainNoteConfig,
+  SlideConfig,
+  BaseJourneyStage,
+  IntroStage,
+  PitchDetectionStage,
+  PitchDetectionSlideStage,
+  BreathworkStage,
 } from "./types";
 
 export const JOURNEY_STAGES: JourneyStage[] = [
@@ -31,9 +37,21 @@ export const JOURNEY_STAGES: JourneyStage[] = [
 
 export const TOTAL_JOURNEY_STAGES = 49;
 
+export const PART_TITLES: Record<1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9, string> = {
+  1: "Introduction",
+  2: "Vocal Warmups",
+  3: "Sustain",
+  4: "Sequences",
+  5: "Vowel U",
+  6: "Vowel EE",
+  7: "Vowel Flow",
+  8: "Puffy Cheeks",
+  9: "Chakras and Yoga of Sounds",
+};
+
 /** Last stage id of each part (1–9) */
 export const LAST_STAGE_ID_PER_PART: Record<number, number> = {
-  1: 1, 2: 9, 3: 17, 4: 23, 5: 31, 6: 39, 7: 43, 8: 45, 9: 49,
+  1: 1, 2: 9, 3: 17, 4: 23, 5: 31, 6: 35, 7: 37, 8: 41, 9: 49,
 };
 
 export function isLastStageOfPart(stageId: number): boolean {
@@ -46,7 +64,7 @@ export const PART_COMPLETE_CONTENT: Record<
   { learned: string; tip: string }
 > = {
   1: {
-    learned: "Vocal placement and its connection to grounding, creativity, and presence.",
+    learned: "Vocal placement and how sound resonates differently across your body.",
     tip: "",
   },
   2: {
@@ -58,27 +76,27 @@ export const PART_COMPLETE_CONTENT: Record<
     tip: "Repeat and combine exercises into longer sessions.",
   },
   4: {
-    learned: "Singing placement sequences for full alignment.",
+    learned: "Moving through your range in sequences — from low to high and everywhere between.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
   5: {
-    learned: "The U vowel (uuu) across all seven chakras.",
+    learned: "The U vowel (uuu) across your full range.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
   6: {
-    learned: "Seed syllables — LAM, VAM, RAM, YAM, HAM, OM, AH — placed through the body.",
-    tip: "Repeat and combine exercises into longer sessions.",
-  },
-  7: {
     learned: "The bright EE vowel for shifting resonance higher.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
-  8: {
+  7: {
     learned: "Gliding from U to EE for vocal flexibility.",
     tip: "Repeat and combine exercises into longer sessions.",
   },
-  9: {
+  8: {
     learned: "Breath control with puffy cheeks.",
     tip: "Repeat and combine exercises into longer sessions.",
+  },
+  9: {
+    learned: "The seven chakras — Root through Crown — and their seed syllables: LAM, VAM, RAM, YAM, HAM, OM, AH.",
+    tip: "You've completed the full journey. Return to any part to deepen your practice.",
   },
 };

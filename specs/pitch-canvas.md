@@ -1,15 +1,11 @@
 # Pitch Canvas
 
-> Web equivalent of the rendering section in `attunr-expo/specs/train-component.md`
-> and `attunr-expo/specs/vocal-training.md`. Uses the HTML5 Canvas 2D API
-> instead of React Native Skia.
-
 ## Purpose
 
 A high-performance, full-size canvas that:
-1. Renders the seven chakra frequency bands as reference guides
+1. Renders frequency reference bands (one per tone)
 2. Draws a real-time pitch dot trail as the user sings
-3. Highlights the currently-matched chakra band when the pitch locks in
+3. Highlights the matched band when pitch locks in
 
 ## Rendering pipeline
 
@@ -17,9 +13,9 @@ The component owns its own `requestAnimationFrame` loop. No React re-renders
 happen during active use — data flows via refs.
 
 ```
-ChakraTrainer (state owner)
+PracticeView (state owner)
     │
-    ├─ chakras[]      ──→  chakrasRef  ──┐
+    ├─ tones[]        ──→  tonesRef    ──┐
     └─ currentHz       ──→  currentHzRef ─┤
                                           ↓
                                     RAF loop (60 fps)
@@ -35,13 +31,13 @@ ChakraTrainer (state owner)
 freqToY(hz) = H - ( log(hz) - log(minHz) ) / ( log(maxHz) - log(minHz) ) × H
 ```
 
-- `minHz` = lowest chakra frequency × 0.76 (padding below Root)
-- `maxHz` = highest chakra frequency × 1.30 (padding above Crown)
+- `minHz` = lowest tone frequency × 0.76 (padding below)
+- `maxHz` = highest tone frequency × 1.30 (padding above)
 - Low frequencies render near the **bottom** of the canvas.
 - High frequencies render near the **top**.
 
 Using a log scale ensures that the perceptual distance between any two adjacent
-chakras is visually uniform, even though their Hz gaps are unequal.
+tones is visually uniform, even though their Hz gaps are unequal.
 
 ### X axis — time scroll
 
@@ -60,17 +56,17 @@ chakras is visually uniform, even though their Hz gaps are unequal.
 | `NEWEST_X` | 0.68 | Fraction of canvas width for newest dot |
 | Tolerance | 3 % | `|detected − target| / target ≤ 0.03` |
 
-## Chakra band rendering
+## Tone band rendering
 
-For each chakra:
+For each tone:
 
-1. **Band fill** — Linear gradient (transparent → chakra colour → transparent),
-   vertical, centred on the chakra's Y position. Alpha: 0.08 default, 0.22
+1. **Band fill** — Linear gradient (transparent → tone colour → transparent),
+   vertical, centred on the tone's Y position. Alpha: 0.08 default, 0.22
    when in-tune.
-2. **Centre line** — Dashed (`3 px on, 7 px off`), chakra colour at 22 % alpha
+2. **Centre line** — Dashed (`3 px on, 7 px off`), tone colour at 22 % alpha
    (60 % when in-tune), 1 px wide (1.5 px when in-tune).
 3. **Right labels** — Two lines right-aligned at `canvas.width − 16 px`:
-   - Line 1: chakra name in small-caps, 11 px 600-weight
+   - Line 1: tone name in small-caps, 11 px 600-weight
    - Line 2: frequency in Hz, 10 px 400-weight, more muted
 4. **Left note badge** — Single note letter (C, D, E…), 10 px 500-weight,
    left-aligned at 14 px.
@@ -85,14 +81,14 @@ Each dot in the trail (newest first):
 age     = i / trail.length          // 0 = newest, 1 = oldest
 opacity = (1 − age) × 0.88
 radius  = DOT_RADIUS × (1 − age × 0.45)
-color   = closest chakra's RGB
+color   = closest tone's RGB
 ```
 
 ### In-tune dot (filled)
 
 ```
 ctx.arc(x, y, radius, 0, 2π)
-ctx.fillStyle = rgba(chakra.rgb, opacity)
+ctx.fillStyle = rgba(tone.rgb, opacity)
 ```
 
 The newest in-tune dot gets an additional white core circle at 38 % radius,
@@ -101,7 +97,7 @@ The newest in-tune dot gets an additional white core circle at 38 % radius,
 ### Out-of-tune dot (outlined)
 
 ```
-ctx.strokeStyle = rgba(chakra.rgb, opacity × 0.55)
+ctx.strokeStyle = rgba(tone.rgb, opacity × 0.55)
 ctx.lineWidth = 1.2
 ```
 
@@ -124,14 +120,14 @@ This ensures crisp rendering on all Retina / HiDPI displays.
 When the user clicks the canvas:
 
 1. The click Y position is converted back to Hz using the inverse log formula.
-2. The closest chakra is found.
-3. `onChakraClick(chakra)` is called — the parent plays the tone.
+2. The closest tone is found.
+3. `onToneClick(tone)` is called — the parent plays the tone.
 
 ## Current pitch dash
 
 A dashed horizontal line runs from just right of the newest dot to just left of
 the right-side labels, drawn at the current detected pitch Y position. Colour is
-the closest chakra at 35 % alpha. This gives a subtle visual anchor for where
+the closest tone's colour at 35 % alpha. This gives a subtle visual anchor for where
 the voice is relative to the nearest band centre.
 
 ## Performance notes

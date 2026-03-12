@@ -1,12 +1,6 @@
-# Chakra Trainer
+# Practice View
 
-> Updated: tuning moved to Settings; mic button replaced by onboarding flow;
-> Train and Journey are now two separate top-level views.
-
-The "Chakra Trainer" refers to the shared pitch canvas + audio engine that powers
-both the **Train tab** and **Journey** stages. This spec covers the shared
-elements. View-specific behaviour is in [Train Tab](./train-tab.md) and
-[Journey](./journey.md).
+The shared pitch canvas + audio engine that powers both the **Train tab** and **Journey** stages. This spec covers the shared elements. View-specific behaviour is in [Train Tab](./train-tab.md) and [Journey](./journey.md).
 
 ---
 
@@ -49,19 +43,18 @@ The app has two top-level views, selectable from the header:
 See [Pitch Canvas](./pitch-canvas.md) for full rendering spec.
 
 Summary:
-- 7 horizontal bands, one per chakra, coloured with chakra colour
+- Horizontal tone bands, colour-coded by frequency region
 - Log-scale Y axis (low frequencies at bottom, high at top)
 - Pitch dot trail scrolling left continuously (time-based, not index-based)
 - Live cursor dot drawn every frame (60fps)
-- Waveform ring around cursor dot — see [Audio Engine](./audio-engine.md)
 - In-tune band gets brighter fill + thicker centre line
-- Pitch readout overlay top-left: `{Hz}  → {Chakra} · {Hz}` (→ becomes ✓ when locked)
+- Pitch readout overlay top-left: `{Hz}  → {Tone} · {Hz}` (→ becomes ✓ when locked)
 
 ---
 
 ## Tone buttons (shared)
 
-One pill per chakra, Root → Crown, in the bottom panel.
+One pill per tone in the bottom panel.
 Playing/in-tune states as before. Tapping plays via the binaural audio engine.
 
 ---
