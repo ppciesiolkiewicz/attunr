@@ -19,9 +19,9 @@ export const PART_2_STAGES: JourneyStage[] = [
     title: "Low U",
     subtitle: "Chest voice · 6 seconds",
     technique: "sustain",
-    notes: [{ target: { kind: "range", from: 0, to: 2 }, seconds: 6 }],
+    notes: [{ target: { kind: "range", from: 0, to: 2, accept: "below" }, seconds: 6 }],
     instruction:
-      "Sing uuuu (as in 'moon') on a low tone. Keep it relaxed and steady. This warms up your lower register and grounds the voice.",
+      "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
   {
     id: 4,
@@ -30,7 +30,7 @@ export const PART_2_STAGES: JourneyStage[] = [
     title: "Hoo hoo",
     subtitle: "Head voice · 6 seconds",
     technique: "sustain",
-    notes: [{ target: { kind: "range", from: -3, to: -1 }, seconds: 6 }],
+    notes: [{ target: { kind: "range", from: -3, to: -1, accept: "above" }, seconds: 6 }],
     instruction:
       "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
   },
@@ -42,7 +42,7 @@ export const PART_2_STAGES: JourneyStage[] = [
     maxCount: 10,
     cardCue: "Calm your nervous system and build steady diaphragm control",
     instruction:
-      "Build diaphragm control and calm your nervous system — a favourite of singers and performers for centuries. Inhale, hold, and exhale for the same count; each cycle adds one. No pause between cycles.",
+      "Build diaphragm control and calm your nervous system — a favourite of singers and performers for centuries. Inhale, hold, and exhale for the same count — each cycle adds one beat, flowing straight into the next with no pause.",
   },
   {
     id: 6,

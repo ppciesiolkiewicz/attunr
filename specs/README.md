@@ -9,7 +9,6 @@ Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 | Spec | Description |
 | ---- | ----------- |
 | [App Overview](./app-overview.md) | Vision, scope, tone system, feature status |
-| [Language & Messaging](./language-and-messaging.md) | Tone of voice, terminology, approved copy |
 | [Practice View](./practice-view.md) | Shared pitch canvas + audio; navigation overview |
 | [Train Tab](./train-tab.md) | Free-form practice view |
 | [Journey](./journey.md) | Guided path — 49 stages, 9 parts |

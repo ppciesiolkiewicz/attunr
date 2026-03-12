@@ -14,4 +14,5 @@ src/
   data/           # In-app data (articles, etc.)
   types/          # TypeScript type declarations
 specs/            # Product and feature specs
+claude/rules/     # Language, messaging, and coding rules for AI guidance
 ```

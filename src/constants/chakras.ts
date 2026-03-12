@@ -415,6 +415,20 @@ export function isInTune(detectedHz: number, targetHz: number): boolean {
 
 /** Check if pitch is anywhere within the frequency range of the given bands. Uses ±10% buffer at edges for loose detection. */
 export function isInBandRange(detectedHz: number, bands: Band[]): boolean {
+  return matchesBandTarget(detectedHz, bands, "within");
+}
+
+/**
+ * Check if pitch matches a band target with optional accept mode.
+ * - within: pitch must be in the band range (±10% buffer)
+ * - below: accept any pitch at or below the target range (chest/low voice)
+ * - above: accept any pitch at or above the target range (head/high voice)
+ */
+export function matchesBandTarget(
+  detectedHz: number,
+  bands: Band[],
+  accept: "within" | "below" | "above" = "within"
+): boolean {
   if (bands.length === 0) return false;
   const freqs = bands.map((b) => b.frequencyHz);
   const minHz = Math.min(...freqs);
@@ -422,7 +436,14 @@ export function isInBandRange(detectedHz: number, bands: Band[]): boolean {
   const buffer = 0.1;
   const low = minHz * (1 - buffer);
   const high = maxHz * (1 + buffer);
-  return detectedHz >= low && detectedHz <= high;
+  switch (accept) {
+    case "below":
+      return detectedHz <= high;
+    case "above":
+      return detectedHz >= low;
+    default:
+      return detectedHz >= low && detectedHz <= high;
+  }
 }
 
 export function findClosestBand(hz: number, bands: Band[]): Band {

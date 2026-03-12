@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { findClosestBand, isInTune, pitchConfidence } from "@/constants/chakras";
+import {
+  findClosestBand,
+  isInTune,
+  matchesBandTarget,
+  pitchConfidence,
+} from "@/constants/chakras";
 import type { Band } from "@/constants/chakras";
 
 interface PitchDot {
@@ -9,12 +14,20 @@ interface PitchDot {
   ts: number; // performance.now() when captured — used for time-based scrolling
 }
 
+/** When set, use this instead of exact-pitch isInTune. E.g. "below" = chest voice (any tone low enough), "above" = head voice. */
+export type InTuneOverride = {
+  bands: Band[];
+  accept: "within" | "below" | "above";
+};
+
 interface PitchCanvasProps {
   bands: Band[];
   /** Ref updated synchronously by the pitch detection hook — no React latency */
   currentHzRef: React.RefObject<number | null>;
   /** When set, non-listed band IDs are dimmed (Journey mode) */
   highlightIds?: string[];
+  /** When set, use matchesBandTarget(hz, bands, accept) instead of isInTune. For chest/head exercises. */
+  inTuneOverride?: InTuneOverride;
   onBandClick?: (band: Band) => void;
   /** When true, show chakra name labels (e.g. "HEART CHAKRA") on chakra-slot bands. False = note + Hz only. */
   showChakraLabels?: boolean;
@@ -115,10 +128,23 @@ function hzToY(hz: number, bands: Band[], bottomY: number, topY: number): number
   return (bottomY + topY) / 2;
 }
 
+function checkInTune(
+  hz: number,
+  bands: Band[],
+  closest: Band,
+  override?: InTuneOverride
+): boolean {
+  if (override && override.bands.length > 0) {
+    return matchesBandTarget(hz, override.bands, override.accept);
+  }
+  return isInTune(hz, closest.frequencyHz);
+}
+
 export default function PitchCanvas({
   bands,
   currentHzRef,
   highlightIds,
+  inTuneOverride,
   onBandClick,
   showChakraLabels = false,
 }: PitchCanvasProps) {
@@ -127,6 +153,7 @@ export default function PitchCanvas({
   /** Kept sorted ascending by frequencyHz so index-based rendering is correct */
   const bandsRef = useRef<Band[]>([]);
   const highlightIdsRef = useRef<string[] | undefined>(highlightIds);
+  const inTuneOverrideRef = useRef<InTuneOverride | undefined>(inTuneOverride);
   const showChakraLabelsRef = useRef(showChakraLabels);
   const lastDotMs = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -145,6 +172,10 @@ export default function PitchCanvas({
   useEffect(() => {
     highlightIdsRef.current = highlightIds;
   }, [highlightIds]);
+
+  useEffect(() => {
+    inTuneOverrideRef.current = inTuneOverride;
+  }, [inTuneOverride]);
 
   useEffect(() => {
     showChakraLabelsRef.current = showChakraLabels;
@@ -201,11 +232,21 @@ export default function PitchCanvas({
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, W, H);
 
+    const override = inTuneOverrideRef.current;
+    const getInTune = (h: number) => {
+      const closest = findClosestBand(h, bands);
+      return checkInTune(h, bands, closest, override);
+    };
+
     // ── Bands + left labels ────────────────────────────────────────────────
     for (let i = 0; i < n; i++) {
       const band = bands[i]; // sorted low → high
       const cy = idxY(i);
-      const active = hz !== null && isInTune(hz, band.frequencyHz);
+      const active =
+        hz !== null &&
+        (override && override.bands.length > 0
+          ? getInTune(hz) && override.bands.some((b) => b.id === band.id)
+          : isInTune(hz, band.frequencyHz));
       const highlighted =
         !highlightIdsRef.current ||
         highlightIdsRef.current.includes(band.id);
@@ -281,7 +322,7 @@ export default function PitchCanvas({
       const r = DOT_RADIUS * (1 - ageFraction * 0.5);
       const y = hzToY(dot.hz, bands, bottomY, topY);
       const closest = findClosestBand(dot.hz, bands);
-      const inTune = isInTune(dot.hz, closest.frequencyHz);
+      const inTune = checkInTune(dot.hz, bands, closest, override);
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -300,7 +341,7 @@ export default function PitchCanvas({
     if (hz !== null) {
       const y = hzToY(hz, bands, bottomY, topY);
       const closest = findClosestBand(hz, bands);
-      const inTune = isInTune(hz, closest.frequencyHz);
+      const inTune = checkInTune(hz, bands, closest, override);
       const conf = pitchConfidence(hz, bands);
 
       const pulse = (Math.sin(now / 500) + 1) / 2;

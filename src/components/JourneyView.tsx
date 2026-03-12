@@ -23,8 +23,8 @@ import {
   BAND_ID_ORDER,
   getScaleNotesForRange,
   findClosestBand,
-  isInBandRange,
   isInTune,
+  matchesBandTarget,
 } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 
@@ -69,6 +69,24 @@ function resolveBandTarget(target: BandTarget, allBands: Band[]): Band[] {
   return [];
 }
 
+/** All 7 chakra colors ordered low → high (root red … crown purple). */
+const CHAKRA_COLORS = BAND_ID_ORDER.map(
+  (id) => CHAKRAS.find((c) => c.id === id)!.color,
+);
+
+/**
+ * Map a range target to chakra colors based on which portion of the vocal
+ * range it covers. Assumes ~14 notes in a typical scale.
+ */
+function rangeToColors(from: number, to: number): string[] {
+  const N = 14;
+  const lo = Math.min(from < 0 ? N + from : from, to < 0 ? N + to : to);
+  const hi = Math.max(from < 0 ? N + from : from, to < 0 ? N + to : to);
+  const fromSlot = Math.max(0, Math.floor((lo / (N - 1)) * 6));
+  const toSlot = Math.min(6, Math.ceil((hi / (N - 1)) * 6));
+  return CHAKRA_COLORS.slice(fromSlot, toSlot + 1);
+}
+
 /** Get display colors for a stage (for StageCard color strip). Uses static CHAKRAS. */
 function getStageDisplayColors(stage: JourneyStage): string[] {
   if (stage.stageTypeId === "pitch-detection") {
@@ -78,15 +96,19 @@ function getStageDisplayColors(stage: JourneyStage): string[] {
       if (t.kind === "slot") {
         const chakra = CHAKRAS.find((c) => c.id === BAND_ID_ORDER[t.n - 1]);
         if (chakra) colors.push(chakra.color);
+      } else if (t.kind === "range") {
+        colors.push(...rangeToColors(t.from, t.to));
       }
     }
     if (colors.length > 0) return colors;
-    return ["#7c3aed", "#6d28d9"];
+    return CHAKRA_COLORS;
   }
+  // Slides cover the full range → rainbow
   if (stage.stageTypeId === "pitch-detection-slide") {
-    return ["#7c3aed", "#6d28d9"];
+    return CHAKRA_COLORS;
   }
-  return ["#7c3aed"];
+  // Breathwork & intro → rainbow
+  return CHAKRA_COLORS;
 }
 
 /** Get the chakra for a single-slot stage (Part 9 mantra display). */
@@ -393,6 +415,7 @@ function JourneyList({
   return (
     <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
+        <h1 className="text-xl sm:text-2xl font-semibold text-white">Journey</h1>
         <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
           <p>
             This is where your journey begins. You&apos;ll be guided through
@@ -1035,11 +1058,12 @@ export function JourneyExercise({
 
       if (stage.stageTypeId === "pitch-detection" && stage.notes.length === 1) {
         const holdSeconds = stage.notes[0].seconds;
-        const targetBands = resolveBandTarget(stage.notes[0].target, allBands);
+        const target = stage.notes[0].target;
+        const targetBands = resolveBandTarget(target, allBands);
         const inTune =
           hz !== null &&
-          (stage.notes[0].target.kind === "range"
-            ? isInBandRange(hz, targetBands)
+          (target.kind === "range"
+            ? matchesBandTarget(hz, targetBands, target.accept ?? "within")
             : targetBands.some((t) => isInTune(hz, t.frequencyHz)));
         if (inTune) holdRef.current += dt;
         const p = holdRef.current / holdSeconds;
@@ -1195,10 +1219,14 @@ export function JourneyExercise({
     pitchHz && exerciseBands.length > 0
       ? findClosestBand(pitchHz, exerciseBands)
       : null;
+  const rangeAccept =
+    isRangeTarget && stage.notes[0].target.kind === "range"
+      ? stage.notes[0].target.accept ?? "within"
+      : "within";
   const locked =
     pitchHz && closestBand &&
     (isRangeTarget
-      ? isInBandRange(pitchHz, exerciseBands)
+      ? matchesBandTarget(pitchHz, exerciseBands, rangeAccept)
       : isInTune(pitchHz, closestBand.frequencyHz));
 
   return (
@@ -1307,6 +1335,11 @@ export function JourneyExercise({
           bands={allBands}
           currentHzRef={pitchHzRef}
           highlightIds={highlightIds}
+          inTuneOverride={
+            isRangeTarget && stage.notes[0].target.kind === "range"
+              ? { bands: exerciseBands, accept: rangeAccept }
+              : undefined
+          }
           showChakraLabels={stage.part === 9}
         />
 
@@ -1420,19 +1453,21 @@ export function JourneyExercise({
           </div>
         ) : (
           <>
-        {isCurrentStage && !stageComplete && stage.stageTypeId !== "pitch-detection-slide" && stage.stageTypeId !== "breathwork" && (
-          <div className="shrink-0 order-first sm:order-none">
-            <ProgressArc progress={progress} />
+        {stage.stageTypeId !== "breathwork" && stage.stageTypeId !== "intro" && (
+          <div className="shrink-0 order-first sm:order-none flex items-center gap-2">
+            <ProgressArc
+              progress={
+                stageComplete
+                  ? 1
+                  : stage.stageTypeId === "pitch-detection-slide"
+                    ? slideCount / 2
+                    : progress
+              }
+            />
+            {(stageComplete || isCompleted) && (
+              <span className="text-xl sm:text-2xl shrink-0" style={isCompleted ? { color: "rgba(255,255,255,0.48)" } : undefined}>✓</span>
+            )}
           </div>
-        )}
-        {isCurrentStage && !stageComplete && stage.stageTypeId === "pitch-detection-slide" && (
-          <div className="flex items-center gap-2 shrink-0 text-xs sm:text-sm text-white/55">
-            Slide {slideCount}/2
-          </div>
-        )}
-        {stageComplete && <span className="text-xl sm:text-2xl shrink-0">✓</span>}
-        {isCompleted && !isCurrentStage && (
-          <span className="text-sm sm:text-base text-white/48 shrink-0">Completed</span>
         )}
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">

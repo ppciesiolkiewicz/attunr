@@ -8,11 +8,12 @@ export type StageTypeId = "intro" | "pitch-detection" | "pitch-detection-slide" 
  * - slot: one of 7 evenly-spaced chakra reference points (n=1 lowest / root, n=7 highest / crown)
  * - index: 0-based position in allBands; negative counts from end (-1 = last note)
  * - range: inclusive index range (negative indices supported); used for loose detection exercises
+ *   - accept: "below" = any tone at or below the range (chest voice); "above" = any tone at or above (head voice)
  */
 export type BandTarget =
   | { kind: "slot"; n: 1 | 2 | 3 | 4 | 5 | 6 | 7 }
   | { kind: "index"; i: number }
-  | { kind: "range"; from: number; to: number };
+  | { kind: "range"; from: number; to: number; accept?: "within" | "below" | "above" };
 
 /** Config for a single sustained pitch — used in pitch-detection stages. */
 export type SustainNoteConfig = { target: BandTarget; seconds: number };

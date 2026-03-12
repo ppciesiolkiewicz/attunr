@@ -60,7 +60,78 @@ export const FARINELLI_ADVICES = [
 ];
 
 const FARINELLI_INSTRUCTIONS =
-  "Inhale, hold, and exhale for the same count. Each cycle adds one. No pause between cycles.";
+  "Inhale, hold, and exhale to the same count — each cycle adds one beat and flows straight into the next.";
+
+/** Unified progress ring + ticking count + tick sound. Reused for countdown (3,2,1) and breathe in/hold/out phases. */
+function TickingProgressCircle({
+  count,
+  durationSeconds,
+  secondsPerTick,
+  onTick,
+  textSize = "text-4xl",
+}: {
+  count: number;
+  durationSeconds: number;
+  secondsPerTick: number;
+  onTick: () => void;
+  textSize?: "text-4xl" | "text-6xl";
+}) {
+  const [displayCount, setDisplayCount] = useState(count);
+  const onTickRef = useRef(onTick);
+  onTickRef.current = onTick;
+
+  // Reset when count changes (new phase)
+  useEffect(() => {
+    setDisplayCount(count);
+  }, [count]);
+
+  // Tick sound on mount (initial count) and at each interval tick
+  useEffect(() => {
+    onTickRef.current();
+  }, []);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setDisplayCount((c) => {
+        const next = Math.max(1, c - 1);
+        if (next !== c) onTickRef.current();
+        return next;
+      });
+    }, secondsPerTick * 1000);
+    return () => clearInterval(id);
+  }, [secondsPerTick]);
+
+  return (
+    <div className="relative w-40 h-40 shrink-0">
+      <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
+        <circle
+          cx="50" cy="50" r="42"
+          fill="none"
+          stroke="rgba(255,255,255,0.1)"
+          strokeWidth="6"
+        />
+        <circle
+          key={durationSeconds}
+          cx="50" cy="50" r="42"
+          fill="none"
+          stroke="rgba(167,139,250,0.9)"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeDasharray={2 * Math.PI * 42}
+          strokeDashoffset={2 * Math.PI * 42}
+          style={{
+            animation: `farinelli-fill ${durationSeconds}s linear forwards`,
+          }}
+        />
+      </svg>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <span className={`${textSize} font-light tabular-nums text-white`}>
+          {displayCount}
+        </span>
+      </div>
+    </div>
+  );
+}
 
 export function FarinelliExercise({
   startCount = 4,
@@ -69,15 +140,15 @@ export function FarinelliExercise({
   onComplete,
 }: FarinelliExerciseProps) {
   const [status, setStatus] = useState<FarinelliStatus>("ready");
-  const [countdown, setCountdown] = useState(3);
   const [phase, setPhase] = useState<FarinelliPhase>("inhale");
   const [cycleCount, setCycleCount] = useState(startCount);
-  const [displayCount, setDisplayCount] = useState(startCount);
   const [isComplete, setIsComplete] = useState(false);
   const [adviceIndex, setAdviceIndex] = useState(0);
   const [shuffledAdvice, setShuffledAdvice] = useState<string[]>([]);
 
   const countdownTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const onCompleteRef = useRef(onComplete);
+  onCompleteRef.current = onComplete;
 
   useEffect(() => {
     return () => countdownTimers.current.forEach(clearTimeout);
@@ -86,13 +157,10 @@ export function FarinelliExercise({
   function handleStart() {
     setShuffledAdvice(shuffle(FARINELLI_ADVICES));
     setStatus("countdown");
-    setCountdown(3);
-    playCountdownClick();
-
     countdownTimers.current = [
-      setTimeout(() => { setCountdown(2); playCountdownClick(); }, 1000),
-      setTimeout(() => { setCountdown(1); playCountdownClick(); }, 2000),
-      setTimeout(() => { setStatus("running"); setDisplayCount(startCount); }, 3000),
+      setTimeout(() => {
+        setStatus("running");
+      }, 3000),
     ];
   }
 
@@ -101,31 +169,20 @@ export function FarinelliExercise({
   const advancePhase = useCallback(() => {
     if (phase === "inhale") {
       setPhase("hold");
-      setDisplayCount(cycleCount);
     } else if (phase === "hold") {
       setPhase("exhale");
-      setDisplayCount(cycleCount);
     } else {
       // exhale done — next cycle or complete
       if (cycleCount >= maxCount) {
         setStatus("complete");
         setIsComplete(true);
-        onComplete?.();
+        onCompleteRef.current?.();
         return;
       }
-      // Advance tip every 2 cycles (change less often)
-      const nextCycle = cycleCount + 1;
-      if ((nextCycle - startCount) % 2 === 0) {
-        setAdviceIndex((i) => {
-          const list = shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES;
-          return (i + 1) % list.length;
-        });
-      }
-      setCycleCount(nextCycle);
+      setCycleCount(cycleCount + 1);
       setPhase("inhale");
-      setDisplayCount(nextCycle);
     }
-  }, [phase, cycleCount, maxCount, onComplete, shuffledAdvice]);
+  }, [phase, cycleCount, maxCount]);
 
   // Phase timing: setTimeout to advance when duration elapses (independent from animation)
   useEffect(() => {
@@ -134,12 +191,18 @@ export function FarinelliExercise({
     return () => clearTimeout(id);
   }, [phase, phaseDuration, advancePhase, isComplete, status]);
 
-  // Count tick-down: independent interval during running
+  // Rotate tips with time during countdown and running
+  const TIP_ROTATE_SECONDS = 12;
   useEffect(() => {
-    if (isComplete || status !== "running") return;
-    const id = setInterval(() => setDisplayCount((c) => Math.max(1, c - 1)), secondsPerCount * 1000);
+    if (status !== "countdown" && status !== "running") return;
+    const id = setInterval(() => {
+      setAdviceIndex((i) => {
+        const list = shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES;
+        return (i + 1) % list.length;
+      });
+    }, TIP_ROTATE_SECONDS * 1000);
     return () => clearInterval(id);
-  }, [status, isComplete, secondsPerCount]);
+  }, [status, shuffledAdvice]);
 
   const phaseLabel =
     phase === "inhale"
@@ -197,17 +260,29 @@ export function FarinelliExercise({
   if (status === "ready" || status === "countdown") {
     return (
       <div className="flex flex-col items-center justify-center h-full gap-8 px-6">
-        <div className={`${topSlotMinH} w-full flex flex-col items-center justify-end`} />
-        <div className="shrink-0">
-          <CircleWrapper onClick={status === "ready" ? handleStart : undefined}>
-          {status === "ready" ? (
-            <span className="text-xl font-semibold text-white">Start</span>
-          ) : (
-            <span className="text-6xl font-light tabular-nums text-white">
-              {countdown > 0 ? countdown : ""}
-            </span>
+        <div className={`${topSlotMinH} w-full flex flex-col items-center justify-end text-center`}>
+          {status === "countdown" && (
+            <>
+              <p className="text-2xl font-medium text-white mb-1">Starting in</p>
+              <p className="text-white/55 text-sm">Get ready to breathe</p>
+            </>
           )}
-        </CircleWrapper>
+        </div>
+        <div className="shrink-0">
+          {status === "ready" ? (
+            <CircleWrapper onClick={handleStart}>
+              <span className="text-xl font-semibold text-white">Start</span>
+            </CircleWrapper>
+          ) : (
+            <TickingProgressCircle
+              key="countdown"
+              count={3}
+              durationSeconds={3}
+              secondsPerTick={1}
+              onTick={playCountdownClick}
+              textSize="text-6xl"
+            />
+          )}
         </div>
         <div className={`${bottomSlotMinH} flex flex-col items-center justify-start gap-2 min-w-[12rem] max-w-[300px] px-4 text-center`}>
           {status === "ready" ? (
@@ -247,43 +322,13 @@ export function FarinelliExercise({
         </p>
       </div>
 
-      {/* Progress ring */}
-      <div className="relative w-40 h-40 shrink-0">
-        <svg
-          className="w-full h-full -rotate-90"
-          viewBox="0 0 100 100"
-        >
-          <circle
-            cx="50"
-            cy="50"
-            r="42"
-            fill="none"
-            stroke="rgba(255,255,255,0.1)"
-            strokeWidth="6"
-          />
-          <circle
-            key={`${phase}-${cycleCount}`}
-            cx="50"
-            cy="50"
-            r="42"
-            fill="none"
-            stroke="rgba(167,139,250,0.9)"
-            strokeWidth="6"
-            strokeLinecap="round"
-            strokeDasharray={2 * Math.PI * 42}
-            strokeDashoffset={2 * Math.PI * 42}
-            style={{
-              animation: `farinelli-fill ${phaseDuration}s linear forwards`,
-              animationTimingFunction: "linear",
-            }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-4xl font-light tabular-nums text-white">
-            {displayCount}
-          </span>
-        </div>
-      </div>
+      <TickingProgressCircle
+        key={`${phase}-${cycleCount}`}
+        count={cycleCount}
+        durationSeconds={phaseDuration}
+        secondsPerTick={secondsPerCount}
+        onTick={playCountdownClick}
+      />
 
       <div className={`${bottomSlotMinH} flex flex-col items-center justify-start max-w-[280px]`}>
         <p className="text-xs text-white/55 text-center">
