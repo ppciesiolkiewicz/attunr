@@ -69,12 +69,15 @@ function TickingProgressCircle({
   secondsPerTick,
   onTick,
   textSize = "text-4xl",
+  phase,
 }: {
   count: number;
   durationSeconds: number;
   secondsPerTick: number;
   onTick: () => void;
   textSize?: "text-4xl" | "text-6xl";
+  /** When provided (inhale/hold/exhale), circle inflates, holds, or deflates. Countdown has no phase. */
+  phase?: FarinelliPhase;
 }) {
   const [displayCount, setDisplayCount] = useState(count);
   const onTickRef = useRef(onTick);
@@ -101,36 +104,54 @@ function TickingProgressCircle({
     return () => clearInterval(id);
   }, [secondsPerTick]);
 
-  return (
-    <div className="relative w-40 h-40 shrink-0">
-      <svg className="w-full h-full -rotate-90" viewBox="0 0 100 100">
-        <circle
-          cx="50" cy="50" r="42"
-          fill="none"
-          stroke="rgba(255,255,255,0.1)"
-          strokeWidth="6"
-        />
-        <circle
-          key={durationSeconds}
-          cx="50" cy="50" r="42"
-          fill="none"
-          stroke="rgba(167,139,250,0.9)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeDasharray={2 * Math.PI * 42}
-          strokeDashoffset={2 * Math.PI * 42}
-          style={{
-            animation: `farinelli-fill ${durationSeconds}s linear forwards`,
-          }}
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className={`${textSize} font-light tabular-nums text-white`}>
-          {displayCount}
-        </span>
+  const scaleAnim =
+    phase === "inhale" ? "farinelli-inflate" : phase === "hold" ? "farinelli-hold" : phase === "exhale" ? "farinelli-deflate" : null;
+
+  const content = (
+    <div className="relative w-40 h-40 shrink-0 flex items-center justify-center">
+      <div
+        className="relative w-40 h-40"
+        style={
+          scaleAnim
+            ? {
+                animation: `${scaleAnim} ${durationSeconds}s ease-in-out both`,
+                transformOrigin: "center",
+                willChange: "transform",
+              }
+            : undefined
+        }
+      >
+        <svg className="w-full h-full -rotate-90 block" viewBox="0 0 100 100">
+          <circle
+            cx="50" cy="50" r="42"
+            fill="none"
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth="6"
+          />
+          <circle
+            key={durationSeconds}
+            cx="50" cy="50" r="42"
+            fill="none"
+            stroke="rgba(167,139,250,0.9)"
+            strokeWidth="6"
+            strokeLinecap="round"
+            strokeDasharray={2 * Math.PI * 42}
+            strokeDashoffset={2 * Math.PI * 42}
+            style={{
+              animation: `farinelli-fill ${durationSeconds}s linear forwards`,
+            }}
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`${textSize} font-light tabular-nums text-white`}>
+            {displayCount}
+          </span>
+        </div>
       </div>
     </div>
   );
+
+  return content;
 }
 
 export function FarinelliExercise({
@@ -204,12 +225,13 @@ export function FarinelliExercise({
     return () => clearInterval(id);
   }, [status, shuffledAdvice]);
 
+  const phaseDurationSeconds = Math.floor(phaseDuration);
   const phaseLabel =
     phase === "inhale"
-      ? "Breathe in"
+      ? `Breathe in for ${phaseDurationSeconds}s`
       : phase === "hold"
-        ? "Hold"
-        : "Breathe out";
+        ? `Hold for ${phaseDurationSeconds}s`
+        : `Breathe out for ${phaseDurationSeconds}s`;
 
   const circleSize = 40;
 
@@ -264,7 +286,7 @@ export function FarinelliExercise({
           {status === "countdown" && (
             <>
               <p className="text-2xl font-medium text-white mb-1">Starting in</p>
-              <p className="text-white/55 text-sm">Get ready to breathe</p>
+              <p className="text-white/55 text-sm">Exhale all the air and get ready for inhale</p>
             </>
           )}
         </div>
@@ -281,6 +303,7 @@ export function FarinelliExercise({
               secondsPerTick={1}
               onTick={playCountdownClick}
               textSize="text-6xl"
+              phase="exhale"
             />
           )}
         </div>
@@ -328,6 +351,7 @@ export function FarinelliExercise({
         durationSeconds={phaseDuration}
         secondsPerTick={secondsPerCount}
         onTick={playCountdownClick}
+        phase={phase}
       />
 
       <div className={`${bottomSlotMinH} flex flex-col items-center justify-start max-w-[280px]`}>
