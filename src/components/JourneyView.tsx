@@ -586,14 +586,11 @@ function ExerciseInfoModal({
 
         {/* Scrollable content */}
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1 min-h-0">
-          {/* Chakra detail — only for slot targets, skip for lip-roll sequences */}
-          {!isTechniqueIntro &&
+          {/* Chakra detail — only Part 9 (the chakra-specific part) */}
+          {stage.part === 9 &&
+            !isTechniqueIntro &&
             chakraIds.length > 0 &&
-            stage.stageTypeId !== "breathwork" &&
-            !(
-              stage.technique === "lip-rolls" &&
-              (stage.stageTypeId === "pitch-detection-slide" || isMultiNote)
-            ) && (
+            stage.stageTypeId !== "breathwork" && (
               <ChakraDetailCard
                 chakraIds={chakraIds}
                 frequencyOverrides={freqOverrides}

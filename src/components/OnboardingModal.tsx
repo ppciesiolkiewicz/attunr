@@ -5,7 +5,8 @@ import { hzToNoteName, deriveVoiceType } from "@/constants/chakras";
 import type { VoiceTypeId } from "@/constants/chakras";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
-const HOLD_SECONDS = 3;
+const HOLD_SECONDS_LOW = 2;
+const HOLD_SECONDS_HIGH = 1.5;
 const CHAKRA_COLORS = ["#ef4444","#f97316","#eab308","#22c55e","#3b82f6","#6366f1","#a855f7"];
 
 function Spinner() {
@@ -87,7 +88,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
         holdTimeRef.current = Math.max(0, holdTimeRef.current - dt * 2);
       }
 
-      const p = holdTimeRef.current / HOLD_SECONDS;
+      const holdTarget = phase === "detect-low" ? HOLD_SECONDS_LOW : HOLD_SECONDS_HIGH;
+      const p = holdTimeRef.current / holdTarget;
       setHoldProgress(Math.min(p, 1));
 
       if (p >= 1) {
@@ -249,8 +251,8 @@ export default function OnboardingModal({ pitchHz, status, onBegin, onRetryMic }
               </p>
               <p className="text-sm text-white/55 mt-1 leading-relaxed">
                 {detectingLow
-                  ? "Feel the vibration in your chest and belly. Hold for 3 seconds."
-                  : "Feel it in your head and face. Hold for 3 seconds."}
+                  ? "Feel the vibration in your chest and belly. Hold for 2 seconds."
+                  : "Feel it in your head and face. Just a moment."}
               </p>
             </div>
 

@@ -56,7 +56,7 @@ export const PART_4_STAGES: JourneyStage[] = [
       { target: { kind: "slot", n: 6 }, seconds: 2 },
     ],
     instruction:
-      "Three tones rising from mid range upward.\nLet the tones lift naturally.\nFeel the resonance move toward the head.",
+      "Three tones rising from mid range upward.\nLet the tones lift naturally.\nKeep it smooth and connected.",
   },
   {
     id: 22,
@@ -69,7 +69,7 @@ export const PART_4_STAGES: JourneyStage[] = [
       { target: { kind: "slot", n: 7 }, seconds: 2 },
     ],
     instruction:
-      "Two high tones.\nStay gentle as you move into the upper register.\nFeel the sound lift toward the crown.",
+      "Two high tones.\nStay gentle as you move into the upper register.\nKeep it light as you go higher.",
   },
   {
     id: 23,
