@@ -408,9 +408,13 @@ export function getScaleNotesForRange(
 
 // ── Pitch utilities ───────────────────────────────────────────────────────────
 
-/** ±3% tolerance — roughly ±50 cents */
-export function isInTune(detectedHz: number, targetHz: number): boolean {
-  return Math.abs(detectedHz - targetHz) / targetHz <= 0.03;
+/** ±3% tolerance by default — roughly ±50 cents. Pass tolerance for looser detection (e.g. 0.08 for lip rolls). */
+export function isInTune(
+  detectedHz: number,
+  targetHz: number,
+  tolerance: number = 0.03
+): boolean {
+  return Math.abs(detectedHz - targetHz) / targetHz <= tolerance;
 }
 
 /** Check if pitch is anywhere within the frequency range of the given bands. Uses ±10% buffer at edges for loose detection. */

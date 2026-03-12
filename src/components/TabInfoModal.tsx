@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Button, CloseButton, Modal } from "@/components/ui";
 
 interface TabInfoModalProps {
   title: string;
@@ -89,30 +90,15 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
   const [persist, setPersist] = useState(false);
 
   return (
-    <div
-      className="fixed inset-0 z-20 flex items-end sm:items-center justify-center p-4"
-      style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(8px)" }}
-      onClick={() => onClose(persist)}
+    <Modal
+      onBackdropClick={() => onClose(persist)}
+      style={{ zIndex: 20, background: "rgba(0,0,0,0.72)" }}
+      panelStyle={{ maxHeight: "88vh" }}
     >
-      <div
-        className="w-full max-w-md rounded-2xl overflow-hidden flex flex-col"
-        style={{
-          background: "#0f0f1a",
-          border: "1px solid rgba(255,255,255,0.1)",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
-          maxHeight: "88vh",
-        }}
-        onClick={(e) => e.stopPropagation()}
-      >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
           <h2 className="text-lg font-semibold text-white">{title}</h2>
-          <button
-            onClick={() => onClose(persist)}
-            className="text-white/42 hover:text-white/75 transition-colors text-xl leading-none"
-          >
-            ✕
-          </button>
+          <CloseButton onClick={() => onClose(persist)} />
         </div>
 
         {/* Scrollable content */}
@@ -134,18 +120,10 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
             </span>
           </label>
 
-          <button
-            onClick={() => onClose(persist)}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white shrink-0 transition-all"
-            style={{
-              background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
-              boxShadow: "0 0 16px rgba(124,58,237,0.3)",
-            }}
-          >
+          <Button onClick={() => onClose(persist)} className="shrink-0">
             Got it
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+    </Modal>
   );
 }

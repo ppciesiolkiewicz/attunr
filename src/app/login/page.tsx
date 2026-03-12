@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui";
 import { analytics } from "@/lib/analytics";
 
 type Step = "email" | "code";
@@ -92,25 +93,17 @@ export default function LoginPage() {
               />
             </label>
             {error && <p className="text-sm text-red-400">{error}</p>}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 rounded-lg bg-violet-600 text-white font-medium hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
+            <Button variant="secondary" type="submit" disabled={loading} className="w-full py-3">
               {loading ? "Sending…" : "Send code"}
-            </button>
+            </Button>
           </form>
         ) : (
           <form onSubmit={handleVerify} className="space-y-4">
             <p className="text-sm text-white/55">
               Code sent to <span className="text-white/80">{email}</span>
-              <button
-                type="button"
-                onClick={() => setStep("email")}
-                className="ml-2 text-violet-400 hover:text-violet-300"
-              >
+              <Button variant="ghost" type="button" onClick={() => setStep("email")} className="ml-2 text-violet-400 hover:text-violet-300">
                 Change
-              </button>
+              </Button>
             </p>
             <label className="block">
               <span className="text-sm text-white/55">6-digit code</span>
@@ -132,20 +125,12 @@ export default function LoginPage() {
               </p>
             )}
             {error && <p className="text-sm text-red-400">{error}</p>}
-            <button
-              type="submit"
-              disabled={loading || code.length !== 6}
-              className="w-full py-3 rounded-lg bg-violet-600 text-white font-medium hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
+            <Button variant="secondary" type="submit" disabled={loading || code.length !== 6} className="w-full py-3">
               {loading ? "Verifying…" : "Verify"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setStep("email")}
-              className="w-full py-2 text-sm text-white/45 hover:text-white/70"
-            >
+            </Button>
+            <Button variant="ghost" type="button" onClick={() => setStep("email")} className="w-full py-2 text-sm text-white/45 hover:text-white/70">
               Use a different email
-            </button>
+            </Button>
           </form>
         )}
 

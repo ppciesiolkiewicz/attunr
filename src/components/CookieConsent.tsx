@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui";
 
 const EU_COUNTRY_CODES = new Set([
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
@@ -86,22 +87,12 @@ export default function CookieConsent() {
           </Link>
         </p>
         <div className="flex items-center gap-2 shrink-0">
-          <button
-            onClick={handleDecline}
-            className="px-4 py-2 text-sm font-medium text-white/60 hover:text-white/80 transition-colors"
-          >
+          <Button variant="ghost" size="sm" onClick={handleDecline}>
             Decline
-          </button>
-          <button
-            onClick={handleAccept}
-            className="px-4 py-2 text-sm font-medium rounded-lg text-white transition-colors"
-            style={{
-              background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
-              boxShadow: "0 0 12px rgba(124,58,237,0.3)",
-            }}
-          >
+          </Button>
+          <Button size="sm" onClick={handleAccept}>
             Accept
-          </button>
+          </Button>
         </div>
       </div>
     </div>

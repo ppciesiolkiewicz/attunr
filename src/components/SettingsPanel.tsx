@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Button, CloseButton } from "@/components/ui";
 import { TUNING_OPTIONS, hzToNoteName } from "@/constants/chakras";
 import { analytics } from "@/lib/analytics";
 import type { Settings } from "@/hooks/useSettings";
@@ -56,12 +57,7 @@ export default function SettingsPanel({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <span className="text-base font-semibold text-white/90">Settings</span>
-          <button
-            onClick={onClose}
-            className="transition-colors text-xl leading-none text-white/55 hover:text-white/80"
-          >
-            ✕
-          </button>
+          <CloseButton onClick={onClose} />
         </div>
 
         <div className="flex flex-col gap-7 px-6 py-6 flex-1">
@@ -93,12 +89,9 @@ export default function SettingsPanel({
             ) : (
               <p className="text-sm text-white/55">Not yet detected</p>
             )}
-            <button
-              onClick={onRedetect}
-              className="text-sm text-violet-400/75 hover:text-violet-400 transition-colors text-left"
-            >
+            <Button variant="ghost" onClick={onRedetect} className="text-sm text-violet-400/75 hover:text-violet-400 text-left">
               Re-detect my range →
-            </button>
+            </Button>
           </Section>
 
           <div className="h-px bg-white/[0.06]" />

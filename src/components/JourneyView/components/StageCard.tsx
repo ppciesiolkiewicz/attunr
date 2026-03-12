@@ -1,0 +1,135 @@
+"use client";
+
+import {
+  getStageDisplayColors,
+  getStageSlotChakra,
+} from "../utils";
+import { BookIcon } from "./BookIcon";
+import type { JourneyStage } from "@/constants/journey";
+
+interface StageCardProps {
+  stage: JourneyStage;
+  highestCompleted: number;
+  onSelect: (id: number) => void;
+}
+
+export function StageCard({
+  stage,
+  highestCompleted,
+  onSelect,
+}: StageCardProps) {
+  const isComplete = stage.id <= highestCompleted;
+  const isCurrent = stage.id === highestCompleted + 1;
+  const isUnlocked = stage.id <= highestCompleted + 1;
+
+  const stageColors = getStageDisplayColors(stage);
+  const primaryColor = stageColors[0] ?? "#7c3aed";
+  const slotChakra = getStageSlotChakra(stage);
+
+  return (
+    <button
+      onClick={() => isUnlocked && onSelect(stage.id)}
+      disabled={!isUnlocked}
+      className="w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
+      style={{
+        borderColor: !isUnlocked
+          ? "rgba(255,255,255,0.12)"
+          : isCurrent
+            ? `${primaryColor}50`
+            : "rgba(255,255,255,0.08)",
+        backgroundColor: isCurrent
+          ? `${primaryColor}12`
+          : "rgba(255,255,255,0.05)",
+        opacity: !isUnlocked ? 0.58 : 1,
+        cursor: !isUnlocked ? "not-allowed" : "pointer",
+      }}
+    >
+      <div
+        className="w-[3px] shrink-0"
+        style={{
+          background:
+            stageColors.length === 1
+              ? primaryColor
+              : `linear-gradient(to bottom, ${stageColors.join(", ")})`,
+          opacity: !isUnlocked ? 0.65 : 1,
+        }}
+      />
+
+      <div className="flex-1 px-3.5 py-3 min-w-0">
+        <div className="flex items-baseline justify-between gap-2 mb-1.5">
+          <span
+            className="text-base font-semibold flex items-center gap-1.5"
+            style={{
+              color: !isUnlocked
+                ? "rgba(255,255,255,0.65)"
+                : "rgba(255,255,255,0.95)",
+            }}
+          >
+            {stage.stageTypeId === "intro" && (
+              <BookIcon
+                className="shrink-0 opacity-70"
+                style={{
+                  color: isUnlocked
+                    ? "rgba(255,255,255,0.6)"
+                    : "rgba(255,255,255,0.45)",
+                }}
+              />
+            )}
+            {stage.title}
+          </span>
+        </div>
+
+        {slotChakra &&
+          stage.part === 9 &&
+          stage.stageTypeId === "pitch-detection" &&
+          stage.technique !== "lip-rolls" && (
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span
+                className="text-xs font-mono font-medium tracking-wider"
+                style={{
+                  color: isUnlocked
+                    ? `${primaryColor}`
+                    : "rgba(255,255,255,0.55)",
+                }}
+              >
+                {slotChakra.mantra}
+              </span>
+              <span className="text-xs text-white/48">·</span>
+              <span className="text-xs text-white/62">
+                {slotChakra.element}
+              </span>
+              <span className="text-xs text-white/48">·</span>
+              <span className="text-xs text-white/68">
+                {slotChakra.description}
+              </span>
+            </div>
+          )}
+        {stage.stageTypeId === "intro" && stage.cardCue && (
+          <p className="text-xs text-white/58">
+            {stage.cardCue}
+          </p>
+        )}
+        {stage.stageTypeId === "breathwork" && stage.cardCue && (
+          <p className="text-xs text-white/58">{stage.cardCue}</p>
+        )}
+        {(stage.stageTypeId === "pitch-detection" || stage.stageTypeId === "pitch-detection-slide") && stage.subtitle && (
+          <p className="text-xs text-white/58">{stage.subtitle}</p>
+        )}
+      </div>
+
+      <div className="flex items-center px-3.5">
+        {isComplete ? (
+          <span className="text-sm" style={{ color: primaryColor }}>
+            ✓
+          </span>
+        ) : !isUnlocked ? (
+          <span className="text-sm text-white/55">⋯</span>
+        ) : (
+          <span className="text-base text-white/42 group-hover:text-white/72 transition-colors">
+            ›
+          </span>
+        )}
+      </div>
+    </button>
+  );
+}

@@ -169,7 +169,9 @@ export function FarinelliExercise({
 
   const countdownTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const onCompleteRef = useRef(onComplete);
+  const maxCountRef = useRef(maxCount);
   onCompleteRef.current = onComplete;
+  maxCountRef.current = maxCount;
 
   useEffect(() => {
     return () => countdownTimers.current.forEach(clearTimeout);
@@ -193,8 +195,9 @@ export function FarinelliExercise({
     } else if (phase === "hold") {
       setPhase("exhale");
     } else {
-      // exhale done — next cycle or complete
-      if (cycleCount >= maxCount) {
+      // exhale done — next cycle or complete (use ref to avoid stale closure)
+      const max = maxCountRef.current;
+      if (cycleCount >= max) {
         setStatus("complete");
         setIsComplete(true);
         onCompleteRef.current?.();
@@ -203,7 +206,7 @@ export function FarinelliExercise({
       setCycleCount(cycleCount + 1);
       setPhase("inhale");
     }
-  }, [phase, cycleCount, maxCount]);
+  }, [phase, cycleCount]);
 
   // Phase timing: setTimeout to advance when duration elapses (independent from animation)
   useEffect(() => {
