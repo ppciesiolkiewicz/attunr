@@ -40,6 +40,8 @@ export default function OnboardingModal({
   const lastTickRef = useRef(0);
   const lastPitchTimeRef = useRef(0);
   const rafRef = useRef<number | null>(null);
+  const detectedHighHzRef = useRef(detectedHighHz);
+  detectedHighHzRef.current = detectedHighHz;
 
   const isError = status === "error";
   const isListening = status === "listening";
@@ -84,7 +86,7 @@ export default function OnboardingModal({
 
           if (phase === "detect-low") {
             setDetectedLowHz(Math.round(median));
-            setPhase("detect-high");
+            setPhase(detectedHighHzRef.current !== null ? "result" : "detect-high");
           } else {
             setDetectedHighHz(Math.round(median));
             setPhase("result");
