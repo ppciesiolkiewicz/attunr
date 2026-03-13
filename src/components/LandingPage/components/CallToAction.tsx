@@ -18,7 +18,7 @@ export function CallToAction() {
           Your voice is already the instrument.
         </p>
         <p className="text-xl sm:text-2xl md:text-3xl text-white/45 leading-snug mb-12">
-          Attunr shows you how to play it.
+          attunr shows you how to play it.
         </p>
 
         <Link href="/journey">

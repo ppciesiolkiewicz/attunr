@@ -50,8 +50,7 @@ export function Hero() {
         </h1>
 
         <p className="text-lg sm:text-xl text-white/60 leading-relaxed max-w-md mb-12">
-          One long exhale on a low hum can shift your entire nervous system.
-          Attunr turns that into a practice.
+          You already know how this feels. We just gave it a path.
         </p>
 
         <Link href="/journey">

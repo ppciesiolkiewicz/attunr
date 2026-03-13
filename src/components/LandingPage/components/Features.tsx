@@ -2,9 +2,9 @@ const FEATURES = [
   {
     color: "#a855f7",
     glow: "rgba(168,85,247,0.15)",
-    title: "Calm arrives fast",
+    title: "Singing just feels good",
     description:
-      "A single sustained tone activates your vagus nerve. Within seconds, your breathing slows and your body settles.",
+      "You already know this. A long hum, a melody in the shower \u2014 your body relaxes. attunr just gives that a structure.",
   },
   {
     color: "#6366f1",
@@ -34,7 +34,7 @@ export function Features() {
     <section className="landing-section px-6 py-16 sm:py-20">
       <div className="max-w-4xl mx-auto">
         <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3 font-medium">
-          What happens when you hum
+          You already know this
         </p>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-14">
           The reset your body already knows
