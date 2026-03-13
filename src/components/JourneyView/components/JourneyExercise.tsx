@@ -491,6 +491,15 @@ export function JourneyExercise({
         </div>
       ) : (
       <div className="relative flex-1 min-h-0">
+        {/* Brief instruction cue — sits in a shared row with the pitch overlay on mobile */}
+        {!(pitchHz !== null) && (
+          <div className="absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12">
+            <p className="text-xs text-white/50 text-center leading-snug max-w-[320px]">
+              {stage.instruction.split("\n")[0]}
+            </p>
+          </div>
+        )}
+
         {stage.stageTypeId === "pitch-detection" && stage.notes.length === 1 ? (
           <BalanceBallCanvas
             bands={exerciseBands}
@@ -526,48 +535,53 @@ export function JourneyExercise({
           </div>
         )}
 
-        {/* Pitch overlay */}
+        {/* Pitch overlay + instruction in a shared row */}
         {pitchHz !== null && (
-          <div className="pointer-events-none absolute top-3 left-4 fade-in">
-            {isRangeTarget ? (
-              <>
-                <div
-                  className="text-2xl font-light"
-                  style={{ color: closestBand?.color ?? "#fff" }}
-                >
-                  {locked ? "✓ " : ""}
-                  {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
-                </div>
-                {!locked && (
-                  <div className="text-sm mt-1 text-white/55">
-                    {rangeAccept === "below" ? "↑ Too high" : rangeAccept === "above" ? "↓ Too low" : ""}
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div
-                  className="text-3xl font-light tabular-nums"
-                  style={{ color: closestBand?.color ?? "#fff" }}
-                >
-                  {Math.round(pitchHz)} Hz
-                </div>
-                {closestBand && (
+          <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
+            <div className="shrink-0">
+              {isRangeTarget ? (
+                <>
                   <div
-                    className="text-sm mt-0.5"
-                    style={{ color: `${closestBand.color}cc` }}
+                    className="text-2xl font-light"
+                    style={{ color: closestBand?.color ?? "#fff" }}
                   >
-                    {locked ? "✓ " : "→ "}
-                    {closestBand.name}
+                    {locked ? "✓ " : ""}
+                    {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
                   </div>
-                )}
-                {!locked && targetBand && (
-                  <div className="text-sm mt-1 text-white/55">
-                    {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
+                  {!locked && (
+                    <div className="text-sm mt-1 text-white/55">
+                      {rangeAccept === "below" ? "↑ Too high" : rangeAccept === "above" ? "↓ Too low" : ""}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div
+                    className="text-3xl font-light tabular-nums"
+                    style={{ color: closestBand?.color ?? "#fff" }}
+                  >
+                    {Math.round(pitchHz)} Hz
                   </div>
-                )}
-              </>
-            )}
+                  {closestBand && (
+                    <div
+                      className="text-sm mt-0.5"
+                      style={{ color: `${closestBand.color}cc` }}
+                    >
+                      {locked ? "✓ " : "→ "}
+                      {closestBand.name}
+                    </div>
+                  )}
+                  {!locked && targetBand && (
+                    <div className="text-sm mt-1 text-white/55">
+                      {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+            <p className="text-xs text-white/50 text-right leading-snug max-w-50">
+              {stage.instruction.split("\n")[0]}
+            </p>
           </div>
         )}
 
