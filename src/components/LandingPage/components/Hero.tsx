@@ -3,9 +3,9 @@ import Logo from "@/components/Logo";
 import { Button } from "@/components/ui";
 
 const RING_COLORS = [
-  "rgba(139,92,246,0.30)",
-  "rgba(99,102,241,0.20)",
-  "rgba(59,130,246,0.12)",
+  "rgba(139,92,246,0.45)",
+  "rgba(99,102,241,0.32)",
+  "rgba(59,130,246,0.20)",
 ];
 
 export function Hero() {
@@ -17,7 +17,7 @@ export function Hero() {
         style={{
           background:
             "radial-gradient(circle, rgba(139,92,246,0.12) 0%, rgba(99,102,241,0.06) 35%, transparent 65%)",
-          animation: "landing-breathe 6s ease-in-out infinite",
+          animation: "landing-breathe 4s ease-in-out infinite",
         }}
       />
 
@@ -30,8 +30,8 @@ export function Hero() {
             width: `${280 + i * 160}px`,
             height: `${280 + i * 160}px`,
             borderColor: color,
-            animation: `landing-ring-pulse ${3 + i * 0.8}s ease-out infinite`,
-            animationDelay: `${i * 0.6}s`,
+            animation: `landing-ring-pulse ${2 + i * 0.5}s ease-out infinite`,
+            animationDelay: `${i * 0.4}s`,
           }}
         />
       ))}
