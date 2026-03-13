@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import confetti from "canvas-confetti";
 import PitchCanvas from "../../PitchCanvas";
 import BalanceBallCanvas from "../../BalanceBallCanvas";
 import { FarinelliExercise } from "../../FarinelliExercise";
@@ -122,9 +123,19 @@ export function JourneyExercise({
     tip: string;
   } | null>(null);
   const [showInfoModal, setShowInfoModal] = useState(false);
+  const [showCongrats, setShowCongrats] = useState(false);
   const [isTonePlaying, setIsTonePlaying] = useState(false);
   const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const rafRef = useRef<number | null>(null);
+
+  // Fire confetti + show "Congratulations" when exercise hits 100%
+  useEffect(() => {
+    if (!stageComplete) return;
+    setShowCongrats(true);
+    confetti({ particleCount: 80, spread: 70, origin: { y: 0.45 } });
+    const id = setTimeout(() => setShowCongrats(false), 2400);
+    return () => clearTimeout(id);
+  }, [stageComplete]);
 
   // Auto-show info modal before exercise (breathwork always; others unless user skipped)
   useEffect(() => {
@@ -500,6 +511,17 @@ export function JourneyExercise({
             }
             showChakraLabels={stage.part === 9}
           />
+        )}
+
+        {/* Completion checkmark overlay */}
+        {showCongrats && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
+            <div className="congrats-appear flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+          </div>
         )}
 
         {/* Pitch overlay */}
