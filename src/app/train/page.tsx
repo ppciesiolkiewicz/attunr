@@ -1,5 +1,7 @@
 import TrainPage from "./TrainPage";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Train",
 };
