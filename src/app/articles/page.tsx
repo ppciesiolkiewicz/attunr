@@ -4,7 +4,7 @@ import { ARTICLES } from "@/data/articles";
 export const metadata = {
   title: "Articles",
   description:
-    "How sound moves through your body — reads on breathwork, resonance, vocal warmups, and the science behind somatic regulation.",
+    "Why humming calms you down, how breath and voice regulate your nervous system, and the science behind somatic vocal practice.",
 };
 
 export default function ArticlesPage() {

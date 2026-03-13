@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Train",
   description:
-    "Open practice — pick a tone, sing, and feel where it lands in your body.",
+    "Feel your voice in your body. Real-time vocal practice that calms your nervous system — not singing lessons, a body practice that uses sound.",
 };
 
 export default function Train() {
