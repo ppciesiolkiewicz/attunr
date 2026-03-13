@@ -68,7 +68,7 @@ export function ExerciseInfoModal({
       : stage.stageTypeId === "pitch-detection" && !isMultiNote
         ? `Hold the tone in tune for ${noteTime} seconds`
         : stage.stageTypeId === "pitch-detection-slide"
-          ? "Slide smoothly through the range two or three times — detection is loose"
+          ? "Slide smoothly through the range two or three times"
           : `Sing each tone in sequence, ${noteTime} seconds each`;
 
   function handleBegin() {
@@ -224,6 +224,11 @@ export function ExerciseInfoModal({
                 ))}
               </div>
               {isTechniqueIntro && <VideoPlaceholder />}
+              {!isTechniqueIntro && stage.technique === "lip-rolls" && (
+                <p className="text-sm text-white/50 leading-relaxed">
+                  Lip rolls are tricky for microphone detection — don&apos;t worry if progress is slow. Feel free to skip when you feel you&apos;ve got it.
+                </p>
+              )}
             </>
           )}
 

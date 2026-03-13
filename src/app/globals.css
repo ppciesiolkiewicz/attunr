@@ -94,6 +94,14 @@ body {
   100% { opacity: 0; transform: translateY(-4px) scale(1.03); }
 }
 .congrats-appear { animation: congrats-appear 2.4s ease-out forwards; }
+
+@keyframes step-check-appear {
+  0%   { opacity: 0; transform: scale(0.7); }
+  20%  { opacity: 1; transform: scale(1.05); }
+  50%  { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
+.step-check-appear { animation: step-check-appear 0.7s ease-out forwards; }
 .spin             { animation: spin 0.9s linear infinite; }
 
 /* ── Landing page ───────────────────────────────────────────────────────── */

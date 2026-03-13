@@ -15,7 +15,7 @@ import { PartCompleteModal } from "./PartCompleteModal";
 import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES, isLastStageOfPart, PART_COMPLETE_CONTENT, PART_TITLES } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
-import { findClosestBand, isInTune, matchesBandTarget } from "@/lib/pitch";
+import { findClosestBand, isInTune, lipRollCredit, matchesBandTarget } from "@/lib/pitch";
 import type { Band } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 
@@ -122,10 +122,12 @@ export function JourneyExercise({
   const lastTickRef = useRef(0);
   const slideCountRef = useRef(0);
   const slideLastZoneRef = useRef<"high" | "low" | null>(null);
+  const noteTransitionTimeRef = useRef(0);
   const [progress, setProgress] = useState(0);
   const [seqIndex, setSeqIndex] = useState(0);
   const [slideCount, setSlideCount] = useState(0);
   const [stageComplete, setStageComplete] = useState(false);
+  const [showStepCheck, setShowStepCheck] = useState(false);
   const [partCompleteData, setPartCompleteData] = useState<{
     part: number;
     partName: string;
@@ -177,6 +179,8 @@ export function JourneyExercise({
     lastTickRef.current = 0;
     slideCountRef.current = 0;
     slideLastZoneRef.current = null;
+    noteTransitionTimeRef.current = 0;
+    setShowStepCheck(false);
     if (toneTimeoutRef.current) {
       clearTimeout(toneTimeoutRef.current);
       toneTimeoutRef.current = null;
@@ -210,13 +214,19 @@ export function JourneyExercise({
         const holdSeconds = stage.notes[0].seconds;
         const target = stage.notes[0].target;
         const targetBands = resolveBandTarget(target, allBands);
-        const lipRollTolerance = stage.technique === "lip-rolls" ? 0.08 : 0.03;
-        const inTune =
-          hz !== null &&
-          (target.kind === "range"
-            ? matchesBandTarget(hz, targetBands, target.accept ?? "within")
-            : targetBands.some((t) => isInTune(hz, t.frequencyHz, lipRollTolerance)));
-        if (inTune) holdRef.current += dt;
+        if (stage.technique === "lip-rolls" && targetBands.length > 0) {
+          // Graduated credit: any pitch gives slow progress, close pitch gives full
+          const credit = lipRollCredit(hz, targetBands[0].frequencyHz);
+          if (credit > 0) holdRef.current += dt * credit;
+        } else {
+          const lipRollTolerance = stage.technique === "lip-rolls" ? 0.08 : 0.03;
+          const inTune =
+            hz !== null &&
+            (target.kind === "range"
+              ? matchesBandTarget(hz, targetBands, target.accept ?? "within")
+              : targetBands.some((t) => isInTune(hz, t.frequencyHz, lipRollTolerance)));
+          if (inTune) holdRef.current += dt;
+        }
         const p = holdRef.current / holdSeconds;
         setProgress(p);
         if (p >= 1) setStageComplete(true);
@@ -229,10 +239,11 @@ export function JourneyExercise({
         const freqs = exerciseBands.map((b) => b.frequencyHz);
         const minFreq = Math.min(...freqs);
         const maxFreq = Math.max(...freqs);
-        // Lip-roll slides: use permissive thresholds so high/low zones are easier to hit
+        // Lip-roll slides: just need "a bit of high" and "a bit of low" — use midpoint as boundary
         const isLipRoll = stage.technique === "lip-rolls";
-        const highThreshold = isLipRoll ? maxFreq * 0.5 : maxFreq * 0.75;
-        const lowThreshold = isLipRoll ? minFreq * 1.5 : minFreq * 1.25;
+        const midFreq = (minFreq + maxFreq) / 2;
+        const highThreshold = isLipRoll ? midFreq : maxFreq * 0.75;
+        const lowThreshold = isLipRoll ? midFreq : minFreq * 1.25;
         const inHigh = hz >= highThreshold;
         const inLow = hz <= lowThreshold;
         let lastZone = slideLastZoneRef.current;
@@ -260,21 +271,32 @@ export function JourneyExercise({
         if (!noteConfig) return;
         const targetBands = resolveBandTarget(noteConfig.target, allBands);
         const noteSeconds = noteConfig.seconds;
-        if (targetBands.length > 0 && hz !== null && targetBands.some((t) => isInTune(hz, t.frequencyHz))) {
+        const tolerance = stage.technique === "lip-rolls" ? 0.08 : 0.03;
+        if (targetBands.length > 0 && hz !== null && targetBands.some((t) => isInTune(hz, t.frequencyHz, tolerance))) {
           noteHoldRef.current += dt;
           if (noteHoldRef.current >= noteSeconds) {
             noteHoldRef.current = 0;
             seqIndexRef.current = idx + 1;
+            noteTransitionTimeRef.current = now;
             setSeqIndex(idx + 1);
+            if (seqIndexRef.current < stage.notes.length) {
+              setShowStepCheck(true);
+              setTimeout(() => setShowStepCheck(false), 700);
+            }
             if (seqIndexRef.current >= stage.notes.length) {
               setStageComplete(true);
               setProgress(1);
               return;
             }
           }
-        } else {
-          noteHoldRef.current = Math.max(0, noteHoldRef.current - dt * 0.5);
+        } else if (hz !== null) {
+          // Wrong pitch — decay slowly, but skip during grace period after note transitions
+          const inGracePeriod = now - noteTransitionTimeRef.current < 400;
+          if (!inGracePeriod) {
+            noteHoldRef.current = Math.max(0, noteHoldRef.current - dt * 0.3);
+          }
         }
+        // hz === null (silence) → no progress, no decay
         setProgress(
           (seqIndexRef.current + noteHoldRef.current / noteSeconds) /
             stage.notes.length,
@@ -353,7 +375,7 @@ export function JourneyExercise({
 
   const TONE_DURATION_MS = 1800;
   const TONE_GAP_MS = 2000;
-  const SLIDE_DURATION_MS = 300 + 1500 + 500; // hold-start + slide + hold-end
+  const SLIDE_DURATION_MS = 400 + 2500 + 600; // hold-start + slide + hold-end
 
   function handleHearTone() {
     if (isTonePlaying) return;
@@ -529,7 +551,19 @@ export function JourneyExercise({
                 : undefined
             }
             showChakraLabels={stage.part === 9}
+            lipRollMode={stage.technique === "lip-rolls"}
           />
+        )}
+
+        {/* Per-step checkmark (sequences only, no confetti) */}
+        {showStepCheck && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
+            <div className="step-check-appear flex items-center justify-center w-12 h-12 rounded-full bg-violet-600/20">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+          </div>
         )}
 
         {/* Completion checkmark overlay */}

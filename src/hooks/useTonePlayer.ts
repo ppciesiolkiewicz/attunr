@@ -121,9 +121,9 @@ export function useTonePlayer() {
     ) => {
       const ctx = getCtx();
       const {
-        holdStartMs = 300,
-        slideDurationMs = 1500,
-        holdEndMs = 500,
+        holdStartMs = 400,
+        slideDurationMs = 2500,
+        holdEndMs = 600,
         chakraId,
         binaural = true,
       } = options ?? {};
