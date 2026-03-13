@@ -6,6 +6,8 @@ Most adults never use their voice intentionally. We speak, but we don't _feel_ o
 
 **Somatic regulation through voice.** The app guides you to produce specific tones and notice where they resonate — chest, throat, head. That simple act of attention activates the vagus nerve, deepens breathing, and shifts the nervous system toward calm. It's not singing lessons; it's a body practice that happens to use sound.
 
+Most vocal apps teach technique. Attunr helps people sense resonance and placement in the body — where a tone lives physically, how it feels, and what shifts when you sustain it. The pitch visualiser isn't a score — it's a mirror. It shows you where your voice is so you can feel where it lands in your body.
+
 Attunr sits at the intersection of:
 
 - **Breathwork & meditation** — structured exercises that regulate the nervous system
