@@ -8,6 +8,7 @@ import {
 import type { Settings } from "@/hooks/useSettings";
 import { StageCard } from "./StageCard";
 import { BadgeIcon } from "./BadgeIcon";
+import { toRoman } from "../utils";
 
 interface JourneyListProps {
   settings: Settings;
@@ -16,7 +17,7 @@ interface JourneyListProps {
 
 export function JourneyList({ settings, onSelect }: JourneyListProps) {
   const { journeyStage: highestCompleted } = settings;
-  const parts = [1, 2, 3, 4, 5, 6, 7, 8, 9] as const;
+  const partNums = Object.keys(PART_TITLES).map(Number).sort((a, b) => a - b);
 
   return (
     <div className="h-full overflow-y-auto">
@@ -34,11 +35,10 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
           </p>
         </div>
 
-        {parts.map((partNum) => {
+        {partNums.map((partNum) => {
           const stages = JOURNEY_STAGES.filter((s) => s.part === partNum);
           if (stages.length === 0) return null;
-          const roman =
-            ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][partNum - 1];
+          const roman = toRoman(partNum);
           const lastStageId = LAST_STAGE_ID_PER_PART[partNum];
           const partComplete = highestCompleted >= lastStageId;
           return (

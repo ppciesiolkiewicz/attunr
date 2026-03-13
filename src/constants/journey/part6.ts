@@ -1,44 +1,64 @@
 import type { JourneyStage } from "./types";
 
-/** Part 6: Vowel EE — bright forward vowel */
+/** Part 6: Rounded Vowels — introduce OO and OH */
 export const PART_6_STAGES: JourneyStage[] = [
   {
-    id: 32,
+    id: 26,
     part: 6,
     stageTypeId: "intro",
-    title: "Vowel EE",
-    cardCue: "Bright, forward vowel — feel the resonance shift higher",
+    title: "Rounded vowels",
+    technique: "sustain",
+    cardCue: "Sing OO and OH — warm, rounded sounds that build on your U foundation",
     instruction:
-      "Sing with EE (as in 'see') — lips spread, tongue forward. EE lifts the resonance higher. It can feel brighter and more energising. Contrast with U to feel the shift.",
+      "OO (as in 'book') and OH (as in 'go') are rounded vowels — cousins of the U you already know. OO keeps the lips rounded but opens the mouth a touch more. OH opens further, like a gentle 'oh' of surprise. Both maintain vocal tract stability and help develop resonance. We'll start on comfortable low-to-mid tones.",
   },
   {
-    id: 33,
+    id: 27,
     part: 6,
     stageTypeId: "pitch-detection",
-    title: "Low — EE",
-    subtitle: "Vowel EE · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 10 }],
+    title: "OO — Low",
+    subtitle: "Vowel OO · 7 seconds",
+    notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
     instruction:
-      "Sing EE on your lowest tone.\nA low tone with a forward vowel — notice the blend.",
+      "Sing OO (as in 'book') on the lower-mid tone.\nLips rounded, mouth slightly more open than U.\nKeep it warm and full.",
   },
   {
-    id: 34,
+    id: 28,
     part: 6,
     stageTypeId: "pitch-detection",
-    title: "Mid — EE",
-    subtitle: "Vowel EE · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
+    title: "OO — Mid",
+    subtitle: "Vowel OO · 7 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 7 }],
     instruction:
-      "Sing EE on the mid tone.\nFeel the openness in the chest with this vowel.",
+      "Sing OO on the mid tone.\nFeel the resonance open compared to U.\nKeep the lips rounded and relaxed.",
   },
   {
-    id: 35,
+    id: 29,
+    part: 6,
+    stageTypeId: "breathwork",
+    title: "Farinelli breathwork",
+    maxCount: 7,
+    instruction:
+      "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Centre yourself before the new OH vowel.",
+  },
+  {
+    id: 30,
     part: 6,
     stageTypeId: "pitch-detection",
-    title: "High — EE",
-    subtitle: "Vowel EE · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 7 }, seconds: 10 }],
+    title: "OH — Low",
+    subtitle: "Vowel OH · 7 seconds",
+    notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
     instruction:
-      "Sing EE on your highest tone.\nA high, bright tone — let it lift.",
+      "Sing OH (as in 'go') on the lower-mid tone.\nSlightly more open than OO — like a gentle 'oh' of surprise.\nKeep it rounded and warm.",
+  },
+  {
+    id: 31,
+    part: 6,
+    stageTypeId: "pitch-detection",
+    title: "OH — Mid",
+    subtitle: "Vowel OH · 7 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 7 }],
+    instruction:
+      "Sing OH on the mid tone.\nFeel the mouth open more than OO.\nKeep the sound warm and resonant.",
   },
 ];

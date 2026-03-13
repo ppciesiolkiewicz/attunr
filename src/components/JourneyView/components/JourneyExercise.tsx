@@ -8,7 +8,7 @@ import BalanceBallCanvas from "../../BalanceBallCanvas";
 import { FarinelliExercise } from "../../FarinelliExercise";
 import { InfoButton } from "../../TabInfoModal";
 import { Button, VideoPlaceholder } from "@/components/ui";
-import { resolveBandTarget, getSkippedInfoStageIds, getStepInPart } from "../utils";
+import { resolveBandTarget, getSkippedInfoStageIds, getStepInPart, toRoman } from "../utils";
 import { ProgressArc } from "./ProgressArc";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { PartCompleteModal } from "./PartCompleteModal";
@@ -421,7 +421,7 @@ export function JourneyExercise({
         </Button>
         <span className="text-white/35">|</span>
         <span className="text-xs sm:text-sm text-white/55 shrink-0">
-          Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]}
+          Part {toRoman(stage.part)}
         </span>
         <span className="hidden md:inline text-xs text-white/72 font-medium shrink-0">
           — {PART_TITLES[stage.part]}
@@ -460,7 +460,7 @@ export function JourneyExercise({
             {/* Part header — shown for every learning section */}
             <div className="pb-2 border-b border-white/[0.08]">
               <h2 className="text-xl font-semibold text-white">
-                Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_TITLES[stage.part]}
+                Part {toRoman(stage.part)} — {PART_TITLES[stage.part]}
               </h2>
               <p className="text-sm text-white/65 mt-0.5">
                 {stage.title} · {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}

@@ -1,84 +1,68 @@
 import type { JourneyStage } from "./types";
 
-/** Part 5: Vowel U — rounded lips across the range */
+/** Part 5: Building Range — humming and U in mid range, first sequences */
 export const PART_5_STAGES: JourneyStage[] = [
+  {
+    id: 20,
+    part: 5,
+    stageTypeId: "pitch-detection",
+    title: "Hum — Mid-low",
+    subtitle: "Hum · 6 seconds",
+    notes: [{ target: { kind: "slot", n: 3 }, seconds: 6 }],
+    instruction:
+      "Hum with purpose on the mid-low tone.\nFeel the tone grow stronger in your body.\nKeep your breath even.",
+  },
+  {
+    id: 21,
+    part: 5,
+    stageTypeId: "pitch-detection",
+    title: "U — Mid-low",
+    subtitle: "Vowel U · 6 seconds",
+    notes: [{ target: { kind: "slot", n: 3 }, seconds: 6 }],
+    instruction:
+      "Sing uuu on the mid-low tone.\nFeel the tone grow stronger.\nKeep the vowel open and relaxed.",
+  },
+  {
+    id: 22,
+    part: 5,
+    stageTypeId: "breathwork",
+    title: "Farinelli breathwork",
+    maxCount: 7,
+    instruction:
+      "Inhale, hold, and exhale for the same count. Each cycle adds one beat. A moment to centre before we push into mid range.",
+  },
+  {
+    id: 23,
+    part: 5,
+    stageTypeId: "pitch-detection",
+    title: "Hum — Mid",
+    subtitle: "Hum · 6 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 6 }],
+    instruction:
+      "Take a soft breath and hum openly on the mid tone.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
+  },
   {
     id: 24,
     part: 5,
-    stageTypeId: "intro",
-    title: "Vowel U",
-    cardCue: "Sing with rounded lips — the easiest vowel to start",
+    stageTypeId: "pitch-detection",
+    title: "U — Mid",
+    subtitle: "Vowel U · 6 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 6 }],
     instruction:
-      "Sing uuu (as in 'moon') — lips rounded, tongue back. U is the easiest vowel to start with. Hold the tone steady and focus on the sound.",
+      "Sing uuu on the mid tone.\nOpen and soft — keep it relaxed.\nFeel the resonance in your chest and face.",
   },
   {
     id: 25,
     part: 5,
     stageTypeId: "pitch-detection",
-    title: "Low — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 10 }],
+    title: "Low sequence",
+    subtitle: "3 tones rising · 2 seconds each",
+    notes: [
+      { target: { kind: "slot", n: 1 }, seconds: 2 },
+      { target: { kind: "slot", n: 2 }, seconds: 2 },
+      { target: { kind: "slot", n: 3 }, seconds: 2 },
+    ],
     instruction:
-      "Sing uuu on your lowest tone.\nKeep it low and grounded.",
-  },
-  {
-    id: 26,
-    part: 5,
-    stageTypeId: "pitch-detection",
-    title: "Lower-mid — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 10 }],
-    instruction:
-      "Sing uuu on the lower-mid tone.\nKeep it warm and full.",
-  },
-  {
-    id: 27,
-    part: 5,
-    stageTypeId: "pitch-detection",
-    title: "Mid-low — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 10 }],
-    instruction:
-      "Sing uuu on the mid-low tone.\nFeel the tone grow stronger.",
-  },
-  {
-    id: 28,
-    part: 5,
-    stageTypeId: "pitch-detection",
-    title: "Mid — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
-    instruction:
-      "Sing uuu on the mid tone.\nOpen and soft — keep it relaxed.",
-  },
-  {
-    id: 29,
-    part: 5,
-    stageTypeId: "pitch-detection",
-    title: "Mid-high — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 10 }],
-    instruction:
-      "Sing uuu on the mid-high tone.\nClear and steady — let your voice be heard.",
-  },
-  {
-    id: 30,
-    part: 5,
-    stageTypeId: "pitch-detection",
-    title: "Upper-mid — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 6 }, seconds: 10 }],
-    instruction:
-      "Sing uuu on the upper-mid tone.\nGentle and inward — keep it soft.",
-  },
-  {
-    id: 31,
-    part: 5,
-    stageTypeId: "pitch-detection",
-    title: "High — U",
-    subtitle: "Vowel U · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 7 }, seconds: 10 }],
-    instruction:
-      "Sing uuu on your highest tone.\nStay soft and open at the top.",
+      "Sing three tones rising from low.\nThis is your first sequence — move smoothly between each tone.\nFeel the resonance shift as you rise.",
   },
 ];

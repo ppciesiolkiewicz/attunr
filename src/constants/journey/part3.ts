@@ -1,85 +1,68 @@
 import type { JourneyStage } from "./types";
 
-/** Part 3: Sustain — seven tones across your range */
+/** Part 3: Lip Rolls & Breath — lip roll mastery, first humming, breathwork */
 export const PART_3_STAGES: JourneyStage[] = [
+  {
+    id: 8,
+    part: 3,
+    stageTypeId: "pitch-detection-slide",
+    title: "Lip rolls — low to high",
+    subtitle: "Glide from low to high · 2–3 times",
+    technique: "lip-rolls",
+    notes: [{ from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } }],
+    instruction:
+      "Slide smoothly from low to high — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
+  },
+  {
+    id: 9,
+    part: 3,
+    stageTypeId: "pitch-detection",
+    title: "Sustain a lip roll",
+    subtitle: "Hold the buzz · 5 seconds",
+    technique: "lip-rolls",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 5 }],
+    instruction:
+      "Hold one tone and sustain the lip roll for five seconds. Keep the buzz steady — lips vibrating without force. Feel the sound in your chest.",
+  },
   {
     id: 10,
     part: 3,
-    stageTypeId: "intro",
-    title: "Sustain",
-    technique: "sustain",
-    cardCue: "Hum each tone and feel where it resonates",
+    stageTypeId: "breathwork",
+    title: "Farinelli breathwork",
+    maxCount: 6,
     instruction:
-      "Humming is one of the gentlest and most powerful ways to feel your voice. Close your lips and sing mmmm — feel the buzz in your lips, teeth, and face. In these exercises, hum each tone for ten seconds. Lower tones resonate deep in the chest, higher tones lift into the head. There's no rush. Let the vibration settle before moving on.",
+      "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Let the rhythm settle your body and deepen your breath.",
   },
   {
     id: 11,
     part: 3,
     stageTypeId: "pitch-detection",
-    title: "Sustain — Low",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 10 }],
+    title: "Low U",
+    subtitle: "Chest voice · 5 seconds",
+    technique: "sustain",
+    notes: [{ target: { kind: "range", from: 0, to: 2, accept: "below" }, seconds: 5 }],
     instruction:
-      "Hum low and steady — mmmm.\nFeel the buzz settle deep in your chest.\nKeep it grounded and relaxed.",
+      "Sing uuuu low and steady. Feel the warmth in your chest. This revisits chest voice — let the sound settle deeper this time.",
   },
   {
     id: 12,
     part: 3,
     stageTypeId: "pitch-detection",
-    title: "Sustain — Lower-mid",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 10 }],
+    title: "Hum — Low",
+    subtitle: "Hum · 5 seconds",
+    notes: [{ target: { kind: "slot", n: 1 }, seconds: 5 }],
     instruction:
-      "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
+      "Close your lips and hum mmmm on the lowest tone. Feel the buzz in your lips and teeth. This is your first taste of humming — one of the gentlest ways to feel your voice.",
   },
   {
     id: 13,
     part: 3,
-    stageTypeId: "pitch-detection",
-    title: "Sustain — Mid-low",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 10 }],
+    stageTypeId: "pitch-detection-slide",
+    title: "Lip rolls — high to low",
+    subtitle: "Glide from high to low · 2–3 times",
+    technique: "lip-rolls",
+    notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
     instruction:
-      "Hum with purpose.\nFeel the tone grow stronger in your body.\nKeep your breath even.",
-  },
-  {
-    id: 14,
-    part: 3,
-    stageTypeId: "pitch-detection",
-    title: "Sustain — Mid",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
-    instruction:
-      "Take a soft breath and hum openly.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
-  },
-  {
-    id: 15,
-    part: 3,
-    stageTypeId: "pitch-detection",
-    title: "Sustain — Mid-high",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 10 }],
-    instruction:
-      "Hum clearly and steadily.\nFeel the resonance shift forward.\nKeep the buzz steady and clear.",
-  },
-  {
-    id: 16,
-    part: 3,
-    stageTypeId: "pitch-detection",
-    title: "Sustain — Upper-mid",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 6 }, seconds: 10 }],
-    instruction:
-      "Hum gently.\nFeel the buzz lift into your face and head.\nKeep it soft and focused.",
-  },
-  {
-    id: 17,
-    part: 3,
-    stageTypeId: "pitch-detection",
-    title: "Sustain — High",
-    subtitle: "Hum · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 7 }, seconds: 10 }],
-    instruction:
-      "Hum softly at the top of your range.\nFeel the buzz in your head.\nKeep it light — don't push.",
+      "One more glide from high to low to close the section. Keep it smooth and easy.",
   },
 ];

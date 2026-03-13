@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import { Button, Modal } from "@/components/ui";
 import { BadgeIcon } from "./BadgeIcon";
+import { toRoman } from "../utils";
 
 interface PartCompleteModalProps {
   part: number;
@@ -12,8 +13,6 @@ interface PartCompleteModalProps {
   tip: string;
   onContinue: () => void;
 }
-
-const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
 export function PartCompleteModal({
   part,
@@ -65,7 +64,7 @@ export function PartCompleteModal({
             <BadgeIcon className="text-violet-400" style={{ width: 24, height: 24 }} />
           </div>
           <h2 className="text-xl font-semibold text-white text-center">
-            Part {ROMAN[part - 1]} Complete
+            Part {toRoman(part)} Complete
           </h2>
           <p className="text-sm text-white/80 text-center">{partName}</p>
         </div>

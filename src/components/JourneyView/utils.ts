@@ -144,4 +144,18 @@ export function getStepInPart(stageId: number): {
   return { stepIndex, stepsInPart: partStages.length };
 }
 
+/** Convert an integer (1–20+) to a Roman numeral string. */
+export function toRoman(n: number): string {
+  const vals = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+  const syms = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+  let result = "";
+  for (let i = 0; i < vals.length; i++) {
+    while (n >= vals[i]) {
+      result += syms[i];
+      n -= vals[i];
+    }
+  }
+  return result;
+}
+
 export { LAST_STAGE_ID_PER_PART };

@@ -1,4 +1,8 @@
-export type StageTypeId = "intro" | "pitch-detection" | "pitch-detection-slide" | "breathwork";
+export type StageTypeId =
+  | "intro"
+  | "pitch-detection"
+  | "pitch-detection-slide"
+  | "breathwork";
 
 // ── Band targeting ─────────────────────────────────────────────────────────────
 
@@ -13,7 +17,12 @@ export type StageTypeId = "intro" | "pitch-detection" | "pitch-detection-slide" 
 export type BandTarget =
   | { kind: "slot"; n: 1 | 2 | 3 | 4 | 5 | 6 | 7 }
   | { kind: "index"; i: number }
-  | { kind: "range"; from: number; to: number; accept?: "within" | "below" | "above" };
+  | {
+      kind: "range";
+      from: number;
+      to: number;
+      accept?: "within" | "below" | "above";
+    };
 
 /** Config for a single sustained pitch — used in pitch-detection stages. */
 export type SustainNoteConfig = { target: BandTarget; seconds: number };
@@ -28,7 +37,7 @@ export type TechniqueId = "sustain" | "mantra" | "lip-rolls" | "puffy-cheeks";
 export interface BaseJourneyStage {
   id: number;
   stageTypeId: StageTypeId;
-  part: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+  part: number;
   title: string;
   subtitle?: string;
   /** Vocal technique for pitch exercises; used for tolerance (e.g. lip-rolls = looser). */

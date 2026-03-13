@@ -45,7 +45,7 @@ export default function ExercisePage() {
       onPlayTone={playTone}
       onPlaySlide={playSlide}
       onSettingsUpdate={updateSettings}
-      onBack={() => router.push("/")}
+      onBack={() => router.push("/journey")}
       onNext={(nextId) => router.push(`/journey/${nextId}`)}
       onPrev={(prevId) => router.push(`/journey/${prevId}`)}
     />

@@ -9,7 +9,7 @@ A guided, progressive path through vocal technique. Replaces the free-form train
 Journey is **URL-driven**: each step has its own URL. The flow is deterministic and shareable.
 
 1. **User visits** `/journey/[id]` (e.g. `/journey/10`)
-2. **Page** parses step id from URL, validates (1–49), finds the stage in `JOURNEY_STAGES`
+2. **Page** parses step id from URL, validates (1–116), finds the stage in `JOURNEY_STAGES`
 3. **Render** by stage type:
    - **`pitch-detection`** / **`pitch-detection-slide`**: PitchCanvas + exercise UI (detection, progress, Hear tone, Next/Skip)
    - **`breathwork`**: Breathing cycle UI (no pitch detection)
@@ -40,29 +40,42 @@ Journey is a separate view from the Train tab, accessible from the bottom naviga
 
 ---
 
-## Part structure (9 parts, 49 stages)
+## Part structure (20 parts, 116 stages)
+
+Each part mixes exercise types (warmup, resonance, articulation, control) and includes Farinelli breathwork. Difficulty progresses from low register → high register, with vowels introduced progressively: U → OO/OH → AH → EH → EE.
 
 | Part | Name | Stages | Focus |
 |------|------|--------|-------|
 | I | Introduction | 1 | Vocal placement concept |
-| II | Vocal Warmups | 2–9 | Farinelli, lip rolls, Low U, Hoo hoo |
-| III | Sustain | 10–17 | Hold each of the 7 tones |
-| IV | Sequences | 18–23 | Multi-tone sequences |
-| V | Vowel U | 24–31 | Uuu across all 7 tones |
-| VI | Vowel EE | 32–35 | EE on low, mid, high |
-| VII | Vowel Flow U → EE | 36–37 | Vowel transition on one tone |
-| VIII | Puffy Cheeks | 38–41 | Breath control technique |
-| IX | Sounds and Mantras | 42–49 | Mantras (LAM–AH) on each tone |
+| II | First Sounds | 2–7 | Chest & head voice, first lip rolls |
+| III | Lip Rolls & Breath | 8–13 | Lip roll mastery, breathwork, first humming |
+| IV | Low Resonance | 14–19 | Humming + U alternating in low range |
+| V | Building Range | 20–25 | Humming + U in mid range, first sequences |
+| VI | Rounded Vowels | 26–31 | Introduce OO and OH |
+| VII | Vowel Warmth | 32–37 | OO/OH deeper, sequences, lip rolls |
+| VIII | The Open AH | 38–43 | AH vowel, first vowel flows |
+| IX | Breath & Body | 44–49 | Puffy cheeks intro, AH range |
+| X | Sequences & Range | 50–55 | Multi-tone sequences with known vowels |
+| XI | Chakras — Earth | 56–61 | Root→Heart mantras (LAM, VAM, RAM, YAM) |
+| XII | Chakras — Sky | 62–67 | Throat→Crown mantras (HAM, OM, AH) |
+| XIII | Forward EH | 68–73 | EH vowel, forward resonance |
+| XIV | EH Mastery | 74–79 | EH range, sequences, puffy cheeks |
+| XV | Warmup III | 80–85 | Advanced warmup: all techniques |
+| XVI | Vowel EE | 86–91 | EE (narrowest, hardest vowel) |
+| XVII | EE & Brightness | 92–97 | EE high register, U→EE flow |
+| XVIII | Vowel Flow | 98–103 | Vowel transitions: U→OO, OO→AH, AH→EE |
+| XIX | Vowel Mastery | 104–109 | Vowel cascade, advanced flows |
+| XX | Vocal Control | 110–116 | Peak difficulty: all techniques combined |
 
-Each part starts with an `intro` stage followed by exercises.
+Most parts start with an `intro` stage followed by exercises. Some later parts skip the intro when no new concept is introduced.
 
 ---
 
 ## Part complete modal
 
-When the user completes the **last step of a part** (e.g. stage 9 for Part II):
+When the user completes the **last step of a part** (e.g. stage 7 for Part II):
 
-- A modal appears: "Part [I–IX] Complete", part name, "What you learnt", optional tip
+- A modal appears: "Part [I–XX] Complete", part name, "What you learnt", optional tip
 - **Confetti** plays on open
 - "Continue →" closes the modal and navigates to the next step URL
 
@@ -130,7 +143,7 @@ On desktop, the part name is shown alongside the stage title in the header.
 
 ## Progress persistence
 
-Journey progress (highest completed stage) is stored in localStorage. Key: `attunr.journeyStage` — integer 1–49. Used to show "Completed" on past steps and to track the current frontier.
+Journey progress (highest completed stage) is stored in localStorage. Key: `attunr.journeyStage` — integer 1–116. Used to show "Completed" on past steps and to track the current frontier.
 
 ---
 

@@ -12,6 +12,7 @@ import {
   getStageChakraIds,
   getStageDisplayColors,
   getStepInPart,
+  toRoman,
 } from "../utils";
 import { BookIcon } from "./BookIcon";
 import type { Settings } from "@/hooks/useSettings";
@@ -110,9 +111,7 @@ export function ExerciseInfoModal({
               {isTechniqueIntro && <BookIcon className="opacity-70" />}
               <span className="uppercase tracking-widest">
                 Part{" "}
-                {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][
-                  stage.part - 1
-                ]}
+                {toRoman(stage.part)}
               </span>
               <span className="text-white/45">·</span>
               <span>
@@ -231,9 +230,6 @@ export function ExerciseInfoModal({
           {!isTechniqueIntro &&
             stage.stageTypeId !== "breathwork" && <HeadphonesNotice />}
 
-          <p className="text-xs text-white/55 text-center">
-            Tuning: {settings.tuning}
-          </p>
         </div>
 
         {showDontShowAgain && (

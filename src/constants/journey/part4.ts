@@ -1,92 +1,64 @@
 import type { JourneyStage } from "./types";
 
-/** Part 4: Sequences — move through your range */
+/** Part 4: Low Resonance — humming and U alternating in the low range */
 export const PART_4_STAGES: JourneyStage[] = [
+  {
+    id: 14,
+    part: 4,
+    stageTypeId: "intro",
+    title: "Humming and resonance",
+    technique: "sustain",
+    cardCue: "Hum each tone and feel where it resonates",
+    instruction:
+      "Humming is one of the gentlest and most powerful ways to feel your voice. Close your lips and sing mmmm — feel the buzz in your lips, teeth, and face. In these exercises, we alternate between humming and the U vowel on low tones. Lower tones resonate deep in the chest. There's no rush — let the vibration settle.",
+  },
+  {
+    id: 15,
+    part: 4,
+    stageTypeId: "pitch-detection",
+    title: "Hum — Low",
+    subtitle: "Hum · 5 seconds",
+    notes: [{ target: { kind: "slot", n: 1 }, seconds: 5 }],
+    instruction:
+      "Hum low and steady — mmmm.\nFeel the buzz settle deep in your chest.\nKeep it grounded and relaxed.",
+  },
+  {
+    id: 16,
+    part: 4,
+    stageTypeId: "pitch-detection",
+    title: "U — Low",
+    subtitle: "Vowel U · 6 seconds",
+    notes: [{ target: { kind: "slot", n: 1 }, seconds: 6 }],
+    instruction:
+      "Sing uuu on the same low tone.\nOpen from the hum into the vowel.\nKeep it warm and grounded.",
+  },
+  {
+    id: 17,
+    part: 4,
+    stageTypeId: "pitch-detection",
+    title: "Hum — Lower-mid",
+    subtitle: "Hum · 5 seconds",
+    notes: [{ target: { kind: "slot", n: 2 }, seconds: 5 }],
+    instruction:
+      "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
+  },
   {
     id: 18,
     part: 4,
     stageTypeId: "pitch-detection",
-    title: "Low sequence",
-    subtitle: "2 tones · 2 seconds each",
-    notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-    ],
+    title: "U — Lower-mid",
+    subtitle: "Vowel U · 6 seconds",
+    notes: [{ target: { kind: "slot", n: 2 }, seconds: 6 }],
     instruction:
-      "Sing two low tones in sequence.\nMove from your lowest into the next tone above.\nFeel the resonance shift as you rise.",
+      "Sing uuu on the lower-mid tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
   },
   {
     id: 19,
     part: 4,
-    stageTypeId: "pitch-detection",
-    title: "Low rise",
-    subtitle: "3 tones rising · 2 seconds each",
-    notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-    ],
+    stageTypeId: "breathwork",
+    title: "Farinelli breathwork",
+    maxCount: 6,
     instruction:
-      "Three tones rising from low.\nFeel the energy climb as you ascend.\nKeep it smooth and steady.",
-  },
-  {
-    id: 20,
-    part: 4,
-    stageTypeId: "pitch-detection",
-    title: "Low to mid",
-    subtitle: "4 tones · low to mid · 2 seconds each",
-    notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
-    ],
-    instruction:
-      "Four tones from low up to mid range.\nKeep each tone smooth and connected.\nFeel the voice open as you rise.",
-  },
-  {
-    id: 21,
-    part: 4,
-    stageTypeId: "pitch-detection",
-    title: "Mid to upper",
-    subtitle: "3 tones · mid to upper · 2 seconds each",
-    notes: [
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
-      { target: { kind: "slot", n: 5 }, seconds: 2 },
-      { target: { kind: "slot", n: 6 }, seconds: 2 },
-    ],
-    instruction:
-      "Three tones rising from mid range upward.\nLet the tones lift naturally.\nKeep it smooth and connected.",
-  },
-  {
-    id: 22,
-    part: 4,
-    stageTypeId: "pitch-detection",
-    title: "Upper range",
-    subtitle: "2 high tones · 2 seconds each",
-    notes: [
-      { target: { kind: "slot", n: 6 }, seconds: 2 },
-      { target: { kind: "slot", n: 7 }, seconds: 2 },
-    ],
-    instruction:
-      "Two high tones.\nStay gentle as you move into the upper register.\nKeep it light as you go higher.",
-  },
-  {
-    id: 23,
-    part: 4,
-    stageTypeId: "pitch-detection",
-    title: "Full range",
-    subtitle: "All 7 tones · 2 seconds each",
-    notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
-      { target: { kind: "slot", n: 5 }, seconds: 2 },
-      { target: { kind: "slot", n: 6 }, seconds: 2 },
-      { target: { kind: "slot", n: 7 }, seconds: 2 },
-    ],
-    instruction:
-      "Sing all seven tones from low to high.\nMove slowly and keep your breath relaxed.\nFeel your full range open up.",
+      "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Let the breath ground you after the low resonance work.",
   },
 ];
