@@ -228,13 +228,12 @@ export function FarinelliExercise({
     return () => clearInterval(id);
   }, [status, shuffledAdvice]);
 
-  const phaseDurationSeconds = Math.floor(phaseDuration);
   const phaseLabel =
     phase === "inhale"
-      ? `Breathe in for ${phaseDurationSeconds}s`
+      ? `Breathe in for ${cycleCount}s`
       : phase === "hold"
-        ? `Hold for ${phaseDurationSeconds}s`
-        : `Breathe out for ${phaseDurationSeconds}s`;
+        ? `Hold for ${cycleCount}s`
+        : `Breathe out for ${cycleCount}s`;
 
   const circleSize = 40;
 

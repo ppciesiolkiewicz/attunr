@@ -17,9 +17,9 @@ export const PART_2_STAGES: JourneyStage[] = [
     part: 2,
     stageTypeId: "pitch-detection",
     title: "Low U",
-    subtitle: "Chest voice · 6 seconds",
+    subtitle: "Chest voice · 10 seconds",
     technique: "sustain",
-    notes: [{ target: { kind: "range", from: 0, to: 2, accept: "below" }, seconds: 6 }],
+    notes: [{ target: { kind: "range", from: 0, to: 2, accept: "below" }, seconds: 10 }],
     instruction:
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
@@ -28,9 +28,9 @@ export const PART_2_STAGES: JourneyStage[] = [
     part: 2,
     stageTypeId: "pitch-detection",
     title: "Hoo hoo",
-    subtitle: "Head voice · 6 seconds",
+    subtitle: "Head voice · 10 seconds",
     technique: "sustain",
-    notes: [{ target: { kind: "range", from: -3, to: -1, accept: "above" }, seconds: 6 }],
+    notes: [{ target: { kind: "range", from: -3, to: -1, accept: "above" }, seconds: 10 }],
     instruction:
       "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
   },
@@ -81,10 +81,10 @@ export const PART_2_STAGES: JourneyStage[] = [
     part: 2,
     stageTypeId: "pitch-detection",
     title: "Sustain a lip roll",
-    subtitle: "Hold the buzz · 5 seconds",
+    subtitle: "Hold the buzz · 10 seconds",
     technique: "lip-rolls",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 5 }],
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
     instruction:
-      "Hold one tone and sustain the lip roll for five seconds. Keep the buzz steady — lips vibrating without force. Feel the sound in your chest.",
+      "Hold one tone and sustain the lip roll for ten seconds. Keep the buzz steady — lips vibrating without force. Feel the sound in your chest.",
   },
 ];

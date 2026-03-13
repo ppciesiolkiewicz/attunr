@@ -16,8 +16,8 @@ export const PART_6_STAGES: JourneyStage[] = [
     part: 6,
     stageTypeId: "pitch-detection",
     title: "Low — EE",
-    subtitle: "Vowel EE · 3 seconds",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 3 }],
+    subtitle: "Vowel EE · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 1 }, seconds: 10 }],
     instruction:
       "Sing EE on your lowest tone.\nA low tone with a forward vowel — notice the blend.",
   },
@@ -26,8 +26,8 @@ export const PART_6_STAGES: JourneyStage[] = [
     part: 6,
     stageTypeId: "pitch-detection",
     title: "Mid — EE",
-    subtitle: "Vowel EE · 3 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 3 }],
+    subtitle: "Vowel EE · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
     instruction:
       "Sing EE on the mid tone.\nFeel the openness in the chest with this vowel.",
   },
@@ -36,8 +36,8 @@ export const PART_6_STAGES: JourneyStage[] = [
     part: 6,
     stageTypeId: "pitch-detection",
     title: "High — EE",
-    subtitle: "Vowel EE · 3 seconds",
-    notes: [{ target: { kind: "slot", n: 7 }, seconds: 3 }],
+    subtitle: "Vowel EE · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 7 }, seconds: 10 }],
     instruction:
       "Sing EE on your highest tone.\nA high, bright tone — let it lift.",
   },

@@ -34,9 +34,8 @@ const TRAIL_MAX = 14;
 const TRAIL_INTERVAL_MS = 60;
 
 /**
- * Map parameter t ∈ [0,1] to (x,y) on the plateau-hill curve.
- * Flat plateau between NOTE_INSET and 1−NOTE_INSET (where notes live),
- * smooth parabolic slopes outside (where the ball rolls off).
+ * Map parameter t ∈ [0,1] to (x,y) on a smooth circular-style hill.
+ * Peak at t = 0.5, descending symmetrically to both edges.
  */
 function curvePoint(t: number, W: number, H: number) {
   const x = CURVE_PAD_X + t * (W - 2 * CURVE_PAD_X);
@@ -44,33 +43,32 @@ function curvePoint(t: number, W: number, H: number) {
   const edgeY = H * CURVE_EDGE_Y_RATIO;
   const depth = edgeY - peakY;
 
-  let drop: number;
-  if (t < NOTE_INSET) {
-    // Left slope — parabolic drop from plateau to edge
-    const s = (NOTE_INSET - t) / NOTE_INSET;
-    drop = s * s;
-  } else if (t > 1 - NOTE_INSET) {
-    // Right slope — mirror
-    const s = (t - 1 + NOTE_INSET) / NOTE_INSET;
-    drop = s * s;
-  } else {
-    // Plateau — flat where notes sit
-    drop = 0;
-  }
+  // Smooth cosine hill — peak at center, slopes down to edges
+  const drop = (1 - Math.cos(Math.PI * (2 * t - 1))) / 2;
 
   return { x, y: peakY + depth * drop };
 }
 
+/** How many semitones of deviation maps across the full note zone for a single note. */
+const SINGLE_NOTE_RANGE_ST = 5;
+
 /**
  * Map detected Hz to curve parameter t.
- * Notes are positioned in [NOTE_INSET, 1−NOTE_INSET] (the plateau).
+ * Notes are positioned in [NOTE_INSET, 1−NOTE_INSET].
  * Out-of-range pitch maps outside that zone → ball rolls down the slopes.
  */
 function hzToT(hz: number, bands: Band[]): number {
   const n = bands.length;
-  if (n <= 1) return 0.5;
-
   const noteRange = 1 - 2 * NOTE_INSET;
+
+  if (n === 0) return 0.5;
+
+  // Single note — map pitch deviation (in semitones) across the hill
+  if (n === 1) {
+    const semitones = 12 * Math.log2(hz / bands[0].frequencyHz);
+    return 0.5 + (semitones / (2 * SINGLE_NOTE_RANGE_ST)) * noteRange;
+  }
+
   let raw: number; // 0 = lowest band, 1 = highest band
 
   if (hz <= bands[0].frequencyHz) {
@@ -90,7 +88,7 @@ function hzToT(hz: number, bands: Band[]): number {
     }
   }
 
-  // Map note-space [0,1] → plateau [NOTE_INSET, 1−NOTE_INSET]
+  // Map note-space [0,1] → note zone [NOTE_INSET, 1−NOTE_INSET]
   return NOTE_INSET + raw * noteRange;
 }
 

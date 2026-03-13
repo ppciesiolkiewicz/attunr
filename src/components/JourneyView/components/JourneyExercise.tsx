@@ -3,6 +3,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import PitchCanvas from "../../PitchCanvas";
+import BalanceBallCanvas from "../../BalanceBallCanvas";
 import { FarinelliExercise } from "../../FarinelliExercise";
 import { InfoButton } from "../../TabInfoModal";
 import { Button, VideoPlaceholder } from "@/components/ui";
@@ -49,7 +50,6 @@ export function JourneyExercise({
   const highestCompleted = settings.journeyStage;
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
   const isCompleted = stageId <= highestCompleted;
-  const isCurrentStage = stageId === highestCompleted + 1;
 
   const allBands = useMemo(
     () => getScaleNotesForRange(
@@ -176,7 +176,7 @@ export function JourneyExercise({
   }, [stageId, stage.part]);
 
   useEffect(() => {
-    if (!isCurrentStage || stageComplete || stage.stageTypeId === "breathwork") return;
+    if (stageComplete || stage.stageTypeId === "breathwork") return;
 
     function tick() {
       const now = performance.now();
@@ -268,7 +268,7 @@ export function JourneyExercise({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isCurrentStage, stageComplete, stageId]);
+  }, [stageComplete, stageId]);
 
   function navigateTo(targetId: number) {
     if (targetId < 1) return;
@@ -383,6 +383,14 @@ export function JourneyExercise({
       ? matchesBandTarget(pitchHz, exerciseBands, rangeAccept)
       : isInTune(pitchHz, closestBand.frequencyHz, lipRollTolerance));
 
+  // Current target band for "Too low / Too high" hint
+  const targetBand = (() => {
+    if (stage.stageTypeId !== "pitch-detection") return null;
+    if (isRangeTarget) return null;
+    if (stage.notes.length === 1) return exerciseBands[0] ?? null;
+    return seqStepBands[seqIndex] ?? null;
+  })();
+
   return (
     <div className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────────── */}
@@ -470,29 +478,48 @@ export function JourneyExercise({
         </div>
       ) : (
       <div className="relative flex-1 min-h-0">
-        <PitchCanvas
-          bands={allBands}
-          currentHzRef={pitchHzRef}
-          highlightIds={highlightIds}
-          inTuneOverride={
-            isRangeTarget && stage.notes[0].target.kind === "range"
-              ? { bands: exerciseBands, accept: rangeAccept }
-              : undefined
-          }
-          showChakraLabels={stage.part === 9}
-        />
+        {stage.stageTypeId === "pitch-detection" && stage.notes.length === 1 ? (
+          <BalanceBallCanvas
+            bands={exerciseBands}
+            currentHzRef={pitchHzRef}
+            highlightIds={highlightIds}
+            inTuneOverride={
+              isRangeTarget && stage.notes[0].target.kind === "range"
+                ? { bands: exerciseBands, accept: rangeAccept }
+                : undefined
+            }
+          />
+        ) : (
+          <PitchCanvas
+            bands={exerciseBands}
+            currentHzRef={pitchHzRef}
+            inTuneOverride={
+              isRangeTarget && stage.notes[0].target.kind === "range"
+                ? { bands: exerciseBands, accept: rangeAccept }
+                : undefined
+            }
+            showChakraLabels={stage.part === 9}
+          />
+        )}
 
         {/* Pitch overlay */}
         {pitchHz !== null && (
           <div className="pointer-events-none absolute top-3 left-4 fade-in">
             {isRangeTarget ? (
-              <div
-                className="text-2xl font-light"
-                style={{ color: closestBand?.color ?? "#fff" }}
-              >
-                {locked ? "✓ " : ""}
-                {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
-              </div>
+              <>
+                <div
+                  className="text-2xl font-light"
+                  style={{ color: closestBand?.color ?? "#fff" }}
+                >
+                  {locked ? "✓ " : ""}
+                  {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
+                </div>
+                {!locked && (
+                  <div className="text-sm mt-1 text-white/55">
+                    {rangeAccept === "below" ? "↑ Too high" : rangeAccept === "above" ? "↓ Too low" : ""}
+                  </div>
+                )}
+              </>
             ) : (
               <>
                 <div
@@ -510,13 +537,18 @@ export function JourneyExercise({
                     {closestBand.name}
                   </div>
                 )}
+                {!locked && targetBand && (
+                  <div className="text-sm mt-1 text-white/55">
+                    {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
+                  </div>
+                )}
               </>
             )}
           </div>
         )}
 
         {/* Sequence step indicator */}
-        {stage.stageTypeId === "pitch-detection-slide" && isCurrentStage && !stageComplete && (
+        {stage.stageTypeId === "pitch-detection-slide" && !stageComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
             {[1, 2].map((i) => {
               const done = i <= slideCount;
@@ -539,7 +571,7 @@ export function JourneyExercise({
             </span>
           </div>
         )}
-        {stage.stageTypeId === "pitch-detection" && stage.notes.length > 1 && isCurrentStage && !stageComplete && (
+        {stage.stageTypeId === "pitch-detection" && stage.notes.length > 1 && !stageComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
             {seqStepBands.map((b, i) => {
               const done = i < seqIndex;

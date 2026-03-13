@@ -17,8 +17,8 @@ export const PART_8_STAGES: JourneyStage[] = [
     part: 8,
     stageTypeId: "pitch-detection",
     title: "Low — Puffy cheeks",
-    subtitle: "Puffy cheeks · 3 seconds",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 3 }],
+    subtitle: "Puffy cheeks · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 1 }, seconds: 10 }],
     instruction:
       "Sing your lowest tone with puffy cheeks.\nFeel the grounding while you hold the breath in your cheeks.",
   },
@@ -27,8 +27,8 @@ export const PART_8_STAGES: JourneyStage[] = [
     part: 8,
     stageTypeId: "pitch-detection",
     title: "Mid — Puffy cheeks",
-    subtitle: "Puffy cheeks · 3 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 3 }],
+    subtitle: "Puffy cheeks · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
     instruction:
       "Sing the mid tone with puffy cheeks.\nStay open in the chest.",
   },
@@ -37,8 +37,8 @@ export const PART_8_STAGES: JourneyStage[] = [
     part: 8,
     stageTypeId: "pitch-detection",
     title: "High — Puffy cheeks",
-    subtitle: "Puffy cheeks · 3 seconds",
-    notes: [{ target: { kind: "slot", n: 7 }, seconds: 3 }],
+    subtitle: "Puffy cheeks · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 7 }, seconds: 10 }],
     instruction:
       "Sing your highest tone with puffy cheeks.\nKeep it soft at the top.",
   },

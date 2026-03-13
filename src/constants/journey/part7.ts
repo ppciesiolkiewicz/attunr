@@ -16,9 +16,9 @@ export const PART_7_STAGES: JourneyStage[] = [
     part: 7,
     stageTypeId: "pitch-detection",
     title: "Mid — U to EE",
-    subtitle: "Flow from U to EE · 5 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 5 }],
+    subtitle: "Flow from U to EE · 10 seconds",
+    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
     instruction:
-      "Sing the mid tone and flow from U to EE. Hold the pitch steady, let the vowel glide. Five seconds in tune.",
+      "Sing the mid tone and flow from U to EE. Hold the pitch steady, let the vowel glide. Ten seconds in tune.",
   },
 ];
