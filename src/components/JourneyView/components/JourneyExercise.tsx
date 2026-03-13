@@ -81,6 +81,18 @@ export function JourneyExercise({
     stage.notes.length === 1 &&
     stage.notes[0].target.kind === "range";
 
+  // For sequences / slides: show target notes + in-between + 1 above & below for context
+  const displayBands = useMemo(() => {
+    if (exerciseBands.length <= 1) return exerciseBands;
+    const indices = exerciseBands
+      .map((b) => allBands.findIndex((ab) => ab.id === b.id))
+      .filter((i) => i >= 0);
+    if (indices.length === 0) return exerciseBands;
+    const minIdx = Math.max(0, Math.min(...indices) - 1);
+    const maxIdx = Math.min(allBands.length - 1, Math.max(...indices) + 1);
+    return allBands.slice(minIdx, maxIdx + 1);
+  }, [exerciseBands, allBands]);
+
   const highlightIds = useMemo(() => exerciseBands.map((b) => b.id), [exerciseBands]);
 
   // Bands to play when user taps "Play tone"
@@ -508,8 +520,9 @@ export function JourneyExercise({
           />
         ) : (
           <PitchCanvas
-            bands={exerciseBands}
+            bands={displayBands}
             currentHzRef={pitchHzRef}
+            highlightIds={highlightIds}
             inTuneOverride={
               isRangeTarget && stage.notes[0].target.kind === "range"
                 ? { bands: exerciseBands, accept: rangeAccept }

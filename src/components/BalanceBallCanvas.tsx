@@ -16,7 +16,7 @@ interface BalanceBallCanvasProps {
 }
 
 // ── Curve layout ────────────────────────────────────────────────────────────
-const CURVE_PAD_X = 80;
+const CURVE_PAD_X = 40;
 const CURVE_PEAK_Y_RATIO = 0.38; // Y of hill plateau (higher on screen)
 const CURVE_EDGE_Y_RATIO = 0.72; // Y of slope bottoms (lower on screen)
 /** Notes live on the flat plateau in [NOTE_INSET, 1−NOTE_INSET]; slopes are outside. */
