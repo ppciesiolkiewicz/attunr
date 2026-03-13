@@ -1,0 +1,6 @@
+import{n as e}from"./iframe-B-evtYGe.js";var t=e();function n(){return(0,t.jsx)(`svg`,{className:`spin`,width:`15`,height:`15`,viewBox:`0 0 24 24`,fill:`none`,stroke:`currentColor`,strokeWidth:`2.5`,children:(0,t.jsx)(`path`,{d:`M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83`})})}var r={title:`UI/Spinner`,component:n},i={},a={render:()=>(0,t.jsxs)(`div`,{className:`flex items-center gap-2 text-white/70`,children:[(0,t.jsx)(n,{}),(0,t.jsx)(`span`,{className:`text-sm`,children:`Detecting pitch...`})]})};i.parameters={...i.parameters,docs:{...i.parameters?.docs,source:{originalSource:`{}`,...i.parameters?.docs?.source}}},a.parameters={...a.parameters,docs:{...a.parameters?.docs,source:{originalSource:`{
+  render: () => <div className="flex items-center gap-2 text-white/70">
+      <Spinner />
+      <span className="text-sm">Detecting pitch...</span>
+    </div>
+}`,...a.parameters?.docs?.source}}};var o=[`Default`,`InContext`];export{i as Default,a as InContext,o as __namedExportsOrder,r as default};
