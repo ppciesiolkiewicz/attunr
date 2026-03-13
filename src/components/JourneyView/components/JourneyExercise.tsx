@@ -27,7 +27,6 @@ export function JourneyExercise({
   onPlayTone,
   onPlaySlide,
   onSettingsUpdate,
-  onOpenSettings,
   onBack,
   onNext,
   onPrev,
@@ -42,7 +41,6 @@ export function JourneyExercise({
     key: K,
     value: Settings[K],
   ) => void;
-  onOpenSettings: () => void;
   onBack: () => void;
   onNext: (nextStageId: number) => void;
   onPrev?: (prevStageId: number) => void;
@@ -405,7 +403,7 @@ export function JourneyExercise({
   return (
     <div className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border-b border-white/[0.06] shrink-0 overflow-x-auto">
+      <div className="flex items-center gap-1.5 sm:gap-2 pl-3 pr-4 sm:pl-4 sm:pr-5 py-2 sm:py-2.5 border-b border-white/6 shrink-0 overflow-x-auto">
         <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90 pr-1!">
           ← Journey
         </Button>
@@ -426,13 +424,10 @@ export function JourneyExercise({
           {stage.title}
         </span>
         {stage.stageTypeId !== "intro" && (
-          <span className="ml-1.5">
+          <span className="ml-auto">
             <InfoButton onClick={() => setShowInfoModal(true)} />
           </span>
         )}
-        <Button variant="ghost" onClick={onOpenSettings} className="ml-auto shrink-0 text-xs text-white/55 hover:text-white/80">
-          {settings.tuning}
-        </Button>
       </div>
 
       {/* Info modal — re-open from exercise (i) button — skip for intro */}
@@ -535,54 +530,64 @@ export function JourneyExercise({
           </div>
         )}
 
-        {/* Pitch overlay + instruction in a shared row */}
+        {/* Pitch overlay + instruction — row on mobile, stacked on desktop */}
         {pitchHz !== null && (
-          <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
-            <div className="shrink-0">
-              {isRangeTarget ? (
-                <>
-                  <div
-                    className="text-2xl font-light"
-                    style={{ color: closestBand?.color ?? "#fff" }}
-                  >
-                    {locked ? "✓ " : ""}
-                    {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
-                  </div>
-                  {!locked && (
-                    <div className="text-sm mt-1 text-white/55">
-                      {rangeAccept === "below" ? "↑ Too high" : rangeAccept === "above" ? "↓ Too low" : ""}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <>
-                  <div
-                    className="text-3xl font-light tabular-nums"
-                    style={{ color: closestBand?.color ?? "#fff" }}
-                  >
-                    {Math.round(pitchHz)} Hz
-                  </div>
-                  {closestBand && (
-                    <div
-                      className="text-sm mt-0.5"
-                      style={{ color: `${closestBand.color}cc` }}
-                    >
-                      {locked ? "✓ " : "→ "}
-                      {closestBand.name}
-                    </div>
-                  )}
-                  {!locked && targetBand && (
-                    <div className="text-sm mt-1 text-white/55">
-                      {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
-                    </div>
-                  )}
-                </>
-              )}
+          <>
+            {/* Desktop: centered instruction (hidden on mobile) */}
+            <div className="pointer-events-none absolute top-2 left-0 right-0 z-10 hidden sm:flex justify-center px-12">
+              <p className="text-xs text-white/50 text-center leading-snug max-w-80">
+                {stage.instruction.split("\n")[0]}
+              </p>
             </div>
-            <p className="text-xs text-white/50 text-right leading-snug max-w-50">
-              {stage.instruction.split("\n")[0]}
-            </p>
-          </div>
+            {/* Pitch data + mobile instruction in a shared row */}
+            <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
+              <div className="shrink-0">
+                {isRangeTarget ? (
+                  <>
+                    <div
+                      className="text-2xl font-light"
+                      style={{ color: closestBand?.color ?? "#fff" }}
+                    >
+                      {locked ? "✓ " : ""}
+                      {stage.stageTypeId === "pitch-detection" && stage.notes[0].target.kind === "range" && stage.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
+                    </div>
+                    {!locked && (
+                      <div className="text-sm mt-1 text-white/55">
+                        {rangeAccept === "below" ? "↑ Too high" : rangeAccept === "above" ? "↓ Too low" : ""}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <div
+                      className="text-3xl font-light tabular-nums"
+                      style={{ color: closestBand?.color ?? "#fff" }}
+                    >
+                      {Math.round(pitchHz)} Hz
+                    </div>
+                    {closestBand && (
+                      <div
+                        className="text-sm mt-0.5"
+                        style={{ color: `${closestBand.color}cc` }}
+                      >
+                        {locked ? "✓ " : "→ "}
+                        {closestBand.name}
+                      </div>
+                    )}
+                    {!locked && targetBand && (
+                      <div className="text-sm mt-1 text-white/55">
+                        {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+              {/* Mobile-only: instruction next to pitch data */}
+              <p className="text-xs text-white/50 text-right leading-snug max-w-50 sm:hidden">
+                {stage.instruction.split("\n")[0]}
+              </p>
+            </div>
+          </>
         )}
 
         {/* Sequence step indicator */}

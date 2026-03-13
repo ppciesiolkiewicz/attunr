@@ -14,7 +14,6 @@ interface JourneyViewProps {
     key: K,
     value: Settings[K],
   ) => void;
-  onOpenSettings: () => void;
 }
 
 export default function JourneyView({
@@ -23,7 +22,6 @@ export default function JourneyView({
   pitchHzRef,
   onPlayTone,
   onSettingsUpdate,
-  onOpenSettings,
 }: JourneyViewProps) {
   const router = useRouter();
 
