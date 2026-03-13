@@ -50,7 +50,9 @@ export function Hero() {
         </h1>
 
         <p className="text-lg sm:text-xl text-white/60 leading-relaxed max-w-md mb-12">
-          You already know how this feels. We just gave it a path.
+          You already know how this feels.
+          <br />
+          We just gave it a path.
         </p>
 
         <Link href="/journey">
