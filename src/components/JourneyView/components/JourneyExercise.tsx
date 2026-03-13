@@ -406,7 +406,7 @@ export function JourneyExercise({
     <div className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border-b border-white/[0.06] shrink-0 overflow-x-auto">
-        <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90">
+        <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90 pr-1!">
           ← Journey
         </Button>
         <span className="text-white/35">|</span>
@@ -426,7 +426,9 @@ export function JourneyExercise({
           {stage.title}
         </span>
         {stage.stageTypeId !== "intro" && (
-          <InfoButton onClick={() => setShowInfoModal(true)} />
+          <span className="ml-1.5">
+            <InfoButton onClick={() => setShowInfoModal(true)} />
+          </span>
         )}
         <Button variant="ghost" onClick={onOpenSettings} className="ml-auto shrink-0 text-xs text-white/55 hover:text-white/80">
           {settings.tuning}

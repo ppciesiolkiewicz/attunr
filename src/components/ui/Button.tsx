@@ -21,7 +21,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   outline:
     "border border-white/20 text-white/68 hover:text-white/90 hover:border-white/30",
   ghost: "text-white/70 hover:text-white/85",
-  icon: "p-2.5 rounded-lg text-white/65 hover:text-white/95 hover:bg-white/[0.08]",
+  icon: "p-2.5 rounded-full flex items-center justify-center text-white/65 hover:text-white/95 hover:bg-white/[0.08]",
 };
 
 const primaryGlow: Record<ButtonSize, string> = {
