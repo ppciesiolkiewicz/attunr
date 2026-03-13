@@ -1,1 +1,0 @@
-import{n as e}from"./iframe-B-evtYGe.js";var t=e();function n({onClick:e,className:n=``}){return(0,t.jsx)(`button`,{onClick:e,"aria-label":`Close`,className:`cursor-pointer text-white/55 hover:text-white/82 transition-colors text-xl leading-none ${n}`,children:`✕`})}export{n as t};
