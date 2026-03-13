@@ -75,7 +75,7 @@ export default function CookieConsent() {
       }}
     >
       <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <p className="text-sm text-white/70 flex-1">
+        <p className="text-sm text-white/78 flex-1">
           We use cookies and similar technologies to help the app work (e.g.
           remembering your settings). By continuing, you accept our use of
           cookies.{" "}

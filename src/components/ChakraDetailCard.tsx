@@ -29,7 +29,7 @@ export default function ChakraDetailCard({
     >
       {isRainbow ? (
         /* Voice focus: low/high only, no specific frequency */
-        <p className="text-sm text-white/58">
+        <p className="text-sm text-white/68">
           {chakraIds[0] === "root"
             ? "Low tone — Find your chest voice"
             : "High tone — Find your head voice"}
@@ -55,10 +55,10 @@ export default function ChakraDetailCard({
               {/* Minimal: tone + warmup cue only; else name + mantra + element */}
               {isMinimal ? (
                 <div className="flex items-baseline gap-2 flex-wrap">
-                  <span className="text-base font-semibold tabular-nums text-white/85">
+                  <span className="text-base font-semibold tabular-nums text-white/90">
                     {displayHz} Hz
                   </span>
-                  <span className="text-sm text-white/58">
+                  <span className="text-sm text-white/68">
                     Comfortable middle tone — focus on sustaining the buzz.
                   </span>
                 </div>
@@ -71,22 +71,22 @@ export default function ChakraDetailCard({
                     >
                       {chakra.name}
                     </span>
-                    <span className="text-sm font-mono text-white/62">
+                    <span className="text-sm font-mono text-white/72">
                       {chakra.mantra}
                     </span>
-                    <span className="text-xs text-white/42 uppercase tracking-wider">
+                    <span className="text-xs text-white/52 uppercase tracking-wider">
                       {chakra.element}
                     </span>
-                    <span className="text-xs text-white/42 tabular-nums ml-auto">
+                    <span className="text-xs text-white/52 tabular-nums ml-auto">
                       {displayHz} Hz
                     </span>
                   </div>
                   {style === "full" ? (
-                    <p className="text-sm text-white/58 leading-relaxed">
+                    <p className="text-sm text-white/68 leading-relaxed">
                       {chakra.longDescription}
                     </p>
                   ) : chakra.interestingFact ? (
-                    <p className="text-sm text-white/58 leading-relaxed">
+                    <p className="text-sm text-white/68 leading-relaxed">
                       {chakra.interestingFact}
                     </p>
                   ) : null}

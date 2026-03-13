@@ -18,10 +18,10 @@ const variantStyles: Record<TextVariant, string> = {
   "heading-lg": "text-2xl font-semibold text-white",
   heading: "text-xl font-semibold text-white",
   "heading-sm": "text-lg font-semibold text-white",
-  body: "text-base text-white/85 leading-relaxed",
-  "body-sm": "text-sm text-white/70 leading-relaxed",
-  caption: "text-xs text-white/45",
-  label: "text-xs uppercase tracking-widest font-medium text-white/40",
+  body: "text-base text-white/90 leading-relaxed",
+  "body-sm": "text-sm text-white/78 leading-relaxed",
+  caption: "text-xs text-white/55",
+  label: "text-xs uppercase tracking-widest font-medium text-white/50",
 };
 
 const defaultTag: Record<TextVariant, TextElement> = {

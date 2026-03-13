@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button, CloseButton } from "@/components/ui";
+import { Button, CloseButton, SelectableCard } from "@/components/ui";
 import { TUNING_OPTIONS } from "@/constants/tuning";
 import type { TuningStandard } from "@/constants/tuning";
 import { hzToNoteName } from "@/lib/pitch";
@@ -19,7 +19,7 @@ interface SettingsPanelProps {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-col gap-3">
-      <p className="text-xs uppercase tracking-widest font-medium text-white/38">{title}</p>
+      <p className="text-xs uppercase tracking-widest font-medium text-white/48">{title}</p>
       {children}
     </div>
   );
@@ -57,7 +57,7 @@ export default function SettingsPanel({
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <span className="text-base font-semibold text-white/90">Settings</span>
+          <span className="text-base font-semibold text-white/95">Settings</span>
           <CloseButton onClick={onClose} />
         </div>
 
@@ -74,9 +74,9 @@ export default function SettingsPanel({
                   <span className="text-sm font-medium" style={{ color: "#ef8b5a" }}>
                     {hzToNoteName(settings.vocalRangeLowHz)}
                   </span>
-                  <span className="text-xs ml-1.5 text-white/38">{settings.vocalRangeLowHz} Hz</span>
+                  <span className="text-xs ml-1.5 text-white/48">{settings.vocalRangeLowHz} Hz</span>
                 </div>
-                <span className="text-white/38">→</span>
+                <span className="text-white/48">→</span>
                 <div
                   className="px-3.5 py-2 rounded-lg border"
                   style={{ backgroundColor: "rgba(129,140,248,0.1)", borderColor: "rgba(129,140,248,0.35)" }}
@@ -84,13 +84,13 @@ export default function SettingsPanel({
                   <span className="text-sm font-medium" style={{ color: "#818cf8" }}>
                     {hzToNoteName(settings.vocalRangeHighHz)}
                   </span>
-                  <span className="text-xs ml-1.5 text-white/38">{settings.vocalRangeHighHz} Hz</span>
+                  <span className="text-xs ml-1.5 text-white/48">{settings.vocalRangeHighHz} Hz</span>
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-white/55">Not yet detected</p>
+              <p className="text-sm text-white/65">Not yet detected</p>
             )}
-            <Button variant="ghost" onClick={onRedetect} className="text-sm text-violet-400/75 hover:text-violet-400 text-left">
+            <Button variant="ghost" onClick={onRedetect} className="text-sm text-violet-400/82 hover:text-violet-400 text-left">
               Re-detect my range →
             </Button>
           </Section>
@@ -101,36 +101,32 @@ export default function SettingsPanel({
           <Section title="Tuning">
             <div className="flex flex-col gap-1.5">
               {TUNING_OPTIONS.map((t) => (
-                <button
+                <SelectableCard
                   key={t.id}
+                  selected={settings.tuning === t.id}
                   onClick={() => {
                     onUpdate("tuning", t.id as TuningStandard);
                     analytics.settingsTuningChanged(t.id);
                   }}
-                  className="flex items-center justify-between px-3.5 py-2.5 rounded-xl border text-left transition-all"
-                  style={{
-                    backgroundColor: settings.tuning === t.id ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.04)",
-                    borderColor: settings.tuning === t.id ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.06)",
-                  }}
                 >
                   <div>
-                    <p className="text-sm font-medium text-white/90">{t.label}</p>
-                    <p className="text-xs mt-0.5 text-white/55">{t.description}</p>
+                    <p className="text-sm font-medium text-white/95">{t.label}</p>
+                    <p className="text-xs mt-0.5 text-white/65">{t.description}</p>
                   </div>
                   {settings.tuning === t.id && (
-                    <span className="text-sm ml-2 text-white/55">✓</span>
+                    <span className="text-sm ml-2 text-white/65">✓</span>
                   )}
-                </button>
+                </SelectableCard>
               ))}
             </div>
-            <p className="text-xs leading-relaxed text-white/38">
+            <p className="text-xs leading-relaxed text-white/48">
               Try each and keep the one that feels right for your practice.
               Tuning applies in voice-based mode.
             </p>
             <Link
               href="/articles/tuning"
               onClick={onClose}
-              className="text-sm text-violet-400/65 hover:text-violet-400 transition-colors"
+              className="cursor-pointer text-sm text-violet-400/75 hover:text-violet-400 transition-colors"
             >
               Learn about tuning →
             </Link>
@@ -140,14 +136,14 @@ export default function SettingsPanel({
 
           {/* ── About ──────────────────────────────────────────────────────── */}
           <Section title="About">
-            <p className="text-xs leading-relaxed text-white/38">
+            <p className="text-xs leading-relaxed text-white/48">
               Your microphone is used only for real-time pitch detection.
               Nothing is ever recorded or stored outside your device.
             </p>
             <Link
               href="/articles/solfeggio-frequencies"
               onClick={onClose}
-              className="text-sm text-violet-400/65 hover:text-violet-400 transition-colors"
+              className="cursor-pointer text-sm text-violet-400/75 hover:text-violet-400 transition-colors"
             >
               What are Solfeggio frequencies? →
             </Link>

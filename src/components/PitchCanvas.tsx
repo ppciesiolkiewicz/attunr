@@ -250,7 +250,7 @@ export default function PitchCanvas({
       const highlighted =
         !highlightIdsRef.current ||
         highlightIdsRef.current.includes(band.id);
-      const dim = highlighted ? 1 : 0.4;
+      const dim = highlighted ? 1 : 0.5;
 
       // Band fill — feathered gradient centred on cy
       const grad = ctx.createLinearGradient(0, cy - bh, 0, cy + bh);
@@ -266,7 +266,7 @@ export default function PitchCanvas({
       const lineStartX = showAsChakra ? LINE_START_X_CHAKRA : LINE_START_X_PLAIN;
       ctx.save();
       ctx.setLineDash([3, 7]);
-      ctx.strokeStyle = `rgba(${band.rgb}, ${(active ? 0.7 : 0.5) * dim})`;
+      ctx.strokeStyle = `rgba(${band.rgb}, ${(active ? 0.78 : 0.6) * dim})`;
       ctx.lineWidth = active ? 1.5 : 1;
       ctx.beginPath();
       ctx.moveTo(lineStartX, cy);
@@ -279,23 +279,23 @@ export default function PitchCanvas({
 
       // Note letter — large, acts as a musical anchor
       ctx.font = `700 19px system-ui, sans-serif`;
-      ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 1 : 0.88) * dim})`;
+      ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 1 : 0.92) * dim})`;
       ctx.fillText(band.note, 12, cy + 3);
       const noteW = ctx.measureText(band.note).width;
 
       if (showAsChakra) {
         // Chakra name + "Chakra" suffix — only for chakra-slot bands in Part 9
         ctx.font = `600 12px system-ui, sans-serif`;
-        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.95 : 0.8) * dim})`;
+        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.95 : 0.88) * dim})`;
         ctx.fillText(band.name.toUpperCase() + " CHAKRA", 32, cy - 3);
 
         ctx.font = `400 11px system-ui, sans-serif`;
-        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.75 : 0.55) * dim})`;
+        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.82 : 0.65) * dim})`;
         ctx.fillText(`${band.frequencyHz} Hz`, 32, cy + 9);
       } else {
         // Hz label — positioned after the note letter with a gap
         ctx.font = `400 11px system-ui, sans-serif`;
-        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.75 : 0.55) * dim})`;
+        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.82 : 0.65) * dim})`;
         ctx.fillText(`${band.frequencyHz} Hz`, 12 + noteW + 9, cy + 1);
       }
     }
@@ -331,7 +331,7 @@ export default function PitchCanvas({
         ctx.fillStyle = `rgba(${closest.rgb}, ${opacity})`;
         ctx.fill();
       } else {
-        ctx.strokeStyle = `rgba(${closest.rgb}, ${opacity * 0.55})`;
+        ctx.strokeStyle = `rgba(${closest.rgb}, ${opacity * 0.65})`;
         ctx.lineWidth = 1.2;
         ctx.stroke();
       }
@@ -356,17 +356,17 @@ export default function PitchCanvas({
 
       ctx.beginPath();
       ctx.arc(newestX, y, DOT_RADIUS, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${closest.rgb}, ${inTune ? 1 : 0.65})`;
+      ctx.fillStyle = `rgba(${closest.rgb}, ${inTune ? 1 : 0.75})`;
       ctx.fill();
 
       ctx.beginPath();
       ctx.arc(newestX, y, DOT_RADIUS * 0.38, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.fillStyle = "rgba(255,255,255,0.82)";
       ctx.fill();
 
       ctx.save();
       ctx.setLineDash([2, 5]);
-      ctx.strokeStyle = `rgba(${closest.rgb}, 0.25)`;
+      ctx.strokeStyle = `rgba(${closest.rgb}, 0.35)`;
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(newestX + ringRadius + 4, y);

@@ -59,18 +59,6 @@ Playing/in-tune states as before. Tapping plays via the binaural audio engine.
 
 ---
 
-## Audio controls row (shared)
-
-Sits between tone buttons and the bottom edge:
-
-```
-[🎵 Drone: Off ▾]    [🎧 Binaural]
-```
-
-See [Audio Engine](./audio-engine.md) for behaviour.
-
----
-
 ## Mic lifecycle
 
 Mic starts automatically during onboarding. There is no mic button on either

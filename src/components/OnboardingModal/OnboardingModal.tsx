@@ -162,7 +162,7 @@ export default function OnboardingModal({
           <h1 className="text-[2.1rem] font-semibold tracking-tight text-white leading-none">
             attunr
           </h1>
-          <p className="mt-1.5 text-xs text-white/52 tracking-widest uppercase">
+          <p className="mt-1.5 text-xs text-white/62 tracking-widest uppercase">
             align your voice
           </p>
         </div>

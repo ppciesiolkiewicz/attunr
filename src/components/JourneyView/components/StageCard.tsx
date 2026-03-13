@@ -30,7 +30,7 @@ export function StageCard({
     <button
       onClick={() => isUnlocked && onSelect(stage.id)}
       disabled={!isUnlocked}
-      className="w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
+      className="cursor-pointer disabled:cursor-not-allowed w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
       style={{
         borderColor: !isUnlocked
           ? "rgba(255,255,255,0.12)"
@@ -41,7 +41,6 @@ export function StageCard({
           ? `${primaryColor}12`
           : "rgba(255,255,255,0.05)",
         opacity: !isUnlocked ? 0.58 : 1,
-        cursor: !isUnlocked ? "not-allowed" : "pointer",
       }}
     >
       <div
@@ -94,26 +93,26 @@ export function StageCard({
               >
                 {slotChakra.mantra}
               </span>
-              <span className="text-xs text-white/48">·</span>
-              <span className="text-xs text-white/62">
+              <span className="text-xs text-white/58">·</span>
+              <span className="text-xs text-white/72">
                 {slotChakra.element}
               </span>
-              <span className="text-xs text-white/48">·</span>
-              <span className="text-xs text-white/68">
+              <span className="text-xs text-white/58">·</span>
+              <span className="text-xs text-white/78">
                 {slotChakra.description}
               </span>
             </div>
           )}
         {stage.stageTypeId === "intro" && stage.cardCue && (
-          <p className="text-xs text-white/58">
+          <p className="text-xs text-white/68">
             {stage.cardCue}
           </p>
         )}
         {stage.stageTypeId === "breathwork" && stage.cardCue && (
-          <p className="text-xs text-white/58">{stage.cardCue}</p>
+          <p className="text-xs text-white/68">{stage.cardCue}</p>
         )}
         {(stage.stageTypeId === "pitch-detection" || stage.stageTypeId === "pitch-detection-slide") && stage.subtitle && (
-          <p className="text-xs text-white/58">{stage.subtitle}</p>
+          <p className="text-xs text-white/68">{stage.subtitle}</p>
         )}
       </div>
 
@@ -123,9 +122,9 @@ export function StageCard({
             ✓
           </span>
         ) : !isUnlocked ? (
-          <span className="text-sm text-white/55">⋯</span>
+          <span className="text-sm text-white/65">⋯</span>
         ) : (
-          <span className="text-base text-white/42 group-hover:text-white/72 transition-colors">
+          <span className="text-base text-white/52 group-hover:text-white/80 transition-colors">
             ›
           </span>
         )}

@@ -11,12 +11,12 @@ export default function PrivacyPage() {
       <div className="max-w-xl mx-auto px-5 py-8">
         <Link
           href="/"
-          className="text-sm text-white/45 hover:text-white/75 transition-colors mb-6 inline-block"
+          className="text-sm text-white/55 hover:text-white/82 transition-colors mb-6 inline-block"
         >
           ← Back
         </Link>
         <h1 className="text-xl font-semibold text-white mb-4">Privacy Policy</h1>
-        <div className="text-sm text-white/65 space-y-4 leading-relaxed">
+        <div className="text-sm text-white/75 space-y-4 leading-relaxed">
           <p>
             attunr processes your voice locally in the browser. No voice data is
             sent to our servers.

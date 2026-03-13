@@ -53,6 +53,27 @@ Do not extract for its own sake; only when it genuinely reduces complexity or en
 
 Don't extract shared logic or a shared component until the pattern is stable and clear. A few similar-looking code blocks are often preferable to a premature abstraction that must twist to accommodate every caller. If callers end up working around an abstraction rather than with it, the abstraction is harmful — remove it.
 
+## Props Define Behaviour
+
+Atoms must use **props** (variant, size, selected, disabled, etc.) to control all visual and interactive behaviour. Never duplicate styling logic at call sites.
+
+- **`<Button>`** — `variant` (`primary` | `secondary` | `outline` | `ghost` | `icon`), `size` (`sm` | `md` | `lg`). All variants include `cursor-pointer`; disabled state shows `cursor-not-allowed`.
+- **`<SelectableCard>`** — `selected` boolean controls active/inactive styling. Used for radio-style option lists.
+- **`<CloseButton>`** — standalone close icon with `cursor-pointer`.
+- **`<Text>`** — `variant` (`heading-lg` | `heading` | `heading-sm` | `body` | `body-sm` | `caption` | `label`), `as` to override the HTML tag.
+- **`<Modal>`** — container with backdrop, panel, and click-outside handling.
+- **`<Spinner>`** — loading indicator.
+
+When writing a raw `<button>` or clickable `<div>` (which should be rare — see "Atoms First"), always include `cursor-pointer` in the className. Prefer using an atom with an appropriate variant instead.
+
+## Storybook
+
+Every atom in `ui/` must have a co-located `.stories.tsx` file. Run `npm run storybook` to develop and preview components in isolation.
+
+- Stories live next to the component: `Button.tsx` + `Button.stories.tsx`.
+- Include at least one story per variant/state (default, selected, disabled, all sizes, etc.).
+- Use Storybook controls to make props interactive.
+
 ## Clean Code Defaults
 
 - **Names reveal intent.** `isLoading`, `journeyStages`, `handleSubmit` — not `flag`, `data`, `fn`.

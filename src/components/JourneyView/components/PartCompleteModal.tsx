@@ -67,14 +67,14 @@ export function PartCompleteModal({
           <h2 className="text-xl font-semibold text-white text-center">
             Part {ROMAN[part - 1]} Complete
           </h2>
-          <p className="text-sm text-white/72 text-center">{partName}</p>
+          <p className="text-sm text-white/80 text-center">{partName}</p>
         </div>
         <div className="px-5 py-4 border-t border-white/[0.06] flex flex-col gap-3">
           <div>
-            <p className="text-xs uppercase tracking-widest text-white/45 mb-1">
+            <p className="text-xs uppercase tracking-widest text-white/55 mb-1">
               What you learnt
             </p>
-            <p className="text-sm text-white/85">{learned}</p>
+            <p className="text-sm text-white/90">{learned}</p>
           </div>
           {tip && (
             <p className="text-sm font-medium" style={{ color: "#a78bfa" }}>

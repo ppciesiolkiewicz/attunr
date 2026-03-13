@@ -19,9 +19,9 @@ const variantStyles: Record<ButtonVariant, string> = {
   secondary:
     "bg-violet-600 text-white hover:bg-violet-500",
   outline:
-    "border border-white/20 text-white/58 hover:text-white/85 hover:border-white/30",
-  ghost: "text-white/60 hover:text-white/80",
-  icon: "p-2.5 rounded-lg text-white/55 hover:text-white/90 hover:bg-white/[0.08]",
+    "border border-white/20 text-white/68 hover:text-white/90 hover:border-white/30",
+  ghost: "text-white/70 hover:text-white/85",
+  icon: "p-2.5 rounded-lg text-white/65 hover:text-white/95 hover:bg-white/[0.08]",
 };
 
 const primaryGlow: Record<ButtonSize, string> = {
@@ -41,7 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`transition-all disabled:opacity-60 disabled:cursor-not-allowed ${variantStyles[variant]} ${isIcon ? "" : sizeStyles[size]} ${className}`}
+        className={`cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed ${variantStyles[variant]} ${isIcon ? "" : sizeStyles[size]} ${className}`}
         style={
           isPrimary
             ? {

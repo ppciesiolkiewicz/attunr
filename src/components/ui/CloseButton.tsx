@@ -8,7 +8,7 @@ export function CloseButton({ onClick, className = "" }: CloseButtonProps) {
     <button
       onClick={onClick}
       aria-label="Close"
-      className={`text-white/45 hover:text-white/75 transition-colors text-xl leading-none ${className}`}
+      className={`cursor-pointer text-white/55 hover:text-white/82 transition-colors text-xl leading-none ${className}`}
     >
       ✕
     </button>

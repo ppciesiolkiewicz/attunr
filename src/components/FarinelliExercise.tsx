@@ -289,7 +289,7 @@ export function FarinelliExercise({
           {status === "countdown" && (
             <>
               <p className="text-2xl font-medium text-white mb-1">Starting in</p>
-              <p className="text-white/55 text-sm">Exhale all the air and get ready for inhale</p>
+              <p className="text-white/65 text-sm">Exhale all the air and get ready for inhale</p>
             </>
           )}
         </div>
@@ -313,11 +313,11 @@ export function FarinelliExercise({
         <div className={`${bottomSlotMinH} flex flex-col items-center justify-start gap-2 min-w-[12rem] max-w-[300px] px-4 text-center`}>
           {status === "ready" ? (
             <>
-              <p className="text-sm text-white/60">{FARINELLI_INSTRUCTIONS}</p>
-              <p className="text-xs text-white/45">Get comfortable, then tap when you&apos;re ready</p>
+              <p className="text-sm text-white/70">{FARINELLI_INSTRUCTIONS}</p>
+              <p className="text-xs text-white/55">Get comfortable, then tap when you&apos;re ready</p>
             </>
           ) : (
-            <p className="text-xs text-white/55">
+            <p className="text-xs text-white/65">
               Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES)[adviceIndex]}
             </p>
           )}
@@ -331,8 +331,8 @@ export function FarinelliExercise({
       <div className="flex flex-col items-center justify-center h-full gap-4 text-white">
         <span className="text-5xl">✓</span>
         <p className="text-xl font-medium">Well done</p>
-        <p className="text-white/60 text-sm">You completed all 7 cycles</p>
-        <p className="text-white/45 text-xs text-center max-w-[260px]">
+        <p className="text-white/70 text-sm">You completed all 7 cycles</p>
+        <p className="text-white/55 text-xs text-center max-w-[260px]">
           Your diaphragm got a great workout — control builds gently over time with practice.
         </p>
       </div>
@@ -343,7 +343,7 @@ export function FarinelliExercise({
     <div className="flex flex-col items-center justify-center h-full gap-8 px-6">
       <div className={`${topSlotMinH} w-full flex flex-col items-center justify-end text-center`}>
         <p className="text-2xl font-medium text-white mb-1">{phaseLabel}</p>
-        <p className="text-white/55 text-sm">
+        <p className="text-white/65 text-sm">
           Cycle {cycleCount - startCount + 1} of {maxCount - startCount + 1} · {cycleCount} counts
         </p>
       </div>
@@ -358,7 +358,7 @@ export function FarinelliExercise({
       />
 
       <div className={`${bottomSlotMinH} flex flex-col items-center justify-start max-w-[280px]`}>
-        <p className="text-xs text-white/55 text-center">
+        <p className="text-xs text-white/65 text-center">
           Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES)[adviceIndex]}
         </p>
       </div>

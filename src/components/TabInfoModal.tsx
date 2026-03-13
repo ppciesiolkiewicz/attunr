@@ -43,26 +43,19 @@ export function InfoIcon({ className, size = 12 }: { className?: string; size?: 
 
 export function InfoButton({ onClick }: { onClick: () => void }) {
   return (
-    <button
+    <Button
+      variant="icon"
       onClick={onClick}
       aria-label="Show info"
-      className="flex items-center justify-center w-8 h-8 rounded-full transition-all"
+      className="w-8 h-8 rounded-full"
       style={{
         background: "rgba(255,255,255,0.06)",
         border: "1px solid rgba(255,255,255,0.1)",
         color: "rgba(255,255,255,0.5)",
       }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.1)";
-        (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.85)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.06)";
-        (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.5)";
-      }}
     >
       <InfoIcon size={14} />
-    </button>
+    </Button>
   );
 }
 
@@ -75,10 +68,10 @@ export function HeadphonesNotice() {
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <span className="text-white/52 shrink-0 flex items-center justify-center">
+      <span className="text-white/62 shrink-0 flex items-center justify-center">
         <HeadphonesIcon />
       </span>
-      <p className="text-sm text-white/58 leading-relaxed text-left">
+      <p className="text-sm text-white/68 leading-relaxed text-left">
         For the best experience, use headphones — they keep the playback out of your
         mic so we can hear your voice clearly.
       </p>
@@ -115,7 +108,7 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
               onChange={(e) => setPersist(e.target.checked)}
               className="w-3.5 h-3.5 accent-violet-500 cursor-pointer"
             />
-            <span className="text-xs text-white/50 group-hover:text-white/65 transition-colors select-none">
+            <span className="text-xs text-white/60 group-hover:text-white/75 transition-colors select-none">
               Don&apos;t show this again
             </span>
           </label>

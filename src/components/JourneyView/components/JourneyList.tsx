@@ -22,7 +22,7 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
     <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
         <h1 className="text-xl sm:text-2xl font-semibold text-white">Journey</h1>
-        <div className="flex flex-col gap-2 text-sm text-white/65 leading-relaxed">
+        <div className="flex flex-col gap-2 text-sm text-white/75 leading-relaxed">
           <p>
             This is where your journey begins. You&apos;ll be guided through
             learning and practice — from vocal warmups to sustaining each tone
@@ -45,10 +45,10 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
             <section key={partNum} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xs uppercase tracking-widest text-white/45">
+                  <span className="text-xs uppercase tracking-widest text-white/55">
                     Part {roman}
                   </span>
-                  <span className="text-xs text-white/72 font-medium">
+                  <span className="text-xs text-white/80 font-medium">
                     {PART_TITLES[partNum]}
                   </span>
                   {partComplete && (

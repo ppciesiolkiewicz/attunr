@@ -106,7 +106,7 @@ export function ExerciseInfoModal({
     >
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
-            <p className="text-xs text-white/45 mb-1 flex items-center gap-1.5">
+            <p className="text-xs text-white/55 mb-1 flex items-center gap-1.5">
               {isTechniqueIntro && <BookIcon className="opacity-70" />}
               <span className="uppercase tracking-widest">
                 Part{" "}
@@ -114,12 +114,12 @@ export function ExerciseInfoModal({
                   stage.part - 1
                 ]}
               </span>
-              <span className="text-white/35">·</span>
+              <span className="text-white/45">·</span>
               <span>
                 {getStepInPart(stageId).stepIndex} of{" "}
                 {getStepInPart(stageId).stepsInPart}
               </span>
-              <span className="text-white/35">·</span>
+              <span className="text-white/45">·</span>
               <span>
                 {isTechniqueIntro
                   ? "Learn"
@@ -168,14 +168,14 @@ export function ExerciseInfoModal({
                 <p className="text-sm font-semibold text-amber-400/95 mb-1.5">
                   Before you begin
                 </p>
-                <p className="text-sm text-white/75 leading-relaxed">
+                <p className="text-sm text-white/82 leading-relaxed">
                   If you have heart or respiratory conditions, or are pregnant,
                   check with your doctor first. Stop immediately if you feel
                   dizzy, lightheaded, or unwell at any time.
                 </p>
               </div>
               <div className="flex items-center justify-center py-3">
-                <span className="text-white/45 text-[0.5em] leading-none">
+                <span className="text-white/55 text-[0.5em] leading-none">
                   ●
                 </span>
               </div>
@@ -195,12 +195,12 @@ export function ExerciseInfoModal({
                 }}
               >
                 <span className="text-2xl opacity-50">▶</span>
-                <p className="text-sm text-white/45 font-medium">
+                <p className="text-sm text-white/55 font-medium">
                   Video coming soon
                 </p>
               </div>
               <div className="flex flex-col gap-3">
-                <p className="text-sm font-medium text-white/70 tracking-wide uppercase">
+                <p className="text-sm font-medium text-white/78 tracking-wide uppercase">
                   Key tips
                 </p>
                 <ul className="flex flex-col gap-2.5">
@@ -244,7 +244,7 @@ export function ExerciseInfoModal({
                   }}
                 >
                   <span className="text-2xl opacity-50">▶</span>
-                  <p className="text-sm text-white/45 font-medium">
+                  <p className="text-sm text-white/55 font-medium">
                     Video coming soon
                   </p>
                 </div>
@@ -255,7 +255,7 @@ export function ExerciseInfoModal({
           {!isTechniqueIntro &&
             stage.stageTypeId !== "breathwork" && <HeadphonesNotice />}
 
-          <p className="text-xs text-white/45 text-center">
+          <p className="text-xs text-white/55 text-center">
             Tuning: {settings.tuning}
           </p>
         </div>
@@ -269,11 +269,11 @@ export function ExerciseInfoModal({
                 onChange={(e) => setDontShowAgain(e.target.checked)}
                 className="w-4 h-4 rounded border-white/30 bg-white/5 text-violet-500 focus:ring-violet-500/50"
               />
-              <span className="text-sm text-white/58">
+              <span className="text-sm text-white/68">
                 Don&apos;t show for this exercise again
               </span>
             </label>
-            <p className="text-xs text-white/40 pl-6 flex items-center gap-1.5 flex-wrap">
+            <p className="text-xs text-white/50 pl-6 flex items-center gap-1.5 flex-wrap">
               You can always bring it back by clicking the{" "}
               <InfoIcon size={12} className="inline-block opacity-70 shrink-0" />{" "}
               icon on the screen

@@ -124,7 +124,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
                 pathname === "/" || pathname.startsWith("/journey")
                   ? "bg-violet-600 text-white"
-                  : "text-white/55 hover:text-white/85"
+                  : "text-white/65 hover:text-white/90"
               }`}
             >
               Journey
@@ -132,7 +132,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             <Link
               href="/train"
               className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
-                pathname === "/train" ? "bg-violet-600 text-white" : "text-white/55 hover:text-white/85"
+                pathname === "/train" ? "bg-violet-600 text-white" : "text-white/65 hover:text-white/90"
               }`}
             >
               Train
@@ -140,7 +140,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
           <Link
             href="/articles"
-            className="px-3 py-1.5 text-sm font-medium text-white/35 hover:text-white/55 transition-colors"
+            className="px-3 py-1.5 text-sm font-medium text-white/45 hover:text-white/65 transition-colors"
           >
             Learn
           </Link>
@@ -170,13 +170,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             style={{ backgroundColor: "rgba(5,5,12,0.85)", backdropFilter: "blur(8px)" }}
           >
             <div className="flex flex-col items-center gap-5 text-center max-w-xs">
-              <p className="text-base text-white/85">
+              <p className="text-base text-white/90">
                 Tap to enable your microphone for pitch detection
               </p>
               <Button size="lg" onClick={() => startListening()} className="px-8 active:scale-[0.98]">
                 Enable microphone
               </Button>
-              <p className="text-xs text-white/45">
+              <p className="text-xs text-white/55">
                 Used only for real-time pitch. Nothing is recorded.
               </p>
             </div>

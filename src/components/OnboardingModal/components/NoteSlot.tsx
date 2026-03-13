@@ -88,7 +88,7 @@ export function NoteSlot({
             </span>
           </div>
         </div>
-        <span className="text-xs text-white/48">{label}</span>
+        <span className="text-xs text-white/58">{label}</span>
       </div>
     );
   }
@@ -111,7 +111,7 @@ export function NoteSlot({
       <span className="text-lg font-semibold" style={{ color: isPlaceholder ? "rgba(255,255,255,0.35)" : color }}>
         {valueHz ? hzToNoteName(valueHz) : "…"}
       </span>
-      <span className="text-xs text-white/48 mt-0.5">
+      <span className="text-xs text-white/58 mt-0.5">
         {valueHz ? `${valueHz} Hz` : ""} · {label}
       </span>
     </div>
@@ -129,7 +129,7 @@ export function NoteSlot({
           <span className="text-lg font-semibold" style={{ color: isPlaceholder ? "rgba(255,255,255,0.35)" : color }}>
             {valueHz ? hzToNoteName(valueHz) : "…"}
           </span>
-          <span className="text-xs text-white/48 mt-0.5">
+          <span className="text-xs text-white/58 mt-0.5">
             {valueHz ? `${valueHz} Hz` : ""} · {label}
           </span>
         </button>

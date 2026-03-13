@@ -16,10 +16,10 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <div>
-        <p className="text-base font-medium text-white/88">
+        <p className="text-base font-medium text-white/92">
           Let&apos;s find your voice
         </p>
-        <p className="text-sm text-white/55 mt-1.5 leading-relaxed px-2">
+        <p className="text-sm text-white/65 mt-1.5 leading-relaxed px-2">
           We&apos;ll listen to you hum low and high to map your
           comfortable range. Takes about 10 seconds.
         </p>
@@ -52,7 +52,7 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
         )}
       </Button>
 
-      <p className="text-xs text-white/42 leading-relaxed px-2">
+      <p className="text-xs text-white/52 leading-relaxed px-2">
         Microphone used only for real-time pitch detection. Nothing is
         recorded.
       </p>

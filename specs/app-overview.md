@@ -2,80 +2,61 @@
 
 ## Vision
 
-Voice is one of the most powerful tools humans have for regulating emotions and breathing.
+Most adults never use their voice intentionally. We speak, but we don't _feel_ our voice in our body. Attunr changes that.
 
-**Problem:** Modern adults rarely use their voice intentionally, even though vocalization has measurable benefits for mood, breathing, and nervous system regulation.
+**Somatic regulation through voice.** The app guides you to produce specific tones and notice where they resonate — chest, throat, head. That simple act of attention activates the vagus nerve, deepens breathing, and shifts the nervous system toward calm. It's not singing lessons; it's a body practice that happens to use sound.
 
-**Solution:** Guided vocal and breathwork exercises with real-time pitch feedback — somatic wellbeing through voice, not singing lessons.
+Attunr sits at the intersection of:
 
-The core concept is **vocal placement**: feeling where sound resonates in the body, and using that connection deliberately. Keywords: somatic, meditation, feeling, regulation.
+- **Breathwork & meditation** — structured exercises that regulate the nervous system
+- **Vocal exploration** — feeling resonance, not chasing pitch perfection
+- **Somatic awareness** — reconnecting with the body through vibration and breath
+- **Ancient chanting traditions** — seed mantras, sustained tones, and intentional vocalization reframed for a modern, secular context
 
-**Future direction:** A growing library of short, varied exercises. Think Candy Crush Saga: structured progression alongside quick creative variety. Low barrier, high return.
+**Why it works:** Vocalization is one of the fastest ways to shift physiological state. A long exhale on a low hum activates the parasympathetic nervous system within seconds. Attunr gives that experience structure, variety, and gentle progression so it becomes a habit, not a novelty.
 
-No install, no account. Open the page and begin.
+**Future direction:** The current Journey has 49 stages across 9 parts — enough to build a real practice. But the vision is hundreds of levels, always growing. Think Candy Crush Saga: structured progression, varied mechanics, and a reason to come back tomorrow. Low barrier, high return. Every session leaves you feeling different than when you started.
 
 ## Tone system
 
-Exercises use tones fitted to the user's vocal range, detected during onboarding. Low tones resonate in the chest, high tones in the head. Frequencies scale to a comfortable range for any voice type.
-
-Four tuning standards are available in Settings: A432 (default, warmer), A440 (standard Western), A444, A528.
+Exercises use tones fitted to the user's vocal range, detected during onboarding. Low tones resonate in the chest, high tones in the head. The app adapts to any voice type so the experience always feels comfortable and embodied.
 
 ## App structure
 
-Three main views accessed via bottom nav:
+The app centres on **Journey** — a guided 49-stage progression through vocal and breathwork techniques. Users open the app, pick up where they left off, and follow the path.
 
-| View        | Route        | Description                                          |
-| ----------- | ------------ | ---------------------------------------------------- |
-| **Journey** | `/`          | Guided 49-stage progression through vocal techniques |
-| **Train**   | (tab)        | Free-form practice — any tone, any order              |
-| **Explore** | `/explore`   | Same as Train, accessed via separate route            |
-
-Plus **Settings** (slide-up panel), and **Onboarding** (first launch only).
-
-## Feature status
-
-| Feature                                 | Status  |
-| --------------------------------------- | ------- |
-| Pitch detection (ml5 / CREPE)           | ✓ Built |
-| Onboarding with vocal range detection   | ✓ Built |
-| Tone playback with binaural beats       | ✓ Built |
-| Train tab (free-form)                   | ✓ Built |
-| Journey (49 guided stages, 9 parts)     | ✓ Built |
-| Settings panel with localStorage        | ✓ Built |
-| Farinelli breathwork exercise           | ✓ Built |
-| Mantra/sound cards (Part 9 only)        | ✓ Built |
-| Drone accompaniment                     | Not built |
-| Waveform ring visualiser                | Not built |
-| Login / accounts                        | Out of scope |
+**Settings** (slide-up panel) and **Onboarding** (first launch) round out the experience.
 
 ## Journey structure
 
 49 stages across 9 parts:
 
-| Part | Name                       | Stages  | Focus                              |
-| ---- | -------------------------- | ------- | ---------------------------------- |
-| I    | Introduction               | 1       | Vocal placement concept            |
-| II   | Vocal warmups              | 2–9     | Farinelli, lip rolls, Low U, Hoo hoo |
-| III  | Sustain                    | 10–17   | Hold each of the 7 tones           |
-| IV   | Sequences                  | 18–23   | Multi-tone sequences               |
-| V    | Vowel U                    | 24–31   | Uuu across all 7 tones             |
-| VI   | Vowel EE                   | 32–35   | EE on low, mid, high               |
-| VII  | Vowel flow U→EE            | 36–37   | Vowel transition on one tone       |
-| VIII | Puffy cheeks               | 38–41   | Breath control technique           |
-| IX   | Sounds and Mantras         | 42–49   | Mantras (LAM–AH) on each tone      |
+| Part | Name               | Stages | Focus                                |
+| ---- | ------------------ | ------ | ------------------------------------ |
+| I    | Introduction       | 1      | Vocal placement concept              |
+| II   | Vocal warmups      | 2–9    | Farinelli, lip rolls, Low U, Hoo hoo |
+| III  | Sustain            | 10–17  | Hold each of the 7 tones             |
+| IV   | Sequences          | 18–23  | Multi-tone sequences                 |
+| V    | Vowel U            | 24–31  | Uuu across all 7 tones               |
+| VI   | Vowel EE           | 32–35  | EE on low, mid, high                 |
+| VII  | Vowel flow U→EE    | 36–37  | Vowel transition on one tone         |
+| VIII | Puffy cheeks       | 38–41  | Breath control technique             |
+| IX   | Sounds and Mantras | 42–49  | Mantras (LAM–AH) on each tone        |
 
-## Stage types
+## Why it works — the somatic case
 
-| stageTypeId              | Description                                            |
-| ------------------------ | ------------------------------------------------------ |
-| `intro`                  | Instructional card, no exercise                        |
-| `pitch-detection`        | Hold one or more tones in sequence                     |
-| `pitch-detection-slide`  | Continuous glide between two tones                     |
-| `breathwork`             | Farinelli breathing cycles (no pitch detection)        |
+Vocalization is one of the most direct ways to shift your physiological state:
 
-## Tech highlights
+- **Vagal activation.** The vagus nerve innervates the larynx. Sustained humming, chanting, and controlled exhale through sound stimulate the ventral vagal complex, moving the nervous system from sympathetic (fight/flight) toward parasympathetic (rest/digest). Studies on "Om" chanting show measurable increases in vagal tone within minutes.
+- **Breath regulation by stealth.** Every vocal exercise is secretly a breathing exercise. To sustain a tone you must slow your exhale; to slide between pitches you must control airflow. The voice gives the breath a job, making slow breathing feel natural rather than forced.
+- **Vibratory feedback.** Low tones vibrate the chest and sternum; high tones resonate in the skull and sinuses. This physical sensation anchors attention in the body (interoception), which is the foundation of somatic awareness and emotional regulation.
+- **Rhythm and entrainment.** Rhythmic vocal patterns synchronise breath, heart rate, and neural oscillations — a phenomenon called cardiorespiratory coupling. Rhythmic exercises deepen the regulatory effect by adding a temporal structure the body can lock onto.
+- **Accessible and immediate.** Unlike meditation, which asks you to "just sit," vocal exercises give the mind a concrete task. The feedback loop (hear the tone, feel the vibration, watch the pitch) keeps attention engaged without effort.
 
-- **ml5 CREPE** — deep-learning pitch detection, accurate for voice
-- **Web Audio API** — binaural tone playback
-- **Next.js / Vercel** — fast global delivery, no install
-- **localStorage** — all settings and progress persisted client-side, no account needed
+## What you do in the app
+
+- **Sustain** — hold a tone at a target pitch and feel where it resonates
+- **Slide** — glide continuously between two tones, connecting body regions
+- **Rhythm** — repeat tones in rhythmic patterns, syncing voice with breath and pulse to deepen nervous-system regulation
+- **Breathwork** — Farinelli breathing cycles that calm the nervous system
+- **Mantras** — chant seed syllables (LAM, VAM, RAM … AH) on specific tones

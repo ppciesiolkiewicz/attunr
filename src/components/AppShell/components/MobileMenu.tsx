@@ -41,11 +41,11 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
             className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${
               pathname === "/" || pathname.startsWith("/journey")
                 ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20"
-                : "text-white/80 hover:bg-white/[0.06] active:bg-white/[0.08]"
+                : "text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08]"
             }`}
             onClick={onClose}
           >
-            <span className={pathname === "/" || pathname.startsWith("/journey") ? "text-white" : "text-white/60"}>
+            <span className={pathname === "/" || pathname.startsWith("/journey") ? "text-white" : "text-white/70"}>
               <MenuJourneyIcon />
             </span>
             Journey
@@ -53,28 +53,28 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
           <Link
             href="/train"
             className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${
-              pathname === "/train" ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20" : "text-white/80 hover:bg-white/[0.06] active:bg-white/[0.08]"
+              pathname === "/train" ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20" : "text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08]"
             }`}
             onClick={onClose}
           >
-            <span className={pathname === "/train" ? "text-white" : "text-white/60"}>
+            <span className={pathname === "/train" ? "text-white" : "text-white/70"}>
               <MenuTrainIcon />
             </span>
             Train
           </Link>
           <Link
             href="/articles"
-            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/80 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all"
+            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all"
             onClick={onClose}
           >
-            <span className="text-white/60">
+            <span className="text-white/70">
               <MenuLearnIcon />
             </span>
             Learn
           </Link>
         </nav>
         <div className="mt-auto px-5 py-5 pt-5 border-t border-white/[0.06]">
-          <p className="text-center text-[0.9rem] text-white/55 tracking-wide flex flex-col gap-1 items-center font-light">
+          <p className="text-center text-[0.9rem] text-white/65 tracking-wide flex flex-col gap-1 items-center font-light">
             <span>Align your voice</span>
             <span className="text-violet-400/70 text-[0.5em] leading-none">●</span>
             <span>find your frequency</span>

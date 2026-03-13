@@ -46,26 +46,26 @@ export function DetectFlowPhase({
       <div>
         {phase === "detect-low" && (
           <>
-            <p className="text-base font-medium text-white/88">Hum low — uu</p>
-            <p className="text-sm text-white/55 mt-1 leading-relaxed">
+            <p className="text-base font-medium text-white/92">Hum low — uu</p>
+            <p className="text-sm text-white/65 mt-1 leading-relaxed">
               Feel it in your chest. Hold steady for 2 seconds.
             </p>
           </>
         )}
         {phase === "detect-high" && (
           <>
-            <p className="text-base font-medium text-white/88">Now hoo hoo — high</p>
-            <p className="text-sm text-white/55 mt-1 leading-relaxed">
+            <p className="text-base font-medium text-white/92">Now hoo hoo — high</p>
+            <p className="text-sm text-white/65 mt-1 leading-relaxed">
               Feel it in your head and face. Just a moment.
             </p>
           </>
         )}
         {phase === "result" && voiceLabel && (
           <>
-            <p className="text-base font-medium text-white/88">Your vocal range</p>
-            <p className="text-sm text-white/55 mt-1">
+            <p className="text-base font-medium text-white/92">Your vocal range</p>
+            <p className="text-sm text-white/65 mt-1">
               Likely{" "}
-              <span className="text-white/75 font-medium">{voiceLabel}</span>{" "}
+              <span className="text-white/82 font-medium">{voiceLabel}</span>{" "}
               · tap a note to re-detect.
             </p>
           </>
@@ -92,7 +92,7 @@ export function DetectFlowPhase({
         )}
 
         <div className="flex flex-col items-center">
-          <span className="text-white/25 text-lg">→</span>
+          <span className="text-white/35 text-lg">→</span>
         </div>
 
         {phase === "detect-high" ? (
@@ -122,7 +122,7 @@ export function DetectFlowPhase({
       )}
 
       <div className="w-full min-h-[100px] flex flex-col gap-3">
-        <p className="text-sm text-white/48 leading-relaxed px-2">
+        <p className="text-sm text-white/58 leading-relaxed px-2">
           Exercises will be tuned to your range. Re-detect anytime in
           settings.
         </p>

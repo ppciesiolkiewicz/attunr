@@ -387,29 +387,29 @@ export function JourneyExercise({
     <div className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border-b border-white/[0.06] shrink-0 overflow-x-auto">
-        <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/58 hover:text-white/85">
+        <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90">
           ← Journey
         </Button>
-        <span className="text-white/25">|</span>
-        <span className="text-xs sm:text-sm text-white/45 shrink-0">
+        <span className="text-white/35">|</span>
+        <span className="text-xs sm:text-sm text-white/55 shrink-0">
           Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]}
         </span>
-        <span className="hidden md:inline text-xs text-white/62 font-medium shrink-0">
+        <span className="hidden md:inline text-xs text-white/72 font-medium shrink-0">
           — {PART_TITLES[stage.part]}
         </span>
-        <span className="text-white/25">·</span>
-        <span className="text-xs sm:text-sm text-white/52 shrink-0">
+        <span className="text-white/35">·</span>
+        <span className="text-xs sm:text-sm text-white/62 shrink-0">
           {getStepInPart(stageId).stepIndex} of{" "}
           {getStepInPart(stageId).stepsInPart}
         </span>
-        <span className="text-white/25">—</span>
-        <span className="text-xs sm:text-sm text-white/72 font-medium truncate min-w-0">
+        <span className="text-white/35">—</span>
+        <span className="text-xs sm:text-sm text-white/80 font-medium truncate min-w-0">
           {stage.title}
         </span>
         {stage.stageTypeId !== "intro" && (
           <InfoButton onClick={() => setShowInfoModal(true)} />
         )}
-        <Button variant="ghost" onClick={onOpenSettings} className="ml-auto shrink-0 text-xs text-white/45 hover:text-white/72">
+        <Button variant="ghost" onClick={onOpenSettings} className="ml-auto shrink-0 text-xs text-white/55 hover:text-white/80">
           {settings.tuning}
         </Button>
       </div>
@@ -434,7 +434,7 @@ export function JourneyExercise({
               <h2 className="text-xl font-semibold text-white">
                 Part {["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"][stage.part - 1]} — {PART_TITLES[stage.part]}
               </h2>
-              <p className="text-sm text-white/55 mt-0.5">
+              <p className="text-sm text-white/65 mt-0.5">
                 {stage.title} · {getStepInPart(stageId).stepIndex} of {getStepInPart(stageId).stepsInPart}
               </p>
             </div>
@@ -462,9 +462,9 @@ export function JourneyExercise({
               }}
             >
               <span className="text-2xl opacity-50">▶</span>
-              <p className="text-sm text-white/45 font-medium">Video coming soon</p>
+              <p className="text-sm text-white/55 font-medium">Video coming soon</p>
             </div>
-            <p className="text-xs text-white/45">
+            <p className="text-xs text-white/55">
               Tuning: {settings.tuning}
             </p>
           </div>
@@ -543,7 +543,7 @@ export function JourneyExercise({
                 />
               );
             })}
-            <span className="text-xs text-white/55 ml-1">
+            <span className="text-xs text-white/65 ml-1">
               slide {slideCount}/2
             </span>
           </div>

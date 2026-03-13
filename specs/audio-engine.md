@@ -35,18 +35,7 @@ AudioContext
 
 Fade envelope: 20 ms in, 200 ms out. Default tone duration: 1.8 s.
 
-## Waveform ring
-
-A visual element in the pitch canvas, drawn around the live cursor dot at 60 fps.
-
-- Radius = `DOT_RADIUS + 4 + confidence × 6 + pulse × 3`
-- `confidence` = `pitchConfidence(hz, chakras)` — 0 far from any chakra, 1 exactly on
-- `pulse` = `(sin(now / 500) + 1) / 2` — slow ~2 Hz oscillation for a breathing feel
-- Opacity proportional to confidence
-- Ring glows brighter and expands when in-tune
-
 ## Out of scope
 
-- Drone accompaniment (removed)
 - User-facing binaural toggle (always on)
 - Custom beat frequency per user

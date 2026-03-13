@@ -32,8 +32,6 @@ Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 | A432 / A440 / A444 / A528 tuning | ✓ |
 | Farinelli breathwork exercise | ✓ |
 | Mantra/sound cards (Part 9) | ✓ |
-| Drone accompaniment | Not built |
-| Waveform ring | Not built |
 
 ## Relationship to attunr-expo
 

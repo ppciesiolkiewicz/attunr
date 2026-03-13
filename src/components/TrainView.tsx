@@ -136,7 +136,7 @@ export default function TrainView({
                 key={band.id}
                 onClick={() => handlePlay(band)}
                 title={`${band.name} — ${band.frequencyHz} Hz\n${band.description ?? ""}`}
-                className="flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all"
+                className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all"
                 style={{
                   borderColor: isActive || isPlaying ? band.color : `${band.color}40`,
                   color: isActive || isPlaying ? band.color : `${band.color}99`,
@@ -155,7 +155,7 @@ export default function TrainView({
       {/* ── Train info modal ──────────────────────────────────────────────── */}
       {showInfo && (
         <TabInfoModal title="Train" onClose={handleCloseInfo}>
-          <p className="text-base text-white/65 leading-relaxed">
+          <p className="text-base text-white/75 leading-relaxed">
             Free-form vocal placement practice. No goals, no instructions — just sing and
             explore your voice against the canvas.
           </p>
@@ -181,7 +181,7 @@ export default function TrainView({
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <span className="text-lg shrink-0 w-6 text-center opacity-75 mt-0.5">{item.icon}</span>
-                <p className="text-sm text-white/58 leading-relaxed">{item.text}</p>
+                <p className="text-sm text-white/68 leading-relaxed">{item.text}</p>
               </div>
             ))}
           </div>

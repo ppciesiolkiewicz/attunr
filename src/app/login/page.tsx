@@ -74,14 +74,14 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-full px-4 py-12">
       <div className="w-full max-w-sm">
         <h1 className="text-2xl font-semibold text-white mb-1">Log in</h1>
-        <p className="text-white/55 text-sm mb-8">
+        <p className="text-white/65 text-sm mb-8">
           Enter your email and we&apos;ll send you a one-time code.
         </p>
 
         {step === "email" ? (
           <form onSubmit={handleSendCode} className="space-y-4">
             <label className="block">
-              <span className="text-sm text-white/55">Email</span>
+              <span className="text-sm text-white/65">Email</span>
               <input
                 type="email"
                 value={email}
@@ -99,14 +99,14 @@ export default function LoginPage() {
           </form>
         ) : (
           <form onSubmit={handleVerify} className="space-y-4">
-            <p className="text-sm text-white/55">
-              Code sent to <span className="text-white/80">{email}</span>
+            <p className="text-sm text-white/65">
+              Code sent to <span className="text-white/85">{email}</span>
               <Button variant="ghost" type="button" onClick={() => setStep("email")} className="ml-2 text-violet-400 hover:text-violet-300">
                 Change
               </Button>
             </p>
             <label className="block">
-              <span className="text-sm text-white/55">6-digit code</span>
+              <span className="text-sm text-white/65">6-digit code</span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -120,7 +120,7 @@ export default function LoginPage() {
               />
             </label>
             {process.env.NODE_ENV === "development" && (
-              <p className="text-xs text-white/40">
+              <p className="text-xs text-white/50">
                 Dev: check your terminal for the code.
               </p>
             )}
@@ -128,14 +128,14 @@ export default function LoginPage() {
             <Button variant="secondary" type="submit" disabled={loading || code.length !== 6} className="w-full py-3">
               {loading ? "Verifying…" : "Verify"}
             </Button>
-            <Button variant="ghost" type="button" onClick={() => setStep("email")} className="w-full py-2 text-sm text-white/45 hover:text-white/70">
+            <Button variant="ghost" type="button" onClick={() => setStep("email")} className="w-full py-2 text-sm text-white/55 hover:text-white/78">
               Use a different email
             </Button>
           </form>
         )}
 
-        <p className="mt-8 text-center text-sm text-white/35">
-          <Link href="/" className="hover:text-white/60">
+        <p className="mt-8 text-center text-sm text-white/45">
+          <Link href="/" className="hover:text-white/70">
             ← Back to attunr
           </Link>
         </p>
