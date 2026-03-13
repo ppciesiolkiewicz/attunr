@@ -13,11 +13,11 @@ const ogImageUrl = `${SITE_URL}/web-app-manifest-512x512.png`;
 export const metadata: Metadata = {
   metadataBase: base,
   title: {
-    default: "attunr — align your voice",
+    default: "attunr — your voice, your calm",
     template: "%s — attunr",
   },
   description:
-    "Find your frequency. Real-time vocal placement practice — sing into your mic and align your voice.",
+    "Feel your voice in your body. Not singing lessons — a body practice that uses sound and breath to calm your nervous system.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -32,24 +32,24 @@ export const metadata: Metadata = {
     locale: "en",
     url: SITE_URL,
     siteName: "attunr",
-    title: "attunr — align your voice",
+    title: "attunr — your voice, your calm",
     description:
-      "Find your frequency. Real-time vocal placement practice — sing into your mic and align your voice.",
+      "Feel your voice in your body. Not singing lessons — a body practice that uses sound and breath to calm your nervous system.",
     images: [
       {
         url: ogImageUrl,
         width: 512,
         height: 512,
-        alt: "attunr — align your voice",
+        alt: "attunr — your voice, your calm",
         type: "image/png",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "attunr — align your voice",
+    title: "attunr — your voice, your calm",
     description:
-      "Find your frequency. Real-time vocal placement practice — sing into your mic and align your voice.",
+      "Feel your voice in your body. Not singing lessons — a body practice that uses sound and breath to calm your nervous system.",
     images: [ogImageUrl],
   },
 };

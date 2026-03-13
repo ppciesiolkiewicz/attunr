@@ -4,7 +4,7 @@ import { ARTICLES } from "@/data/articles";
 export const metadata = {
   title: "Articles",
   description:
-    "Learn about vocal placement, vocal warmups, frequencies, and sound healing.",
+    "How sound moves through your body — reads on breathwork, resonance, vocal warmups, and the science behind somatic regulation.",
 };
 
 export default function ArticlesPage() {

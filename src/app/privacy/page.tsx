@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Privacy",
-  description: "Privacy policy for attunr.",
+  description: "How attunr handles your data — short version: your voice stays on your device.",
 };
 
 export default function PrivacyPage() {

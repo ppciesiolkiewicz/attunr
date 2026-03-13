@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Terms",
-  description: "Terms of use for attunr.",
+  description: "The ground rules for using attunr — plain-language terms of use.",
 };
 
 export default function TermsPage() {
