@@ -37,15 +37,15 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
         </div>
         <nav className="flex flex-col gap-0.5 px-3 py-4">
           <Link
-            href="/"
+            href="/journey"
             className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${
-              pathname === "/" || pathname.startsWith("/journey")
+              pathname.startsWith("/journey")
                 ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20"
                 : "text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08]"
             }`}
             onClick={onClose}
           >
-            <span className={pathname === "/" || pathname.startsWith("/journey") ? "text-white" : "text-white/70"}>
+            <span className={pathname.startsWith("/journey") ? "text-white" : "text-white/70"}>
               <MenuJourneyIcon />
             </span>
             Journey

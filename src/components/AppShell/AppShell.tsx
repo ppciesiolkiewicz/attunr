@@ -79,11 +79,15 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     analytics.onboardingCompleted(result.voiceType, true, result.lowHz, result.highHz);
   }
 
-  const needsMic = pathname === "/" || pathname?.startsWith("/journey") || pathname === "/train";
+  const isLanding = pathname === "/";
+  const needsMic = pathname?.startsWith("/journey") || pathname === "/train";
   const showMicGate =
     !(showOnboarding || redetect) &&
     needsMic &&
     status === "idle";
+
+  // Landing page: skip all app chrome
+  if (isLanding) return <>{children}</>;
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -120,9 +124,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <div className="hidden sm:flex items-center gap-2">
           <nav className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-1">
             <Link
-              href="/"
+              href="/journey"
               className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
-                pathname === "/" || pathname.startsWith("/journey")
+                pathname.startsWith("/journey")
                   ? "bg-violet-600 text-white"
                   : "text-white/65 hover:text-white/90"
               }`}

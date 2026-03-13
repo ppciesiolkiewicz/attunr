@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import PitchCanvas from "../../PitchCanvas";
 import { FarinelliExercise } from "../../FarinelliExercise";
 import { InfoButton } from "../../TabInfoModal";
-import { Button } from "@/components/ui";
+import { Button, VideoPlaceholder } from "@/components/ui";
 import { resolveBandTarget, getSkippedInfoStageIds, getStepInPart } from "../utils";
 import { ProgressArc } from "./ProgressArc";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
@@ -454,16 +454,7 @@ export function JourneyExercise({
                 </p>
               ))}
             </div>
-            <div
-              className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
-              style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px dashed rgba(255,255,255,0.15)",
-              }}
-            >
-              <span className="text-2xl opacity-50">▶</span>
-              <p className="text-sm text-white/55 font-medium">Video coming soon</p>
-            </div>
+            <VideoPlaceholder />
             <p className="text-xs text-white/55">
               Tuning: {settings.tuning}
             </p>

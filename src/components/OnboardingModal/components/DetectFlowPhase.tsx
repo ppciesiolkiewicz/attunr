@@ -48,7 +48,9 @@ export function DetectFlowPhase({
           <>
             <p className="text-base font-medium text-white/92">Hum low — uu</p>
             <p className="text-sm text-white/65 mt-1 leading-relaxed">
-              Feel it in your chest. Hold steady for 2 seconds.
+              Let the sound come from deep in your belly.
+              Feel the vibration in your chest, not your throat.
+              Hold steady for 2 seconds.
             </p>
           </>
         )}

@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import ChakraDetailCard from "@/components/ChakraDetailCard";
 import { FarinelliExercise, FARINELLI_ADVICES } from "@/components/FarinelliExercise";
 import { HeadphonesNotice, InfoButton, InfoIcon } from "@/components/TabInfoModal";
-import { Button, CloseButton, Modal } from "@/components/ui";
+import { Button, CloseButton, Modal, VideoPlaceholder } from "@/components/ui";
 import { JOURNEY_STAGES } from "@/constants/journey";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import {
@@ -187,18 +187,7 @@ export function ExerciseInfoModal({
                   {stage.instruction.split("\n\n")[0]}
                 </p>
               </div>
-              <div
-                className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px dashed rgba(255,255,255,0.15)",
-                }}
-              >
-                <span className="text-2xl opacity-50">▶</span>
-                <p className="text-sm text-white/55 font-medium">
-                  Video coming soon
-                </p>
-              </div>
+              <VideoPlaceholder />
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-medium text-white/78 tracking-wide uppercase">
                   Key tips
@@ -235,20 +224,7 @@ export function ExerciseInfoModal({
                   </p>
                 ))}
               </div>
-              {isTechniqueIntro && (
-                <div
-                  className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px dashed rgba(255,255,255,0.15)",
-                  }}
-                >
-                  <span className="text-2xl opacity-50">▶</span>
-                  <p className="text-sm text-white/55 font-medium">
-                    Video coming soon
-                  </p>
-                </div>
-              )}
+              {isTechniqueIntro && <VideoPlaceholder />}
             </>
           )}
 

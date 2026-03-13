@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Spinner } from "@/components/ui";
+import { Button, Spinner, VideoPlaceholder } from "@/components/ui";
 import { MicrophoneIcon } from "./MicrophoneIcon";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
@@ -23,6 +23,13 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
           We&apos;ll listen to you hum low and high to map your
           comfortable range. Takes about 10 seconds.
         </p>
+        <p className="text-sm text-white/55 mt-2.5 leading-relaxed px-2">
+          Relax your body — drop your shoulders, soften your jaw.
+          You should never feel strain in your throat.
+        </p>
+        <div className="mt-2">
+          <VideoPlaceholder variant="inline" />
+        </div>
       </div>
 
       <Button
