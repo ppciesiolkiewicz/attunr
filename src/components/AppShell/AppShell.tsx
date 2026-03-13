@@ -116,9 +116,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 border-b border-white/[0.06] shrink-0">
-        <h1 className="text-lg sm:text-2xl">
+        <Link href="/" className="text-lg sm:text-2xl">
           <Logo layout="horizontal" size="default" />
-        </h1>
+        </Link>
 
         {/* Desktop nav */}
         <div className="hidden sm:flex items-center gap-2">

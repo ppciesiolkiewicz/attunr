@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { LandingHeader } from "./components/LandingHeader";
 import { Hero } from "./components/Hero";
 import { Features } from "./components/Features";
 import { HowItWorks } from "./components/HowItWorks";
@@ -46,6 +47,7 @@ export default function LandingPage() {
 
   return (
     <div className="h-full overflow-y-auto landing-scroll">
+      <LandingHeader />
       <Hero />
       <Divider />
       <Features />

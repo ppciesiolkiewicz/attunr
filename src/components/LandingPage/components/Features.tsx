@@ -37,7 +37,7 @@ export function Features() {
           What happens when you hum
         </p>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-14">
-          Sound is the fastest path to calm
+          The reset your body already knows
         </h2>
 
         <div className="grid sm:grid-cols-2 gap-5">

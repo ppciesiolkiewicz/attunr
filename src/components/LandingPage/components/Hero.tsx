@@ -37,8 +37,8 @@ export function Hero() {
       ))}
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-        <div className="mb-12 text-2xl sm:text-3xl" style={{ animation: "landing-float 5s ease-in-out infinite" }}>
-          <Logo layout="vertical" size="default" />
+        <div className="mb-12" style={{ animation: "landing-float 5s ease-in-out infinite" }}>
+          <Logo layout="vertical" size="lg" />
         </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">
