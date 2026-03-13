@@ -18,7 +18,7 @@ When splitting a large file:
 
 ## Example: Journey / exercise config
 
-`src/constants/journey/` is split per part. See [Journey](./journey.md#code-structure).
+`src/constants/journey/` is split per part. See [Journey](../../specs/journey.md#code-structure).
 
 ```
 src/constants/journey/

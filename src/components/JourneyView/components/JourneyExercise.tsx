@@ -12,9 +12,10 @@ import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { PartCompleteModal } from "./PartCompleteModal";
 import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES, isLastStageOfPart, PART_COMPLETE_CONTENT, PART_TITLES } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
-import { getScaleNotesForRange, findClosestBand, isInTune, matchesBandTarget } from "@/constants/chakras";
-import type { Settings } from "@/hooks/useSettings";
+import { getScaleNotesForRange } from "@/lib/vocal-scale";
+import { findClosestBand, isInTune, matchesBandTarget } from "@/lib/pitch";
 import type { Band } from "@/constants/chakras";
+import type { Settings } from "@/hooks/useSettings";
 
 export function JourneyExercise({
   stageId,
@@ -22,6 +23,7 @@ export function JourneyExercise({
   pitchHz,
   pitchHzRef,
   onPlayTone,
+  onPlaySlide,
   onSettingsUpdate,
   onOpenSettings,
   onBack,
@@ -33,6 +35,7 @@ export function JourneyExercise({
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   onPlayTone: (band: Band) => void;
+  onPlaySlide?: (fromBand: Band, toBand: Band) => void;
   onSettingsUpdate: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
@@ -329,10 +332,31 @@ export function JourneyExercise({
 
   const TONE_DURATION_MS = 1800;
   const TONE_GAP_MS = 2000;
+  const SLIDE_DURATION_MS = 300 + 1500 + 500; // hold-start + slide + hold-end
 
   function handleHearTone() {
     if (isTonePlaying) return;
     setIsTonePlaying(true);
+
+    // Lip-roll slides: play a smooth glide (highest → lowest) instead of discrete tones
+    if (
+      stage.stageTypeId === "pitch-detection-slide" &&
+      stage.technique === "lip-rolls" &&
+      onPlaySlide &&
+      toneBands.length >= 2
+    ) {
+      const freqs = toneBands.map((b) => b.frequencyHz);
+      const highBand = toneBands[freqs.indexOf(Math.max(...freqs))];
+      const lowBand = toneBands[freqs.indexOf(Math.min(...freqs))];
+      onPlaySlide(highBand, lowBand);
+      if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
+      toneTimeoutRef.current = setTimeout(() => {
+        toneTimeoutRef.current = null;
+        setIsTonePlaying(false);
+      }, SLIDE_DURATION_MS);
+      return;
+    }
+
     toneBands.forEach((band, i) => {
       setTimeout(() => onPlayTone(band), i * TONE_GAP_MS);
     });
@@ -576,10 +600,8 @@ export function JourneyExercise({
                     ? slideCount / 2
                     : progress
               }
+              complete={stageComplete}
             />
-            {(stageComplete || isCompleted) && (
-              <span className="text-xl sm:text-2xl shrink-0" style={isCompleted ? { color: "rgba(255,255,255,0.48)" } : undefined}>✓</span>
-            )}
           </div>
         )}
 

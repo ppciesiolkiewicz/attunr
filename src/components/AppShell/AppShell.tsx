@@ -27,7 +27,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   const { settings, update } = useSettings();
   const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
-  const { playTone } = useTonePlayer();
+  const { playTone, playSlide } = useTonePlayer();
 
   // Hydrate onboarding flag after mount
   useEffect(() => {
@@ -46,6 +46,13 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     analytics.tonePlayed(band.id, pathname?.startsWith("/train") ? "explore" : "journey");
   }
 
+  function handlePlaySlide(fromBand: Band, toBand: Band) {
+    playSlide(fromBand.frequencyHz, toBand.frequencyHz, {
+      chakraId: fromBand.chakraId,
+      binaural: true,
+    });
+  }
+
   function handleOpenSettings() {
     setSettingsOpen(true);
     analytics.settingsOpened();
@@ -57,6 +64,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     pitchHz,
     pitchHzRef,
     playTone: handlePlayTone,
+    playSlide: handlePlaySlide,
     pitchStatus: status,
     startListening,
     openSettings: handleOpenSettings,

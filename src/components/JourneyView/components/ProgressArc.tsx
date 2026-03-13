@@ -1,4 +1,4 @@
-export function ProgressArc({ progress }: { progress: number }) {
+export function ProgressArc({ progress, complete }: { progress: number; complete?: boolean }) {
   const r = 20;
   const circ = 2 * Math.PI * r;
   const dash = circ * Math.min(progress, 1);
@@ -24,16 +24,27 @@ export function ProgressArc({ progress }: { progress: number }) {
         transform="rotate(-90 25 25)"
         style={{ transition: "stroke-dasharray 0.3s" }}
       />
-      <text
-        x={25}
-        y={29}
-        textAnchor="middle"
-        fontSize={13}
-        fill="rgba(255,255,255,0.75)"
-        fontFamily="system-ui"
-      >
-        {Math.round(progress * 100)}%
-      </text>
+      {complete ? (
+        <path
+          d="M17 25.5l5 5 11-11"
+          fill="none"
+          stroke="#a78bfa"
+          strokeWidth={2.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <text
+          x={25}
+          y={29}
+          textAnchor="middle"
+          fontSize={13}
+          fill="rgba(255,255,255,0.75)"
+          fontFamily="system-ui"
+        >
+          {Math.round(progress * 100)}%
+        </text>
+      )}
     </svg>
   );
 }

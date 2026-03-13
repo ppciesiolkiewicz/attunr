@@ -17,7 +17,7 @@ export default function ExercisePage() {
   const params = useParams();
   const pathname = usePathname();
   const router = useRouter();
-  const { settings, pitchHz, pitchHzRef, playTone, updateSettings, openSettings } = useApp();
+  const { settings, pitchHz, pitchHzRef, playTone, playSlide, updateSettings, openSettings } = useApp();
 
   // useParams can be empty on first render (Next.js 15+); fallback to parsing from pathname
   const idFromParams = typeof params?.id === "string" ? parseInt(params.id, 10) : NaN;
@@ -43,6 +43,7 @@ export default function ExercisePage() {
       pitchHz={pitchHz}
       pitchHzRef={pitchHzRef}
       onPlayTone={playTone}
+      onPlaySlide={playSlide}
       onSettingsUpdate={updateSettings}
       onOpenSettings={openSettings}
       onBack={() => router.push("/")}

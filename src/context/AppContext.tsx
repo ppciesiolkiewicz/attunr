@@ -10,6 +10,7 @@ export interface AppContextValue {
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   playTone: (band: Band) => void;
+  playSlide: (fromBand: Band, toBand: Band) => void;
   pitchStatus: string;
   startListening: () => void;
   openSettings: () => void;

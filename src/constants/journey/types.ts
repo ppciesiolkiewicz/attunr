@@ -31,27 +31,26 @@ export interface BaseJourneyStage {
   part: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
   title: string;
   subtitle?: string;
+  /** Vocal technique for pitch exercises; used for tolerance (e.g. lip-rolls = looser). */
+  technique?: TechniqueId;
 }
 
 // ── Layer 2: Specific stage types ─────────────────────────────────────────────
 
 export interface IntroStage extends BaseJourneyStage {
   stageTypeId: "intro";
-  technique?: TechniqueId;
   instruction: string;
   cardCue?: string;
 }
 
 export interface PitchDetectionStage extends BaseJourneyStage {
   stageTypeId: "pitch-detection";
-  technique?: TechniqueId;
   notes: SustainNoteConfig[];
   instruction: string;
 }
 
 export interface PitchDetectionSlideStage extends BaseJourneyStage {
   stageTypeId: "pitch-detection-slide";
-  technique?: TechniqueId;
   notes: SlideConfig[];
   instruction: string;
 }

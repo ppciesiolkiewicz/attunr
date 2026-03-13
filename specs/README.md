@@ -2,7 +2,7 @@
 
 Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 
-**Conventions:** Keep files small (under ~300 lines). Split large files by logical unit (e.g. exercise config per part). See [Code Organization](./code-organization.md).
+**Conventions:** Keep files small (under ~300 lines). Split large files by logical unit (e.g. exercise config per part). See [Code Organization](../.claude/rules/code-organization.md).
 
 ## Specs index
 
@@ -16,8 +16,6 @@ Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 | [Audio Engine](./audio-engine.md) | Binaural beats |
 | [Settings](./settings.md) | Tuning, voice type, localStorage persistence |
 | [Tech Stack](./tech-stack.md) | Next.js, Tailwind v4, ml5 CREPE, Web Audio API |
-| [Code Organization](./code-organization.md) | File size limits, splitting strategy |
-
 ## Current build status
 
 | Feature | Built |

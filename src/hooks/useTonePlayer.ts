@@ -103,5 +103,84 @@ export function useTonePlayer() {
     [getCtx]
   );
 
-  return { playTone, getCtx };
+  /**
+   * Play a smooth pitch slide from one frequency to another.
+   * Holds the start pitch, glides to the end pitch, then holds.
+   */
+  const playSlide = useCallback(
+    (
+      fromHz: number,
+      toHz: number,
+      options?: {
+        holdStartMs?: number;
+        slideDurationMs?: number;
+        holdEndMs?: number;
+        chakraId?: ChakraId;
+        binaural?: boolean;
+      }
+    ) => {
+      const ctx = getCtx();
+      const {
+        holdStartMs = 300,
+        slideDurationMs = 1500,
+        holdEndMs = 500,
+        chakraId,
+        binaural = true,
+      } = options ?? {};
+
+      const now = ctx.currentTime;
+      const totalDur = (holdStartMs + slideDurationMs + holdEndMs) / 1000;
+      const holdStartS = holdStartMs / 1000;
+      const slideS = slideDurationMs / 1000;
+      const beatHz = chakraId ? BEAT_HZ[chakraId] : 0;
+      const useBinaural = binaural && beatHz > 0;
+
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(0, now);
+      masterGain.gain.linearRampToValueAtTime(GAIN, now + FADE_IN_S);
+      masterGain.gain.setValueAtTime(GAIN, now + totalDur - FADE_OUT_S);
+      masterGain.gain.linearRampToValueAtTime(0, now + totalDur);
+      masterGain.connect(ctx.destination);
+
+      function scheduleSlide(osc: OscillatorNode, startHz: number, endHz: number) {
+        osc.frequency.setValueAtTime(startHz, now);
+        osc.frequency.setValueAtTime(startHz, now + holdStartS);
+        osc.frequency.exponentialRampToValueAtTime(endHz, now + holdStartS + slideS);
+      }
+
+      if (useBinaural) {
+        const merger = ctx.createChannelMerger(2);
+        merger.connect(masterGain);
+
+        const oscL = ctx.createOscillator();
+        oscL.type = "sine";
+        scheduleSlide(oscL, fromHz, toHz);
+        const gL = ctx.createGain();
+        gL.gain.value = 1;
+        oscL.connect(gL);
+        gL.connect(merger, 0, 0);
+
+        const oscR = ctx.createOscillator();
+        oscR.type = "sine";
+        scheduleSlide(oscR, fromHz + beatHz, toHz + beatHz);
+        const gR = ctx.createGain();
+        gR.gain.value = 1;
+        oscR.connect(gR);
+        gR.connect(merger, 0, 1);
+
+        oscL.start(now); oscL.stop(now + totalDur);
+        oscR.start(now); oscR.stop(now + totalDur);
+      } else {
+        const osc = ctx.createOscillator();
+        osc.type = "sine";
+        scheduleSlide(osc, fromHz, toHz);
+        osc.connect(masterGain);
+        osc.start(now);
+        osc.stop(now + totalDur);
+      }
+    },
+    [getCtx]
+  );
+
+  return { playTone, playSlide, getCtx };
 }

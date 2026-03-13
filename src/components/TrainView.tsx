@@ -3,11 +3,8 @@
 import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
 import TabInfoModal, { InfoButton, HeadphonesNotice } from "./TabInfoModal";
-import {
-  getScaleNotesForRange,
-  findClosestBand,
-  isInTune,
-} from "@/constants/chakras";
+import { getScaleNotesForRange } from "@/lib/vocal-scale";
+import { findClosestBand, isInTune } from "@/lib/pitch";
 import type { Band } from "@/constants/chakras";
 import type { Settings } from "@/hooks/useSettings";
 

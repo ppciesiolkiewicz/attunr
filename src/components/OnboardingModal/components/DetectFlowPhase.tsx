@@ -1,7 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui";
-import { deriveVoiceType, VOICE_TYPES } from "@/constants/chakras";
+import { deriveVoiceType } from "@/lib/pitch";
+import { VOICE_TYPES } from "@/constants/voice-types";
 import { NoteSlot } from "./NoteSlot";
 
 const MIN_RANGE_SEMITONES = 10;

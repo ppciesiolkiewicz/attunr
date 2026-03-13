@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import type { TuningStandard } from "@/constants/chakras";
+import type { TuningStandard } from "@/constants/tuning";
 
 export interface Settings {
   tuning: TuningStandard;

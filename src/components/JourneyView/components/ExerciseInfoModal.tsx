@@ -6,7 +6,7 @@ import { FarinelliExercise, FARINELLI_ADVICES } from "@/components/FarinelliExer
 import { HeadphonesNotice, InfoButton, InfoIcon } from "@/components/TabInfoModal";
 import { Button, CloseButton, Modal } from "@/components/ui";
 import { JOURNEY_STAGES } from "@/constants/journey";
-import { getScaleNotesForRange } from "@/constants/chakras";
+import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import {
   addSkippedInfoStageId,
   getStageChakraIds,

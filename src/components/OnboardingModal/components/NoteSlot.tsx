@@ -1,6 +1,6 @@
 "use client";
 
-import { hzToNoteName } from "@/constants/chakras";
+import { hzToNoteName } from "@/lib/pitch";
 
 export interface NoteSlotProps {
   variant: "low" | "high";

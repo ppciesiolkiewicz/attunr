@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { deriveVoiceType, hzToNoteName } from "@/constants/chakras";
-import type { VoiceTypeId } from "@/constants/chakras";
+import { deriveVoiceType, hzToNoteName } from "@/lib/pitch";
+import type { VoiceTypeId } from "@/constants/voice-types";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 import { ChakraSpectrum } from "./components/ChakraSpectrum";
 import { WelcomePhase } from "./components/WelcomePhase";

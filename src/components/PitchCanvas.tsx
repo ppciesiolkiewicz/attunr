@@ -6,7 +6,7 @@ import {
   isInTune,
   matchesBandTarget,
   pitchConfidence,
-} from "@/constants/chakras";
+} from "@/lib/pitch";
 import type { Band } from "@/constants/chakras";
 
 interface PitchDot {

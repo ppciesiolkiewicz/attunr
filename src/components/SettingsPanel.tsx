@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Button, CloseButton } from "@/components/ui";
-import { TUNING_OPTIONS, hzToNoteName } from "@/constants/chakras";
+import { TUNING_OPTIONS } from "@/constants/tuning";
+import type { TuningStandard } from "@/constants/tuning";
+import { hzToNoteName } from "@/lib/pitch";
 import { analytics } from "@/lib/analytics";
 import type { Settings } from "@/hooks/useSettings";
-import type { TuningStandard } from "@/constants/chakras";
 
 interface SettingsPanelProps {
   open: boolean;
