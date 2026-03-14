@@ -29,16 +29,21 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
   const { playTone, playSlide } = useTonePlayer();
 
-  // Hydrate onboarding flag after mount
+  // Hydrate onboarding flag after mount — also trigger onboarding when voice
+  // range is missing (e.g. user from a previous app version).
   useEffect(() => {
-    if (!localStorage.getItem("attunr.onboarded")) setShowOnboarding(true);
+    const onboarded = localStorage.getItem("attunr.onboarded");
+    const hasVoice =
+      Number(localStorage.getItem("attunr.vocalRangeLowHz")) > 0 &&
+      Number(localStorage.getItem("attunr.vocalRangeHighHz")) > 0;
+    if (!onboarded || !hasVoice) setShowOnboarding(true);
   }, []);
 
-  // Auto-start mic when app loads
+  // Auto-start mic when app loads (skip on landing page — no mic needed there)
   useEffect(() => {
-    if (status === "idle") startListening();
+    if (status === "idle" && pathname !== "/") startListening();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pathname]);
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(band: Band) {
