@@ -505,9 +505,6 @@ export function JourneyExercise({
               ))}
             </div>
             <VideoPlaceholder />
-            <p className="text-xs text-white/55">
-              Tuning: {settings.tuning}
-            </p>
           </div>
         </div>
       ) : stage.stageTypeId === "breathwork" ? (
