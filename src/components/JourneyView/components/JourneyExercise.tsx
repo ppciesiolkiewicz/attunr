@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import confetti from "canvas-confetti";
 import PitchCanvas from "../../PitchCanvas";
 import BalanceBallCanvas from "../../BalanceBallCanvas";
+import HillBallCanvas from "../../HillBallCanvas";
 import { FarinelliExercise } from "../../FarinelliExercise";
 import { InfoButton } from "../../TabInfoModal";
 import { Button, CircularProgress, VideoPlaceholder } from "@/components/ui";
@@ -526,16 +527,19 @@ export function JourneyExercise({
           </div>
         )}
 
-        {stage.stageTypeId === "pitch-detection" && stage.notes.length === 1 ? (
+        {stage.stageTypeId === "pitch-detection" && stage.notes.length === 1 && isRangeTarget && stage.notes[0].target.kind === "range" ? (
+          <HillBallCanvas
+            bands={exerciseBands}
+            currentHzRef={pitchHzRef}
+            direction={rangeAccept === "below" ? "down" : "up"}
+            accept={rangeAccept as "above" | "below"}
+          />
+        ) : stage.stageTypeId === "pitch-detection" && stage.notes.length === 1 ? (
           <BalanceBallCanvas
             bands={exerciseBands}
             currentHzRef={pitchHzRef}
             highlightIds={highlightIds}
-            inTuneOverride={
-              isRangeTarget && stage.notes[0].target.kind === "range"
-                ? { bands: exerciseBands, accept: rangeAccept }
-                : undefined
-            }
+            inTuneOverride={undefined}
           />
         ) : (
           <PitchCanvas
@@ -614,7 +618,7 @@ export function JourneyExercise({
                     </div>
                     {!locked && (
                       <div className="text-sm mt-1 text-white/55">
-                        {rangeAccept === "below" ? "↑ Too high" : rangeAccept === "above" ? "↓ Too low" : ""}
+                        {rangeAccept === "below" ? "Push lower" : rangeAccept === "above" ? "Push higher" : ""}
                       </div>
                     )}
                   </>
