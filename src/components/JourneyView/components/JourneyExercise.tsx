@@ -566,18 +566,19 @@ export function JourneyExercise({
           </div>
         )}
 
-        {/* Centered progress overlay */}
-        {!stageComplete && !showCongrats && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-5">
+        {/* Centered progress overlay — visible only when pitch is detected */}
+        {!stageComplete && !showCongrats && pitchHz !== null && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-5 transition-opacity duration-300">
             <CircularProgress
               progress={
                 stage.stageTypeId === "pitch-detection-slide"
                   ? slideCount / 2
                   : progress
               }
-              size={72}
-              strokeWidth={4}
-              className="opacity-40"
+              size={200}
+              strokeWidth={5}
+              showLabel
+              className="opacity-35"
             />
           </div>
         )}
