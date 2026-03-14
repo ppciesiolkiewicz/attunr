@@ -7,7 +7,7 @@ import PitchCanvas from "../../PitchCanvas";
 import BalanceBallCanvas from "../../BalanceBallCanvas";
 import { FarinelliExercise } from "../../FarinelliExercise";
 import { InfoButton } from "../../TabInfoModal";
-import { Button, VideoPlaceholder } from "@/components/ui";
+import { Button, CircularProgress, VideoPlaceholder } from "@/components/ui";
 import { resolveBandTarget, getSkippedInfoStageIds, getStepInPart, toRoman } from "../utils";
 import { ProgressArc } from "./ProgressArc";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
@@ -563,6 +563,22 @@ export function JourneyExercise({
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
+          </div>
+        )}
+
+        {/* Centered progress overlay */}
+        {!stageComplete && !showCongrats && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-5">
+            <CircularProgress
+              progress={
+                stage.stageTypeId === "pitch-detection-slide"
+                  ? slideCount / 2
+                  : progress
+              }
+              size={72}
+              strokeWidth={4}
+              className="opacity-40"
+            />
           </div>
         )}
 
