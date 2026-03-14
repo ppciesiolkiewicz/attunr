@@ -15,9 +15,17 @@ Attunr sits at the intersection of:
 - **Somatic awareness** — reconnecting with the body through vibration and breath
 - **Ancient chanting traditions** — seed mantras, sustained tones, and intentional vocalization reframed for a modern, secular context
 
+### Fun
+
+Attunr should feel like a game, not a chore. Every interaction — tapping a stage, watching the pitch line follow your voice, unlocking the next part — should spark a small hit of delight. Playful animations, satisfying feedback loops, and a sense of momentum keep people coming back. If it's not fun, it doesn't matter how good the science is — no one will stick with it.
+
+### Engagement
+
+Engagement is the engine that turns a first session into a daily practice. Attunr uses progression (a journey you advance through), variety (different exercise types and techniques), and gentle challenge (each stage asks a little more) to sustain interest over weeks and months. The goal is the same feeling as "one more level" — you finish a stage and want to see what's next. Short sessions, clear progress markers, and a reason to return tomorrow.
+
 **Why it works:** Vocalization is one of the fastest ways to shift physiological state. A long exhale on a low hum activates the parasympathetic nervous system within seconds. Attunr gives that experience structure, variety, and gentle progression so it becomes a habit, not a novelty.
 
-**Future direction:** The current Journey has 49 stages across 9 parts — enough to build a real practice. But the vision is hundreds of levels, always growing. Think Candy Crush Saga: structured progression, varied mechanics, and a reason to come back tomorrow. Low barrier, high return. Every session leaves you feeling different than when you started.
+**Future direction:** The vision is hundreds of levels, always growing. Think Candy Crush Saga: structured progression, varied mechanics, and a reason to come back tomorrow. Low barrier, high return. Every session leaves you feeling different than when you started.
 
 ## Tone system
 
@@ -25,25 +33,9 @@ Exercises use tones fitted to the user's vocal range, detected during onboarding
 
 ## App structure
 
-The app centres on **Journey** — a guided 49-stage progression through vocal and breathwork techniques. Users open the app, pick up where they left off, and follow the path.
+The app centres on **Journey** — a structured, guided progression through vocal and breathwork exercises. Stages are grouped into thematic parts, each introducing new techniques and building on what came before. Users open the app, pick up where they left off, and follow the path. The journey starts simple (breath, hum, sustain) and gradually layers in new vocal shapes, rhythmic patterns, and mantra work, so each session feels fresh without being overwhelming.
 
-**Settings** (slide-up panel) and **Onboarding** (first launch) round out the experience.
-
-## Journey structure
-
-49 stages across 9 parts:
-
-| Part | Name               | Stages | Focus                                |
-| ---- | ------------------ | ------ | ------------------------------------ |
-| I    | Introduction       | 1      | Vocal placement concept              |
-| II   | Vocal warmups      | 2–9    | Farinelli, lip rolls, Low U, Hoo hoo |
-| III  | Sustain            | 10–17  | Hold each of the 7 tones             |
-| IV   | Sequences          | 18–23  | Multi-tone sequences                 |
-| V    | Vowel U            | 24–31  | Uuu across all 7 tones               |
-| VI   | Vowel EE           | 32–35  | EE on low, mid, high                 |
-| VII  | Vowel flow U→EE    | 36–37  | Vowel transition on one tone         |
-| VIII | Puffy cheeks       | 38–41  | Breath control technique             |
-| IX   | Sounds and Mantras | 42–49  | Mantras (LAM–AH) on each tone        |
+**Settings** (slide-up panel) and **Onboarding** (first launch) round out the experience. For the full journey breakdown, see [journey.md](journey.md).
 
 ## Why it works — the somatic case
 
