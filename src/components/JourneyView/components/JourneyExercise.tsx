@@ -636,7 +636,9 @@ export function JourneyExercise({
                         style={{ color: `${closestBand.color}cc` }}
                       >
                         {locked ? "✓ " : "→ "}
-                        {closestBand.name}
+                        {closestBand.isChakraSlot && stage.part < 11
+                          ? `${closestBand.note}${closestBand.octave}`
+                          : closestBand.name}
                       </div>
                     )}
                     {!locked && targetBand && (
