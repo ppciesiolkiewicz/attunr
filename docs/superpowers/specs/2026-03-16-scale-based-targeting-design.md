@@ -52,7 +52,7 @@ interface MelodyScale extends BaseScale {
 }
 ```
 
-**`ScaleNote`** (renamed from `Band`) — drops `isSlot` and `slotId`:
+**`ScaleNote`** (renamed from `Band`) — drops `isSlot`, `slotId`, and color fields. Represents a resolved note from a scale without visual styling:
 
 ```ts
 interface ScaleNote {
@@ -61,9 +61,16 @@ interface ScaleNote {
   frequencyHz: number;
   note: string;
   octave: number;
+  name: string;
+}
+```
+
+**`ColoredNote`** — extends `ScaleNote` with color. Used by `VocalRange` and canvas components:
+
+```ts
+interface ColoredNote extends ScaleNote {
   color: string;
   rgb: string;
-  name: string;
 }
 ```
 
@@ -112,7 +119,7 @@ interface ToneFollowExercise extends BaseExerciseConfig {
 All references throughout the codebase update:
 
 - `BandTarget` → `NoteTarget`
-- `Band` → `ScaleNote`
+- `Band` → `ScaleNote` (colorless) / `ColoredNote` (with color, extends `ScaleNote`)
 - `resolveBandTarget` → `resolveNoteTarget`
 - `matchesBandTarget` → `matchesNoteTarget`
 - `findClosestBand` → `findClosestNote`
@@ -132,11 +139,13 @@ A custom scale type that preserves exact current slot behavior: build all major 
 
 ### Color assignment
 
-`buildScaleForRange` assigns colors to `ScaleNote` entries. The existing 7-color palette (`SLOTS` colors) is kept as a constant (no longer tied to slot identity). Color strategy per scale type:
+Colors are a property of the user's vocal range, not the exercise's scale. A given note (e.g. C3) always has the same color for a given user, regardless of which exercise is playing.
 
-- **`even-7-from-major`** — 7 notes, each gets one of the 7 palette colors in order (same as current slots).
-- **`major` and other diatonic scales** — cycle through the 7-color palette (`idx % 7`), same as current `buildScaleForRange` behavior.
-- **`chromatic`** — interpolate colors between the 7 palette anchors across the full note array, same as current `getScaleNotesForRange` interpolation logic.
+**`VocalRange.allNotes`** is `ColoredNote[]` — `getScaleNotesForRange` assigns colors across the chromatic range using the existing 7-color palette with interpolation (same as current behavior). This is the single source of truth for note colors.
+
+**`buildScaleForRange`** returns `ScaleNote[]` — no color fields. It only resolves which notes belong to the scale.
+
+**`colorizeNotes`** — new utility function: `(notes: ScaleNote[], vocalRange: VocalRange) => ColoredNote[]`. Looks up each note's color by midi from `vocalRange.allNotes`. Exercise components call this after building their scale to get colored notes for canvas rendering.
 
 ### `getScaleNotesForRange` consolidation
 
@@ -185,45 +194,47 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 
 ### Runtime changes
 
-**`resolveNoteTarget`** (in `pitch.ts`) — remove slot branch, use `BandTargetKind` enum. Signature: `(target: NoteTarget, notes: ScaleNote[]) => ScaleNote[]`.
+**`resolveNoteTarget`** (in `pitch.ts`) — remove slot branch, use `BandTargetKind` enum. Signature: `(target: NoteTarget, notes: ScaleNote[]) => ScaleNote[]`. Works with both `ScaleNote` and `ColoredNote` (since `ColoredNote extends ScaleNote`).
 
-**`buildScaleForRange`** (in `vocal-scale.ts`) — add `"even-7-from-major"` handler that extracts current `getScaleNotesForRange` logic. Returns `ScaleNote[]` without slot metadata.
+**`buildScaleForRange`** (in `vocal-scale.ts`) — add `"even-7-from-major"` handler that extracts current `getScaleNotesForRange` logic. Returns `ScaleNote[]` (no colors).
 
-**Exercise components** (`PitchExercise`, `ToneFollowExercise`) — switch from `vocalRange.allNotes` to `buildScaleForRange(lowNote, highNote, exercise.scale.type, exercise.scale.root)` for their note pool.
+**`colorizeNotes`** (new, in `vocal-scale.ts`) — `(notes: ScaleNote[], vocalRange: VocalRange) => ColoredNote[]`. Matches each note by midi against `vocalRange.allNotes` to assign colors. Fallback for notes not in the vocal range: interpolate from nearest colored notes.
 
-**`JourneyView/utils.ts`** — `getExerciseDisplayColors` derives colors from the exercise's resolved scale notes instead of slot lookups. `getExerciseSlot` and `getExerciseSlotIds` removed or reworked.
+**Exercise components** (`PitchExercise`, `ToneFollowExercise`) — build note pool via `buildScaleForRange`, then `colorizeNotes` for canvas rendering. Pitch detection logic works with `ScaleNote` (doesn't need color); canvas components receive `ColoredNote[]`.
 
-**`tone-slots.ts`** — `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER` removed. `ScaleNote` interface lives here (or moves to a new file). `VocalRange.allBands` → `VocalRange.allNotes`.
+**`JourneyView/utils.ts`** — `getExerciseDisplayColors` derives colors from the exercise's resolved scale notes via `colorizeNotes`. `getExerciseSlot` and `getExerciseSlotIds` removed.
+
+**`tone-slots.ts`** — `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER` removed. The 7-color palette is kept as a standalone constant (e.g. `NOTE_PALETTE`). `ScaleNote` and `ColoredNote` interfaces live here. `VocalRange.allBands` → `VocalRange.allNotes: ColoredNote[]`.
 
 ## Files to modify
 
 | File | Change |
 |------|--------|
 | `src/constants/journey/types.ts` | Add `ChromaticDegree`, `BandTargetKind`, `BaseScale`. Rename `BandTarget` → `NoteTarget`, remove `slot`. Add `scale` to exercise types. `MelodyScale extends BaseScale`. |
-| `src/constants/tone-slots.ts` | Remove `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER`. Rename `Band` → `ScaleNote`, drop `isSlot`/`slotId`. `VocalRange.allBands` → `allNotes`. Update re-exports (`resolveBandTarget` → `resolveNoteTarget`, etc.). |
+| `src/constants/tone-slots.ts` | Remove `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER`. Replace `Band` with `ScaleNote` + `ColoredNote`, drop `isSlot`/`slotId`. Keep 7-color palette as `NOTE_PALETTE`. `VocalRange.allBands` → `allNotes: ColoredNote[]`. Update re-exports. |
 | `src/lib/pitch.ts` | Rename functions and types: `resolveBandTarget` → `resolveNoteTarget`, `Band` → `ScaleNote`, etc. Remove slot branch. Use `BandTargetKind` enum. |
-| `src/lib/vocal-scale.ts` | Add `"even-7-from-major"` to `buildScaleForRange`. Remove slot metadata from output. Rename `Band` → `ScaleNote`. |
+| `src/lib/vocal-scale.ts` | Add `"even-7-from-major"` to `buildScaleForRange`. `buildScaleForRange` returns `ScaleNote[]` (no colors). Add `colorizeNotes` utility. `getScaleNotesForRange` returns `ColoredNote[]` for `VocalRange`. |
 | `src/constants/journey/part2.ts` – `part20.ts` | Migrate slot targets to index with `scale`. Add `scale` to range/slide exercises. Update `kind` strings to enum. |
 | `src/constants/journey/index.ts` | Update exports. |
-| `src/components/Exercise/PitchExercise/PitchExercise.tsx` | Use `exercise.scale` to build note pool. Rename `Band` → `ScaleNote`. |
-| `src/components/Exercise/PitchExercise/usePitchProgress.ts` | Rename `Band` → `ScaleNote`. |
-| `src/components/Exercise/ToneFollowExercise.tsx` | Use `exercise.scale`, add `displayNotes` support, rename. |
-| `src/components/Exercise/MelodyExercise.tsx` | Update `kind` strings to enum, rename `Band` → `ScaleNote`. |
-| `src/components/PitchCanvas.tsx` | Rename `Band` → `ScaleNote`. |
-| `src/components/HillBallCanvas.tsx` | Rename `Band` → `ScaleNote`. |
-| `src/components/BalanceBallCanvas.tsx` | Rename `Band` → `ScaleNote`. |
+| `src/components/Exercise/PitchExercise/PitchExercise.tsx` | Use `exercise.scale` + `colorizeNotes`. `Band` → `ColoredNote` for canvas, `ScaleNote` for pitch logic. |
+| `src/components/Exercise/PitchExercise/usePitchProgress.ts` | `Band` → `ScaleNote` (pitch detection doesn't need color). |
+| `src/components/Exercise/ToneFollowExercise.tsx` | Use `exercise.scale` + `colorizeNotes`, add `displayNotes` support. |
+| `src/components/Exercise/MelodyExercise.tsx` | Update `kind` strings to enum, `Band` → `ColoredNote`/`ScaleNote`. |
+| `src/components/PitchCanvas.tsx` | `Band` → `ColoredNote` (needs color for rendering). |
+| `src/components/HillBallCanvas.tsx` | `Band` → `ColoredNote`. |
+| `src/components/BalanceBallCanvas.tsx` | `Band` → `ColoredNote`. |
 | `src/components/JourneyView/utils.ts` | Remove slot-based color/id logic (`getExerciseSlot`, `getExerciseSlotIds`), derive colors from scale. |
-| `src/components/JourneyView/JourneyView.tsx` | Rename `Band` → `ScaleNote` in props. |
-| `src/components/JourneyView/components/JourneyExercise.tsx` | Rename `Band` → `ScaleNote`, update `allBands` → `allNotes`. |
+| `src/components/JourneyView/JourneyView.tsx` | `Band` → `ColoredNote` in props. |
+| `src/components/JourneyView/components/JourneyExercise.tsx` | `Band` → `ColoredNote`, `allBands` → `allNotes`. |
 | `src/components/JourneyView/components/ExerciseCard.tsx` | Update `getExerciseDisplayColors` call (signature may change). |
 | `src/components/JourneyView/components/ExerciseInfoModal.tsx` | Update `getExerciseDisplayColors` call (signature may change). |
-| `src/components/TrainView.tsx` | Rename `Band` → `ScaleNote`, `allBands` → `allNotes`. |
-| `src/components/AppShell/AppShell.tsx` | Rename `Band` → `ScaleNote` in callbacks. |
-| `src/context/AppContext.tsx` | Rename `Band` → `ScaleNote` in context type. |
-| `src/components/Exercise/BaseExercise.tsx` | Rename `Band` → `ScaleNote`. |
-| `src/components/Exercise/LearnNotesExercise.tsx` | Rename `Band` → `ScaleNote`. |
-| `src/components/HillBallCanvas.stories.tsx` | Update `Band` → `ScaleNote` in story data. |
-| `src/components/BalanceBallCanvas.stories.tsx` | Update `Band` → `ScaleNote` in story data. |
+| `src/components/TrainView.tsx` | `Band` → `ColoredNote`, `allBands` → `allNotes`. |
+| `src/components/AppShell/AppShell.tsx` | `Band` → `ColoredNote` in callbacks (`playTone`, `playSlide`). |
+| `src/context/AppContext.tsx` | `Band` → `ColoredNote` in context type. |
+| `src/components/Exercise/BaseExercise.tsx` | `Band` → `ColoredNote` in props. |
+| `src/components/Exercise/LearnNotesExercise.tsx` | `Band` → `ColoredNote`. |
+| `src/components/HillBallCanvas.stories.tsx` | `Band` → `ColoredNote` in story data. |
+| `src/components/BalanceBallCanvas.stories.tsx` | `Band` → `ColoredNote` in story data. |
 | `specs/exercise-config-flow.md` | Update to reflect new types and slot removal. |
 
 ## What does NOT change
