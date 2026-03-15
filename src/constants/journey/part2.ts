@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { NoteDuration } from "./types";
 
 /** Part 2: First Sounds — discover chest and head voice, first lip rolls */
 export const PART_2_EXERCISES: JourneyExerciseInput[] = [
@@ -49,41 +50,43 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Perfect Fifth",
     subtitle: "Sing two notes · intervals",
     technique: "sustain",
-    melody: [1, 2, 3, 4, 5, 6, 7].map((root) => ({
-      type: "major",
-      root,
-      notes: [
-        { rest: true as const, seconds: 0.3 },
-        { target: { kind: "index" as const, i: 0 }, seconds: 2 },
-        { target: { kind: "index" as const, i: 4 }, seconds: 2 },
-      ],
-    })),
-    backingTrack: (() => {
-      const chord = (root: number) => ({
+    tempo: 60,
+    melody: [1, 2, 3, 4, 5, 6, 7].flatMap((root, i) => {
+      const majorChord = (r: number) => ({
         type: "major",
-        root,
-        notes: [
-          { chord: [
+        root: r,
+        events: [
+          { type: "play" as const, targets: [
             { kind: "index" as const, i: 0 },
             { kind: "index" as const, i: 2 },
             { kind: "index" as const, i: 4 },
-          ], seconds: 0.9 },
+          ], duration: NoteDuration.Quarter },
         ],
       });
-      const silence = (seconds: number) => ({
-        type: "major",
-        root: 1,
-        notes: [{ rest: true as const, seconds }],
-      });
-      // Segment 1: rest (where prev chord would be) → chord(1)
-      // Segment N: chord(N-1) → chord(N)
-      // After each pair of chords: silence for singing duration (4s)
-      return [1, 2, 3, 4, 5, 6, 7].flatMap((root, i) => [
-        i === 0 ? silence(0.9) : chord(i),  // prev chord (or silence for first)
-        chord(root),                          // current chord
-        silence(4),                           // silence during singing
-      ]);
-    })(),
+      return [
+        // Previous chord (or pause for first pair)
+        i === 0
+          ? { type: "major", root: 1, events: [
+              { type: "pause" as const, duration: NoteDuration.Quarter },
+            ]}
+          : majorChord(i),
+        // Current chord → pause → sing root → sing fifth
+        {
+          type: "major",
+          root,
+          events: [
+            { type: "play" as const, targets: [
+              { kind: "index" as const, i: 0 },
+              { kind: "index" as const, i: 2 },
+              { kind: "index" as const, i: 4 },
+            ], duration: NoteDuration.Quarter },
+            { type: "pause" as const, duration: NoteDuration.Eighth },
+            { type: "note" as const, target: { kind: "index" as const, i: 0 }, duration: NoteDuration.Half },
+            { type: "note" as const, target: { kind: "index" as const, i: 4 }, duration: NoteDuration.Half },
+          ],
+        },
+      ];
+    }),
     minScore: 0,
     instruction: "Sing the two notes as they appear — the piano plays each note for you",
   },
