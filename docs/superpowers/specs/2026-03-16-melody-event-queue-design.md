@@ -76,9 +76,11 @@ interface MelodyExercise extends BaseExerciseConfig {
 
 1. Computes `durationMs` from `event.duration` and `tempo`: `(event.duration / 4) * (60 / tempo) * 1000`
 2. For `note` events: resolves `target` against the segment's scale pool, emits a `NoteTimeline` entry (shown, scored)
-3. For `play` events: resolves each target in `targets` against the segment's scale pool, emits entries at the same `startMs` (audio only — a new `audioOnly` flag on `NoteTimeline`, or a separate `AudioTimeline` type)
+3. For `play` events: resolves each target in `targets` against the segment's scale pool, emits `NoteTimeline` entries at the same `startMs` with `audioOnly: true` — these are scheduled for audio but excluded from scoring and rectangle rendering
 4. For `pause` events: advances cursor, no entry emitted
 5. Cursor advances by `durationMs` for all event types
+
+`NoteTimeline` gains an `audioOnly?: boolean` flag. `singableNotes` filtering excludes `audioOnly` entries, preserving scoring and rendering invariants.
 
 ### Audio scheduling
 
@@ -119,7 +121,7 @@ At tempo 60 (quarter = 1s, half = 2s):
 }
 ```
 
-Per pair: quarter (1s) + quarter (1s) + eighth (0.5s) + half (2s) + half (2s) = 5.5s. Full exercise: ~38.5s.
+Per pair: quarter (1s) + quarter (1s) + eighth (0.5s) + half (2s) + half (2s) = 6.5s. Full exercise: ~45.5s.
 
 ## Files to modify
 
@@ -139,7 +141,7 @@ Per pair: quarter (1s) + quarter (1s) + eighth (0.5s) + half (2s) + half (2s) = 
 - `usePianoSampler` — unchanged, receives same `{ frequencyHz, startSec, durationSec }[]`
 - `VocalRange` — unchanged
 - `DisplayNote` / `DisplayScale` — unchanged
-- Scoring logic — unchanged (operates on resolved note entries)
+- Scoring logic — unchanged (`singableNotes` filter excludes `audioOnly` entries)
 
 ## Migration
 
@@ -149,6 +151,7 @@ Per pair: quarter (1s) + quarter (1s) + eighth (0.5s) + half (2s) + half (2s) = 
 |-----|-----|
 | `{ target, seconds }` | `{ type: "note", target, duration }` |
 | `{ target, seconds, silent: true }` | `{ type: "note", target, duration, silent: true }` |
+| `{ chord: targets, seconds }` | `{ type: "play", targets, duration }` (chord variant — was audio-only in backing track; no scored chord use exists in current configs) |
 | `{ rest: true, seconds }` | `{ type: "pause", duration }` |
 | `backingTrack` notes | `{ type: "play", targets: [...], duration }` inline in `melody` |
 
