@@ -119,6 +119,13 @@ All references throughout the codebase update:
 - `isInBandRange` → `isInNoteRange`
 - `VocalRange.allBands` → `VocalRange.allNotes`
 
+Types that reference `BandTarget` and update to `NoteTarget`:
+- `SustainNoteConfig` — `target: NoteTarget`
+- `SlideConfig` — `from: NoteTarget; to: NoteTarget`
+- `ToneFollowShape` — `from`/`to`/`target` fields become `NoteTarget`
+- `MelodyEvent` — `target` and `targets` fields become `NoteTarget`
+- `DisplayNote` — `target: NoteTarget`
+
 ### Scale type: `even-7-from-major`
 
 A custom scale type that preserves exact current slot behavior: build all major scale notes across the vocal range, then pick 7 at evenly-spaced array indices (`Math.round(i * (N-1) / 6)` for i=0..6). Handled in `buildScaleForRange`.
@@ -227,7 +234,7 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 - Scoring logic — unchanged
 - `usePianoSampler` — unchanged
 - `VoiceType` / voice detection — unchanged
-- `DisplayNote` / `DisplayScale` — unchanged (already used by melody, now shared with slide/tone-follow)
+- `DisplayNote` / `DisplayScale` — structure unchanged (already used by melody, now shared with slide/tone-follow); `DisplayNote.target` type updates from `BandTarget` to `NoteTarget`
 
 ## Verification
 
