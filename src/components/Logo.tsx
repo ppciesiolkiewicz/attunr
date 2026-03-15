@@ -1,3 +1,5 @@
+import { Text } from "@/components/ui";
+
 const TONE_SPECTRUM = [
   "#ef4444",
   "#f97316",
@@ -38,14 +40,37 @@ const textSizes: Record<LogoSize, string> = {
   lg: "text-2xl sm:text-3xl",
 };
 
+const LOGO_LETTERS = ["a", "t", "t", "u", "n", "r"] as const;
+
 export default function Logo({ layout = "horizontal", size = "default", animate, className = "" }: LogoProps) {
+  const text = (
+    <span className={`inline-flex font-semibold tracking-tight text-white leading-none ${textSizes[size]}`}>
+      {LOGO_LETTERS.map((letter, i) => (
+        <span
+          key={i}
+          style={animate ? {
+            display: "inline-block",
+            animation: `logo-bend 5s ease-in-out infinite`,
+            animationDelay: `${i * 0.4}s`,
+          } : undefined}
+        >
+          {letter}
+        </span>
+      ))}
+    </span>
+  );
+
   const dots = (
-    <span
+    <Text
+      as="span"
+      variant="body-sm"
       className={`inline-flex items-center ${dotGaps[size]} shrink-0`}
       style={{ transform: layout === "horizontal" ? "translateY(2px)" : undefined }}
     >
       {TONE_SPECTRUM.map((color, i) => (
-        <span
+        <Text
+          as="span"
+          variant="body-sm"
           key={i}
           className={`block ${dotSizes[size]} rounded-full opacity-80`}
           style={{
@@ -57,7 +82,7 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
           }}
         />
       ))}
-    </span>
+    </Text>
   );
 
   const bounceStyle = (animate === 1 || animate === 3)
@@ -67,7 +92,7 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
   if (layout === "vertical") {
     return (
       <div className={`flex flex-col items-center ${size === "lg" ? "gap-3" : "gap-1.5"} ${className}`} style={bounceStyle}>
-        <span className={`font-semibold tracking-tight text-white leading-none ${textSizes[size]}`}>attunr</span>
+        {text}
         {dots}
       </div>
     );
@@ -75,7 +100,7 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
 
   return (
     <div className={`flex items-center gap-2 sm:gap-3 ${className}`} style={bounceStyle}>
-      <span className={`font-semibold tracking-tight text-white leading-none ${textSizes[size]}`}>attunr</span>
+      {text}
       {dots}
     </div>
   );

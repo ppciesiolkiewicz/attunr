@@ -128,9 +128,15 @@ body {
 }
 
 @keyframes logo-wave {
-  0%       { transform: translateY(-10px); }
-  50%      { transform: translateY(10px); }
-  100%     { transform: translateY(-10px); }
+  0%       { transform: translateY(-1.5px); }
+  50%      { transform: translateY(1.5px); }
+  100%     { transform: translateY(-1.5px); }
+}
+
+@keyframes logo-bend {
+  0%       { transform: rotate(-3deg) translateY(-1px); }
+  50%      { transform: rotate(3deg) translateY(1px); }
+  100%     { transform: rotate(-3deg) translateY(-1px); }
 }
 
 @keyframes landing-ring-pulse {
