@@ -15,6 +15,8 @@ type LogoProps = {
   layout?: LogoLayout;
   /** Size variant: sm for compact, default for header, lg for hero/marketing */
   size?: LogoSize;
+  /** Dot animation: 1 = bounce wave (up only), 2 = sine wave (up & down), 3 = both combined */
+  animate?: 1 | 2 | 3;
   className?: string;
 };
 
@@ -36,7 +38,7 @@ const textSizes: Record<LogoSize, string> = {
   lg: "text-2xl sm:text-3xl",
 };
 
-export default function Logo({ layout = "horizontal", size = "default", className = "" }: LogoProps) {
+export default function Logo({ layout = "horizontal", size = "default", animate, className = "" }: LogoProps) {
   const dots = (
     <span
       className={`inline-flex items-center ${dotGaps[size]} shrink-0`}
@@ -46,15 +48,25 @@ export default function Logo({ layout = "horizontal", size = "default", classNam
         <span
           key={i}
           className={`block ${dotSizes[size]} rounded-full opacity-80`}
-          style={{ backgroundColor: color }}
+          style={{
+            backgroundColor: color,
+            ...((animate === 2 || animate === 3) && {
+              animation: `logo-wave 5s ease-in-out infinite`,
+              animationDelay: `${i * 0.4}s`,
+            }),
+          }}
         />
       ))}
     </span>
   );
 
+  const bounceStyle = (animate === 1 || animate === 3)
+    ? { animation: "logo-bounce 5s ease-in-out infinite" } as const
+    : undefined;
+
   if (layout === "vertical") {
     return (
-      <div className={`flex flex-col items-center ${size === "lg" ? "gap-3" : "gap-1.5"} ${className}`}>
+      <div className={`flex flex-col items-center ${size === "lg" ? "gap-3" : "gap-1.5"} ${className}`} style={bounceStyle}>
         <span className={`font-semibold tracking-tight text-white leading-none ${textSizes[size]}`}>attunr</span>
         {dots}
       </div>
@@ -62,7 +74,7 @@ export default function Logo({ layout = "horizontal", size = "default", classNam
   }
 
   return (
-    <div className={`flex items-center gap-2 sm:gap-3 ${className}`}>
+    <div className={`flex items-center gap-2 sm:gap-3 ${className}`} style={bounceStyle}>
       <span className={`font-semibold tracking-tight text-white leading-none ${textSizes[size]}`}>attunr</span>
       {dots}
     </div>

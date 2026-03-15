@@ -37,8 +37,8 @@ export function Hero() {
       ))}
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-        <div className="mb-12" style={{ animation: "landing-float 5s ease-in-out infinite" }}>
-          <Logo layout="vertical" size="lg" />
+        <div className="mb-12">
+          <Logo layout="vertical" size="lg" animate={1} />
         </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">
@@ -71,8 +71,22 @@ export function Hero() {
           fill="none"
           className="animate-bounce"
         >
-          <rect x="1" y="1" width="18" height="26" rx="9" stroke="currentColor" strokeWidth="1.5" />
-          <circle cx="10" cy="8" r="2" fill="currentColor" className="animate-pulse" />
+          <rect
+            x="1"
+            y="1"
+            width="18"
+            height="26"
+            rx="9"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+          <circle
+            cx="10"
+            cy="8"
+            r="2"
+            fill="currentColor"
+            className="animate-pulse"
+          />
         </svg>
       </div>
     </section>
