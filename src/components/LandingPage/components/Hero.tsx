@@ -30,8 +30,7 @@ export function Hero() {
             width: `${280 + i * 160}px`,
             height: `${280 + i * 160}px`,
             borderColor: color,
-            animation: `landing-ring-pulse ${2 + i * 0.5}s ease-out infinite`,
-            animationDelay: `${i * 0.4}s`,
+            animation: `landing-ring-pulse ${2 + i * 0.5}s ease-out ${i * 0.4}s infinite backwards`,
           }}
         />
       ))}
