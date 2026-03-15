@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
-import { Button, Text } from "@/components/ui";
+import { Button } from "@/components/ui";
 
 const RING_COLORS = [
   "rgba(139,92,246,0.45)",
@@ -37,35 +37,21 @@ export function Hero() {
       ))}
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-        <div className="mb-12">
-          <Logo layout="vertical" size="lg" animate={3} />
-        </div>
+        <Logo layout="vertical" size="lg" animate={3} className="mb-12" />
 
-        <Text
-          variant="heading-lg"
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-6"
-        >
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.1] tracking-tight mb-6">
           Feel your voice
           <br />
-          <Text
-            as="span"
-            variant="heading-lg"
-            className="bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"
-            color=""
-          >
+          <span className="bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
             in your body
-          </Text>
-        </Text>
+          </span>
+        </h1>
 
-        <Text
-          variant="body"
-          color="text-white/60"
-          className="text-lg sm:text-xl max-w-md mb-12"
-        >
+        <p className="text-lg sm:text-xl text-white/60 leading-relaxed max-w-md mb-12">
           You already know how this feels.
           <br />
           We just gave it a path.
-        </Text>
+        </p>
 
         <Link href="/journey">
           <Button size="lg" className="px-12 text-lg glow-pulse">

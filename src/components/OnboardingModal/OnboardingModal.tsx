@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { deriveVoiceType, hzToNoteName } from "@/lib/pitch";
 import type { VoiceTypeId } from "@/constants/voice-types";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
+import { Text } from "@/components/ui";
 import { ToneSpectrum } from "./components/ToneSpectrum";
 import { WelcomePhase } from "./components/WelcomePhase";
 import { DetectFlowPhase } from "./components/DetectFlowPhase";
@@ -161,12 +162,12 @@ export default function OnboardingModal({
         <ToneSpectrum />
 
         <div>
-          <h1 className="text-[2.1rem] font-semibold tracking-tight text-white leading-none">
+          <Text variant="heading-lg" className="text-[2.1rem] tracking-tight leading-none">
             attunr
-          </h1>
-          <p className="mt-1.5 text-xs text-white/62 tracking-widest uppercase">
+          </Text>
+          <Text variant="label" className="mt-1.5" color="muted-1">
             align your voice
-          </p>
+          </Text>
         </div>
 
         <div

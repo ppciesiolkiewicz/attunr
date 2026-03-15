@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { InfoButton } from "../../TabInfoModal";
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { getSkippedInfoExerciseIds, getStepInPart, toRoman } from "../utils";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { BaseExercise } from "@/components/Exercise";
@@ -127,26 +127,26 @@ export function JourneyExercise({
         <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90 pr-1!">
           ← Journey
         </Button>
-        <span className="text-white/35">|</span>
-        <span className="text-xs sm:text-sm text-white/55 shrink-0">
+        <Text variant="caption" as="span" color="muted-2">|</Text>
+        <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
           Part {toRoman(exercise.part)}
-        </span>
-        <span className="hidden md:inline text-xs text-white/72 font-medium shrink-0">
+        </Text>
+        <Text variant="caption" as="span" color="text-2" className="hidden md:inline font-medium shrink-0">
           — {partTitle}
-        </span>
-        <span className="text-white/35">·</span>
-        <span className="text-xs sm:text-sm text-white/62 shrink-0">
+        </Text>
+        <Text variant="caption" as="span" color="muted-2">·</Text>
+        <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
           {getStepInPart(exerciseId).stepIndex} of{" "}
           {getStepInPart(exerciseId).stepsInPart}
-        </span>
-        <span className="text-white/35">—</span>
-        <span className="text-xs sm:text-sm text-white/80 font-medium truncate min-w-0">
+        </Text>
+        <Text variant="caption" as="span" color="muted-2">—</Text>
+        <Text variant="caption" as="span" color="text-2" className="sm:text-sm font-medium truncate min-w-0">
           {exercise.title}
-        </span>
+        </Text>
         {exercise.exerciseTypeId !== "learn" && (
-          <span className="ml-auto">
+          <Text as="span" className="ml-auto">
             <InfoButton onClick={() => setShowInfoModal(true)} />
-          </span>
+          </Text>
         )}
       </div>
 

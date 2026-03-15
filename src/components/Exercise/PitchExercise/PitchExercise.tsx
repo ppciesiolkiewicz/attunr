@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import BalanceBallCanvas from "@/components/BalanceBallCanvas";
 import HillBallCanvas from "@/components/HillBallCanvas";
-import { Button, CircularProgress } from "@/components/ui";
+import { Button, CircularProgress, Text } from "@/components/ui";
 import { usePitchProgress } from "./usePitchProgress";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
@@ -182,9 +182,9 @@ export function PitchExercise({
         {/* Brief instruction cue */}
         {!(pitchHz !== null) && (
           <div className="absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12">
-            <p className="text-xs text-white/50 text-center leading-snug max-w-[320px]">
+            <Text variant="caption" color="muted-1" className="text-center leading-snug max-w-[320px]">
               {exercise.instruction.split("\n")[0]}
-            </p>
+            </Text>
           </div>
         )}
 
@@ -256,57 +256,63 @@ export function PitchExercise({
         {pitchHz !== null && (
           <>
             <div className="pointer-events-none absolute top-2 left-0 right-0 z-10 hidden sm:flex justify-center px-12">
-              <p className="text-xs text-white/50 text-center leading-snug max-w-80">
+              <Text variant="caption" color="muted-1" className="text-center leading-snug max-w-80">
                 {exercise.instruction.split("\n")[0]}
-              </p>
+              </Text>
             </div>
             <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
               <div className="shrink-0">
                 {isRangeTarget ? (
                   <>
-                    <div
-                      className="text-2xl font-light"
+                    <Text
+                      as="div"
+                      variant="heading-lg"
+                      className="font-light"
                       style={{ color: closestBand?.color ?? "#fff" }}
                     >
                       {locked ? "✓ " : ""}
                       {exercise.exerciseTypeId === "pitch-detection" && exercise.notes[0].target.kind === "range" && exercise.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
-                    </div>
+                    </Text>
                     {!locked && (
-                      <div className="text-sm mt-1 text-white/55">
+                      <Text variant="body-sm" as="div" color="muted-1" className="mt-1">
                         {rangeAccept === "below" ? "Push lower" : rangeAccept === "above" ? "Push higher" : ""}
-                      </div>
+                      </Text>
                     )}
                   </>
                 ) : (
                   <>
-                    <div
+                    <Text
+                      as="div"
+                      variant="heading-lg"
                       className="text-3xl font-light tabular-nums"
                       style={{ color: closestBand?.color ?? "#fff" }}
                     >
                       {Math.round(pitchHz)} Hz
-                    </div>
+                    </Text>
                     {closestBand && (
-                      <div
-                        className="text-sm mt-0.5"
+                      <Text
+                        as="div"
+                        variant="body-sm"
+                        className="mt-0.5"
                         style={{ color: `${closestBand.color}cc` }}
                       >
                         {locked ? "✓ " : "→ "}
                         {closestBand.isSlot
                           ? `${closestBand.note}${closestBand.octave}`
                           : closestBand.name}
-                      </div>
+                      </Text>
                     )}
                     {!locked && targetBand && (
-                      <div className="text-sm mt-1 text-white/55">
+                      <Text variant="body-sm" as="div" color="muted-1" className="mt-1">
                         {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
-                      </div>
+                      </Text>
                     )}
                   </>
                 )}
               </div>
-              <p className="text-xs text-white/50 text-right leading-snug max-w-50 sm:hidden">
+              <Text variant="caption" color="muted-1" className="text-right leading-snug max-w-50 sm:hidden">
                 {exercise.instruction.split("\n")[0]}
-              </p>
+              </Text>
             </div>
           </>
         )}
@@ -325,7 +331,7 @@ export function PitchExercise({
                 }}
               />
             ))}
-            <span className="text-xs text-white/65 ml-1">slide {slideCount}/2</span>
+            <Text variant="caption" as="span" color="text-2" className="ml-1">slide {slideCount}/2</Text>
           </div>
         )}
         {exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length > 1 && !exerciseComplete && (

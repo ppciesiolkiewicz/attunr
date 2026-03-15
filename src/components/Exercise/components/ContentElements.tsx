@@ -1,7 +1,7 @@
 "use client";
 
 import { HeadphonesNotice } from "@/components/TabInfoModal";
-import { Video } from "@/components/ui";
+import { Text, Video } from "@/components/ui";
 import type { ContentElement } from "@/constants/journey";
 
 interface ContentElementsProps {
@@ -24,18 +24,18 @@ export function ContentElements({ elements }: ContentElementsProps) {
                   background: "rgba(251,191,36,0.08)",
                 }}
               >
-                <p className="text-sm font-semibold text-amber-400/95 mb-1.5">
+                <Text variant="body-sm" color="warning" className="font-semibold mb-1.5">
                   Before you begin
-                </p>
-                <p className="text-sm text-white/82 leading-relaxed">{el.text}</p>
+                </Text>
+                <Text variant="body-sm" color="text-1">{el.text}</Text>
               </div>
             );
 
           case "paragraph":
             return (
-              <p
+              <Text
                 key={i}
-                className="text-base leading-relaxed"
+                variant="body"
                 style={{
                   color:
                     el.variant === "secondary"
@@ -44,7 +44,7 @@ export function ContentElements({ elements }: ContentElementsProps) {
                 }}
               >
                 {el.text}
-              </p>
+              </Text>
             );
 
           case "video":
@@ -56,19 +56,21 @@ export function ContentElements({ elements }: ContentElementsProps) {
           case "tip-list":
             return (
               <div key={i} className="flex flex-col gap-3">
-                <p className="text-sm font-medium text-white/78 tracking-wide uppercase">
+                <Text variant="label" color="text-2" className="font-medium tracking-wide">
                   {el.title}
-                </p>
+                </Text>
                 <ul className="flex flex-col gap-2.5">
                   {el.tips.map((tip, j) => (
-                    <li
+                    <Text
+                      as="li"
                       key={j}
-                      className="flex gap-2.5 text-[15px] leading-relaxed"
+                      variant="body"
+                      className="flex gap-2.5 text-[15px]"
                       style={{ color: "rgba(255,255,255,0.72)" }}
                     >
                       <span className="mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full bg-violet-400/70" />
-                      <span>{tip}</span>
-                    </li>
+                      <Text as="span" variant="body" style={{ color: "rgba(255,255,255,0.72)" }}>{tip}</Text>
+                    </Text>
                   ))}
                 </ul>
               </div>
@@ -77,7 +79,7 @@ export function ContentElements({ elements }: ContentElementsProps) {
           case "separator":
             return (
               <div key={i} className="flex items-center justify-center py-3">
-                <span className="text-white/55 text-[0.5em] leading-none">●</span>
+                <Text as="span" variant="caption" color="muted-1" className="text-[0.5em] leading-none">●</Text>
               </div>
             );
         }

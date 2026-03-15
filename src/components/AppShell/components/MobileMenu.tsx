@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import Logo from "../../Logo";
 import { CloseIcon, MenuJourneyIcon, MenuTrainIcon, MenuLearnIcon } from "./icons";
 
@@ -28,9 +28,9 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between px-5 pt-6 pb-4 border-b border-white/[0.06]">
-          <div className="text-lg">
+          <Text as="div" variant="heading-sm" className="font-normal">
             <Logo layout="horizontal" size="sm" />
-          </div>
+          </Text>
           <Button variant="icon" onClick={onClose} aria-label="Close menu" className="p-2">
             <CloseIcon />
           </Button>
@@ -45,9 +45,9 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
             }`}
             onClick={onClose}
           >
-            <span className={pathname.startsWith("/journey") ? "text-white" : "text-white/70"}>
+            <Text as="span" variant="body-sm" color={pathname.startsWith("/journey") ? "text-1" : "text-2"}>
               <MenuJourneyIcon />
-            </span>
+            </Text>
             Journey
           </Link>
           <Link
@@ -57,9 +57,9 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
             }`}
             onClick={onClose}
           >
-            <span className={pathname === "/train" ? "text-white" : "text-white/70"}>
+            <Text as="span" variant="body-sm" color={pathname === "/train" ? "text-1" : "text-2"}>
               <MenuTrainIcon />
-            </span>
+            </Text>
             Train
           </Link>
           <Link
@@ -67,18 +67,18 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all"
             onClick={onClose}
           >
-            <span className="text-white/70">
+            <Text as="span" variant="body-sm" color="text-2">
               <MenuLearnIcon />
-            </span>
+            </Text>
             Learn
           </Link>
         </nav>
         <div className="mt-auto px-5 py-5 pt-5 border-t border-white/[0.06]">
-          <p className="text-center text-[0.9rem] text-white/65 tracking-wide flex flex-col gap-1 items-center font-light">
-            <span>Align your voice</span>
-            <span className="text-violet-400/70 text-[0.5em] leading-none">●</span>
-            <span>find your frequency</span>
-          </p>
+          <Text variant="body-sm" color="text-2" className="text-center text-[0.9rem] tracking-wide flex flex-col gap-1 items-center font-light">
+            <Text as="span" variant="body-sm" color="text-2">Align your voice</Text>
+            <Text as="span" variant="body-sm" color="accent" className="text-[0.5em] leading-none">●</Text>
+            <Text as="span" variant="body-sm" color="text-2">find your frequency</Text>
+          </Text>
         </div>
       </div>
     </div>

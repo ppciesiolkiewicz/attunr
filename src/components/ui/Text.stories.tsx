@@ -11,7 +11,11 @@ const meta: Meta<typeof Text> = {
     },
     as: {
       control: "select",
-      options: ["h1", "h2", "h3", "h4", "p", "span", "label"],
+      options: ["h1", "h2", "h3", "h4", "p", "span", "label", "div", "li"],
+    },
+    color: {
+      control: "select",
+      options: ["text-1", "text-2", "muted-1", "muted-2", "accent", "warning", "error"],
     },
     children: { control: "text" },
   },
@@ -42,5 +46,27 @@ export const AllVariants: Story = {
       <Text variant="caption">Caption for subtle metadata</Text>
       <Text variant="label">Label Text</Text>
     </div>
+  ),
+};
+
+export const ColorOverrides: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <Text variant="body-sm" color="text-1">text-1 — full white</Text>
+      <Text variant="body-sm" color="text-2">text-2 — readable (default for body-sm)</Text>
+      <Text variant="body-sm" color="muted-1">muted-1 — captions, labels</Text>
+      <Text variant="body-sm" color="muted-2">muted-2 — separators, decorative</Text>
+      <Text variant="body-sm" color="accent">Accent — brand highlights</Text>
+      <Text variant="body-sm" color="warning">Warning — caution notices</Text>
+      <Text variant="body-sm" color="error">Error — error messages</Text>
+    </div>
+  ),
+};
+
+export const DynamicColor: Story = {
+  render: () => (
+    <Text variant="heading-sm" style={{ color: "#7c3aed" }}>
+      Dynamic color via style (default suppressed automatically)
+    </Text>
   ),
 };

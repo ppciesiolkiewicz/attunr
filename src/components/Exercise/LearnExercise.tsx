@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { ContentElements } from "./components/ContentElements";
 import type { LearnExercise as LearnExerciseConfig } from "@/constants/journey";
 
@@ -32,12 +32,12 @@ export function LearnExercise({
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="max-w-lg mx-auto px-5 py-6 flex flex-col gap-6">
           <div className="pb-2 border-b border-white/[0.08]">
-            <h2 className="text-xl font-semibold text-white">
+            <Text variant="heading">
               Part {partRoman} — {partTitle}
-            </h2>
-            <p className="text-sm text-white/65 mt-0.5">
+            </Text>
+            <Text variant="body-sm" color="text-2" className="mt-0.5">
               {exercise.title} · {stepIndex} of {stepsInPart}
-            </p>
+            </Text>
           </div>
           <div className="flex flex-col gap-4">
             <ContentElements elements={exercise.elements} />

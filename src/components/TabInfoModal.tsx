@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, CloseButton, Modal } from "@/components/ui";
+import { Button, CloseButton, Modal, Text } from "@/components/ui";
 
 interface TabInfoModalProps {
   title: string;
@@ -68,13 +68,13 @@ export function HeadphonesNotice() {
         border: "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <span className="text-white/62 shrink-0 flex items-center justify-center">
+      <Text as="span" variant="caption" color="muted-1" className="shrink-0 flex items-center justify-center">
         <HeadphonesIcon />
-      </span>
-      <p className="text-sm text-white/68 leading-relaxed text-left">
+      </Text>
+      <Text variant="body-sm" color="text-2" className="text-left">
         For the best experience, use headphones — they keep the playback out of your
         mic so we can hear your voice clearly.
-      </p>
+      </Text>
     </div>
   );
 }
@@ -90,7 +90,7 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
     >
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-white/[0.06] shrink-0">
-          <h2 className="text-lg font-semibold text-white">{title}</h2>
+          <Text variant="heading-sm">{title}</Text>
           <CloseButton onClick={() => onClose(persist)} />
         </div>
 
@@ -108,9 +108,9 @@ export default function TabInfoModal({ title, children, onClose }: TabInfoModalP
               onChange={(e) => setPersist(e.target.checked)}
               className="w-3.5 h-3.5 accent-violet-500 cursor-pointer"
             />
-            <span className="text-xs text-white/60 group-hover:text-white/75 transition-colors select-none">
+            <Text as="span" variant="caption" color="muted-1" className="group-hover:text-white/75 transition-colors select-none">
               Don&apos;t show this again
-            </span>
+            </Text>
           </label>
 
           <Button onClick={() => onClose(persist)} className="shrink-0">

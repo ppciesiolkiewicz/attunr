@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Spinner, Video } from "@/components/ui";
+import { Button, Spinner, Text, Video } from "@/components/ui";
 import { MicrophoneIcon } from "./MicrophoneIcon";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
@@ -16,17 +16,17 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
   return (
     <div className="flex flex-col items-center gap-4 w-full">
       <div>
-        <p className="text-base font-medium text-white/92">
+        <Text variant="body" className="font-medium" color="text-1">
           Let&apos;s find your voice
-        </p>
-        <p className="text-sm text-white/65 mt-1.5 leading-relaxed px-2">
+        </Text>
+        <Text variant="body-sm" className="mt-1.5 px-2" color="text-2">
           We&apos;ll listen to you hum low and high to map your
           comfortable range. Takes about 10 seconds.
-        </p>
-        <p className="text-sm text-white/55 mt-2.5 leading-relaxed px-2">
+        </Text>
+        <Text variant="body-sm" className="mt-2.5 px-2" color="muted-1">
           Relax your body — drop your shoulders, soften your jaw.
           You should never feel strain in your throat.
-        </p>
+        </Text>
         <div className="mt-2">
           <Video variant="inline" />
         </div>
@@ -40,29 +40,29 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
         style={isLoading ? { boxShadow: "none" } : undefined}
       >
         {isLoading ? (
-          <span className="flex items-center justify-center gap-2">
+          <Text as="span" variant="body" className="flex items-center justify-center gap-2">
             <Spinner />
             {status === "requesting-mic"
               ? "Requesting microphone…"
               : "Loading pitch model…"}
-          </span>
+          </Text>
         ) : isError ? (
-          <span className="inline-flex items-center justify-center gap-2">
+          <Text as="span" variant="body" className="inline-flex items-center justify-center gap-2">
             <MicrophoneIcon />
             Retry microphone
-          </span>
+          </Text>
         ) : (
-          <span className="inline-flex items-center justify-center gap-2">
+          <Text as="span" variant="body" className="inline-flex items-center justify-center gap-2">
             <MicrophoneIcon />
             Begin
-          </span>
+          </Text>
         )}
       </Button>
 
-      <p className="text-xs text-white/52 leading-relaxed px-2">
+      <Text variant="caption" className="leading-relaxed px-2" color="muted-1">
         Microphone used only for real-time pitch detection. Nothing is
         recorded.
-      </p>
+      </Text>
     </div>
   );
 }

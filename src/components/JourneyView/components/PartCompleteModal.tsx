@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
-import { Button, Modal } from "@/components/ui";
+import { Button, Modal, Text } from "@/components/ui";
 import { ContentElements } from "@/components/Exercise/components/ContentElements";
 import { BadgeIcon } from "./BadgeIcon";
 import type { ModalConfig } from "@/constants/journey/types";
@@ -59,10 +59,12 @@ export function PartCompleteModal({
           >
             <BadgeIcon className="text-violet-400" style={{ width: 24, height: 24 }} />
           </div>
-          <h2 className="text-xl font-semibold text-white text-center">
+          <Text variant="heading" className="text-center">
             {modalConfig.title}
-          </h2>
-          <p className="text-sm text-white/80 text-center">{modalConfig.subtitle}</p>
+          </Text>
+          <Text variant="body-sm" color="text-2" className="text-center">
+            {modalConfig.subtitle}
+          </Text>
         </div>
         <div className="px-5 py-4 border-t border-white/[0.06] flex flex-col gap-3">
           <ContentElements elements={modalConfig.elements} />

@@ -7,6 +7,7 @@ import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { findClosestBand, isInTune } from "@/lib/pitch";
 import type { Band } from "@/constants/tone-slots";
 import type { Settings } from "@/hooks/useSettings";
+import { Text } from "@/components/ui";
 
 const STORAGE_KEY = "attunr.exploreInfoSeen";
 
@@ -105,20 +106,24 @@ export default function TrainView({
         {/* Pitch overlay */}
         {pitchHz !== null && (
           <div className="pointer-events-none absolute top-4 left-5 fade-in">
-            <div
-              className="text-3xl font-light tabular-nums tracking-tight"
+            <Text
+              as="div"
+              variant="heading-lg"
+              className="font-light tabular-nums tracking-tight text-3xl!"
               style={{ color: closestBand?.color ?? "#fff" }}
             >
               {Math.round(pitchHz)} Hz
-            </div>
+            </Text>
             {closestBand && (
-              <div
-                className="text-sm font-medium mt-0.5"
+              <Text
+                as="div"
+                variant="body-sm"
+                className="font-medium mt-0.5"
                 style={{ color: closestBand.color + "aa" }}
               >
                 {locked ? "✓ " : "→ "}
                 {closestBand.frequencyHz} Hz
-              </div>
+              </Text>
             )}
           </div>
         )}
@@ -145,7 +150,7 @@ export default function TrainView({
                 }}
               >
                 <PlayIcon />
-                <span className="opacity-65">{band.frequencyHz} Hz</span>
+                <Text as="span" variant="body-sm" className="opacity-65">{band.frequencyHz} Hz</Text>
               </button>
             );
           })}
@@ -155,10 +160,10 @@ export default function TrainView({
       {/* ── Train info modal ──────────────────────────────────────────────── */}
       {showInfo && (
         <TabInfoModal title="Train" onClose={handleCloseInfo}>
-          <p className="text-base text-white/75 leading-relaxed">
+          <Text variant="body" color="text-2">
             Free-form vocal placement practice. No goals, no instructions — just sing and
             explore your voice against the canvas.
-          </p>
+          </Text>
 
           <div className="flex flex-col gap-3">
             {[
@@ -180,8 +185,8 @@ export default function TrainView({
               },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
-                <span className="text-lg shrink-0 w-6 text-center opacity-75 mt-0.5">{item.icon}</span>
-                <p className="text-sm text-white/68 leading-relaxed">{item.text}</p>
+                <Text as="span" variant="heading-sm" className="shrink-0 w-6 text-center opacity-75 mt-0.5 font-normal">{item.icon}</Text>
+                <Text variant="body-sm" color="text-2">{item.text}</Text>
               </div>
             ))}
           </div>

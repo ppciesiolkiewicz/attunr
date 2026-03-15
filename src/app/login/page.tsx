@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { analytics } from "@/lib/analytics";
 
 type Step = "email" | "code";
@@ -73,15 +73,15 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-full px-4 py-12">
       <div className="w-full max-w-sm">
-        <h1 className="text-2xl font-semibold text-white mb-1">Log in</h1>
-        <p className="text-white/65 text-sm mb-8">
+        <Text variant="heading-lg" className="mb-1">Log in</Text>
+        <Text variant="body-sm" color="text-2" className="mb-8">
           Enter your email and we&apos;ll send you a one-time code.
-        </p>
+        </Text>
 
         {step === "email" ? (
           <form onSubmit={handleSendCode} className="space-y-4">
             <label className="block">
-              <span className="text-sm text-white/65">Email</span>
+              <Text as="span" variant="body-sm" color="text-2">Email</Text>
               <input
                 type="email"
                 value={email}
@@ -92,21 +92,21 @@ export default function LoginPage() {
                 autoComplete="email"
               />
             </label>
-            {error && <p className="text-sm text-red-400">{error}</p>}
+            {error && <Text variant="body-sm" color="error">{error}</Text>}
             <Button variant="secondary" type="submit" disabled={loading} className="w-full py-3">
               {loading ? "Sending…" : "Send code"}
             </Button>
           </form>
         ) : (
           <form onSubmit={handleVerify} className="space-y-4">
-            <p className="text-sm text-white/65">
-              Code sent to <span className="text-white/85">{email}</span>
+            <Text variant="body-sm" color="text-2">
+              Code sent to <Text as="span" variant="body-sm" color="text-1">{email}</Text>
               <Button variant="ghost" type="button" onClick={() => setStep("email")} className="ml-2 text-violet-400 hover:text-violet-300">
                 Change
               </Button>
-            </p>
+            </Text>
             <label className="block">
-              <span className="text-sm text-white/65">6-digit code</span>
+              <Text as="span" variant="body-sm" color="text-2">6-digit code</Text>
               <input
                 type="text"
                 inputMode="numeric"
@@ -120,11 +120,11 @@ export default function LoginPage() {
               />
             </label>
             {process.env.NODE_ENV === "development" && (
-              <p className="text-xs text-white/50">
+              <Text variant="caption">
                 Dev: check your terminal for the code.
-              </p>
+              </Text>
             )}
-            {error && <p className="text-sm text-red-400">{error}</p>}
+            {error && <Text variant="body-sm" color="error">{error}</Text>}
             <Button variant="secondary" type="submit" disabled={loading || code.length !== 6} className="w-full py-3">
               {loading ? "Verifying…" : "Verify"}
             </Button>
@@ -134,11 +134,11 @@ export default function LoginPage() {
           </form>
         )}
 
-        <p className="mt-8 text-center text-sm text-white/45">
+        <Text variant="body-sm" color="muted-1" className="mt-8 text-center">
           <Link href="/" className="hover:text-white/70">
             ← Back to attunr
           </Link>
-        </p>
+        </Text>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@
 import {
   JOURNEY_CONFIG,
 } from "@/constants/journey";
+import { Text } from "@/components/ui";
 import type { Settings } from "@/hooks/useSettings";
 import { ExerciseCard } from "./ExerciseCard";
 import { BadgeIcon } from "./BadgeIcon";
@@ -19,17 +20,17 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
   return (
     <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
-        <h1 className="text-xl sm:text-2xl font-semibold text-white">Journey</h1>
-        <div className="flex flex-col gap-2 text-sm text-white/75 leading-relaxed">
-          <p>
+        <Text variant="heading" as="h1" className="sm:text-2xl">Journey</Text>
+        <div className="flex flex-col gap-2">
+          <Text variant="body-sm" color="text-2">
             This is where your journey begins. You&apos;ll be guided through
             learning and practice — from vocal warmups to sustaining each tone
             and exploring techniques like mantras and vowels.
-          </p>
-          <p>
+          </Text>
+          <Text variant="body-sm" color="text-2">
             When you&apos;ve built confidence, switch to Train for freeform
             practice — any tone, any order.
-          </p>
+          </Text>
         </div>
 
         {JOURNEY_CONFIG.map((part) => {
@@ -40,12 +41,12 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
             <section key={part.part} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
                 <div className="flex items-center gap-2 shrink-0">
-                  <span className="text-xs uppercase tracking-widest text-white/55">
+                  <Text variant="label" as="span" color="muted-1">
                     Part {toRoman(part.part)}
-                  </span>
-                  <span className="text-xs text-white/80 font-medium">
+                  </Text>
+                  <Text variant="caption" as="span" color="text-2" className="font-medium">
                     {part.title}
-                  </span>
+                  </Text>
                   {partComplete && (
                     <BadgeIcon
                       className="text-violet-400/90"

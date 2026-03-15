@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Text } from "@/components/ui/Text";
 
 export const metadata = {
   title: "Terms",
@@ -15,21 +16,21 @@ export default function TermsPage() {
         >
           ← Back
         </Link>
-        <h1 className="text-xl font-semibold text-white mb-4">Terms of Use</h1>
-        <div className="text-sm text-white/75 space-y-4 leading-relaxed">
-          <p>
+        <Text variant="heading" className="mb-4">Terms of Use</Text>
+        <div className="space-y-4">
+          <Text variant="body-sm" color="text-2">
             attunr is provided as-is for personal, non-commercial use. Use it
             responsibly and never push your voice beyond comfort.
-          </p>
-          <p>
+          </Text>
+          <Text variant="body-sm" color="text-2">
             The exercises and information are for educational purposes. They
             are not a substitute for professional voice or medical advice.
-          </p>
-          <p>
+          </Text>
+          <Text variant="body-sm" color="text-2">
             By using attunr, you agree to use it at your own risk. We are not
             liable for any harm resulting from use of the app.
-          </p>
-          <p className="pt-2 border-t border-white/[0.08] mt-6">
+          </Text>
+          <Text variant="body-sm" color="text-2" className="pt-2 border-t border-white/8 mt-6">
             attunr uses{" "}
             <a
               href="https://ml5js.org/license"
@@ -48,7 +49,7 @@ export default function TermsPage() {
             >
               ml5.js license
             </a>.
-          </p>
+          </Text>
         </div>
       </div>
     </div>

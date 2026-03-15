@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { InfoIcon } from "@/components/TabInfoModal";
-import { Button, CloseButton, Modal } from "@/components/ui";
+import { Button, CloseButton, Modal, Text } from "@/components/ui";
 import { ContentElements } from "@/components/Exercise/components/ContentElements";
 import { JOURNEY_EXERCISES } from "@/constants/journey";
 import {
@@ -73,25 +73,25 @@ export function ExerciseInfoModal({
     >
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
-            <p className="text-xs text-white/55 mb-1 flex items-center gap-1.5">
+            <Text variant="caption" className="mb-1 flex items-center gap-1.5">
               {isLearnExercise && <BookIcon className="opacity-70" />}
-              <span className="uppercase tracking-widest">
+              <Text as="span" variant="label" color="muted-1">
                 Part{" "}
                 {toRoman(exercise.part)}
-              </span>
-              <span className="text-white/45">·</span>
-              <span>
+              </Text>
+              <Text as="span" variant="caption" color="muted-1">·</Text>
+              <Text as="span" variant="caption">
                 {getStepInPart(exerciseId).stepIndex} of{" "}
                 {getStepInPart(exerciseId).stepsInPart}
-              </span>
-            </p>
-            <h2 className="text-xl font-semibold text-white">
+              </Text>
+            </Text>
+            <Text variant="heading">
               {modal?.title ?? exercise.title}
-            </h2>
+            </Text>
             {modal?.subtitle && (
-              <p className="text-sm mt-1" style={{ color: primaryColor }}>
+              <Text variant="body-sm" className="mt-1" style={{ color: primaryColor }}>
                 {modal.subtitle}
-              </p>
+              </Text>
             )}
           </div>
           <CloseButton onClick={onDismiss} className="ml-4 mt-0.5 shrink-0" />
@@ -110,15 +110,15 @@ export function ExerciseInfoModal({
                 onChange={(e) => setDontShowAgain(e.target.checked)}
                 className="w-4 h-4 rounded border-white/30 bg-white/5 text-violet-500 focus:ring-violet-500/50"
               />
-              <span className="text-sm text-white/68">
+              <Text as="span" variant="body-sm" color="text-2">
                 Don&apos;t show for this exercise again
-              </span>
+              </Text>
             </label>
-            <p className="text-xs text-white/50 pl-6 flex items-center gap-1.5 flex-wrap">
+            <Text variant="caption" color="muted-1" className="pl-6 flex items-center gap-1.5 flex-wrap">
               You can always bring it back by clicking the{" "}
               <InfoIcon size={12} className="inline-block opacity-70 shrink-0" />{" "}
               icon on the screen
-            </p>
+            </Text>
           </div>
         )}
 

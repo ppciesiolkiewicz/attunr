@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { deriveVoiceType } from "@/lib/pitch";
 import { VOICE_TYPES } from "@/constants/voice-types";
 import { NoteSlot } from "./NoteSlot";
@@ -46,30 +46,30 @@ export function DetectFlowPhase({
       <div>
         {phase === "detect-low" && (
           <>
-            <p className="text-base font-medium text-white/92">Hum low — uu</p>
-            <p className="text-sm text-white/65 mt-1 leading-relaxed">
+            <Text variant="body" className="font-medium" color="text-1">Hum low — uu</Text>
+            <Text variant="body-sm" className="mt-1" color="text-2">
               Let the sound come from deep in your belly.
               Feel the vibration in your chest, not your throat.
               Hold steady for 2 seconds.
-            </p>
+            </Text>
           </>
         )}
         {phase === "detect-high" && (
           <>
-            <p className="text-base font-medium text-white/92">Now hoo hoo — high</p>
-            <p className="text-sm text-white/65 mt-1 leading-relaxed">
+            <Text variant="body" className="font-medium" color="text-1">Now hoo hoo — high</Text>
+            <Text variant="body-sm" className="mt-1" color="text-2">
               Feel it in your head and face. Just a moment.
-            </p>
+            </Text>
           </>
         )}
         {phase === "result" && voiceLabel && (
           <>
-            <p className="text-base font-medium text-white/92">Your vocal range</p>
-            <p className="text-sm text-white/65 mt-1">
+            <Text variant="body" className="font-medium" color="text-1">Your vocal range</Text>
+            <Text variant="body-sm" className="mt-1" color="text-2">
               Likely{" "}
-              <span className="text-white/82 font-medium">{voiceLabel}</span>{" "}
+              <Text as="span" variant="body-sm" className="font-medium" color="text-1">{voiceLabel}</Text>{" "}
               · tap a note to re-detect.
-            </p>
+            </Text>
           </>
         )}
       </div>
@@ -94,7 +94,7 @@ export function DetectFlowPhase({
         )}
 
         <div className="flex flex-col items-center">
-          <span className="text-white/35 text-lg">→</span>
+          <Text as="span" variant="body" className="text-lg" color="muted-2">→</Text>
         </div>
 
         {phase === "detect-high" ? (
@@ -117,17 +117,17 @@ export function DetectFlowPhase({
       </div>
 
       {rangeTooSmall && (
-        <p className="text-sm text-amber-400/95 leading-relaxed px-2">
+        <Text variant="body-sm" className="px-2" color="warning">
           Range seems narrow — detection may be off. Tap a note above
           to re-detect, or try again in a quieter space.
-        </p>
+        </Text>
       )}
 
       <div className="w-full min-h-[100px] flex flex-col gap-3">
-        <p className="text-sm text-white/58 leading-relaxed px-2">
+        <Text variant="body-sm" className="px-2" color="muted-1">
           Exercises will be tuned to your range. Re-detect anytime in
           settings.
-        </p>
+        </Text>
         <div
           className="w-full h-px shrink-0"
           style={{ background: "rgba(255,255,255,0.07)" }}

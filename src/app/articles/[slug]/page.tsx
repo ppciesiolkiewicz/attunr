@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ARTICLES, getArticleBySlug } from "@/data/articles";
 import ArticleViewTracker from "@/components/ArticleViewTracker";
+import { Text } from "@/components/ui/Text";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,12 +36,12 @@ export default async function ArticlePage({ params }: Props) {
           ← Articles
         </Link>
         <article>
-          <h1 className="text-xl font-semibold text-white mb-2">{article.title}</h1>
+          <Text variant="heading" className="mb-2">{article.title}</Text>
           <div className="prose prose-invert prose-sm max-w-none">
             {article.content.split("\n\n").map((para, i) => (
-              <p key={i} className="text-white/82 leading-relaxed mb-3">
+              <Text key={i} variant="body" color="text-1" className="mb-3">
                 {para}
-              </p>
+              </Text>
             ))}
           </div>
         </article>

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Text } from "@/components/ui/Text";
 
 export const metadata = {
   title: "Privacy",
@@ -15,25 +16,25 @@ export default function PrivacyPage() {
         >
           ← Back
         </Link>
-        <h1 className="text-xl font-semibold text-white mb-4">Privacy Policy</h1>
-        <div className="text-sm text-white/75 space-y-4 leading-relaxed">
-          <p>
+        <Text variant="heading" className="mb-4">Privacy Policy</Text>
+        <div className="space-y-4">
+          <Text variant="body-sm" color="text-2">
             attunr processes your voice locally in the browser. No voice data is
             sent to our servers.
-          </p>
-          <p>
+          </Text>
+          <Text variant="body-sm" color="text-2">
             We use localStorage to remember your preferences (voice type,
             journey progress, settings). You can clear these in your browser
             settings at any time.
-          </p>
-          <p>
+          </Text>
+          <Text variant="body-sm" color="text-2">
             If you accept cookies (when shown), we may use them for the same
             purpose. We do not use tracking or advertising cookies.
-          </p>
-          <p>
+          </Text>
+          <Text variant="body-sm" color="text-2">
             For questions, please reach out through the contact details on the
             main site.
-          </p>
+          </Text>
         </div>
       </div>
     </div>

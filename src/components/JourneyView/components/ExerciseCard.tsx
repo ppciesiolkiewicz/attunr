@@ -3,6 +3,7 @@
 import {
   getExerciseDisplayColors,
 } from "../utils";
+import { Text } from "@/components/ui";
 import { BookIcon } from "./BookIcon";
 import type { JourneyExercise } from "@/constants/journey";
 
@@ -54,8 +55,10 @@ export function ExerciseCard({
 
       <div className="flex-1 px-3.5 py-3 min-w-0">
         <div className="flex items-baseline justify-between gap-2 mb-1.5">
-          <span
-            className="text-base font-semibold flex items-center gap-1.5"
+          <Text
+            variant="body"
+            as="span"
+            className="font-semibold flex items-center gap-1.5"
             style={{
               color: !isUnlocked
                 ? "rgba(255,255,255,0.65)"
@@ -73,25 +76,25 @@ export function ExerciseCard({
               />
             )}
             {exercise.title}
-          </span>
+          </Text>
         </div>
 
         {(exercise.cardCue ?? exercise.subtitle) && (
-          <p className="text-xs text-white/68">{exercise.cardCue ?? exercise.subtitle}</p>
+          <Text variant="caption" color="text-2">{exercise.cardCue ?? exercise.subtitle}</Text>
         )}
       </div>
 
       <div className="flex items-center px-3.5">
         {isComplete ? (
-          <span className="text-sm" style={{ color: primaryColor }}>
+          <Text variant="body-sm" as="span" style={{ color: primaryColor }}>
             ✓
-          </span>
+          </Text>
         ) : !isUnlocked ? (
-          <span className="text-sm text-white/65">⋯</span>
+          <Text variant="body-sm" as="span" color="text-2">⋯</Text>
         ) : (
-          <span className="text-base text-white/52 group-hover:text-white/80 transition-colors">
+          <Text variant="body" as="span" color="muted-1" className="group-hover:text-white/80 transition-colors">
             ›
-          </span>
+          </Text>
         )}
       </div>
     </button>

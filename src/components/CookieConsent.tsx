@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 
 const EU_COUNTRY_CODES = new Set([
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
@@ -75,7 +75,7 @@ export default function CookieConsent() {
       }}
     >
       <div className="max-w-2xl mx-auto flex flex-col sm:flex-row items-start sm:items-center gap-4">
-        <p className="text-sm text-white/78 flex-1">
+        <Text variant="body-sm" className="flex-1">
           We use cookies and similar technologies to help the app work (e.g.
           remembering your settings). By continuing, you accept our use of
           cookies.{" "}
@@ -85,7 +85,7 @@ export default function CookieConsent() {
           >
             Privacy policy
           </Link>
-        </p>
+        </Text>
         <div className="flex items-center gap-2 shrink-0">
           <Button variant="ghost" size="sm" onClick={handleDecline}>
             Decline
