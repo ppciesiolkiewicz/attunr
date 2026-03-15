@@ -47,14 +47,41 @@ The backing track for each segment runs during the rest + first ~1.5s of singing
 - Title: "Perfect Fifth"
 - Instruction: "Sing the two notes as they appear — the piano plays each note for you"
 
-## File to modify
+### `displayNotes` — optional canvas band override (type only)
+
+When omitted, MelodyExercise auto-derives display bands from the resolved melody notes (current behavior). When present, defines exactly which notes appear on the canvas and how they're rendered.
+
+```ts
+interface DisplayNote {
+  target: BandTarget;
+  style?: "full" | "muted";  // default "full"; "muted" = faint line, no label
+}
+
+interface DisplayScale {
+  type: string;       // tonal.js scale name
+  root: number;       // chromatic degree from user's lowest note
+  notes: DisplayNote[];
+}
+
+// Added to MelodyExercise:
+displayNotes?: DisplayScale[];
+```
+
+- Notes resolve via `buildScaleForRange` — same pattern as `MelodyScale`
+- Can pull notes from multiple scales, each with its own display style
+- `style` is extensible (future: `"highlight"`, `"dashed"`, etc.)
+
+**This spec only adds the types.** The rendering side (muted band style, label suppression) is deferred. MelodyExercise ignores `displayNotes` until the renderer is built.
+
+## Files to modify
 
 | File | Change |
 |------|--------|
+| `src/constants/journey/types.ts` | Add `DisplayNote`, `DisplayScale` interfaces; add `displayNotes?: DisplayScale[]` to `MelodyExercise` |
 | `src/constants/journey/part2.ts` | Replace current Perfect Fifth config with 7-segment melody + backing track |
 
 ## What does NOT change
 
 - `MelodyScale` type, `buildScaleForRange()`, `resolveScaleTimeline()` — all unchanged
-- MelodyExercise component — unchanged, just different config data
+- MelodyExercise component — unchanged, just different config data (ignores `displayNotes` for now)
 - Scoring, PitchCanvas rendering — unchanged
