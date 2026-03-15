@@ -48,11 +48,13 @@ export type {
   ToneFollowExercise,
   ToneFollowShape,
   MelodyExercise,
-  MelodyNoteConfig,
   MelodyScale,
+  MelodyEvent,
   DisplayNote,
   DisplayScale,
 } from "./types";
+
+export { NoteDuration } from "./types";
 
 /** Build introModal for a non-learn exercise from its existing properties. */
 function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
@@ -95,7 +97,7 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
       }
     }
     elements.push({ type: "headphones-notice" });
-    const noteCount = exercise.melody.flatMap((s) => s.notes).filter((n) => !("rest" in n && n.rest)).length;
+    const noteCount = exercise.melody.flatMap((s) => s.events).filter((e) => e.type === "note").length;
     return {
       title: exercise.title,
       subtitle: `Sing along to ${noteCount} notes — score ${exercise.minScore}% to pass`,
