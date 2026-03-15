@@ -5,12 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SettingsPanel from "../SettingsPanel";
 import OnboardingModal from "../OnboardingModal";
+import FrequencyModal from "../FrequencyModal";
 import Footer from "../Footer";
 import PostHogPageView from "../PostHogPageView";
 import { useSettings } from "@/hooks/useSettings";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
+import { useServiceWorker } from "@/hooks/useServiceWorker";
+import { useNotificationScheduler } from "@/hooks/useNotificationScheduler";
+import { useNotificationPrompt } from "@/hooks/useNotificationPrompt";
 import { AppContext } from "@/context/AppContext";
+import { ToastProvider } from "@/context/ToastContext";
 import { analytics } from "@/lib/analytics";
 import type { Band } from "@/constants/tone-slots";
 import { Button, Text } from "@/components/ui";
@@ -18,16 +23,36 @@ import Logo from "../Logo";
 import { SettingsIcon, HamburgerIcon } from "./components/icons";
 import { MobileMenu } from "./components/MobileMenu";
 
+/** Outer shell — provides ToastProvider so inner hooks can use useToast. */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const isLanding = pathname === "/";
+
+  // Landing page: skip all app chrome
+  if (isLanding) return <>{children}</>;
+
+  return (
+    <ToastProvider>
+      <AppShellInner pathname={pathname}>{children}</AppShellInner>
+    </ToastProvider>
+  );
+}
+
+/** Inner shell — all hooks run inside ToastProvider. */
+function AppShellInner({ pathname, children }: { pathname: string; children: React.ReactNode }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [redetect, setRedetect] = useState(false);
-
   const { settings, update } = useSettings();
   const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
   const { playTone, playSlide } = useTonePlayer();
+
+  // Notifications: service worker, scheduler, and prompt flow
+  useServiceWorker();
+  useNotificationScheduler(settings);
+  const { frequencyModalOpen, openFrequencyModal, closeFrequencyModal, handleFrequencySave } =
+    useNotificationPrompt(settings, update);
 
   // Hydrate onboarding flag after mount — also trigger onboarding when voice
   // range is missing (e.g. user from a previous app version).
@@ -81,15 +106,11 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     analytics.onboardingCompleted(result.voiceType, true, result.lowHz, result.highHz);
   }
 
-  const isLanding = pathname === "/";
   const needsMic = pathname?.startsWith("/journey") || pathname === "/train";
   const showMicGate =
     !(showOnboarding || redetect) &&
     needsMic &&
     status === "idle";
-
-  // Landing page: skip all app chrome
-  if (isLanding) return <>{children}</>;
 
   return (
     <AppContext.Provider value={contextValue}>
@@ -104,6 +125,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         />
       )}
 
+      <FrequencyModal
+        open={frequencyModalOpen}
+        onClose={closeFrequencyModal}
+        onSave={handleFrequencySave}
+      />
+
       <SettingsPanel
         open={settingsOpen}
         settings={settings}
@@ -114,6 +141,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
           setRedetect(true);
           if (status === "idle") startListening();
         }}
+        onOpenFrequencyModal={openFrequencyModal}
       />
 
       {/* Header */}

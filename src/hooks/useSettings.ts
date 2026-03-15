@@ -2,12 +2,16 @@
 
 import { useState, useEffect, useCallback } from "react";
 import type { TuningStandard } from "@/constants/tuning";
+import type { PracticeFrequency } from "@/constants/notifications";
 
 export interface Settings {
   tuning: TuningStandard;
   journeyStage: number; // 0 = none completed, 1–49 = highest completed
   vocalRangeLowHz: number;  // detected low comfortable Hz (0 = not set)
   vocalRangeHighHz: number; // detected high comfortable Hz (0 = not set)
+  notificationsEnabled: boolean;
+  practiceFrequency: PracticeFrequency;
+  notificationPromptShown: boolean;
 }
 
 const DEFAULTS: Settings = {
@@ -15,13 +19,19 @@ const DEFAULTS: Settings = {
   journeyStage: 0,
   vocalRangeLowHz: 0,
   vocalRangeHighHz: 0,
+  notificationsEnabled: false,
+  practiceFrequency: "daily",
+  notificationPromptShown: false,
 };
 
 const KEYS: Record<keyof Settings, string> = {
-  tuning:           "attunr.tuning",
-  journeyStage:     "attunr.journeyStage",
-  vocalRangeLowHz:  "attunr.vocalRangeLowHz",
-  vocalRangeHighHz: "attunr.vocalRangeHighHz",
+  tuning:                   "attunr.tuning",
+  journeyStage:             "attunr.journeyStage",
+  vocalRangeLowHz:          "attunr.vocalRangeLowHz",
+  vocalRangeHighHz:         "attunr.vocalRangeHighHz",
+  notificationsEnabled:     "attunr.notificationsEnabled",
+  practiceFrequency:        "attunr.practiceFrequency",
+  notificationPromptShown:  "attunr.notificationPromptShown",
 };
 
 function readStorage(): Partial<Settings> {
@@ -30,11 +40,17 @@ function readStorage(): Partial<Settings> {
     const stageRaw  = localStorage.getItem(KEYS.journeyStage);
     const lowRaw    = localStorage.getItem(KEYS.vocalRangeLowHz);
     const highRaw   = localStorage.getItem(KEYS.vocalRangeHighHz);
+    const notifEnabled = localStorage.getItem(KEYS.notificationsEnabled);
+    const frequency = localStorage.getItem(KEYS.practiceFrequency) as PracticeFrequency | null;
+    const promptShown = localStorage.getItem(KEYS.notificationPromptShown);
     return {
-      ...(tuning    && { tuning }),
-      ...(stageRaw  && { journeyStage: parseInt(stageRaw, 10) }),
-      ...(lowRaw    && { vocalRangeLowHz: parseFloat(lowRaw) }),
-      ...(highRaw   && { vocalRangeHighHz: parseFloat(highRaw) }),
+      ...(tuning       && { tuning }),
+      ...(stageRaw     && { journeyStage: parseInt(stageRaw, 10) }),
+      ...(lowRaw       && { vocalRangeLowHz: parseFloat(lowRaw) }),
+      ...(highRaw      && { vocalRangeHighHz: parseFloat(highRaw) }),
+      ...(notifEnabled && { notificationsEnabled: notifEnabled === "true" }),
+      ...(frequency    && { practiceFrequency: frequency }),
+      ...(promptShown  && { notificationPromptShown: promptShown === "true" }),
     };
   } catch {
     return {};

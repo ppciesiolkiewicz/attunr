@@ -5,4 +5,6 @@ export { Modal } from "./Modal";
 export { SelectableCard } from "./SelectableCard";
 export { Spinner } from "./Spinner";
 export { Text, type TextColor, type TextVariant } from "./Text";
+export { Toast, type ToastVariant } from "./Toast";
+export { Toggle } from "./Toggle";
 export { Video } from "./Video";

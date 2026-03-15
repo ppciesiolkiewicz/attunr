@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Button, CloseButton, SelectableCard, Text } from "@/components/ui";
+import { Button, CloseButton, SelectableCard, Text, Toggle } from "@/components/ui";
 import { TUNING_OPTIONS } from "@/constants/tuning";
 import type { TuningStandard } from "@/constants/tuning";
+import { FREQUENCY_OPTIONS, type PracticeFrequency } from "@/constants/notifications";
 import { hzToNoteName } from "@/lib/pitch";
+import { isNotificationSupported } from "@/lib/notifications";
 import { analytics } from "@/lib/analytics";
 import type { Settings } from "@/hooks/useSettings";
 
@@ -14,6 +16,7 @@ interface SettingsPanelProps {
   onUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   onClose: () => void;
   onRedetect: () => void;
+  onOpenFrequencyModal: () => void;
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -31,6 +34,7 @@ export default function SettingsPanel({
   onUpdate,
   onClose,
   onRedetect,
+  onOpenFrequencyModal,
 }: SettingsPanelProps) {
   return (
     <>
@@ -130,6 +134,66 @@ export default function SettingsPanel({
             >
               Learn about tuning →
             </Link>
+          </Section>
+
+          <div className="h-px bg-white/[0.06]" />
+
+          {/* -- Reminders ----------------------------------------------------- */}
+          <Section title="Reminders">
+            {!isNotificationSupported() ? (
+              <Text variant="caption" color="muted-1">
+                Notifications are not available in this browser.
+              </Text>
+            ) : settings.notificationsEnabled ? (
+              <>
+                <div className="flex items-center justify-between">
+                  <Text variant="body-sm" color="text-2">Practice reminders</Text>
+                  <Toggle
+                    checked={settings.notificationsEnabled}
+                    onChange={(on) => {
+                      onUpdate("notificationsEnabled", on);
+                      analytics.notificationToggled(on);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  {FREQUENCY_OPTIONS.map((opt) => (
+                    <SelectableCard
+                      key={opt.id}
+                      selected={settings.practiceFrequency === opt.id}
+                      onClick={() => {
+                        onUpdate("practiceFrequency", opt.id as PracticeFrequency);
+                        analytics.notificationFrequencySelected(opt.id);
+                      }}
+                    >
+                      <div>
+                        <Text variant="body-sm" color="text-1" className="font-medium">{opt.label}</Text>
+                        <Text variant="caption" color="text-2" className="mt-0.5">{opt.description}</Text>
+                      </div>
+                      {settings.practiceFrequency === opt.id && (
+                        <Text as="span" variant="body-sm" color="text-2" className="ml-2">✓</Text>
+                      )}
+                    </SelectableCard>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <Text variant="caption" color="text-2" className="leading-relaxed">
+                  Get gentle reminders to keep your vocal practice consistent.
+                </Text>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    onClose();
+                    onOpenFrequencyModal();
+                  }}
+                  className="text-sm text-violet-400/82 hover:text-violet-400 text-left"
+                >
+                  Enable practice reminders →
+                </Button>
+              </>
+            )}
           </Section>
 
           <div className="h-px bg-white/[0.06]" />

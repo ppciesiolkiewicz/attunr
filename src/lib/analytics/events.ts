@@ -41,4 +41,13 @@ export const analytics = {
     capture("settings_changed", { setting: "voice_type", value: voiceType }),
   settingsTuningChanged: (tuning: string) =>
     capture("settings_changed", { setting: "tuning", value: tuning }),
+
+  // Notifications
+  notificationPromptShown: () => capture("notification_prompt_shown"),
+  notificationPermissionResult: (result: string) =>
+    capture("notification_permission_result", { result }),
+  notificationFrequencySelected: (frequency: string) =>
+    capture("notification_frequency_selected", { frequency }),
+  notificationToggled: (enabled: boolean) =>
+    capture("notification_toggled", { enabled }),
 };
