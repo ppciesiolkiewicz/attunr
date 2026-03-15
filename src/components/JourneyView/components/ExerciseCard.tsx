@@ -1,32 +1,32 @@
 "use client";
 
 import {
-  getStageDisplayColors,
+  getExerciseDisplayColors,
 } from "../utils";
 import { BookIcon } from "./BookIcon";
-import type { JourneyStage } from "@/constants/journey";
+import type { JourneyExercise } from "@/constants/journey";
 
-interface StageCardProps {
-  stage: JourneyStage;
+interface ExerciseCardProps {
+  exercise: JourneyExercise;
   highestCompleted: number;
   onSelect: (id: number) => void;
 }
 
-export function StageCard({
-  stage,
+export function ExerciseCard({
+  exercise,
   highestCompleted,
   onSelect,
-}: StageCardProps) {
-  const isComplete = stage.id <= highestCompleted;
-  const isCurrent = stage.id === highestCompleted + 1;
-  const isUnlocked = stage.id <= highestCompleted + 1;
+}: ExerciseCardProps) {
+  const isComplete = exercise.id <= highestCompleted;
+  const isCurrent = exercise.id === highestCompleted + 1;
+  const isUnlocked = exercise.id <= highestCompleted + 1;
 
-  const stageColors = getStageDisplayColors(stage);
-  const primaryColor = stageColors[0] ?? "#7c3aed";
+  const exerciseColors = getExerciseDisplayColors(exercise);
+  const primaryColor = exerciseColors[0] ?? "#7c3aed";
 
   return (
     <button
-      onClick={() => isUnlocked && onSelect(stage.id)}
+      onClick={() => isUnlocked && onSelect(exercise.id)}
       disabled={!isUnlocked}
       className="cursor-pointer disabled:cursor-not-allowed w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
       style={{
@@ -45,9 +45,9 @@ export function StageCard({
         className="w-[3px] shrink-0"
         style={{
           background:
-            stageColors.length === 1
+            exerciseColors.length === 1
               ? primaryColor
-              : `linear-gradient(to bottom, ${stageColors.join(", ")})`,
+              : `linear-gradient(to bottom, ${exerciseColors.join(", ")})`,
           opacity: !isUnlocked ? 0.65 : 1,
         }}
       />
@@ -62,7 +62,7 @@ export function StageCard({
                 : "rgba(255,255,255,0.95)",
             }}
           >
-            {stage.stageTypeId === "learn" && (
+            {exercise.exerciseTypeId === "learn" && (
               <BookIcon
                 className="shrink-0 opacity-70"
                 style={{
@@ -72,12 +72,12 @@ export function StageCard({
                 }}
               />
             )}
-            {stage.title}
+            {exercise.title}
           </span>
         </div>
 
-        {(stage.cardCue ?? stage.subtitle) && (
-          <p className="text-xs text-white/68">{stage.cardCue ?? stage.subtitle}</p>
+        {(exercise.cardCue ?? exercise.subtitle) && (
+          <p className="text-xs text-white/68">{exercise.cardCue ?? exercise.subtitle}</p>
         )}
       </div>
 

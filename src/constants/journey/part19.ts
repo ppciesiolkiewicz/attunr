@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 19: Vowel Mastery — advanced flows, vowel cascade */
-export const PART_19_STAGES: JourneyStage[] = [
+export const PART_19_EXERCISES: JourneyExercise[] = [
   {
     id: 104,
     part: 19,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U → EE flow — high",
     subtitle: "Full vowel shift · 10 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 10 }],
@@ -15,7 +15,7 @@ export const PART_19_STAGES: JourneyStage[] = [
   {
     id: 105,
     part: 19,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OO → EE flow",
     subtitle: "Vowel transition · 10 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
@@ -25,7 +25,7 @@ export const PART_19_STAGES: JourneyStage[] = [
   {
     id: 106,
     part: 19,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Vowel cascade — mid-low",
     subtitle: "All vowels on one pitch · 12 seconds",
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 12 }],
@@ -35,7 +35,7 @@ export const PART_19_STAGES: JourneyStage[] = [
   {
     id: 107,
     part: 19,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 11,
     instruction:
@@ -44,7 +44,7 @@ export const PART_19_STAGES: JourneyStage[] = [
   {
     id: 108,
     part: 19,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — High",
     subtitle: "Breath control · 10 seconds",
     technique: "puffy-cheeks",
@@ -55,11 +55,20 @@ export const PART_19_STAGES: JourneyStage[] = [
   {
     id: 109,
     part: 19,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Vowel cascade — mid-high",
     subtitle: "All vowels on one pitch · 12 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 12 }],
     instruction:
       "Hold the mid-high tone and flow through all six vowels: U → OO → OH → AH → EH → EE. Same cascade, higher pitch — more challenging. Keep the resonance full and consistent through each transition.",
+    completionModal: {
+      title: "Part XIX Complete",
+      subtitle: "Vowel Mastery",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Advanced vowel flows, the full vowel cascade (U→OO→OH→AH→EH→EE), and puffy cheeks on the highest tone." },
+        { id: "tip", type: "paragraph", text: "The vowel cascade is a signature exercise. Try it on different pitches to explore your range." },
+      ],
+      confetti: true,
+    },
   },
 ];

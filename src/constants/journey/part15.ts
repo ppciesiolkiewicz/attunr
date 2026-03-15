@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 15: Warmup III — advanced warmup revisiting all techniques */
-export const PART_15_STAGES: JourneyStage[] = [
+export const PART_15_EXERCISES: JourneyExercise[] = [
   {
     id: 80,
     part: 15,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Advanced warmup",
     cardCue: "Revisit all techniques with greater range and control",
     instruction:
@@ -14,7 +14,7 @@ export const PART_15_STAGES: JourneyStage[] = [
   {
     id: 81,
     part: 15,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — high to low",
     subtitle: "Full range glide · 2–3 times",
     technique: "lip-rolls",
@@ -25,7 +25,7 @@ export const PART_15_STAGES: JourneyStage[] = [
   {
     id: 82,
     part: 15,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — low to high",
     subtitle: "Full range glide · 2–3 times",
     technique: "lip-rolls",
@@ -36,7 +36,7 @@ export const PART_15_STAGES: JourneyStage[] = [
   {
     id: 83,
     part: 15,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid-high",
     subtitle: "Breath control · 8 seconds",
     technique: "puffy-cheeks",
@@ -47,7 +47,7 @@ export const PART_15_STAGES: JourneyStage[] = [
   {
     id: 84,
     part: 15,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 10,
     instruction:
@@ -56,7 +56,7 @@ export const PART_15_STAGES: JourneyStage[] = [
   {
     id: 85,
     part: 15,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Full range hum sequence",
     subtitle: "4 tones skipping · 3 seconds each",
     notes: [
@@ -67,5 +67,14 @@ export const PART_15_STAGES: JourneyStage[] = [
     ],
     instruction:
       "Hum four tones spanning your full range — skipping every other note.\nLow, mid-low, mid-high, high.\nFeel the resonance shift from chest to head as you climb.",
+    completionModal: {
+      title: "Part XV Complete",
+      subtitle: "Warmup III",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Advanced warmup combining lip rolls, puffy cheeks, and full-range humming sequences." },
+        { id: "tip", type: "paragraph", text: "This advanced warmup is a complete routine. Use it before performances or longer practice sessions." },
+      ],
+      confetti: true,
+    },
   },
 ];

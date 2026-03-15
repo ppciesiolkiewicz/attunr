@@ -29,7 +29,7 @@ export default function JourneyView({
     <div className="h-full">
       <JourneyList
         settings={settings}
-        onSelect={(stageId) => router.push(`/journey/${stageId}`)}
+        onSelect={(exerciseId) => router.push(`/journey/${exerciseId}`)}
       />
     </div>
   );

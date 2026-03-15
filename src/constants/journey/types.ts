@@ -6,11 +6,11 @@
 /**
  * Determines which canvas, progress model, and UI the exercise renders.
  */
-export type StageTypeId =
-  | "learn"                   // text + video placeholder, no exercise
-  | "pitch-detection"         // hold tone(s) — single note or sequence
-  | "pitch-detection-slide"   // glide between two pitches
-  | "breathwork";             // Farinelli breathing cycles, no pitch detection
+export type ExerciseTypeId =
+  | "learn"                       // text + video placeholder, no exercise
+  | "pitch-detection"             // hold tone(s) — single note or sequence
+  | "pitch-detection-slide"       // glide between two pitches
+  | "breathwork-farinelli";       // Farinelli breathing cycles, no pitch detection
 
 // ── Band targeting ─────────────────────────────────────────────────────────────
 
@@ -44,14 +44,51 @@ export type SlideConfig = { from: BandTarget; to: BandTarget };
  */
 export type TechniqueId = "sustain" | "mantra" | "lip-rolls" | "puffy-cheeks";
 
+// ── Modal config ─────────────────────────────────────────────────────────────
+
+/** A single content element in a modal body. */
+export type ContentElement =
+  | WarningElement
+  | ParagraphElement
+  | VideoElement;
+
+export interface WarningElement {
+  id: string;
+  type: "warning";
+  text: string;
+}
+
+export interface ParagraphElement {
+  id: string;
+  type: "paragraph";
+  text: string;
+}
+
+export interface VideoElement {
+  id: string;
+  type: "video";
+  url: string;
+}
+
+/** Config for a modal shown before or after an exercise. */
+export interface ModalConfig {
+  title: string;
+  subtitle: string;
+  elements: ContentElement[];
+  /** Action button label. Default: "Begin exercise →" / "Continue →" */
+  actionLabel?: string;
+  /** Fire confetti on open? */
+  confetti?: boolean;
+}
+
 // ── Layer 1: Base ─────────────────────────────────────────────────────────────
 
-/** Fields shared by all stage types. */
-export interface BaseJourneyStage {
-  /** Unique stage ID (1–116). IDs are stable; gaps exist where parts are disabled. */
+/** Fields shared by all exercise types. */
+export interface BaseExerciseConfig {
+  /** Unique exercise ID (1–116). IDs are stable; gaps exist where parts are disabled. */
   id: number;
-  stageTypeId: StageTypeId;
-  /** Part number (1–20). Shown in headers and part-complete modals. */
+  exerciseTypeId: ExerciseTypeId;
+  /** Part number (1–20). Shown in headers and completion modals. */
   part: number;
   title: string;
   /** Secondary text shown in exercise header. */
@@ -60,39 +97,51 @@ export interface BaseJourneyStage {
   cardCue?: string;
   /** Vocal technique — controls detection tolerance and playback style. */
   technique?: TechniqueId;
+  /** Shown before exercise starts. */
+  introModal?: ModalConfig;
+  /** Shown after exercise completes (e.g. part-complete summary). */
+  completionModal?: ModalConfig;
 }
 
-// ── Layer 2: Specific stage types ─────────────────────────────────────────────
+// ── Layer 2: Specific exercise types ─────────────────────────────────────────
 
-export interface LearnStage extends BaseJourneyStage {
-  stageTypeId: "learn";
+export interface LearnExercise extends BaseExerciseConfig {
+  exerciseTypeId: "learn";
   /** Markdown-ish text shown as scrollable content. */
   instruction: string;
 }
 
-export interface PitchDetectionStage extends BaseJourneyStage {
-  stageTypeId: "pitch-detection";
+export interface PitchDetectionExercise extends BaseExerciseConfig {
+  exerciseTypeId: "pitch-detection";
   /** One note = single-tone hold; multiple = sing in sequence. */
   notes: SustainNoteConfig[];
   instruction: string;
 }
 
-export interface PitchDetectionSlideStage extends BaseJourneyStage {
-  stageTypeId: "pitch-detection-slide";
+export interface PitchDetectionSlideExercise extends BaseExerciseConfig {
+  exerciseTypeId: "pitch-detection-slide";
   /** Typically one slide config (from → to). */
   notes: SlideConfig[];
   instruction: string;
 }
 
-export interface BreathworkStage extends BaseJourneyStage {
-  stageTypeId: "breathwork";
+export interface FarinelliBreathworkExercise extends BaseExerciseConfig {
+  exerciseTypeId: "breathwork-farinelli";
   /** Number of breathing cycles to complete (typically 7). */
   maxCount: number;
   instruction: string;
 }
 
-export type JourneyStage =
-  | LearnStage
-  | PitchDetectionStage
-  | PitchDetectionSlideStage
-  | BreathworkStage;
+export type JourneyExercise =
+  | LearnExercise
+  | PitchDetectionExercise
+  | PitchDetectionSlideExercise
+  | FarinelliBreathworkExercise;
+
+// ── Journey part ─────────────────────────────────────────────────────────────
+
+export interface JourneyPart {
+  part: number;
+  title: string;
+  exercises: JourneyExercise[];
+}

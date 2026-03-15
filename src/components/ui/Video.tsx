@@ -1,11 +1,11 @@
-interface VideoPlaceholderProps {
+interface VideoProps {
   /** Compact inline style (e.g. onboarding) vs boxed card style (default) */
   variant?: "box" | "inline";
 }
 
-export function VideoPlaceholder({
+export function Video({
   variant = "box",
-}: VideoPlaceholderProps) {
+}: VideoProps) {
   if (variant === "inline") {
     return (
       <p className="text-[11px] text-white/40 italic">

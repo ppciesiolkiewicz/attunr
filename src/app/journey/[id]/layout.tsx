@@ -1,20 +1,20 @@
-import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES } from "@/constants/journey";
+import { JOURNEY_EXERCISES } from "@/constants/journey";
 
 type Props = { params: Promise<{ id: string }> };
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
-  const stageId = parseInt(id, 10);
+  const exerciseId = parseInt(id, 10);
   const journeyDesc =
     "A guided vocal journey — 49 stages of breathwork, toning, and mantras that calm your nervous system and bring you back to your body.";
-  if (isNaN(stageId) || stageId < 1 || stageId > TOTAL_JOURNEY_STAGES) {
+  if (isNaN(exerciseId) || exerciseId < 1 || exerciseId > JOURNEY_EXERCISES.length) {
     return { title: "Journey", description: journeyDesc };
   }
-  const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
-  if (!stage) return { title: "Journey", description: journeyDesc };
-  const prefix = stage.stageTypeId === "learn" ? "Learn" : "Exercise";
+  const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId);
+  if (!exercise) return { title: "Journey", description: journeyDesc };
+  const prefix = exercise.exerciseTypeId === "learn" ? "Learn" : "Exercise";
   return {
-    title: `${prefix} · ${stage.title}`,
+    title: `${prefix} · ${exercise.title}`,
     description: journeyDesc,
   };
 }

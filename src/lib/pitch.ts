@@ -1,6 +1,8 @@
 import type { Band } from "@/constants/tone-slots";
+import { SLOT_ORDER } from "@/constants/tone-slots";
 import { VOICE_TYPES } from "@/constants/voice-types";
 import type { VoiceTypeId } from "@/constants/voice-types";
+import type { BandTarget } from "@/constants/journey";
 
 export const NOTE_NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"] as const;
 
@@ -109,4 +111,36 @@ export function pitchConfidence(hz: number, bands: Band[]): number {
   const closest = findClosestBand(hz, bands);
   const ratio = Math.abs(hz - closest.frequencyHz) / closest.frequencyHz;
   return Math.max(0, 1 - ratio / 0.03);
+}
+
+/** Resolve a BandTarget to concrete Band(s) from the user's vocal scale. */
+export function resolveBandTarget(
+  target: BandTarget,
+  allBands: Band[],
+): Band[] {
+  const n = allBands.length;
+  if (n === 0) return [];
+
+  if (target.kind === "slot") {
+    const slotId = SLOT_ORDER[target.n - 1];
+    const band = allBands.find(
+      (b) => b.isSlot && b.slotId === slotId,
+    );
+    return band ? [band] : [];
+  }
+
+  if (target.kind === "index") {
+    const i = target.i < 0 ? n + target.i : target.i;
+    return i >= 0 && i < n ? [allBands[i]] : [];
+  }
+
+  if (target.kind === "range") {
+    const from = target.from < 0 ? n + target.from : target.from;
+    const to = target.to < 0 ? n + target.to : target.to;
+    const lo = Math.max(0, Math.min(from, to));
+    const hi = Math.min(n - 1, Math.max(from, to));
+    return allBands.slice(lo, hi + 1);
+  }
+
+  return [];
 }

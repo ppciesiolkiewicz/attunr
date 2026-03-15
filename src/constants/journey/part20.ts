@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 20: Vocal Control — peak difficulty, all techniques combined */
-export const PART_20_STAGES: JourneyStage[] = [
+export const PART_20_EXERCISES: JourneyExercise[] = [
   {
     id: 110,
     part: 20,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Vocal control",
     cardCue: "Combine everything you've learned — full range, all vowels, all techniques",
     instruction:
@@ -14,7 +14,7 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 111,
     part: 20,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — rising sequence",
     subtitle: "4 tones skipping · 3 seconds each",
     technique: "puffy-cheeks",
@@ -30,7 +30,7 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 112,
     part: 20,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "AH → EE flow — high",
     subtitle: "Vowel transition · 12 seconds",
     notes: [{ target: { kind: "slot", n: 6 }, seconds: 12 }],
@@ -40,7 +40,7 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 113,
     part: 20,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Descending sequence — OH",
     subtitle: "All 7 tones descending · 2 seconds each",
     notes: [
@@ -58,7 +58,7 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 114,
     part: 20,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 12,
     instruction:
@@ -67,7 +67,7 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 115,
     part: 20,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — precision slide",
     subtitle: "Full range glide · smooth and even",
     technique: "lip-rolls",
@@ -78,11 +78,20 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 116,
     part: 20,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Vowel cascade — high",
     subtitle: "All vowels on one pitch · 15 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 15 }],
     instruction:
       "Hold the mid-high tone and flow through all six vowels: U → OO → OH → AH → EH → EE. Fifteen seconds — the longest sustained exercise. Take your time with each transition. This is mastery: full vowel control on a single pitch.",
+    completionModal: {
+      title: "Part XX Complete",
+      subtitle: "Vocal Control",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Full vocal control — all techniques combined across your entire range. Puffy cheeks sequences, high vowel flows, descending sequences, and the extended vowel cascade." },
+        { id: "tip", type: "paragraph", text: "You've completed the full journey. Return to any part to deepen your practice, or create your own sequences from the exercises you've learned." },
+      ],
+      confetti: true,
+    },
   },
 ];

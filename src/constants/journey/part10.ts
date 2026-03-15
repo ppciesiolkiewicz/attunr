@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 10: Sequences & Range — multi-tone sequences with known vowels */
-export const PART_10_STAGES: JourneyStage[] = [
+export const PART_10_EXERCISES: JourneyExercise[] = [
   {
     id: 50,
     part: 10,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Low sequence — U",
     subtitle: "3 tones rising · 2 seconds each",
     notes: [
@@ -19,7 +19,7 @@ export const PART_10_STAGES: JourneyStage[] = [
   {
     id: 51,
     part: 10,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Skip sequence — Hum",
     subtitle: "3 tones skipping · 3 seconds each",
     notes: [
@@ -33,7 +33,7 @@ export const PART_10_STAGES: JourneyStage[] = [
   {
     id: 52,
     part: 10,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 8,
     instruction:
@@ -42,7 +42,7 @@ export const PART_10_STAGES: JourneyStage[] = [
   {
     id: 53,
     part: 10,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Rising sequence — AH",
     subtitle: "5 tones rising · 2 seconds each",
     notes: [
@@ -57,7 +57,7 @@ export const PART_10_STAGES: JourneyStage[] = [
   {
     id: 54,
     part: 10,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — low to high",
     subtitle: "Glide · 2–3 times",
     technique: "lip-rolls",
@@ -68,7 +68,7 @@ export const PART_10_STAGES: JourneyStage[] = [
   {
     id: 55,
     part: 10,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Rising sequence — OO",
     subtitle: "5 tones rising · 2 seconds each",
     notes: [
@@ -80,5 +80,14 @@ export const PART_10_STAGES: JourneyStage[] = [
     ],
     instruction:
       "Sing OO on five rising tones — low to mid-high.\nKeep the lips rounded through every tone.\nFeel the range opening up.",
+    completionModal: {
+      title: "Part X Complete",
+      subtitle: "Sequences & Range",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Multi-tone sequences with different vowels — U, Hum, AH, and OO across your expanding range." },
+        { id: "tip", type: "paragraph", text: "Sequences prepare you for real singing. Try connecting them to songs you enjoy." },
+      ],
+      confetti: true,
+    },
   },
 ];

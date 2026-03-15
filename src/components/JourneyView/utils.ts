@@ -1,42 +1,9 @@
 import {
-  JOURNEY_STAGES,
-  LAST_STAGE_ID_PER_PART,
+  JOURNEY_EXERCISES,
 } from "@/constants/journey";
-import type { JourneyStage, BandTarget } from "@/constants/journey";
-import type { SlotId, Band } from "@/constants/tone-slots";
+import type { JourneyExercise } from "@/constants/journey";
+import type { SlotId } from "@/constants/tone-slots";
 import { SLOTS, SLOT_ORDER } from "@/constants/tone-slots";
-
-/** Resolve a BandTarget to concrete Band(s) from the user's vocal scale. */
-export function resolveBandTarget(
-  target: BandTarget,
-  allBands: Band[],
-): Band[] {
-  const n = allBands.length;
-  if (n === 0) return [];
-
-  if (target.kind === "slot") {
-    const slotId = SLOT_ORDER[target.n - 1];
-    const band = allBands.find(
-      (b) => b.isSlot && b.slotId === slotId,
-    );
-    return band ? [band] : [];
-  }
-
-  if (target.kind === "index") {
-    const i = target.i < 0 ? n + target.i : target.i;
-    return i >= 0 && i < n ? [allBands[i]] : [];
-  }
-
-  if (target.kind === "range") {
-    const from = target.from < 0 ? n + target.from : target.from;
-    const to = target.to < 0 ? n + target.to : target.to;
-    const lo = Math.max(0, Math.min(from, to));
-    const hi = Math.min(n - 1, Math.max(from, to));
-    return allBands.slice(lo, hi + 1);
-  }
-
-  return [];
-}
 
 const SLOT_COLORS = SLOT_ORDER.map(
   (id) => SLOTS.find((s) => s.id === id)!.color,
@@ -57,11 +24,11 @@ function rangeToColors(from: number, to: number): string[] {
   return SLOT_COLORS.slice(fromSlot, toSlot + 1);
 }
 
-/** Get display colors for a stage (for StageCard color strip). */
-export function getStageDisplayColors(stage: JourneyStage): string[] {
-  if (stage.stageTypeId === "pitch-detection") {
+/** Get display colors for an exercise (for ExerciseCard color strip). */
+export function getExerciseDisplayColors(exercise: JourneyExercise): string[] {
+  if (exercise.exerciseTypeId === "pitch-detection") {
     const colors: string[] = [];
-    for (const nc of stage.notes) {
+    for (const nc of exercise.notes) {
       const t = nc.target;
       if (t.kind === "slot") {
         const slot = SLOTS.find(
@@ -75,24 +42,24 @@ export function getStageDisplayColors(stage: JourneyStage): string[] {
     if (colors.length > 0) return colors;
     return SLOT_COLORS;
   }
-  if (stage.stageTypeId === "pitch-detection-slide") return SLOT_COLORS;
+  if (exercise.exerciseTypeId === "pitch-detection-slide") return SLOT_COLORS;
   return SLOT_COLORS;
 }
 
-/** Get the slot for a single-slot stage. */
-export function getStageSlot(stage: JourneyStage) {
-  if (stage.stageTypeId !== "pitch-detection") return null;
-  if (stage.notes.length !== 1) return null;
-  const t = stage.notes[0].target;
+/** Get the slot for a single-slot exercise. */
+export function getExerciseSlot(exercise: JourneyExercise) {
+  if (exercise.exerciseTypeId !== "pitch-detection") return null;
+  if (exercise.notes.length !== 1) return null;
+  const t = exercise.notes[0].target;
   if (t.kind !== "slot") return null;
   return SLOTS.find((s) => s.id === SLOT_ORDER[t.n - 1]) ?? null;
 }
 
 /** Extract SlotId[] from slot targets. */
-export function getStageSlotIds(stage: JourneyStage): SlotId[] {
-  if (stage.stageTypeId === "pitch-detection") {
+export function getExerciseSlotIds(exercise: JourneyExercise): SlotId[] {
+  if (exercise.exerciseTypeId === "pitch-detection") {
     const ids: SlotId[] = [];
-    for (const n of stage.notes) {
+    for (const n of exercise.notes) {
       if (n.target.kind === "slot") {
         ids.push(SLOT_ORDER[n.target.n - 1]);
       }
@@ -104,7 +71,7 @@ export function getStageSlotIds(stage: JourneyStage): SlotId[] {
 
 const JOURNEY_EXERCISE_INFO_SKIP_KEY = "attunr.journeyExerciseInfoSkipped";
 
-export function getSkippedInfoStageIds(): Set<number> {
+export function getSkippedInfoExerciseIds(): Set<number> {
   if (typeof window === "undefined") return new Set();
   try {
     const raw = localStorage.getItem(JOURNEY_EXERCISE_INFO_SKIP_KEY);
@@ -120,10 +87,10 @@ export function getSkippedInfoStageIds(): Set<number> {
   }
 }
 
-export function addSkippedInfoStageId(stageId: number) {
+export function addSkippedInfoExerciseId(exerciseId: number) {
   try {
-    const ids = getSkippedInfoStageIds();
-    ids.add(stageId);
+    const ids = getSkippedInfoExerciseIds();
+    ids.add(exerciseId);
     localStorage.setItem(
       JOURNEY_EXERCISE_INFO_SKIP_KEY,
       JSON.stringify([...ids]),
@@ -133,15 +100,15 @@ export function addSkippedInfoStageId(stageId: number) {
   }
 }
 
-export function getStepInPart(stageId: number): {
+export function getStepInPart(exerciseId: number): {
   stepIndex: number;
   stepsInPart: number;
 } {
-  const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
-  if (!stage) return { stepIndex: 1, stepsInPart: 1 };
-  const partStages = JOURNEY_STAGES.filter((s) => s.part === stage.part);
-  const stepIndex = partStages.findIndex((s) => s.id === stageId) + 1;
-  return { stepIndex, stepsInPart: partStages.length };
+  const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId);
+  if (!exercise) return { stepIndex: 1, stepsInPart: 1 };
+  const partExercises = JOURNEY_EXERCISES.filter((e) => e.part === exercise.part);
+  const stepIndex = partExercises.findIndex((e) => e.id === exerciseId) + 1;
+  return { stepIndex, stepsInPart: partExercises.length };
 }
 
 /** Convert an integer (1–20+) to a Roman numeral string. */
@@ -157,5 +124,3 @@ export function toRoman(n: number): string {
   }
   return result;
 }
-
-export { LAST_STAGE_ID_PER_PART };

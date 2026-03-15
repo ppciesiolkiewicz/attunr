@@ -14,10 +14,10 @@ export const analytics = {
     capture("onboarding_completed", { voice_type: voiceType, detected: !!detected, low_hz: lowHz, high_hz: highHz }),
 
   // Journey
-  journeyExerciseStarted: (stageId: number, part: number, partName: string) =>
-    capture("journey_exercise_started", { stage_id: stageId, part, part_name: partName }),
-  journeyStageCompleted: (stageId: number, part: number, skipped?: boolean) =>
-    capture("journey_stage_completed", { stage_id: stageId, part, skipped }),
+  journeyExerciseStarted: (exerciseId: number, part: number, partName: string) =>
+    capture("journey_exercise_started", { exercise_id: exerciseId, part, part_name: partName }),
+  journeyExerciseCompleted: (exerciseId: number, part: number, skipped?: boolean) =>
+    capture("journey_exercise_completed", { exercise_id: exerciseId, part, skipped }),
   journeyPartCompleted: (part: number, partName: string) =>
     capture("journey_part_completed", { part, part_name: partName }),
 

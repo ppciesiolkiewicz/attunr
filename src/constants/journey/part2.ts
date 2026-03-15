@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 2: First Sounds — discover chest and head voice, first lip rolls */
-export const PART_2_STAGES: JourneyStage[] = [
+export const PART_2_EXERCISES: JourneyExercise[] = [
   {
     id: 2,
     part: 2,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Chest and head voice",
     technique: "sustain",
     cardCue: "Find your chest and head voice",
@@ -15,7 +15,7 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 3,
     part: 2,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Low U",
     subtitle: "Chest voice · 5 seconds",
     technique: "sustain",
@@ -26,7 +26,7 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 4,
     part: 2,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Hoo hoo",
     subtitle: "Head voice · 5 seconds",
     technique: "sustain",
@@ -37,7 +37,7 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 5,
     part: 2,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 5,
     cardCue: "Calm your nervous system and build steady diaphragm control",
@@ -47,7 +47,7 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 6,
     part: 2,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Lip rolls",
     technique: "lip-rolls",
     cardCue: "Gentle warmup to relax your jaw and warm your voice",
@@ -57,12 +57,21 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 7,
     part: 2,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — high to low",
     subtitle: "Glide from high to low · 2–3 times",
     technique: "lip-rolls",
     notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
     instruction:
       "Slide smoothly from high to low — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
+    completionModal: {
+      title: "Part II Complete",
+      subtitle: "First Sounds",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Chest voice (Low U), head voice (Hoo hoo), Farinelli breathwork, and lip roll slides — the foundations of every warmup." },
+        { id: "tip", type: "paragraph", text: "Always warm up before each practice session!" },
+      ],
+      confetti: true,
+    },
   },
 ];

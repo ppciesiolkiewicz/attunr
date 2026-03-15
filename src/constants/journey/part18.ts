@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 18: Vowel Flow — vowel transitions mastery */
-export const PART_18_STAGES: JourneyStage[] = [
+export const PART_18_EXERCISES: JourneyExercise[] = [
   {
     id: 98,
     part: 18,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Vowel flow",
     technique: "sustain",
     cardCue: "Master smooth transitions between all vowels",
@@ -15,7 +15,7 @@ export const PART_18_STAGES: JourneyStage[] = [
   {
     id: 99,
     part: 18,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U → OO flow",
     subtitle: "Vowel transition · 10 seconds",
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 10 }],
@@ -25,7 +25,7 @@ export const PART_18_STAGES: JourneyStage[] = [
   {
     id: 100,
     part: 18,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OO → AH flow",
     subtitle: "Vowel transition · 10 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
@@ -35,7 +35,7 @@ export const PART_18_STAGES: JourneyStage[] = [
   {
     id: 101,
     part: 18,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 10,
     instruction:
@@ -44,7 +44,7 @@ export const PART_18_STAGES: JourneyStage[] = [
   {
     id: 102,
     part: 18,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "AH → EH flow",
     subtitle: "Vowel transition · 10 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
@@ -54,11 +54,20 @@ export const PART_18_STAGES: JourneyStage[] = [
   {
     id: 103,
     part: 18,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EH → EE flow",
     subtitle: "Vowel transition · 10 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 10 }],
     instruction:
       "Hold the mid-high tone steady. Start with EH and narrow further into EE. The lips spread and the tongue lifts. A small but precise shift — keep the pitch locked and the resonance forward.",
+    completionModal: {
+      title: "Part XVIII Complete",
+      subtitle: "Vowel Flow",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Vowel flow mastery — smooth transitions between all vowel pairs: U→OO, OO→AH, AH→EH, EH→EE." },
+        { id: "tip", type: "paragraph", text: "Practice these flows daily. They're the secret to smooth, connected singing." },
+      ],
+      confetti: true,
+    },
   },
 ];

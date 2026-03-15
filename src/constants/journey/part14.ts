@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 14: EH Mastery — EH range, sequences, puffy cheeks */
-export const PART_14_STAGES: JourneyStage[] = [
+export const PART_14_EXERCISES: JourneyExercise[] = [
   {
     id: 74,
     part: 14,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — high to low",
     subtitle: "Warmup glide · 2–3 times",
     technique: "lip-rolls",
@@ -16,7 +16,7 @@ export const PART_14_STAGES: JourneyStage[] = [
   {
     id: 75,
     part: 14,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EH — Low",
     subtitle: "Vowel EH · 9 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 9 }],
@@ -26,7 +26,7 @@ export const PART_14_STAGES: JourneyStage[] = [
   {
     id: 76,
     part: 14,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid",
     subtitle: "Breath control · 8 seconds",
     technique: "puffy-cheeks",
@@ -37,7 +37,7 @@ export const PART_14_STAGES: JourneyStage[] = [
   {
     id: 77,
     part: 14,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EH rising sequence",
     subtitle: "4 tones rising · 2 seconds each",
     notes: [
@@ -52,7 +52,7 @@ export const PART_14_STAGES: JourneyStage[] = [
   {
     id: 78,
     part: 14,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 10,
     instruction:
@@ -61,11 +61,20 @@ export const PART_14_STAGES: JourneyStage[] = [
   {
     id: 79,
     part: 14,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "AH → EH flow",
     subtitle: "Vowel transition · 9 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 9 }],
     instruction:
       "Hold the mid tone steady. Start with AH (open, neutral) and transition to EH (forward, brighter). Feel the tongue move forward and the resonance shift. The pitch stays the same.",
+    completionModal: {
+      title: "Part XIV Complete",
+      subtitle: "EH Mastery",
+      elements: [
+        { id: "learned", type: "paragraph", text: "EH mastery — longer holds, sequences, puffy cheeks at mid range, and AH → EH vowel flow." },
+        { id: "tip", type: "paragraph", text: "Combining techniques (puffy cheeks + vowels + sequences) builds real vocal fitness." },
+      ],
+      confetti: true,
+    },
   },
 ];

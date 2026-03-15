@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 4: Low Resonance — humming and U alternating in the low range */
-export const PART_4_STAGES: JourneyStage[] = [
+export const PART_4_EXERCISES: JourneyExercise[] = [
   {
     id: 14,
     part: 4,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Humming and resonance",
     technique: "sustain",
     cardCue: "Hum each tone and feel where it resonates",
@@ -15,7 +15,7 @@ export const PART_4_STAGES: JourneyStage[] = [
   {
     id: 15,
     part: 4,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Hum — Low",
     subtitle: "Hum · 5 seconds",
     notes: [{ target: { kind: "slot", n: 1 }, seconds: 5 }],
@@ -25,7 +25,7 @@ export const PART_4_STAGES: JourneyStage[] = [
   {
     id: 16,
     part: 4,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U — Low",
     subtitle: "Vowel U · 6 seconds",
     notes: [{ target: { kind: "slot", n: 1 }, seconds: 6 }],
@@ -35,7 +35,7 @@ export const PART_4_STAGES: JourneyStage[] = [
   {
     id: 17,
     part: 4,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Hum — Lower-mid",
     subtitle: "Hum · 5 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 5 }],
@@ -45,7 +45,7 @@ export const PART_4_STAGES: JourneyStage[] = [
   {
     id: 18,
     part: 4,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U — Lower-mid",
     subtitle: "Vowel U · 6 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 6 }],
@@ -55,10 +55,19 @@ export const PART_4_STAGES: JourneyStage[] = [
   {
     id: 19,
     part: 4,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 6,
     instruction:
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Let the breath ground you after the low resonance work.",
+    completionModal: {
+      title: "Part IV Complete",
+      subtitle: "Low Resonance",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Humming and the U vowel in your low register — feeling where resonance lives in your chest." },
+        { id: "tip", type: "paragraph", text: "The low register is your foundation. Return here when you need to ground your voice." },
+      ],
+      confetti: true,
+    },
   },
 ];

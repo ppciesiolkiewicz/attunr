@@ -1,20 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { FarinelliExercise, FARINELLI_ADVICES } from "@/components/FarinelliExercise";
-import { HeadphonesNotice, InfoButton, InfoIcon } from "@/components/TabInfoModal";
-import { Button, CloseButton, Modal, VideoPlaceholder } from "@/components/ui";
-import { JOURNEY_STAGES } from "@/constants/journey";
+import { FARINELLI_ADVICES } from "@/components/FarinelliExercise";
+import { HeadphonesNotice, InfoIcon } from "@/components/TabInfoModal";
+import { Button, CloseButton, Modal, Video } from "@/components/ui";
+import { JOURNEY_EXERCISES } from "@/constants/journey";
 import {
-  addSkippedInfoStageId,
-  getStageDisplayColors,
+  addSkippedInfoExerciseId,
+  getExerciseDisplayColors,
   getStepInPart,
   toRoman,
 } from "../utils";
 import { BookIcon } from "./BookIcon";
 
 interface ExerciseInfoModalProps {
-  stageId: number;
+  exerciseId: number;
   onStart: () => void;
   onDismiss: () => void;
   onAdvanceWithoutExercise?: () => void;
@@ -22,7 +22,7 @@ interface ExerciseInfoModalProps {
 }
 
 export function ExerciseInfoModal({
-  stageId,
+  exerciseId,
   onStart,
   onDismiss,
   onAdvanceWithoutExercise,
@@ -30,23 +30,23 @@ export function ExerciseInfoModal({
 }: ExerciseInfoModalProps) {
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
-  const isLearnStage = stage.stageTypeId === "learn";
+  const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId)!;
+  const isLearnExercise = exercise.exerciseTypeId === "learn";
 
-  const stageColors = getStageDisplayColors(stage);
-  const primaryColor = stageColors[0] ?? "#7c3aed";
+  const exerciseColors = getExerciseDisplayColors(exercise);
+  const primaryColor = exerciseColors[0] ?? "#7c3aed";
 
   const noteTime =
-    stage.stageTypeId === "pitch-detection" ? stage.notes[0]?.seconds ?? 0 : 0;
+    exercise.exerciseTypeId === "pitch-detection" ? exercise.notes[0]?.seconds ?? 0 : 0;
   const isMultiNote =
-    stage.stageTypeId === "pitch-detection" && stage.notes.length > 1;
-  const objective = isLearnStage
+    exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length > 1;
+  const objective = isLearnExercise
     ? "Learn the technique"
-    : stage.stageTypeId === "breathwork"
+    : exercise.exerciseTypeId === "breathwork-farinelli"
       ? `Complete 7 cycles — each a bit longer than the last`
-      : stage.stageTypeId === "pitch-detection" && !isMultiNote
+      : exercise.exerciseTypeId === "pitch-detection" && !isMultiNote
         ? `Hold the tone in tune for ${noteTime} seconds`
-        : stage.stageTypeId === "pitch-detection-slide"
+        : exercise.exerciseTypeId === "pitch-detection-slide"
           ? "Slide smoothly through the range two or three times"
           : `Sing each tone in sequence, ${noteTime} seconds each`;
 
@@ -58,8 +58,8 @@ export function ExerciseInfoModal({
   const commitBeginRef = useRef<() => void>(() => {});
   useEffect(() => {
     commitBeginRef.current = () => {
-      if (showDontShowAgain && dontShowAgain) addSkippedInfoStageId(stageId);
-      if (isLearnStage && onAdvanceWithoutExercise)
+      if (showDontShowAgain && dontShowAgain) addSkippedInfoExerciseId(exerciseId);
+      if (isLearnExercise && onAdvanceWithoutExercise)
         onAdvanceWithoutExercise();
       else onStart();
     };
@@ -87,34 +87,34 @@ export function ExerciseInfoModal({
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
             <p className="text-xs text-white/55 mb-1 flex items-center gap-1.5">
-              {isLearnStage && <BookIcon className="opacity-70" />}
+              {isLearnExercise && <BookIcon className="opacity-70" />}
               <span className="uppercase tracking-widest">
                 Part{" "}
-                {toRoman(stage.part)}
+                {toRoman(exercise.part)}
               </span>
               <span className="text-white/45">·</span>
               <span>
-                {getStepInPart(stageId).stepIndex} of{" "}
-                {getStepInPart(stageId).stepsInPart}
+                {getStepInPart(exerciseId).stepIndex} of{" "}
+                {getStepInPart(exerciseId).stepsInPart}
               </span>
               <span className="text-white/45">·</span>
               <span>
-                {isLearnStage
+                {isLearnExercise
                   ? "Learn"
-                  : stage.stageTypeId === "breathwork"
+                  : exercise.exerciseTypeId === "breathwork-farinelli"
                     ? "Breathwork"
-                    : stage.part === 2
+                    : exercise.part === 2
                       ? "Warmup"
-                      : stage.stageTypeId === "pitch-detection-slide"
+                      : exercise.exerciseTypeId === "pitch-detection-slide"
                         ? "Slide"
                         : isMultiNote
                           ? "Sequence"
-                          : stage.part >= 5
+                          : exercise.part >= 5
                             ? "Technique"
                             : "Individual"}
               </span>
             </p>
-            <h2 className="text-xl font-semibold text-white">{stage.title}</h2>
+            <h2 className="text-xl font-semibold text-white">{exercise.title}</h2>
             <p className="text-sm mt-1" style={{ color: primaryColor }}>
               {objective}
             </p>
@@ -123,7 +123,7 @@ export function ExerciseInfoModal({
         </div>
 
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1 min-h-0">
-          {stage.stageTypeId === "breathwork" ? (
+          {exercise.exerciseTypeId === "breathwork-farinelli" ? (
             <>
               <div
                 className="rounded-xl px-4 py-3"
@@ -151,10 +151,10 @@ export function ExerciseInfoModal({
                   className="text-base leading-relaxed"
                   style={{ color: "rgba(255,255,255,0.88)" }}
                 >
-                  {stage.instruction.split("\n\n")[0]}
+                  {exercise.instruction.split("\n\n")[0]}
                 </p>
               </div>
-              <VideoPlaceholder />
+              <Video />
               <div className="flex flex-col gap-3">
                 <p className="text-sm font-medium text-white/78 tracking-wide uppercase">
                   Key tips
@@ -176,7 +176,7 @@ export function ExerciseInfoModal({
           ) : (
             <>
               <div className="flex flex-col gap-1">
-                {stage.instruction.split("\n").map((line, i) => (
+                {exercise.instruction.split("\n").map((line, i) => (
                   <p
                     key={i}
                     className="text-base leading-relaxed"
@@ -191,8 +191,8 @@ export function ExerciseInfoModal({
                   </p>
                 ))}
               </div>
-              {isLearnStage && <VideoPlaceholder />}
-              {!isLearnStage && stage.technique === "lip-rolls" && (
+              {isLearnExercise && <Video />}
+              {!isLearnExercise && exercise.technique === "lip-rolls" && (
                 <p className="text-sm text-white/50 leading-relaxed">
                   Lip rolls are tricky for microphone detection — don&apos;t worry if progress is slow. Feel free to skip when you feel you&apos;ve got it.
                 </p>
@@ -200,8 +200,8 @@ export function ExerciseInfoModal({
             </>
           )}
 
-          {!isLearnStage &&
-            stage.stageTypeId !== "breathwork" && <HeadphonesNotice />}
+          {!isLearnExercise &&
+            exercise.exerciseTypeId !== "breathwork-farinelli" && <HeadphonesNotice />}
 
         </div>
 
@@ -228,7 +228,7 @@ export function ExerciseInfoModal({
 
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
           <Button size="lg" onClick={handleBegin} disabled={isClosing} className="w-full">
-            {isLearnStage ? "Continue →" : "Begin exercise →"}
+            {isLearnExercise ? "Continue →" : "Begin exercise →"}
           </Button>
         </div>
     </Modal>

@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 16: Vowel EE — introduce the narrowest, brightest vowel */
-export const PART_16_STAGES: JourneyStage[] = [
+export const PART_16_EXERCISES: JourneyExercise[] = [
   {
     id: 86,
     part: 16,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Bright vowel — EE",
     technique: "sustain",
     cardCue: "The narrowest vowel — lips spread, tongue forward, bright resonance",
@@ -15,7 +15,7 @@ export const PART_16_STAGES: JourneyStage[] = [
   {
     id: 87,
     part: 16,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EE — Low",
     subtitle: "Vowel EE · 8 seconds",
     notes: [{ target: { kind: "slot", n: 1 }, seconds: 8 }],
@@ -25,7 +25,7 @@ export const PART_16_STAGES: JourneyStage[] = [
   {
     id: 88,
     part: 16,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EE — Mid",
     subtitle: "Vowel EE · 8 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
@@ -35,7 +35,7 @@ export const PART_16_STAGES: JourneyStage[] = [
   {
     id: 89,
     part: 16,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 10,
     instruction:
@@ -44,7 +44,7 @@ export const PART_16_STAGES: JourneyStage[] = [
   {
     id: 90,
     part: 16,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EE — Mid-high",
     subtitle: "Vowel EE · 9 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 9 }],
@@ -54,7 +54,7 @@ export const PART_16_STAGES: JourneyStage[] = [
   {
     id: 91,
     part: 16,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Low sequence — EE",
     subtitle: "3 tones rising · 3 seconds each",
     notes: [
@@ -64,5 +64,14 @@ export const PART_16_STAGES: JourneyStage[] = [
     ],
     instruction:
       "Sing EE on three rising tones — low range.\nKeep the brightness consistent as you rise.\nFeel the forward resonance on every note.",
+    completionModal: {
+      title: "Part XVI Complete",
+      subtitle: "Vowel EE",
+      elements: [
+        { id: "learned", type: "paragraph", text: "The bright EE vowel — the narrowest, most forward vowel. EE on low, mid, and mid-high tones." },
+        { id: "tip", type: "paragraph", text: "EE is the hardest vowel to control. Patience and relaxation are key." },
+      ],
+      confetti: true,
+    },
   },
 ];

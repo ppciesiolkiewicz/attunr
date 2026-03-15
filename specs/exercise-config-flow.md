@@ -1,17 +1,17 @@
 # Exercise Config → Flow
 
-How a stage definition in `src/constants/journey/` drives what the user sees and how the exercise behaves. This spec traces the path from config to rendered output.
+How an exercise definition in `src/constants/journey/` drives what the user sees and how the exercise behaves. This spec traces the path from config to rendered output.
 
 ---
 
-## Stage config shape
+## Exercise config shape
 
-Every stage extends `BaseJourneyStage` and is discriminated by `stageTypeId`:
+Every exercise extends `BaseExerciseConfig` and is discriminated by `exerciseTypeId`:
 
 ```typescript
-interface BaseJourneyStage {
-  id: number;              // Unique stage ID (1–116)
-  stageTypeId: StageTypeId;
+interface BaseExerciseConfig {
+  id: number;              // Unique exercise ID (1–116)
+  exerciseTypeId: ExerciseTypeId;
   part: number;
   title: string;
   subtitle?: string;       // Shown in exercise header
@@ -20,10 +20,10 @@ interface BaseJourneyStage {
 }
 
 // Discriminated variants:
-LearnStage        → { stageTypeId: "learn",                instruction }
-PitchDetectionStage → { stageTypeId: "pitch-detection",    notes: SustainNoteConfig[], instruction }
-PitchDetectionSlideStage → { stageTypeId: "pitch-detection-slide", notes: SlideConfig[], instruction }
-BreathworkStage   → { stageTypeId: "breathwork",           maxCount, instruction }
+LearnExercise        → { exerciseTypeId: "learn",                instruction }
+PitchDetectionExercise → { exerciseTypeId: "pitch-detection",    notes: SustainNoteConfig[], instruction }
+PitchDetectionSlideExercise → { exerciseTypeId: "pitch-detection-slide", notes: SlideConfig[], instruction }
+FarinelliBreathworkExercise   → { exerciseTypeId: "breathwork-farinelli",           maxCount, instruction }
 ```
 
 ### BandTarget — how config points at notes
@@ -42,46 +42,81 @@ At runtime, `resolveBandTarget(target, allBands)` maps these to actual `Band` ob
 
 ## Config → canvas + progress
 
-Two config fields together determine the canvas, progress model, and detection behaviour:
+Two config fields — `exerciseTypeId` and `technique` — together determine the canvas, progress model, and detection behaviour. Currently this decision is spread across ~50 branch points in `JourneyExercise.tsx`. The decision tree below documents what each combination produces.
 
-### `stageTypeId` — picks the canvas and progress model
+### Decision tree
+
+The full decision is made from three inputs: `exerciseTypeId`, `notes` shape (length + target kind), and `technique`:
 
 ```
-"learn"
-    → text content + VideoPlaceholder
-    → no canvas, no mic, no progress tracking
-
-"breathwork"
-    → FarinelliExercise (self-contained timer, no pitch detection)
-    → progress: cycle count (maxCount cycles, inhale 4→10)
-
-"pitch-detection", notes.length === 1, target.kind === "range"
-    → HillBallCanvas (slope — user pushes ball toward low or high pitches)
-    → progress: cumulative hold time with range-based detection
-
-"pitch-detection", notes.length === 1, exact pitch
-    → BalanceBallCanvas (ball on hill — rolls by pitch deviation)
-    → progress: cumulative hold time with exact-pitch detection
-
-"pitch-detection", notes.length > 1
-    → PitchCanvas (scrolling dot trail with step indicators)
-    → progress: sequential note advancement
-
-"pitch-detection-slide"
-    → PitchCanvas (scrolling dot trail)
-    → progress: zone-crossing count (complete after 2 crosses)
+exercise
+ ├─ exerciseTypeId
+ │   ├─ "learn"           → canvas: none (text + Video)
+ │   │                      progress: none
+ │   │                      buttons: [Prev, Next]
+ │   │                      info modal: never
+ │   │                      pitch overlay: hidden
+ │   │
+ │   ├─ "breathwork-farinelli" → canvas: FarinelliExercise
+ │   │                      progress: cycle count (maxCount)
+ │   │                      buttons: [] (automatic)
+ │   │                      info modal: always shown
+ │   │                      pitch overlay: hidden
+ │   │
+ │   ├─ "pitch-detection"
+ │   │   ├─ notes.length === 1
+ │   │   │   ├─ target.kind === "range"
+ │   │   │   │               → canvas: HillBallCanvas
+ │   │   │   │                 progress: hold (range-based detection)
+ │   │   │   │                 pitch overlay: "Low tone" / "High tone"
+ │   │   │   │
+ │   │   │   └─ exact pitch → canvas: BalanceBallCanvas
+ │   │   │                    progress: hold (exact-pitch detection)
+ │   │   │                    pitch overlay: Hz readout + direction hint
+ │   │   │
+ │   │   └─ notes.length > 1
+ │   │                     → canvas: PitchCanvas
+ │   │                       progress: sequence (note-by-note advancement)
+ │   │                       pitch overlay: Hz readout + direction hint
+ │   │                       indicators: step dots (bottom-left)
+ │   │
+ │   └─ "pitch-detection-slide"
+ │                         → canvas: PitchCanvas
+ │                           progress: zone-crossing (complete after 2)
+ │                           pitch overlay: Hz readout
+ │                           indicators: slide dots (bottom-left)
+ │
+ └─ technique (cross-cuts all pitch exercises)
+     ├─ "lip-rolls"       → tolerance: ±8%
+     │                      detection: graduated credit (lipRollCredit 0–1)
+     │                      slide playback: smooth glide
+     │                      slide zones: midpoint boundary (forgiving)
+     │
+     └─ others             → tolerance: ±3%
+        ("sustain",          detection: binary in-tune
+         "mantra",           slide playback: discrete start + end tones
+         "puffy-cheeks")     slide zones: upper/lower thirds
 ```
 
-### `technique` — adjusts detection tolerance and playback
+### Where decisions are currently made (`JourneyExercise.tsx`)
 
-| TechniqueId      | In-tune tolerance | Detection                                               | Playback                                           |
-| ---------------- | ----------------- | ------------------------------------------------------- | -------------------------------------------------- |
-| `"sustain"`      | ±3%               | Binary in-tune                                          | Standard tone(s)                                   |
-| `"mantra"`       | ±3%               | Binary in-tune                                          | Standard tone(s)                                   |
-| `"puffy-cheeks"` | ±3%               | Binary in-tune                                          | Standard tone(s)                                   |
-| `"lip-rolls"`    | ±8%               | Graduated credit via `lipRollCredit()` (0–1 multiplier) | Slides play smooth glide instead of discrete tones |
+| Concern | Lines | Branching on |
+|---------|-------|-------------|
+| Resolve exercise bands | ~65–78 | `exerciseTypeId`, `notes` shape |
+| Detect range target | ~80–83 | `exerciseTypeId`, `notes.length`, `target.kind` |
+| Resolve tone playback bands | ~100–111 | `exerciseTypeId` |
+| Sequence step bands | ~114–117 | `exerciseTypeId`, `notes.length` |
+| Info modal auto-show | ~155–162 | `exerciseTypeId` |
+| Progress tick (RAF loop) | ~214–305 | `exerciseTypeId`, `notes.length`, `technique`, `target.kind` |
+| Play tone handler | ~384–416 | `exerciseTypeId`, `technique` |
+| In-tune / lock detection | ~418–431 | `isRangeTarget`, `technique` |
+| Target band for direction hint | ~434–439 | `exerciseTypeId`, `isRangeTarget`, `notes.length` |
+| Canvas rendering | ~482–559 | `exerciseTypeId`, `notes.length`, `isRangeTarget` |
+| Pitch overlay content | ~601–660 | `isRangeTarget`, `target.kind` |
+| Step indicator dots | ~663–709 | `exerciseTypeId`, `notes.length` |
+| Button panel | ~715–789 | `exerciseTypeId` |
 
-Lip-roll slides also use relaxed zone thresholds (midpoint boundary instead of 25% margins).
+> **Future direction:** Extract a `resolveExerciseConfig(exercise)` function that resolves the decision tree once into a flat config object (`canvas`, `progressModel`, `tolerance`, `playbackStyle`, etc.). `JourneyExercise` would read the resolved config instead of re-branching at each concern. See the plan for details.
 
 ---
 
@@ -146,7 +181,7 @@ When the user taps "Play tone":
 | `pitch-detection`, N notes                         | N tones sequentially, 2s apart                                |
 | `pitch-detection-slide` + `technique: "lip-rolls"` | Smooth glide high→low (400ms hold + 2500ms ramp + 600ms hold) |
 | `pitch-detection-slide` + other technique          | Start + end tones sequentially                                |
-| `breathwork` / `learn`                             | No play button                                                |
+| `breathwork-farinelli` / `learn`                   | No play button                                                |
 
 All tones: binaural rendering (left = hz, right = hz + 6 Hz theta beat).
 
@@ -154,17 +189,17 @@ All tones: binaural rendering (left = hz, right = hz + 6 Hz theta beat).
 
 ## Config → info modal
 
-`ExerciseInfoModal` derives content from the stage:
+`ExerciseInfoModal` derives content from the exercise:
 
-- **Objective** — from `stageTypeId` + `notes` shape:
+- **Objective** — from `exerciseTypeId` + `notes` shape:
   - Single note: "Hold the tone in tune for X seconds"
   - Sequence: "Sing each tone in sequence, X seconds each"
   - Slide: "Slide smoothly through the range"
   - Breathwork: "Complete N cycles"
-- **Instruction body** — `stage.instruction` verbatim
+- **Instruction body** — `exercise.instruction` verbatim
 - **Lip-roll notice** — shown when `technique === "lip-rolls"` (mic detection is tricky)
 - **Headphones notice** — shown for all pitch exercises (binaural beats)
-- **"Don't show again"** — per stage ID in localStorage
+- **"Don't show again"** — per exercise ID in localStorage
 
 Breathwork always shows the modal. Others show unless previously dismissed.
 
@@ -172,12 +207,12 @@ Breathwork always shows the modal. Others show unless previously dismissed.
 
 ## Config → journey list card
 
-`StageCard` renders from config fields directly — no `stageTypeId` branching:
+`StageCard` renders from config fields directly — no `exerciseTypeId` branching:
 
 ```
-stage.title          → primary text
-stage.cardCue ?? stage.subtitle → secondary text
-getStageDisplayColors(stage)    → left accent bar (gradient for multi-slot stages)
+exercise.title          → primary text
+exercise.cardCue ?? exercise.subtitle → secondary text
+getStageDisplayColors(exercise)    → left accent bar (gradient for multi-slot exercises)
 ```
 
 ---
@@ -194,7 +229,7 @@ usePitchDetection (ml5 CREPE, ~30 fps)
     └─→ pitchHz state (throttled ~15 fps)
         ├─→ pitch overlay (Hz, lock status, direction hint)
         └─→ progress tick (RAF loop in JourneyExercise)
-            └─→ setStageComplete(true)
+            └─→ setExerciseComplete(true)
 ```
 
 Two channels by design:
@@ -207,20 +242,20 @@ Two channels by design:
 ## Completion → navigation
 
 ```
-setStageComplete(true)
+setExerciseComplete(true)
     → confetti + checkmark (2400ms)
     → user taps "Next"
-    → isLastStageOfPart(stageId)?
+    → isLastExerciseOfPart(exerciseId)?
         yes → PartCompleteModal (content from PART_COMPLETE_CONTENT[part])
-              → "Continue" → getNextStageId(stageId)
-        no  → getNextStageId(stageId) directly
+              → "Continue" → getNextExerciseId(exerciseId)
+        no  → getNextExerciseId(exerciseId) directly
     → router.push(/journey/{nextId})
-    → info modal auto-shows on new stage
+    → info modal auto-shows on new exercise
 ```
 
-Progress: `localStorage attunr.journeyStage = max(current, stageId)`.
+Progress: `localStorage attunr.journeyStage = max(current, exerciseId)`.
 
-"Skip" advances without saving progress and forces the info modal on the next stage.
+"Skip" advances without saving progress and forces the info modal on the next exercise.
 
 ---
 
@@ -228,8 +263,8 @@ Progress: `localStorage attunr.journeyStage = max(current, stageId)`.
 
 | File                                                          | Role                                                          |
 | ------------------------------------------------------------- | ------------------------------------------------------------- |
-| `src/constants/journey/types.ts`                              | Stage types, BandTarget, TechniqueId                          |
-| `src/constants/journey/*.ts`                                  | Per-part stage configs                                        |
+| `src/constants/journey/types.ts`                              | Exercise types, BandTarget, TechniqueId                       |
+| `src/constants/journey/*.ts`                                  | Per-part exercise configs                                     |
 | `src/components/JourneyView/components/JourneyExercise.tsx`   | Config → canvas, progress, completion                         |
 | `src/components/JourneyView/components/ExerciseInfoModal.tsx` | Config → modal content                                        |
 | `src/components/JourneyView/components/StageCard.tsx`         | Config → journey list card                                    |

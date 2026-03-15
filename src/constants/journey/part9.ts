@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 9: Breath & Body — puffy cheeks intro, AH range expansion */
-export const PART_9_STAGES: JourneyStage[] = [
+export const PART_9_EXERCISES: JourneyExercise[] = [
   {
     id: 44,
     part: 9,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Puffy cheeks",
     technique: "puffy-cheeks",
     cardCue: "Build breath control with a playful technique",
@@ -15,7 +15,7 @@ export const PART_9_STAGES: JourneyStage[] = [
   {
     id: 45,
     part: 9,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Low",
     subtitle: "Breath control · 7 seconds",
     technique: "puffy-cheeks",
@@ -26,7 +26,7 @@ export const PART_9_STAGES: JourneyStage[] = [
   {
     id: 46,
     part: 9,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "AH — Mid-high",
     subtitle: "Vowel AH · 8 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 8 }],
@@ -36,7 +36,7 @@ export const PART_9_STAGES: JourneyStage[] = [
   {
     id: 47,
     part: 9,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 8,
     instruction:
@@ -45,7 +45,7 @@ export const PART_9_STAGES: JourneyStage[] = [
   {
     id: 48,
     part: 9,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid",
     subtitle: "Breath control · 7 seconds",
     technique: "puffy-cheeks",
@@ -56,11 +56,20 @@ export const PART_9_STAGES: JourneyStage[] = [
   {
     id: 49,
     part: 9,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OO → AH flow",
     subtitle: "Vowel transition · 8 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
     instruction:
       "Hold the mid tone steady. Start with OO (rounded lips) and slowly open into AH (jaw drops). The pitch stays the same — the vowel opens from rounded to neutral. Feel the space increase.",
+    completionModal: {
+      title: "Part IX Complete",
+      subtitle: "Breath & Body",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Puffy cheeks for breath control, AH in higher range, and OO → AH vowel flow." },
+        { id: "tip", type: "paragraph", text: "Puffy cheeks is a playful but powerful technique. Use it when you feel tension in your jaw." },
+      ],
+      confetti: true,
+    },
   },
 ];

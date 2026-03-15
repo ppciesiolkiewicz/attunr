@@ -4,14 +4,14 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { JourneyExercise } from "@/components/JourneyView";
 import { useApp } from "@/context/AppContext";
-import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES } from "@/constants/journey";
+import { JOURNEY_EXERCISES } from "@/constants/journey";
 
 /**
  * Journey step page — URL-driven: /journey/[id]
- * 1. Get step id from URL
- * 2. Validate & find stage
- * 3. Render JourneyExercise (exercise or learn content by stage type)
- * 4. PartCompleteModal on last step of part → Continue navigates to next URL
+ * 1. Get exercise id from URL
+ * 2. Validate & find exercise
+ * 3. Render JourneyExercise (exercise or learn content by exercise type)
+ * 4. Completion modal on last step of part → Continue navigates to next URL
  */
 export default function ExercisePage() {
   const params = useParams();
@@ -27,18 +27,18 @@ export default function ExercisePage() {
   })();
   const id = !isNaN(idFromParams) ? idFromParams : idFromPath;
 
-  const isValid = !isNaN(id) && id >= 1 && id <= TOTAL_JOURNEY_STAGES;
-  const stageExists = isValid && JOURNEY_STAGES.some((s) => s.id === id);
+  const isValid = !isNaN(id) && id >= 1 && id <= JOURNEY_EXERCISES.length;
+  const exerciseExists = isValid && JOURNEY_EXERCISES.some((e) => e.id === id);
 
   useEffect(() => {
-    if (!stageExists) router.replace("/");
-  }, [stageExists, router]);
+    if (!exerciseExists) router.replace("/");
+  }, [exerciseExists, router]);
 
-  if (!stageExists) return null;
+  if (!exerciseExists) return null;
 
   return (
     <JourneyExercise
-      stageId={id}
+      exerciseId={id}
       settings={settings}
       pitchHz={pitchHz}
       pitchHzRef={pitchHzRef}

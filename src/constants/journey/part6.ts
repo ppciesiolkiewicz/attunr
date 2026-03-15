@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 6: Rounded Vowels — introduce OO and OH */
-export const PART_6_STAGES: JourneyStage[] = [
+export const PART_6_EXERCISES: JourneyExercise[] = [
   {
     id: 26,
     part: 6,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Rounded vowels",
     technique: "sustain",
     cardCue: "Sing OO and OH — warm, rounded sounds that build on your U foundation",
@@ -15,7 +15,7 @@ export const PART_6_STAGES: JourneyStage[] = [
   {
     id: 27,
     part: 6,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OO — Low",
     subtitle: "Vowel OO · 7 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
@@ -25,7 +25,7 @@ export const PART_6_STAGES: JourneyStage[] = [
   {
     id: 28,
     part: 6,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OO — Mid",
     subtitle: "Vowel OO · 7 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 7 }],
@@ -35,7 +35,7 @@ export const PART_6_STAGES: JourneyStage[] = [
   {
     id: 29,
     part: 6,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 7,
     instruction:
@@ -44,7 +44,7 @@ export const PART_6_STAGES: JourneyStage[] = [
   {
     id: 30,
     part: 6,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OH — Low",
     subtitle: "Vowel OH · 7 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
@@ -54,11 +54,20 @@ export const PART_6_STAGES: JourneyStage[] = [
   {
     id: 31,
     part: 6,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OH — Mid",
     subtitle: "Vowel OH · 7 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 7 }],
     instruction:
       "Sing OH on the mid tone.\nFeel the mouth open more than OO.\nKeep the sound warm and resonant.",
+    completionModal: {
+      title: "Part VI Complete",
+      subtitle: "Rounded Vowels",
+      elements: [
+        { id: "learned", type: "paragraph", text: "The rounded vowels OO (as in 'book') and OH (as in 'go') — warm, stable vowels that build on your U foundation." },
+        { id: "tip", type: "paragraph", text: "OO and OH are great for developing resonance. Use them in your warmup routine." },
+      ],
+      confetti: true,
+    },
   },
 ];

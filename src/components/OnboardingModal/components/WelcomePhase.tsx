@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Spinner, VideoPlaceholder } from "@/components/ui";
+import { Button, Spinner, Video } from "@/components/ui";
 import { MicrophoneIcon } from "./MicrophoneIcon";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
@@ -28,7 +28,7 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
           You should never feel strain in your throat.
         </p>
         <div className="mt-2">
-          <VideoPlaceholder variant="inline" />
+          <Video variant="inline" />
         </div>
       </div>
 

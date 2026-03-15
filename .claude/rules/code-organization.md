@@ -22,20 +22,20 @@ When splitting a large file:
 
 ```
 src/constants/journey/
-├── types.ts    — JourneyStage discriminated union, StageTypeId, Note, TechniqueId, etc.
-├── index.ts    — re-exports JOURNEY_STAGES, TOTAL_JOURNEY_STAGES, etc.
+├── types.ts    — JourneyExercise discriminated union, ExerciseTypeId, JourneyPart, etc.
+├── index.ts    — exports JOURNEY_CONFIG (JourneyPart[]), JOURNEY_EXERCISES (flat), etc.
 ├── part1.ts    — Part I:    Introduction
-├── part2.ts    — Part II:   Vocal warmups
-├── part3.ts    — Part III:  Sustain
-├── part4.ts    — Part IV:   Sequences
-├── part5.ts    — Part V:    Vowel U
-├── part6.ts    — Part VI:   Vowel EE
-├── part7.ts    — Part VII:  Vowel flow U→EE
-├── part8.ts    — Part VIII: Puffy cheeks
-├── part9.ts    — Part IX:   Sounds and Mantras
+├── part2.ts    — Part II:   First Sounds
+├── part3.ts    — Part III:  Lip Rolls & Breath
+├── part4.ts    — Part IV:   Low Resonance
+├── part5.ts    — Part V:    Building Range
+├── part6.ts    — Part VI:   Rounded Vowels
+├── part7.ts    — Part VII:  Vowel Warmth
+├── part8.ts    — Part VIII: The Open AH
+├── part9.ts    — Part IX:   Breath & Body
 ```
 
-Each part file exports its stages; `index.ts` concatenates and re-exports. Consumers import from `@/constants/journey` unchanged.
+Each part file exports its exercises; `index.ts` wraps them in `JOURNEY_CONFIG: JourneyPart[]` and derives the flat `JOURNEY_EXERCISES` list. Consumers import from `@/constants/journey` unchanged.
 
 ## Specs
 

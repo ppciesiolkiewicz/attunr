@@ -1,23 +1,20 @@
 "use client";
 
 import {
-  JOURNEY_STAGES,
-  LAST_STAGE_ID_PER_PART,
-  PART_TITLES,
+  JOURNEY_CONFIG,
 } from "@/constants/journey";
 import type { Settings } from "@/hooks/useSettings";
-import { StageCard } from "./StageCard";
+import { ExerciseCard } from "./ExerciseCard";
 import { BadgeIcon } from "./BadgeIcon";
 import { toRoman } from "../utils";
 
 interface JourneyListProps {
   settings: Settings;
-  onSelect: (stageId: number) => void;
+  onSelect: (exerciseId: number) => void;
 }
 
 export function JourneyList({ settings, onSelect }: JourneyListProps) {
   const { journeyStage: highestCompleted } = settings;
-  const partNums = Object.keys(PART_TITLES).map(Number).sort((a, b) => a - b);
 
   return (
     <div className="h-full overflow-y-auto">
@@ -35,21 +32,19 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
           </p>
         </div>
 
-        {partNums.map((partNum) => {
-          const stages = JOURNEY_STAGES.filter((s) => s.part === partNum);
-          if (stages.length === 0) return null;
-          const roman = toRoman(partNum);
-          const lastStageId = LAST_STAGE_ID_PER_PART[partNum];
-          const partComplete = highestCompleted >= lastStageId;
+        {JOURNEY_CONFIG.map((part) => {
+          if (part.exercises.length === 0) return null;
+          const lastExerciseId = part.exercises[part.exercises.length - 1].id;
+          const partComplete = highestCompleted >= lastExerciseId;
           return (
-            <section key={partNum} className="flex flex-col gap-2">
+            <section key={part.part} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
                 <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs uppercase tracking-widest text-white/55">
-                    Part {roman}
+                    Part {toRoman(part.part)}
                   </span>
                   <span className="text-xs text-white/80 font-medium">
-                    {PART_TITLES[partNum]}
+                    {part.title}
                   </span>
                   {partComplete && (
                     <BadgeIcon
@@ -60,10 +55,10 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
                 </div>
                 <div className="flex-1 h-px bg-white/[0.05]" />
               </header>
-              {stages.map((stage) => (
-                <StageCard
-                  key={stage.id}
-                  stage={stage}
+              {part.exercises.map((exercise) => (
+                <ExerciseCard
+                  key={exercise.id}
+                  exercise={exercise}
                   highestCompleted={highestCompleted}
                   onSelect={onSelect}
                 />

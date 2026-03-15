@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 11: Chakras — Earth — Root to Heart mantras */
-export const PART_11_STAGES: JourneyStage[] = [
+export const PART_11_EXERCISES: JourneyExercise[] = [
   {
     id: 56,
     part: 11,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Chakras and Yoga of Sounds",
     technique: "mantra",
     cardCue: "Discover the ancient system of body, tone, and seed syllable",
@@ -15,7 +15,7 @@ export const PART_11_STAGES: JourneyStage[] = [
   {
     id: 57,
     part: 11,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Root — LAM",
     subtitle: "Mantra · Root tone · 8 seconds",
     technique: "mantra",
@@ -26,7 +26,7 @@ export const PART_11_STAGES: JourneyStage[] = [
   {
     id: 58,
     part: 11,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Sacral — VAM",
     subtitle: "Mantra · Sacral tone · 8 seconds",
     technique: "mantra",
@@ -37,7 +37,7 @@ export const PART_11_STAGES: JourneyStage[] = [
   {
     id: 59,
     part: 11,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Solar Plexus — RAM",
     subtitle: "Mantra · Solar Plexus tone · 8 seconds",
     technique: "mantra",
@@ -48,7 +48,7 @@ export const PART_11_STAGES: JourneyStage[] = [
   {
     id: 60,
     part: 11,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Heart — YAM",
     subtitle: "Mantra · Heart tone · 8 seconds",
     technique: "mantra",
@@ -59,7 +59,7 @@ export const PART_11_STAGES: JourneyStage[] = [
   {
     id: 61,
     part: 11,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 9,
     instruction:

@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 5: Building Range — humming and U in mid range, first sequences */
-export const PART_5_STAGES: JourneyStage[] = [
+export const PART_5_EXERCISES: JourneyExercise[] = [
   {
     id: 20,
     part: 5,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Hum — Mid-low",
     subtitle: "Hum · 6 seconds",
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 6 }],
@@ -15,7 +15,7 @@ export const PART_5_STAGES: JourneyStage[] = [
   {
     id: 21,
     part: 5,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U — Mid-low",
     subtitle: "Vowel U · 6 seconds",
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 6 }],
@@ -25,7 +25,7 @@ export const PART_5_STAGES: JourneyStage[] = [
   {
     id: 22,
     part: 5,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 7,
     instruction:
@@ -34,7 +34,7 @@ export const PART_5_STAGES: JourneyStage[] = [
   {
     id: 23,
     part: 5,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Hum — Mid",
     subtitle: "Hum · 6 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 6 }],
@@ -44,7 +44,7 @@ export const PART_5_STAGES: JourneyStage[] = [
   {
     id: 24,
     part: 5,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U — Mid",
     subtitle: "Vowel U · 6 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 6 }],
@@ -54,7 +54,7 @@ export const PART_5_STAGES: JourneyStage[] = [
   {
     id: 25,
     part: 5,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Low sequence",
     subtitle: "3 tones rising · 2 seconds each",
     notes: [
@@ -64,5 +64,14 @@ export const PART_5_STAGES: JourneyStage[] = [
     ],
     instruction:
       "Sing three tones rising from low.\nThis is your first sequence — move smoothly between each tone.\nFeel the resonance shift as you rise.",
+    completionModal: {
+      title: "Part V Complete",
+      subtitle: "Building Range",
+      elements: [
+        { id: "learned", type: "paragraph", text: "Humming and U vowel in mid range, and your first multi-tone sequence." },
+        { id: "tip", type: "paragraph", text: "Sequences build agility. Try singing them a little faster as you improve." },
+      ],
+      confetti: true,
+    },
   },
 ];

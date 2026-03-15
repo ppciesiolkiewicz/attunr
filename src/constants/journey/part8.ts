@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 8: The Open AH — introduce AH vowel and first vowel flows */
-export const PART_8_STAGES: JourneyStage[] = [
+export const PART_8_EXERCISES: JourneyExercise[] = [
   {
     id: 38,
     part: 8,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "The open vowel — AH",
     technique: "sustain",
     cardCue: "Open your voice with the most natural vowel",
@@ -15,7 +15,7 @@ export const PART_8_STAGES: JourneyStage[] = [
   {
     id: 39,
     part: 8,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "AH — Low",
     subtitle: "Vowel AH · 7 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
@@ -25,7 +25,7 @@ export const PART_8_STAGES: JourneyStage[] = [
   {
     id: 40,
     part: 8,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "AH — Mid",
     subtitle: "Vowel AH · 8 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
@@ -35,7 +35,7 @@ export const PART_8_STAGES: JourneyStage[] = [
   {
     id: 41,
     part: 8,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U → AH flow",
     subtitle: "Vowel transition · 8 seconds",
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 8 }],
@@ -45,7 +45,7 @@ export const PART_8_STAGES: JourneyStage[] = [
   {
     id: 42,
     part: 8,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 8,
     instruction:
@@ -54,7 +54,7 @@ export const PART_8_STAGES: JourneyStage[] = [
   {
     id: 43,
     part: 8,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Rising sequence — AH",
     subtitle: "4 tones rising · 2 seconds each",
     notes: [
@@ -65,5 +65,14 @@ export const PART_8_STAGES: JourneyStage[] = [
     ],
     instruction:
       "Sing AH on four rising tones — low to mid.\nKeep the jaw relaxed and the vowel open on every tone.\nFeel the resonance lift as you ascend.",
+    completionModal: {
+      title: "Part VIII Complete",
+      subtitle: "The Open AH",
+      elements: [
+        { id: "learned", type: "paragraph", text: "The open AH vowel and your first vowel flow — transitioning from U to AH while holding pitch." },
+        { id: "tip", type: "paragraph", text: "Vowel flows are one of the most valuable exercises for vocal efficiency." },
+      ],
+      confetti: true,
+    },
   },
 ];

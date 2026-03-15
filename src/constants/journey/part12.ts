@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 12: Chakras — Sky — Throat to Crown mantras */
-export const PART_12_STAGES: JourneyStage[] = [
+export const PART_12_EXERCISES: JourneyExercise[] = [
   {
     id: 62,
     part: 12,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 9,
     instruction:
@@ -14,7 +14,7 @@ export const PART_12_STAGES: JourneyStage[] = [
   {
     id: 63,
     part: 12,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Throat — HAM",
     subtitle: "Mantra · Throat tone · 8 seconds",
     technique: "mantra",
@@ -25,7 +25,7 @@ export const PART_12_STAGES: JourneyStage[] = [
   {
     id: 64,
     part: 12,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Third Eye — OM",
     subtitle: "Mantra · Third Eye tone · 8 seconds",
     technique: "mantra",
@@ -36,7 +36,7 @@ export const PART_12_STAGES: JourneyStage[] = [
   {
     id: 65,
     part: 12,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Crown — AH",
     subtitle: "Mantra · Crown tone · 8 seconds",
     technique: "mantra",
@@ -47,7 +47,7 @@ export const PART_12_STAGES: JourneyStage[] = [
   {
     id: 66,
     part: 12,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Full chakra sequence",
     subtitle: "All 7 mantras · 3 seconds each",
     technique: "mantra",
@@ -66,7 +66,7 @@ export const PART_12_STAGES: JourneyStage[] = [
   {
     id: 67,
     part: 12,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 9,
     instruction:

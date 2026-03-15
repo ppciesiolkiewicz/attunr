@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 17: EE & Brightness — EE high register, U→EE flow, full range */
-export const PART_17_STAGES: JourneyStage[] = [
+export const PART_17_EXERCISES: JourneyExercise[] = [
   {
     id: 92,
     part: 17,
-    stageTypeId: "pitch-detection-slide",
+    exerciseTypeId: "pitch-detection-slide",
     title: "Lip rolls — low to high",
     subtitle: "Warmup glide · 2–3 times",
     technique: "lip-rolls",
@@ -16,7 +16,7 @@ export const PART_17_STAGES: JourneyStage[] = [
   {
     id: 93,
     part: 17,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EE — High",
     subtitle: "Vowel EE · 10 seconds",
     notes: [{ target: { kind: "slot", n: 7 }, seconds: 10 }],
@@ -26,7 +26,7 @@ export const PART_17_STAGES: JourneyStage[] = [
   {
     id: 94,
     part: 17,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "U → EE flow",
     subtitle: "Vowel transition · 10 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
@@ -36,7 +36,7 @@ export const PART_17_STAGES: JourneyStage[] = [
   {
     id: 95,
     part: 17,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 10,
     instruction:
@@ -45,7 +45,7 @@ export const PART_17_STAGES: JourneyStage[] = [
   {
     id: 96,
     part: 17,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Full range sequence — EE",
     subtitle: "All 7 tones · 2 seconds each",
     notes: [
@@ -63,12 +63,21 @@ export const PART_17_STAGES: JourneyStage[] = [
   {
     id: 97,
     part: 17,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — High",
     subtitle: "Breath control · 8 seconds",
     technique: "puffy-cheeks",
     notes: [{ target: { kind: "slot", n: 6 }, seconds: 8 }],
     instruction:
       "Sing on the upper-mid tone with puffy cheeks.\nHigh tone with breath control — a real challenge.\nKeep it steady and supported.",
+    completionModal: {
+      title: "Part XVII Complete",
+      subtitle: "EE & Brightness",
+      elements: [
+        { id: "learned", type: "paragraph", text: "EE on high tones, U → EE full vowel flow, full-range EE sequence, and puffy cheeks on high tones." },
+        { id: "tip", type: "paragraph", text: "The U → EE flow is one of the most valuable exercises in singing. It teaches resonance consistency." },
+      ],
+      confetti: true,
+    },
   },
 ];

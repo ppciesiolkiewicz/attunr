@@ -1,11 +1,11 @@
-import type { JourneyStage } from "./types";
+import type { JourneyExercise } from "./types";
 
 /** Part 13: Forward EH — introduce EH vowel and resonance shift */
-export const PART_13_STAGES: JourneyStage[] = [
+export const PART_13_EXERCISES: JourneyExercise[] = [
   {
     id: 68,
     part: 13,
-    stageTypeId: "learn",
+    exerciseTypeId: "learn",
     title: "Forward resonance — EH",
     technique: "sustain",
     cardCue: "Place your voice forward with the Spanish-style EH vowel",
@@ -15,7 +15,7 @@ export const PART_13_STAGES: JourneyStage[] = [
   {
     id: 69,
     part: 13,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EH — Low",
     subtitle: "Vowel EH · 8 seconds",
     notes: [{ target: { kind: "slot", n: 2 }, seconds: 8 }],
@@ -25,7 +25,7 @@ export const PART_13_STAGES: JourneyStage[] = [
   {
     id: 70,
     part: 13,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EH — Mid",
     subtitle: "Vowel EH · 8 seconds",
     notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
@@ -35,7 +35,7 @@ export const PART_13_STAGES: JourneyStage[] = [
   {
     id: 71,
     part: 13,
-    stageTypeId: "breathwork",
+    exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 9,
     instruction:
@@ -44,7 +44,7 @@ export const PART_13_STAGES: JourneyStage[] = [
   {
     id: 72,
     part: 13,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "OH → EH flow",
     subtitle: "Vowel transition · 8 seconds",
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 8 }],
@@ -54,11 +54,20 @@ export const PART_13_STAGES: JourneyStage[] = [
   {
     id: 73,
     part: 13,
-    stageTypeId: "pitch-detection",
+    exerciseTypeId: "pitch-detection",
     title: "EH — Mid-high",
     subtitle: "Vowel EH · 8 seconds",
     notes: [{ target: { kind: "slot", n: 5 }, seconds: 8 }],
     instruction:
       "Sing EH on the mid-high tone.\nA step higher — keep the forward placement.\nDon't push. Let the brightness come naturally.",
+    completionModal: {
+      title: "Part XIII Complete",
+      subtitle: "Forward EH",
+      elements: [
+        { id: "learned", type: "paragraph", text: "The forward EH vowel (as in 'bed'), OH → EH vowel flow, and forward resonance placement." },
+        { id: "tip", type: "paragraph", text: "Forward resonance helps with projection. Practice EH when you want your voice to carry." },
+      ],
+      confetti: true,
+    },
   },
 ];

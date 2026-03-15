@@ -76,7 +76,7 @@ inTune = |detected − target| / target ≤ 0.03
 
 ## File structure
 
-Keep files small; split large configs by logical unit (e.g. journey stages per part). See [Code Organization](./code-organization.md).
+Keep files small; split large configs by logical unit (e.g. journey exercises per part). See [Code Organization](./code-organization.md).
 
 ```
 src/
@@ -84,18 +84,18 @@ src/
 │   ├── layout.tsx            — root layout, metadata, global CSS import
 │   ├── page.tsx              — root route (landing or app)
 │   ├── globals.css           — Tailwind v4 import + @theme + @keyframes
-│   └── journey/[id]/page.tsx — individual Journey stage route
+│   └── journey/[id]/page.tsx — individual Journey exercise route
 ├── components/
 │   ├── AppShell/             — app-level shell: nav, settings, onboarding, mic gate
 │   ├── TrainView.tsx         — free-form practice (pitch canvas + tone buttons)
-│   ├── JourneyView/          — guided stages (StageCard, JourneyExercise, etc.)
+│   ├── JourneyView/          — guided exercises (StageCard, JourneyExercise, etc.)
 │   ├── PitchCanvas.tsx       — scrolling dot-trail canvas (sequences, slides)
 │   ├── BalanceBallCanvas.tsx  — ball-on-hill canvas (single-note exercises)
 │   └── HillBallCanvas.tsx    — slope canvas (range exercises: Low U, Hoo Hoo)
 ├── constants/
 │   ├── tone-slots.ts         — SlotId, Slot, Band, SLOTS, SLOT_ORDER, re-exports
 │   ├── chakras.ts            — ChakraId, Chakra, CHAKRAS (chakra domain data only)
-│   └── journey/              — 116-stage config split by part; types.ts for JourneyStage
+│   └── journey/              — 116-exercise config split by part; types.ts for JourneyExercise
 ├── hooks/
 │   ├── usePitchDetection.ts  — ml5 CREPE lifecycle (idle → mic → model → poll)
 │   └── useTonePlayer.ts      — Web Audio binaural oscillator with fade envelope
