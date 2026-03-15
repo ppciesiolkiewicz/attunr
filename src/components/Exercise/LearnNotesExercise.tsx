@@ -150,11 +150,17 @@ export function LearnNotesExercise({
           <div className="flex flex-col gap-3">
             <Text variant="heading-sm">A little about notes</Text>
             <Text variant="body" color="text-2">
-              We won&apos;t bore you with too much theory — just the bare minimum so the exercises make sense.
-              Every sound you sing is a <Text as="span" color="text-1" className="font-medium">note</Text>.
-              Notes go in order:{" "}
-              <Text as="span" color="text-1" className="font-medium">A B C D E F G</Text>,
-              then back to A — one step higher. That cycle repeats across your whole range.
+              We won&apos;t bore you with too much theory — just the bare
+              minimum so the exercises make sense. Every sound you sing is a{" "}
+              <Text as="span" color="text-1" className="font-medium">
+                note
+              </Text>
+              . Notes go in order:{" "}
+              <Text as="span" color="text-1" className="font-medium">
+                A B C D E F G
+              </Text>
+              , then back to A — one step higher. That cycle repeats across your
+              whole range.
             </Text>
           </div>
 
@@ -169,24 +175,31 @@ export function LearnNotesExercise({
               <Text variant="body" color="text-2">
                 This is your voice. Your lowest note is{" "}
                 <Text as="span" color="note-low" className="font-semibold">
-                  {lowest.note}{lowest.octave}
-                </Text>
-                {" "}and your highest is{" "}
+                  {lowest.note}
+                  {lowest.octave}
+                </Text>{" "}
+                and your highest is{" "}
                 <Text as="span" color="note-high" className="font-semibold">
-                  {highest.note}{highest.octave}
-                </Text>.
-                {" "}We use{" "}
-                <Text as="span" color="note-low">warm colors</Text>
-                {" "}for low notes and{" "}
-                <Text as="span" color="note-high">cool colors</Text>
-                {" "}for high ones.
+                  {highest.note}
+                  {highest.octave}
+                </Text>
+                . We use{" "}
+                <Text as="span" color="note-low">
+                  warm colors
+                </Text>{" "}
+                for low notes and{" "}
+                <Text as="span" color="note-high">
+                  cool colors
+                </Text>{" "}
+                for high ones.
               </Text>
             )}
 
             {/* Try it */}
             <Text variant="body" color="text-2">
-              Try singing your lowest note and holding it for a moment — then your highest.
-              You&apos;ll hear these at the start and end of the glide exercises coming up.
+              Try singing your lowest note and holding it for a moment — then
+              your highest. You&apos;ll hear these at the start and end of the
+              glide exercises coming up.
             </Text>
 
             {/* Sharps */}
@@ -194,11 +207,16 @@ export function LearnNotesExercise({
               <Text variant="heading-sm">Sharps (#)</Text>
               <Text variant="body" color="text-2">
                 You might see notes like{" "}
-                <Text as="span" color="text-1" className="font-medium">A#</Text>
-                {" "}or{" "}
-                <Text as="span" color="text-1" className="font-medium">C#</Text>.
-                {" "}A sharp is just a half-step up — so A# sits between A and B.
-                That&apos;s it — you don&apos;t need to think about it beyond that.
+                <Text as="span" color="text-1" className="font-medium">
+                  A#
+                </Text>{" "}
+                or{" "}
+                <Text as="span" color="text-1" className="font-medium">
+                  C#
+                </Text>
+                . A sharp is just a half-step up — so A# sits between A and B.
+                That&apos;s it — you don&apos;t need to think about it beyond
+                that.
               </Text>
             </div>
           </div>
@@ -209,11 +227,19 @@ export function LearnNotesExercise({
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 ml-auto w-full sm:w-auto justify-end">
           {exerciseId > 1 && onPrev && (
-            <Button variant="outline" onClick={onPrev} title="Previous" className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
+            <Button
+              variant="outline"
+              onClick={onPrev}
+              title="Previous"
+              className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
+            >
               ← Prev
             </Button>
           )}
-          <Button onClick={onComplete} className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
+          <Button
+            onClick={onComplete}
+            className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
+          >
             {isLast ? "Complete ✓" : "Next →"}
           </Button>
         </div>
