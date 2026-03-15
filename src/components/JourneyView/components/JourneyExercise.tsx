@@ -13,11 +13,11 @@ import { resolveBandTarget, getSkippedInfoStageIds, getStepInPart, toRoman } fro
 import { ProgressArc } from "./ProgressArc";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { PartCompleteModal } from "./PartCompleteModal";
-import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES, isLastStageOfPart, PART_COMPLETE_CONTENT, PART_TITLES } from "@/constants/journey";
+import { JOURNEY_STAGES, TOTAL_JOURNEY_STAGES, isLastStageOfPart, getNextStageId, PART_COMPLETE_CONTENT, PART_TITLES } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { findClosestBand, isInTune, lipRollCredit, matchesBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 import type { Settings } from "@/hooks/useSettings";
 
 export function JourneyExercise({
@@ -152,7 +152,7 @@ export function JourneyExercise({
 
   // Auto-show info modal before exercise (breathwork always; others unless user skipped)
   useEffect(() => {
-    if (stage.stageTypeId === "intro") return;
+    if (stage.stageTypeId === "learn") return;
     if (stage.stageTypeId === "breathwork") {
       setShowInfoModal(true);
       return;
@@ -164,8 +164,8 @@ export function JourneyExercise({
   // Prefetch next page so it’s ready when the modal closes
   useEffect(() => {
     if (partCompleteData !== null) {
-      const nextId = stageId + 1;
-      if (nextId <= TOTAL_JOURNEY_STAGES) {
+      const nextId = getNextStageId(stageId);
+      if (nextId !== null) {
         router.prefetch(`/journey/${nextId}`);
       } else {
         router.prefetch("/");
@@ -340,7 +340,9 @@ export function JourneyExercise({
         tip: content.tip,
       });
     } else {
-      navigateTo(stageId + 1);
+      const nextId = getNextStageId(stageId);
+      if (nextId !== null) navigateTo(nextId);
+      else onBack();
     }
   }
 
@@ -352,8 +354,9 @@ export function JourneyExercise({
   }
 
   function doAdvance() {
-    if (stageId < TOTAL_JOURNEY_STAGES) {
-      navigateTo(stageId + 1);
+    const nextId = getNextStageId(stageId);
+    if (nextId !== null) {
+      navigateTo(nextId);
     } else {
       onBack();
     }
@@ -458,7 +461,7 @@ export function JourneyExercise({
         <span className="text-xs sm:text-sm text-white/80 font-medium truncate min-w-0">
           {stage.title}
         </span>
-        {stage.stageTypeId !== "intro" && (
+        {stage.stageTypeId !== "learn" && (
           <span className="ml-auto">
             <InfoButton onClick={() => setShowInfoModal(true)} />
           </span>
@@ -466,10 +469,9 @@ export function JourneyExercise({
       </div>
 
       {/* Info modal — re-open from exercise (i) button — skip for intro */}
-      {stage.stageTypeId !== "intro" && showInfoModal && (
+      {stage.stageTypeId !== "learn" && showInfoModal && (
         <ExerciseInfoModal
           stageId={stageId}
-          settings={settings}
           onStart={() => setShowInfoModal(false)}
           onDismiss={() => setShowInfoModal(false)}
           showDontShowAgain={stage.stageTypeId !== "breathwork"}
@@ -477,7 +479,7 @@ export function JourneyExercise({
       )}
 
       {/* ── Main content: intro, breathwork, or canvas for exercises ─── */}
-      {stage.stageTypeId === "intro" ? (
+      {stage.stageTypeId === "learn" ? (
         <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="max-w-lg mx-auto px-5 py-6 flex flex-col gap-6">
             {/* Part header — shown for every learning section */}
@@ -551,7 +553,7 @@ export function JourneyExercise({
                 ? { bands: exerciseBands, accept: rangeAccept }
                 : undefined
             }
-            showChakraLabels={stage.part === 9}
+
             lipRollMode={stage.technique === "lip-rolls"}
           />
         )}
@@ -636,7 +638,7 @@ export function JourneyExercise({
                         style={{ color: `${closestBand.color}cc` }}
                       >
                         {locked ? "✓ " : "→ "}
-                        {closestBand.isChakraSlot && stage.part < 11
+                        {closestBand.isSlot
                           ? `${closestBand.note}${closestBand.octave}`
                           : closestBand.name}
                       </div>
@@ -710,7 +712,7 @@ export function JourneyExercise({
 
       {/* ── Bottom panel ──────────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">
-        {stage.stageTypeId === "intro" ? (
+        {stage.stageTypeId === "learn" ? (
           <div className="flex items-center gap-2 sm:gap-3 ml-auto w-full sm:w-auto justify-end">
             {stageId > 1 && onPrev && (
               <Button variant="outline" onClick={goToPrevStage} title="Previous" className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">

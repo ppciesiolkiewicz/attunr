@@ -9,8 +9,8 @@ import { PART_7_STAGES } from "./part7";
 import { PART_8_STAGES } from "./part8";
 import { PART_9_STAGES } from "./part9";
 import { PART_10_STAGES } from "./part10";
-import { PART_11_STAGES } from "./part11";
-import { PART_12_STAGES } from "./part12";
+// import { PART_11_STAGES } from "./part11"; // Chakra exercises — temporarily removed
+// import { PART_12_STAGES } from "./part12"; // Chakra exercises — temporarily removed
 import { PART_13_STAGES } from "./part13";
 import { PART_14_STAGES } from "./part14";
 import { PART_15_STAGES } from "./part15";
@@ -28,7 +28,7 @@ export type {
   SustainNoteConfig,
   SlideConfig,
   BaseJourneyStage,
-  IntroStage,
+  LearnStage,
   PitchDetectionStage,
   PitchDetectionSlideStage,
   BreathworkStage,
@@ -45,8 +45,8 @@ export const JOURNEY_STAGES: JourneyStage[] = [
   ...PART_8_STAGES,
   ...PART_9_STAGES,
   ...PART_10_STAGES,
-  ...PART_11_STAGES,
-  ...PART_12_STAGES,
+  // ...PART_11_STAGES, // Chakra exercises — temporarily removed
+  // ...PART_12_STAGES, // Chakra exercises — temporarily removed
   ...PART_13_STAGES,
   ...PART_14_STAGES,
   ...PART_15_STAGES,
@@ -70,8 +70,8 @@ export const PART_TITLES: Record<number, string> = {
   8: "The Open AH",
   9: "Breath & Body",
   10: "Sequences & Range",
-  11: "Chakras — Earth",
-  12: "Chakras — Sky",
+  // 11: "Chakras — Earth", // Temporarily removed
+  // 12: "Chakras — Sky",   // Temporarily removed
   13: "Forward EH",
   14: "EH Mastery",
   15: "Warmup III",
@@ -85,12 +85,20 @@ export const PART_TITLES: Record<number, string> = {
 /** Last stage id of each part (1–20) */
 export const LAST_STAGE_ID_PER_PART: Record<number, number> = {
   1: 1, 2: 7, 3: 13, 4: 19, 5: 25, 6: 31, 7: 37, 8: 43, 9: 49, 10: 55,
-  11: 61, 12: 67, 13: 73, 14: 79, 15: 85, 16: 91, 17: 97, 18: 103, 19: 109, 20: 116,
+  // 11: 61, 12: 67, // Temporarily removed
+  13: 73, 14: 79, 15: 85, 16: 91, 17: 97, 18: 103, 19: 109, 20: 116,
 };
 
 export function isLastStageOfPart(stageId: number): boolean {
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId);
   return stage ? LAST_STAGE_ID_PER_PART[stage.part] === stageId : false;
+}
+
+/** Find the next available stage after the given ID (handles gaps from removed parts). */
+export function getNextStageId(currentId: number): number | null {
+  const idx = JOURNEY_STAGES.findIndex((s) => s.id === currentId);
+  if (idx < 0 || idx >= JOURNEY_STAGES.length - 1) return null;
+  return JOURNEY_STAGES[idx + 1].id;
 }
 
 export const PART_COMPLETE_CONTENT: Record<
@@ -137,14 +145,8 @@ export const PART_COMPLETE_CONTENT: Record<
     learned: "Multi-tone sequences with different vowels — U, Hum, AH, and OO across your expanding range.",
     tip: "Sequences prepare you for real singing. Try connecting them to songs you enjoy.",
   },
-  11: {
-    learned: "The four Earth chakras — Root (LAM), Sacral (VAM), Solar Plexus (RAM), Heart (YAM) — and their seed mantras.",
-    tip: "Mantras work best when you sing slowly and intentionally. Feel where each sound lands.",
-  },
-  12: {
-    learned: "The three Sky chakras — Throat (HAM), Third Eye (OM), Crown (AH) — and the full seven-chakra sequence.",
-    tip: "The full chakra sequence is a beautiful meditation. Return to it whenever you want to centre yourself.",
-  },
+  // 11: { learned: "...", tip: "..." }, // Temporarily removed
+  // 12: { learned: "...", tip: "..." }, // Temporarily removed
   13: {
     learned: "The forward EH vowel (as in 'bed'), OH → EH vowel flow, and forward resonance placement.",
     tip: "Forward resonance helps with projection. Practice EH when you want your voice to carry.",

@@ -1,15 +1,15 @@
 "use client";
 
-import { BAND_ID_ORDER, CHAKRAS } from "@/constants/chakras";
+import { SLOTS, SLOT_ORDER } from "@/constants/tone-slots";
 
-const CHAKRA_COLORS = BAND_ID_ORDER.map(
-  (id) => CHAKRAS.find((c) => c.id === id)!.color,
+const SLOT_COLORS = SLOT_ORDER.map(
+  (id) => SLOTS.find((s) => s.id === id)!.color,
 );
 
-export function ChakraSpectrum() {
+export function ToneSpectrum() {
   return (
     <div className="flex items-center gap-2.5">
-      {CHAKRA_COLORS.map((color, i) => (
+      {SLOT_COLORS.map((color, i) => (
         <div
           key={i}
           className="rounded-full"

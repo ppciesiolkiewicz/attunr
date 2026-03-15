@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { JourneyList } from "./components/JourneyList";
 import type { Settings } from "@/hooks/useSettings";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 
 interface JourneyViewProps {
   settings: Settings;

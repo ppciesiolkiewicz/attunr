@@ -5,7 +5,7 @@ import PitchCanvas from "./PitchCanvas";
 import TabInfoModal, { InfoButton, HeadphonesNotice } from "./TabInfoModal";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { findClosestBand, isInTune } from "@/lib/pitch";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 import type { Settings } from "@/hooks/useSettings";
 
 const STORAGE_KEY = "attunr.exploreInfoSeen";
@@ -61,9 +61,9 @@ export default function TrainView({
     [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
 
-  // Only show chakra-slot bands as buttons (avoid 13+ buttons for all notes)
-  const chakraSlotBands = useMemo(
-    () => allBands.filter((b) => b.isChakraSlot),
+  // Only show slot bands as buttons (avoid 13+ buttons for all notes)
+  const slotBands = useMemo(
+    () => allBands.filter((b) => b.isSlot),
     [allBands],
   );
 
@@ -128,14 +128,14 @@ export default function TrainView({
       {/* ── Bottom panel ─────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-3 pb-4 flex flex-col gap-3">
         <div className="flex flex-wrap gap-2 justify-center">
-          {chakraSlotBands.map((band) => {
+          {slotBands.map((band) => {
             const isPlaying = playingId === band.id;
             const isActive = locked && closestBand?.id === band.id;
             return (
               <button
                 key={band.id}
                 onClick={() => handlePlay(band)}
-                title={`${band.name} — ${band.frequencyHz} Hz\n${band.description ?? ""}`}
+                title={`${band.name} — ${band.frequencyHz} Hz`}
                 className="cursor-pointer flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all"
                 style={{
                   borderColor: isActive || isPlaying ? band.color : `${band.color}40`,

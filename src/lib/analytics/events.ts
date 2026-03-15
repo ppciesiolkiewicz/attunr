@@ -23,8 +23,8 @@ export const analytics = {
 
   // Explore & tone
   exploreViewed: () => capture("explore_viewed"),
-  tonePlayed: (chakraId: string, source: "journey" | "explore") =>
-    capture("tone_played", { chakra_id: chakraId, source }),
+  tonePlayed: (slotId: string, source: "journey" | "explore") =>
+    capture("tone_played", { slot_id: slotId, source }),
 
   // Articles
   articleViewed: (slug: string, title: string) =>

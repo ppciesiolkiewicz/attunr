@@ -1,18 +1,9 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-import type { ChakraId } from "@/constants/chakras";
 
-/** Binaural beat frequency (Hz) per chakra — difference between L and R ears */
-const BEAT_HZ: Record<ChakraId, number> = {
-  "root":        3,   // delta — grounding
-  "sacral":      6,   // theta — creativity
-  "solar-plexus":10,  // alpha — confidence
-  "heart":       8,   // alpha — calm
-  "throat":      14,  // alpha/beta — clarity
-  "third-eye":   6,   // theta — intuition
-  "crown":       4,   // theta — expanded awareness
-};
+/** Fixed binaural beat offset (Hz) — 6 Hz theta for calming/somatic effect */
+const BINAURAL_BEAT_HZ = 6;
 
 const TONE_DURATION_MS = 1800;
 const FADE_IN_S  = 0.02;
@@ -37,27 +28,24 @@ export function useTonePlayer() {
   }, []);
 
   /**
-   * Play a tone. When chakraId + binaural=true, renders a binaural pair:
+   * Play a tone. When binaural=true, renders a binaural pair:
    *   left ear  → frequencyHz
-   *   right ear → frequencyHz + BEAT_HZ[chakraId]
-   * Falls back to mono sine when binaural=false or chakraId is not provided.
+   *   right ear → frequencyHz + BINAURAL_BEAT_HZ
+   * Falls back to mono sine when binaural=false.
    */
   const playTone = useCallback(
     (
       frequencyHz: number,
-      options?: { chakraId?: ChakraId; binaural?: boolean; durationMs?: number }
+      options?: { binaural?: boolean; durationMs?: number }
     ) => {
       const ctx = getCtx();
       const {
-        chakraId,
         binaural = true,
         durationMs = TONE_DURATION_MS,
       } = options ?? {};
 
       const now = ctx.currentTime;
       const dur = durationMs / 1000;
-      const beatHz = chakraId ? BEAT_HZ[chakraId] : 0;
-      const useBinaural = binaural && beatHz > 0;
 
       // Shared gain envelope (applied after merge)
       const masterGain = ctx.createGain();
@@ -67,7 +55,7 @@ export function useTonePlayer() {
       masterGain.gain.linearRampToValueAtTime(0, now + dur);
       masterGain.connect(ctx.destination);
 
-      if (useBinaural) {
+      if (binaural) {
         // Stereo: L = base, R = base + beat
         const merger = ctx.createChannelMerger(2);
         merger.connect(masterGain);
@@ -82,7 +70,7 @@ export function useTonePlayer() {
 
         const oscR = ctx.createOscillator();
         oscR.type = "sine";
-        oscR.frequency.value = frequencyHz + beatHz;
+        oscR.frequency.value = frequencyHz + BINAURAL_BEAT_HZ;
         const gR = ctx.createGain();
         gR.gain.value = 1;
         oscR.connect(gR);
@@ -115,7 +103,6 @@ export function useTonePlayer() {
         holdStartMs?: number;
         slideDurationMs?: number;
         holdEndMs?: number;
-        chakraId?: ChakraId;
         binaural?: boolean;
       }
     ) => {
@@ -124,7 +111,6 @@ export function useTonePlayer() {
         holdStartMs = 400,
         slideDurationMs = 2500,
         holdEndMs = 600,
-        chakraId,
         binaural = true,
       } = options ?? {};
 
@@ -132,8 +118,6 @@ export function useTonePlayer() {
       const totalDur = (holdStartMs + slideDurationMs + holdEndMs) / 1000;
       const holdStartS = holdStartMs / 1000;
       const slideS = slideDurationMs / 1000;
-      const beatHz = chakraId ? BEAT_HZ[chakraId] : 0;
-      const useBinaural = binaural && beatHz > 0;
 
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, now);
@@ -148,7 +132,7 @@ export function useTonePlayer() {
         osc.frequency.exponentialRampToValueAtTime(endHz, now + holdStartS + slideS);
       }
 
-      if (useBinaural) {
+      if (binaural) {
         const merger = ctx.createChannelMerger(2);
         merger.connect(masterGain);
 
@@ -162,7 +146,7 @@ export function useTonePlayer() {
 
         const oscR = ctx.createOscillator();
         oscR.type = "sine";
-        scheduleSlide(oscR, fromHz + beatHz, toHz + beatHz);
+        scheduleSlide(oscR, fromHz + BINAURAL_BEAT_HZ, toHz + BINAURAL_BEAT_HZ);
         const gR = ctx.createGain();
         gR.gain.value = 1;
         oscR.connect(gR);

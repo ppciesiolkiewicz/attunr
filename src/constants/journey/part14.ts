@@ -11,7 +11,7 @@ export const PART_14_STAGES: JourneyStage[] = [
     technique: "lip-rolls",
     notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
     instruction:
-      "Quick lip roll warmup — slide from high to low. Loosen up after the chakra and EH work.",
+      "Quick lip roll warmup — slide from high to low. Loosen up after the previous work.",
   },
   {
     id: 75,

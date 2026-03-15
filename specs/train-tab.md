@@ -41,7 +41,7 @@ This is the default landing view after onboarding (before Journey is introduced)
 
 Info button only. No mode toggle, no voice type selector.
 
-Frequencies are always scaled to the user's detected vocal range (`getChakraFrequenciesForRange`).
+Frequencies are always scaled to the user's detected vocal range (`getScaleNotesForRange`).
 
 ---
 
@@ -59,7 +59,7 @@ Frequencies are always scaled to the user's detected vocal range (`getChakraFreq
 Shown while mic detects a pitch:
 - Large Hz readout coloured by closest band
 - Smaller line: `✓ 528 Hz` (in tune) or `→ 528 Hz` (approaching)
-- No chakra/band name shown
+- No slot/band name shown
 
 ---
 
@@ -69,7 +69,7 @@ One pill per tone. Each shows:
 - Play icon
 - Frequency in Hz (e.g. `528 Hz`)
 
-No chakra name. Playing state and in-tune glow both apply.
+No slot name. Playing state and in-tune glow both apply.
 
 ---
 
@@ -77,7 +77,7 @@ No chakra name. Playing state and in-tune glow both apply.
 
 - Mode toggle (Absolute / By voice removed)
 - Voice type selector
-- Chakra / band names on buttons or overlay
+- Slot / band names on buttons or overlay
 - Tuning selector (moved to Settings)
 - Completion indicators
 - Step-by-step instructions

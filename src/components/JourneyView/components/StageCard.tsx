@@ -2,7 +2,6 @@
 
 import {
   getStageDisplayColors,
-  getStageSlotChakra,
 } from "../utils";
 import { BookIcon } from "./BookIcon";
 import type { JourneyStage } from "@/constants/journey";
@@ -24,7 +23,6 @@ export function StageCard({
 
   const stageColors = getStageDisplayColors(stage);
   const primaryColor = stageColors[0] ?? "#7c3aed";
-  const slotChakra = getStageSlotChakra(stage);
 
   return (
     <button
@@ -64,7 +62,7 @@ export function StageCard({
                 : "rgba(255,255,255,0.95)",
             }}
           >
-            {stage.stageTypeId === "intro" && (
+            {stage.stageTypeId === "learn" && (
               <BookIcon
                 className="shrink-0 opacity-70"
                 style={{
@@ -78,41 +76,8 @@ export function StageCard({
           </span>
         </div>
 
-        {slotChakra &&
-          stage.part === 9 &&
-          stage.stageTypeId === "pitch-detection" &&
-          stage.technique !== "lip-rolls" && (
-            <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span
-                className="text-xs font-mono font-medium tracking-wider"
-                style={{
-                  color: isUnlocked
-                    ? `${primaryColor}`
-                    : "rgba(255,255,255,0.55)",
-                }}
-              >
-                {slotChakra.mantra}
-              </span>
-              <span className="text-xs text-white/58">·</span>
-              <span className="text-xs text-white/72">
-                {slotChakra.element}
-              </span>
-              <span className="text-xs text-white/58">·</span>
-              <span className="text-xs text-white/78">
-                {slotChakra.description}
-              </span>
-            </div>
-          )}
-        {stage.stageTypeId === "intro" && stage.cardCue && (
-          <p className="text-xs text-white/68">
-            {stage.cardCue}
-          </p>
-        )}
-        {stage.stageTypeId === "breathwork" && stage.cardCue && (
-          <p className="text-xs text-white/68">{stage.cardCue}</p>
-        )}
-        {(stage.stageTypeId === "pitch-detection" || stage.stageTypeId === "pitch-detection-slide") && stage.subtitle && (
-          <p className="text-xs text-white/68">{stage.subtitle}</p>
+        {(stage.cardCue ?? stage.subtitle) && (
+          <p className="text-xs text-white/68">{stage.cardCue ?? stage.subtitle}</p>
         )}
       </div>
 

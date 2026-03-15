@@ -7,7 +7,7 @@ import {
   matchesBandTarget,
   pitchConfidence,
 } from "@/lib/pitch";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 
 interface PitchDot {
   hz: number;
@@ -29,8 +29,6 @@ interface PitchCanvasProps {
   /** When set, use matchesBandTarget(hz, bands, accept) instead of isInTune. For chest/head exercises. */
   inTuneOverride?: InTuneOverride;
   onBandClick?: (band: Band) => void;
-  /** When true, show chakra name labels (e.g. "HEART CHAKRA") on chakra-slot bands. False = note + Hz only. */
-  showChakraLabels?: boolean;
   /** When true, use generous tolerance for dot rendering so lip roll exercises look more encouraging. */
   lipRollMode?: boolean;
 }
@@ -57,10 +55,8 @@ const PAD_BOTTOM_MIN = 50;
  * screens so the bands stay tightly grouped rather than filling all space.
  */
 const MAX_SLOT_H = 68;
-/** Left padding before dashed band line when showing chakra labels */
-const LINE_START_X_CHAKRA = 118;
-/** Left padding before dashed band line when showing note + Hz only */
-const LINE_START_X_PLAIN = 82;
+/** Left padding before dashed band line */
+const LINE_START_X = 82;
 
 /**
  * Compute the Y positions of the lowest (bottom) and highest (top) bands given
@@ -149,7 +145,6 @@ export default function PitchCanvas({
   highlightIds,
   inTuneOverride,
   onBandClick,
-  showChakraLabels = false,
   lipRollMode = false,
 }: PitchCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -158,7 +153,6 @@ export default function PitchCanvas({
   const bandsRef = useRef<Band[]>([]);
   const highlightIdsRef = useRef<string[] | undefined>(highlightIds);
   const inTuneOverrideRef = useRef<InTuneOverride | undefined>(inTuneOverride);
-  const showChakraLabelsRef = useRef(showChakraLabels);
   const lipRollModeRef = useRef(lipRollMode);
   const lastDotMs = useRef(0);
   const rafRef = useRef<number | null>(null);
@@ -181,10 +175,6 @@ export default function PitchCanvas({
   useEffect(() => {
     inTuneOverrideRef.current = inTuneOverride;
   }, [inTuneOverride]);
-
-  useEffect(() => {
-    showChakraLabelsRef.current = showChakraLabels;
-  }, [showChakraLabels]);
 
   useEffect(() => {
     lipRollModeRef.current = lipRollMode;
@@ -271,15 +261,13 @@ export default function PitchCanvas({
       ctx.fillStyle = grad;
       ctx.fillRect(0, cy - bh, W, bh * 2);
 
-      // Dashed centre line (starts after labels to avoid overlap)
-      const showAsChakra = showChakraLabelsRef.current && band.isChakraSlot;
-      const lineStartX = showAsChakra ? LINE_START_X_CHAKRA : LINE_START_X_PLAIN;
+      // Dashed centre line
       ctx.save();
       ctx.setLineDash([3, 7]);
       ctx.strokeStyle = `rgba(${band.rgb}, ${(active ? 0.78 : 0.6) * dim})`;
       ctx.lineWidth = active ? 1.5 : 1;
       ctx.beginPath();
-      ctx.moveTo(lineStartX, cy);
+      ctx.moveTo(LINE_START_X, cy);
       ctx.lineTo(W, cy);
       ctx.stroke();
       ctx.restore();
@@ -293,21 +281,10 @@ export default function PitchCanvas({
       ctx.fillText(band.note, 12, cy + 3);
       const noteW = ctx.measureText(band.note).width;
 
-      if (showAsChakra) {
-        // Chakra name + "Chakra" suffix — only for chakra-slot bands in Part 9
-        ctx.font = `600 12px system-ui, sans-serif`;
-        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.95 : 0.88) * dim})`;
-        ctx.fillText(band.name.toUpperCase() + " CHAKRA", 32, cy - 3);
-
-        ctx.font = `400 11px system-ui, sans-serif`;
-        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.82 : 0.65) * dim})`;
-        ctx.fillText(`${band.frequencyHz} Hz`, 32, cy + 9);
-      } else {
-        // Hz label — positioned after the note letter with a gap
-        ctx.font = `400 11px system-ui, sans-serif`;
-        ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.82 : 0.65) * dim})`;
-        ctx.fillText(`${band.frequencyHz} Hz`, 12 + noteW + 9, cy + 1);
-      }
+      // Hz label — positioned after the note letter with a gap
+      ctx.font = `400 11px system-ui, sans-serif`;
+      ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.82 : 0.65) * dim})`;
+      ctx.fillText(`${band.frequencyHz} Hz`, 12 + noteW + 9, cy + 1);
     }
 
     // ── Accumulate trail dot (every DOT_INTERVAL_MS) ─────────────────────────

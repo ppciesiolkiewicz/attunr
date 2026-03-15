@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { deriveVoiceType, hzToNoteName } from "@/lib/pitch";
 import type { VoiceTypeId } from "@/constants/voice-types";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
-import { ChakraSpectrum } from "./components/ChakraSpectrum";
+import { ToneSpectrum } from "./components/ToneSpectrum";
 import { WelcomePhase } from "./components/WelcomePhase";
 import { DetectFlowPhase } from "./components/DetectFlowPhase";
 
@@ -158,7 +158,7 @@ export default function OnboardingModal({
             "0 32px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.04)",
         }}
       >
-        <ChakraSpectrum />
+        <ToneSpectrum />
 
         <div>
           <h1 className="text-[2.1rem] font-semibold tracking-tight text-white leading-none">

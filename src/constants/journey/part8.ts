@@ -5,7 +5,7 @@ export const PART_8_STAGES: JourneyStage[] = [
   {
     id: 38,
     part: 8,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "The open vowel — AH",
     technique: "sustain",
     cardCue: "Open your voice with the most natural vowel",

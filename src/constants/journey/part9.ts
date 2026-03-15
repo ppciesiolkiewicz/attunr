@@ -5,7 +5,7 @@ export const PART_9_STAGES: JourneyStage[] = [
   {
     id: 44,
     part: 9,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Puffy cheeks",
     technique: "puffy-cheeks",
     cardCue: "Build breath control with a playful technique",

@@ -5,7 +5,7 @@ export const PART_13_STAGES: JourneyStage[] = [
   {
     id: 68,
     part: 13,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Forward resonance — EH",
     technique: "sustain",
     cardCue: "Place your voice forward with the Spanish-style EH vowel",

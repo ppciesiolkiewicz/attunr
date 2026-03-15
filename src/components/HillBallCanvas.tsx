@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useCallback } from "react";
 import { findClosestBand, matchesBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 
 interface HillBallCanvasProps {
   bands: Band[];

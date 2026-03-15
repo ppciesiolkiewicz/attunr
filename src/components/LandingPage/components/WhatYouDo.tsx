@@ -5,7 +5,7 @@ const PRACTICES = [
   { label: "Rhythm", color: "#f97316" },
 ] as const;
 
-const CHAKRA_COLORS = [
+const TONE_COLORS = [
   "#ef4444", "#f97316", "#eab308", "#22c55e",
   "#3b82f6", "#6366f1", "#a855f7",
 ];
@@ -25,7 +25,7 @@ export function WhatYouDo() {
       <div className="relative max-w-2xl mx-auto text-center">
         {/* Spectrum line */}
         <div className="flex justify-center gap-1 mb-12">
-          {CHAKRA_COLORS.map((color) => (
+          {TONE_COLORS.map((color) => (
             <div
               key={color}
               className="w-8 sm:w-10 h-0.5 rounded-full"

@@ -5,7 +5,7 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 2,
     part: 2,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Chest and head voice",
     technique: "sustain",
     cardCue: "Find your chest and head voice",
@@ -47,7 +47,7 @@ export const PART_2_STAGES: JourneyStage[] = [
   {
     id: 6,
     part: 2,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Lip rolls",
     technique: "lip-rolls",
     cardCue: "Gentle warmup to relax your jaw and warm your voice",

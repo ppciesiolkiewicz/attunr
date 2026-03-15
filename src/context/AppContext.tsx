@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 import type { Settings } from "@/hooks/useSettings";
 
 export interface AppContextValue {

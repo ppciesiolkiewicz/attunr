@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useCallback } from "react";
 import { findClosestBand, isInTune, matchesBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 import type { InTuneOverride } from "./PitchCanvas";
 
 interface BalanceBallCanvasProps {

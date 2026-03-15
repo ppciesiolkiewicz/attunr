@@ -5,7 +5,7 @@ export const PART_16_STAGES: JourneyStage[] = [
   {
     id: 86,
     part: 16,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Bright vowel — EE",
     technique: "sustain",
     cardCue: "The narrowest vowel — lips spread, tongue forward, bright resonance",

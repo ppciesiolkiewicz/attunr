@@ -19,7 +19,7 @@ each choice so future contributors can understand trade-offs.
 - **Why v4**: No `tailwind.config.js` required. Design tokens live in
   `globals.css` via `@theme {}`. PostCSS-only pipeline via
   `@tailwindcss/postcss`.
-- Custom chakra colours are defined as CSS custom properties in `@theme` and
+- Custom tone slot colours are defined as CSS custom properties in `@theme` and
   used as utility classes throughout.
 - Animations (glow-pulse, fade-in, spin) are defined as `@keyframes` in
   `globals.css` and applied with plain class names — no arbitrary Tailwind
@@ -66,14 +66,11 @@ each choice so future contributors can understand trade-offs.
 ## Frequency math
 
 ```typescript
-// Voice-based frequency for chakra i:
-hz = chakra.baseHz × voice.sacredFactor × tuningFactor
+// 7 tone slots are evenly spaced across the user's detected vocal range.
+// getScaleNotesForRange(lowHz, highHz) builds the full chromatic scale
+// and marks every slot with isSlot: true.
 
-// tuningFactor:
-//   A432: 432 / 440 ≈ 0.9818
-//   A440: 1.0
-
-// In-tune tolerance: ±3 % (~50 cents)
+// In-tune tolerance: ±3 % (~50 cents), ±8 % for lip rolls
 inTune = |detected − target| / target ≤ 0.03
 ```
 
@@ -85,22 +82,26 @@ Keep files small; split large configs by logical unit (e.g. journey stages per p
 src/
 ├── app/
 │   ├── layout.tsx            — root layout, metadata, global CSS import
-│   ├── page.tsx              — root route (Journey list)
+│   ├── page.tsx              — root route (landing or app)
 │   ├── globals.css           — Tailwind v4 import + @theme + @keyframes
-│   ├── journey/[id]/page.tsx — individual Journey stage route
-│   └── explore/page.tsx      — Explore route (same canvas as Train)
+│   └── journey/[id]/page.tsx — individual Journey stage route
 ├── components/
-│   ├── AppShell.tsx          — app-level shell: nav, settings, onboarding
+│   ├── AppShell/             — app-level shell: nav, settings, onboarding, mic gate
 │   ├── TrainView.tsx         — free-form practice (pitch canvas + tone buttons)
-│   ├── JourneyView.tsx       — guided stages (StageCard, ExerciseInfoModal, etc.)
-│   └── PitchCanvas.tsx       — pure canvas component; owns RAF loop and dot trail
+│   ├── JourneyView/          — guided stages (StageCard, JourneyExercise, etc.)
+│   ├── PitchCanvas.tsx       — scrolling dot-trail canvas (sequences, slides)
+│   ├── BalanceBallCanvas.tsx  — ball-on-hill canvas (single-note exercises)
+│   └── HillBallCanvas.tsx    — slope canvas (range exercises: Low U, Hoo Hoo)
 ├── constants/
-│   ├── chakras.ts            — CHAKRAS[], VOICE_TYPES[], getChakraFrequencies(),
-│   │                           isInTune(), findClosestChakra()
-│   └── journey/              — 49-stage config split by part; types.ts for JourneyStage
-└── hooks/
-    ├── usePitchDetection.ts  — ml5 CREPE lifecycle (idle → mic → model → poll)
-    └── useTonePlayer.ts      — Web Audio oscillator with fade envelope
+│   ├── tone-slots.ts         — SlotId, Slot, Band, SLOTS, SLOT_ORDER, re-exports
+│   ├── chakras.ts            — ChakraId, Chakra, CHAKRAS (chakra domain data only)
+│   └── journey/              — 116-stage config split by part; types.ts for JourneyStage
+├── hooks/
+│   ├── usePitchDetection.ts  — ml5 CREPE lifecycle (idle → mic → model → poll)
+│   └── useTonePlayer.ts      — Web Audio binaural oscillator with fade envelope
+└── lib/
+    ├── pitch.ts              — isInTune, findClosestBand, matchesBandTarget
+    └── vocal-scale.ts        — getScaleNotesForRange (builds bands from Hz range)
 ```
 
 ## Dependencies

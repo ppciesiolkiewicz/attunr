@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useRef, useEffect } from "react";
 import HillBallCanvas from "./HillBallCanvas";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 
 // ── Mock bands (simulating 3 low-range notes for Low U, 3 high-range for Hoo Hoo) ──
 
@@ -15,8 +15,8 @@ const LOW_BANDS: Band[] = [
     color: "#ef4444",
     rgb: "239, 68, 68",
     name: "Low C",
-    isChakraSlot: true,
-    chakraId: "root",
+    isSlot: true,
+    slotId: "slot-1",
   },
   {
     id: "low-2",
@@ -27,8 +27,8 @@ const LOW_BANDS: Band[] = [
     color: "#f97316",
     rgb: "249, 115, 22",
     name: "Low D",
-    isChakraSlot: true,
-    chakraId: "sacral",
+    isSlot: true,
+    slotId: "slot-2",
   },
   {
     id: "low-3",
@@ -39,8 +39,8 @@ const LOW_BANDS: Band[] = [
     color: "#eab308",
     rgb: "234, 179, 8",
     name: "Low E",
-    isChakraSlot: true,
-    chakraId: "solar-plexus",
+    isSlot: true,
+    slotId: "slot-3",
   },
 ];
 
@@ -54,8 +54,8 @@ const HIGH_BANDS: Band[] = [
     color: "#22c55e",
     rgb: "34, 197, 94",
     name: "High E",
-    isChakraSlot: true,
-    chakraId: "heart",
+    isSlot: true,
+    slotId: "slot-4",
   },
   {
     id: "high-2",
@@ -66,8 +66,8 @@ const HIGH_BANDS: Band[] = [
     color: "#3b82f6",
     rgb: "59, 130, 246",
     name: "High F#",
-    isChakraSlot: true,
-    chakraId: "throat",
+    isSlot: true,
+    slotId: "slot-5",
   },
   {
     id: "high-3",
@@ -78,8 +78,8 @@ const HIGH_BANDS: Band[] = [
     color: "#8b5cf6",
     rgb: "139, 92, 246",
     name: "High Ab",
-    isChakraSlot: true,
-    chakraId: "third-eye",
+    isSlot: true,
+    slotId: "slot-6",
   },
 ];
 

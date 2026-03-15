@@ -1,35 +1,9 @@
 import { Note, Scale } from "tonal";
-import type { Chakra, ChakraId, Band } from "@/constants/chakras";
-import { CHAKRAS, BAND_ID_ORDER } from "@/constants/chakras";
-import { VOICE_TYPES } from "@/constants/voice-types";
-import type { VoiceTypeId } from "@/constants/voice-types";
-import { TUNING_A_HZ } from "@/constants/tuning";
-import type { TuningStandard, FrequencyBase } from "@/constants/tuning";
-import { hzToMidi, midiToHz, fitToRange, NOTE_NAMES } from "@/lib/pitch";
+import type { SlotId, Band } from "@/constants/tone-slots";
+import { SLOTS, SLOT_ORDER } from "@/constants/tone-slots";
+import { hzToMidi, midiToHz, NOTE_NAMES } from "@/lib/pitch";
 import { parseRgb, lerpColor, toHex } from "@/lib/color";
-
-export function getScaleNotes(
-  base: FrequencyBase,
-  voiceId: VoiceTypeId,
-  tuning: TuningStandard
-): Chakra[] {
-  const tuningScale = TUNING_A_HZ[tuning] / 432;
-
-  if (base === "absolute") {
-    return CHAKRAS.map((c) => ({
-      ...c,
-      frequencyHz: Math.round(c.frequencyHz * tuningScale),
-    }));
-  }
-
-  const voice = VOICE_TYPES.find((v) => v.id === voiceId) ?? VOICE_TYPES[2];
-  const [low, high] = voice.rangeHz;
-
-  return CHAKRAS.map((c) => ({
-    ...c,
-    frequencyHz: Math.round(fitToRange(c.frequencyHz * tuningScale, low, high)),
-  }));
-}
+import type { TuningStandard } from "@/constants/tuning";
 
 /**
  * Build all major-scale MIDI notes spanning the user's detected vocal range.
@@ -68,8 +42,7 @@ function buildScaleMidi(lowHz: number, highHz: number): number[] {
 
 /**
  * Map the user's detected vocal range to all scale notes, with 7 evenly-spaced
- * chakra slots carrying full chakra metadata and interpolated colors for the rest.
- * Returns Band[] sorted low → high.
+ * slots and interpolated colors for the rest. Returns Band[] sorted low → high.
  */
 export function getScaleNotesForRange(
   lowHz: number,
@@ -85,31 +58,31 @@ export function getScaleNotesForRange(
   );
   const slotIndexSet = new Set(slotIndices);
 
-  // Parse chakra RGB values once
-  const chakraRgbs = BAND_ID_ORDER.map((id) => {
-    const chakra = CHAKRAS.find((c) => c.id === id)!;
-    return parseRgb(chakra.rgb);
+  // Parse slot RGB values once
+  const slotRgbs = SLOT_ORDER.map((id) => {
+    const slot = SLOTS.find((s) => s.id === id)!;
+    return parseRgb(slot.rgb);
   });
 
   // Get interpolated color for any band index
   function colorAt(idx: number): { hex: string; rgb: string } {
     if (idx <= slotIndices[0]) {
-      const [r, g, b] = chakraRgbs[0];
+      const [r, g, b] = slotRgbs[0];
       return { hex: toHex(r, g, b), rgb: `${r}, ${g}, ${b}` };
     }
     if (idx >= slotIndices[6]) {
-      const [r, g, b] = chakraRgbs[6];
+      const [r, g, b] = slotRgbs[6];
       return { hex: toHex(r, g, b), rgb: `${r}, ${g}, ${b}` };
     }
     for (let s = 0; s < 6; s++) {
       if (idx >= slotIndices[s] && idx <= slotIndices[s + 1]) {
         const span = slotIndices[s + 1] - slotIndices[s];
         const t = span === 0 ? 0 : (idx - slotIndices[s]) / span;
-        const [r, g, b] = lerpColor(chakraRgbs[s], chakraRgbs[s + 1], t);
+        const [r, g, b] = lerpColor(slotRgbs[s], slotRgbs[s + 1], t);
         return { hex: toHex(r, g, b), rgb: `${r}, ${g}, ${b}` };
       }
     }
-    const [r, g, b] = chakraRgbs[0];
+    const [r, g, b] = slotRgbs[0];
     return { hex: toHex(r, g, b), rgb: `${r}, ${g}, ${b}` };
   }
 
@@ -119,25 +92,20 @@ export function getScaleNotesForRange(
     const octave = Math.floor(midi / 12) - 1;
 
     if (slotIndexSet.has(idx)) {
-      const slotNum = slotIndices.indexOf(idx); // 0-based slot number
-      const chakraId = BAND_ID_ORDER[slotNum];
-      const chakra = CHAKRAS.find((c) => c.id === chakraId)!;
+      const slotNum = slotIndices.indexOf(idx);
+      const slotId = SLOT_ORDER[slotNum];
+      const slot = SLOTS.find((s) => s.id === slotId)!;
       return {
-        id: chakraId,
+        id: slotId,
         midi,
         frequencyHz: hz,
         note: noteName,
         octave,
-        color: chakra.color,
-        rgb: chakra.rgb,
-        name: chakra.name,
-        isChakraSlot: true,
-        chakraId: chakraId as ChakraId,
-        mantra: chakra.mantra,
-        description: chakra.description,
-        longDescription: chakra.longDescription,
-        element: chakra.element,
-        interestingFact: chakra.interestingFact,
+        color: slot.color,
+        rgb: slot.rgb,
+        name: slot.name,
+        isSlot: true,
+        slotId: slotId as SlotId,
       };
     }
 
@@ -151,7 +119,7 @@ export function getScaleNotesForRange(
       color: hex,
       rgb,
       name: `${noteName}${octave}`,
-      isChakraSlot: false,
+      isSlot: false,
     };
   });
 }

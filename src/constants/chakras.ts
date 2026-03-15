@@ -1,3 +1,7 @@
+// ── Chakra domain data ───────────────────────────────────────────────────────
+// Only used by chakra-themed exercises (Parts 11–12, currently commented out).
+// Core app plumbing uses SlotId / Band from tone-slots.ts instead.
+
 export type ChakraId =
   | "root"
   | "sacral"
@@ -18,7 +22,6 @@ export interface Chakra {
   description: string;
   longDescription: string;
   element: string;
-  /** Short interesting fact for Journey stages (used in later exercises) */
   interestingFact?: string;
 }
 
@@ -122,50 +125,3 @@ export const CHAKRAS: Chakra[] = [
     interestingFact: "Crown connects you to what's beyond the individual self — a sense of unity with all that is.",
   },
 ];
-
-/** Chakra IDs ordered from lowest (slot 1) to highest (slot 7). */
-export const BAND_ID_ORDER: ChakraId[] = [
-  "root", "sacral", "solar-plexus", "heart", "throat", "third-eye", "crown",
-];
-
-/** A single note in the user's vocal scale. Chakra slots (7 evenly-spaced) carry full chakra metadata. */
-export interface Band {
-  id: string;
-  midi: number;
-  frequencyHz: number;
-  note: string;
-  octave: number;
-  color: string;
-  rgb: string;
-  name: string;
-  isChakraSlot: boolean;
-  chakraId?: ChakraId;
-  mantra?: string;
-  description?: string;
-  longDescription?: string;
-  element?: string;
-  interestingFact?: string;
-}
-
-// ── Re-exports for backward compatibility ───────────────────────────────────
-
-export { VOICE_TYPES } from "@/constants/voice-types";
-export type { VoiceTypeId, VoiceType } from "@/constants/voice-types";
-
-export { TUNING_OPTIONS, TUNING_A_HZ } from "@/constants/tuning";
-export type { TuningStandard, FrequencyBase } from "@/constants/tuning";
-
-export {
-  hzToMidi,
-  midiToHz,
-  hzToNoteName,
-  deriveVoiceType,
-  isInTune,
-  isInBandRange,
-  matchesBandTarget,
-  findClosestBand,
-  pitchConfidence,
-} from "@/lib/pitch";
-
-export { getScaleNotes, getScaleNotesForRange } from "@/lib/vocal-scale";
-

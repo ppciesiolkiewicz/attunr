@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useRef, useEffect } from "react";
 import BalanceBallCanvas from "./BalanceBallCanvas";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 
 // ── Mock bands ──────────────────────────────────────────────────────────────
 
@@ -14,8 +14,8 @@ const ROOT: Band = {
   color: "#ef4444",
   rgb: "239, 68, 68",
   name: "Root",
-  isChakraSlot: true,
-  chakraId: "root",
+  isSlot: true,
+  slotId: "slot-1",
 };
 
 const SACRAL: Band = {
@@ -27,8 +27,8 @@ const SACRAL: Band = {
   color: "#f97316",
   rgb: "249, 115, 22",
   name: "Sacral",
-  isChakraSlot: true,
-  chakraId: "sacral",
+  isSlot: true,
+  slotId: "slot-2",
 };
 
 const SOLAR: Band = {
@@ -40,8 +40,8 @@ const SOLAR: Band = {
   color: "#eab308",
   rgb: "234, 179, 8",
   name: "Solar Plexus",
-  isChakraSlot: true,
-  chakraId: "solar-plexus",
+  isSlot: true,
+  slotId: "slot-3",
 };
 
 const HEART: Band = {
@@ -53,8 +53,8 @@ const HEART: Band = {
   color: "#22c55e",
   rgb: "34, 197, 94",
   name: "Heart",
-  isChakraSlot: true,
-  chakraId: "heart",
+  isSlot: true,
+  slotId: "slot-4",
 };
 
 const THROAT: Band = {
@@ -66,8 +66,8 @@ const THROAT: Band = {
   color: "#3b82f6",
   rgb: "59, 130, 246",
   name: "Throat",
-  isChakraSlot: true,
-  chakraId: "throat",
+  isSlot: true,
+  slotId: "slot-5",
 };
 
 // ── Simulated-pitch wrapper ─────────────────────────────────────────────────

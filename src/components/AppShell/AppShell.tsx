@@ -12,7 +12,7 @@ import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { AppContext } from "@/context/AppContext";
 import { analytics } from "@/lib/analytics";
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 import { Button } from "@/components/ui";
 import Logo from "../Logo";
 import { SettingsIcon, HamburgerIcon } from "./components/icons";
@@ -47,15 +47,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(band: Band) {
-    playTone(band.frequencyHz, { chakraId: band.chakraId, binaural: true });
+    playTone(band.frequencyHz, { binaural: true });
     analytics.tonePlayed(band.id, pathname?.startsWith("/train") ? "explore" : "journey");
   }
 
   function handlePlaySlide(fromBand: Band, toBand: Band) {
-    playSlide(fromBand.frequencyHz, toBand.frequencyHz, {
-      chakraId: fromBand.chakraId,
-      binaural: true,
-    });
+    playSlide(fromBand.frequencyHz, toBand.frequencyHz, { binaural: true });
   }
 
   function handleOpenSettings() {

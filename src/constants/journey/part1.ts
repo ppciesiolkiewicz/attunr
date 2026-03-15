@@ -1,11 +1,11 @@
-import type { IntroStage } from "./types";
+import type { LearnStage } from "./types";
 
 /** Part 1: Vocal placement (foundation) */
-export const PART_1_STAGES: IntroStage[] = [
+export const PART_1_STAGES: LearnStage[] = [
   {
     id: 1,
     part: 1,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Vocal placement",
     technique: "sustain",
     cardCue: "Discover vocal placement and how it connects voice to body awareness",

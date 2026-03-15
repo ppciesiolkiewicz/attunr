@@ -1,4 +1,4 @@
-const CHAKRA_SPECTRUM = [
+const TONE_SPECTRUM = [
   "#ef4444",
   "#f97316",
   "#eab308",
@@ -42,7 +42,7 @@ export default function Logo({ layout = "horizontal", size = "default", classNam
       className={`inline-flex items-center ${dotGaps[size]} shrink-0`}
       style={{ transform: layout === "horizontal" ? "translateY(2px)" : undefined }}
     >
-      {CHAKRA_SPECTRUM.map((color, i) => (
+      {TONE_SPECTRUM.map((color, i) => (
         <span
           key={i}
           className={`block ${dotSizes[size]} rounded-full opacity-80`}

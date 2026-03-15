@@ -5,7 +5,7 @@ export const PART_4_STAGES: JourneyStage[] = [
   {
     id: 14,
     part: 4,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Humming and resonance",
     technique: "sustain",
     cardCue: "Hum each tone and feel where it resonates",

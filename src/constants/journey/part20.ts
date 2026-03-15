@@ -5,7 +5,7 @@ export const PART_20_STAGES: JourneyStage[] = [
   {
     id: 110,
     part: 20,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Vocal control",
     cardCue: "Combine everything you've learned — full range, all vowels, all techniques",
     instruction:

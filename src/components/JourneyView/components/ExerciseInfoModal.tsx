@@ -1,25 +1,20 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
-import ChakraDetailCard from "@/components/ChakraDetailCard";
+import { useState, useEffect, useRef } from "react";
 import { FarinelliExercise, FARINELLI_ADVICES } from "@/components/FarinelliExercise";
 import { HeadphonesNotice, InfoButton, InfoIcon } from "@/components/TabInfoModal";
 import { Button, CloseButton, Modal, VideoPlaceholder } from "@/components/ui";
 import { JOURNEY_STAGES } from "@/constants/journey";
-import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import {
   addSkippedInfoStageId,
-  getStageChakraIds,
   getStageDisplayColors,
   getStepInPart,
   toRoman,
 } from "../utils";
 import { BookIcon } from "./BookIcon";
-import type { Settings } from "@/hooks/useSettings";
 
 interface ExerciseInfoModalProps {
   stageId: number;
-  settings: Settings;
   onStart: () => void;
   onDismiss: () => void;
   onAdvanceWithoutExercise?: () => void;
@@ -28,7 +23,6 @@ interface ExerciseInfoModalProps {
 
 export function ExerciseInfoModal({
   stageId,
-  settings,
   onStart,
   onDismiss,
   onAdvanceWithoutExercise,
@@ -37,23 +31,8 @@ export function ExerciseInfoModal({
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const stage = JOURNEY_STAGES.find((s) => s.id === stageId)!;
-  const isTechniqueIntro = stage.stageTypeId === "intro";
+  const isLearnStage = stage.stageTypeId === "learn";
 
-  const allBands = useMemo(
-    () =>
-      getScaleNotesForRange(
-        settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131,
-        settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523,
-        settings.tuning,
-      ),
-    [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
-  );
-  const chakraIds = getStageChakraIds(stage);
-  const freqOverrides: Record<string, number> = {};
-  for (const cid of chakraIds) {
-    const band = allBands.find((b) => b.chakraId === cid);
-    if (band) freqOverrides[cid] = band.frequencyHz;
-  }
   const stageColors = getStageDisplayColors(stage);
   const primaryColor = stageColors[0] ?? "#7c3aed";
 
@@ -61,7 +40,7 @@ export function ExerciseInfoModal({
     stage.stageTypeId === "pitch-detection" ? stage.notes[0]?.seconds ?? 0 : 0;
   const isMultiNote =
     stage.stageTypeId === "pitch-detection" && stage.notes.length > 1;
-  const objective = isTechniqueIntro
+  const objective = isLearnStage
     ? "Learn the technique"
     : stage.stageTypeId === "breathwork"
       ? `Complete 7 cycles — each a bit longer than the last`
@@ -80,7 +59,7 @@ export function ExerciseInfoModal({
   useEffect(() => {
     commitBeginRef.current = () => {
       if (showDontShowAgain && dontShowAgain) addSkippedInfoStageId(stageId);
-      if (isTechniqueIntro && onAdvanceWithoutExercise)
+      if (isLearnStage && onAdvanceWithoutExercise)
         onAdvanceWithoutExercise();
       else onStart();
     };
@@ -108,7 +87,7 @@ export function ExerciseInfoModal({
         <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06] shrink-0">
           <div>
             <p className="text-xs text-white/55 mb-1 flex items-center gap-1.5">
-              {isTechniqueIntro && <BookIcon className="opacity-70" />}
+              {isLearnStage && <BookIcon className="opacity-70" />}
               <span className="uppercase tracking-widest">
                 Part{" "}
                 {toRoman(stage.part)}
@@ -120,7 +99,7 @@ export function ExerciseInfoModal({
               </span>
               <span className="text-white/45">·</span>
               <span>
-                {isTechniqueIntro
+                {isLearnStage
                   ? "Learn"
                   : stage.stageTypeId === "breathwork"
                     ? "Breathwork"
@@ -144,17 +123,6 @@ export function ExerciseInfoModal({
         </div>
 
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1 min-h-0">
-          {stage.part === 9 &&
-            !isTechniqueIntro &&
-            chakraIds.length > 0 &&
-            stage.stageTypeId !== "breathwork" && (
-              <ChakraDetailCard
-                chakraIds={chakraIds}
-                frequencyOverrides={freqOverrides}
-                style="full"
-              />
-            )}
-
           {stage.stageTypeId === "breathwork" ? (
             <>
               <div
@@ -223,8 +191,8 @@ export function ExerciseInfoModal({
                   </p>
                 ))}
               </div>
-              {isTechniqueIntro && <VideoPlaceholder />}
-              {!isTechniqueIntro && stage.technique === "lip-rolls" && (
+              {isLearnStage && <VideoPlaceholder />}
+              {!isLearnStage && stage.technique === "lip-rolls" && (
                 <p className="text-sm text-white/50 leading-relaxed">
                   Lip rolls are tricky for microphone detection — don&apos;t worry if progress is slow. Feel free to skip when you feel you&apos;ve got it.
                 </p>
@@ -232,7 +200,7 @@ export function ExerciseInfoModal({
             </>
           )}
 
-          {!isTechniqueIntro &&
+          {!isLearnStage &&
             stage.stageTypeId !== "breathwork" && <HeadphonesNotice />}
 
         </div>
@@ -260,7 +228,7 @@ export function ExerciseInfoModal({
 
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
           <Button size="lg" onClick={handleBegin} disabled={isClosing} className="w-full">
-            {isTechniqueIntro ? "Continue →" : "Begin exercise →"}
+            {isLearnStage ? "Continue →" : "Begin exercise →"}
           </Button>
         </div>
     </Modal>

@@ -5,7 +5,7 @@ export const PART_11_STAGES: JourneyStage[] = [
   {
     id: 56,
     part: 11,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Chakras and Yoga of Sounds",
     technique: "mantra",
     cardCue: "Discover the ancient system of body, tone, and seed syllable",

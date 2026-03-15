@@ -5,7 +5,7 @@ export const PART_15_STAGES: JourneyStage[] = [
   {
     id: 80,
     part: 15,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Advanced warmup",
     cardCue: "Revisit all techniques with greater range and control",
     instruction:

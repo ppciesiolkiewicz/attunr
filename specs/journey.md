@@ -13,7 +13,7 @@ Journey is **URL-driven**: each step has its own URL. The flow is deterministic 
 3. **Render** by stage type:
    - **`pitch-detection`** / **`pitch-detection-slide`**: PitchCanvas + exercise UI (detection, progress, Hear tone, Next/Skip)
    - **`breathwork`**: Breathing cycle UI (no pitch detection)
-   - **`intro`**: Plain background + scrollable content (instructions, Previous/Next)
+   - **`learn`**: Plain background + scrollable content (instructions, Previous/Next)
 4. **Part complete modal**: When the user finishes the **last step of a part**, a congratulations modal appears (confetti). "Continue" navigates to the next step URL.
 5. **Loop**: New URL → flow repeats from step 1.
 
@@ -31,16 +31,16 @@ Journey is a separate view from the Train tab, accessible from the bottom naviga
 
 | stageTypeId | Rendering | Purpose |
 |-------------|-----------|---------|
-| `intro` | Plain background, scrollable text | Introduce a technique or part before exercises |
+| `learn` | Plain background, scrollable text | Introduce a technique or part before exercises |
 | `pitch-detection` | PitchCanvas, hold one or more tones in sequence | Hold one tone or sing tones in sequence |
 | `pitch-detection-slide` | PitchCanvas, continuous glide | Slide between two tones (e.g. lip rolls) |
 | `breathwork` | Breathing cycle UI | Farinelli breathing cycles — no pitch detection |
 
-**Intro stages** have no canvas. **Exercise stages** (`pitch-detection`, `pitch-detection-slide`, `breathwork`) show the relevant UI and success criteria.
+**Intro stages** have no canvas. **Exercise stages** (`pitch-detection`, `pitch-detection-slide`, `breathwork`) show the relevant UI and success criteria. See [Exercise Config Flow](./exercise-config-flow.md) for detailed data flow, canvas selection, and progress models.
 
 ---
 
-## Part structure (20 parts, 116 stages)
+## Part structure (20 parts, 116 stages — Parts 11–12 temporarily disabled)
 
 Each part mixes exercise types (warmup, resonance, articulation, control) and includes Farinelli breathwork. Difficulty progresses from low register → high register, with vowels introduced progressively: U → OO/OH → AH → EH → EE.
 
@@ -56,8 +56,8 @@ Each part mixes exercise types (warmup, resonance, articulation, control) and in
 | VIII | The Open AH | 38–43 | AH vowel, first vowel flows |
 | IX | Breath & Body | 44–49 | Puffy cheeks intro, AH range |
 | X | Sequences & Range | 50–55 | Multi-tone sequences with known vowels |
-| XI | Chakras — Earth | 56–61 | Root→Heart mantras (LAM, VAM, RAM, YAM) |
-| XII | Chakras — Sky | 62–67 | Throat→Crown mantras (HAM, OM, AH) |
+| ~~XI~~ | ~~Chakras — Earth~~ | ~~56–61~~ | *Temporarily disabled* |
+| ~~XII~~ | ~~Chakras — Sky~~ | ~~62–67~~ | *Temporarily disabled* |
 | XIII | Forward EH | 68–73 | EH vowel, forward resonance |
 | XIV | EH Mastery | 74–79 | EH range, sequences, puffy cheeks |
 | XV | Warmup III | 80–85 | Advanced warmup: all techniques |
@@ -67,7 +67,9 @@ Each part mixes exercise types (warmup, resonance, articulation, control) and in
 | XIX | Vowel Mastery | 104–109 | Vowel cascade, advanced flows |
 | XX | Vocal Control | 110–116 | Peak difficulty: all techniques combined |
 
-Most parts start with an `intro` stage followed by exercises. Some later parts skip the intro when no new concept is introduced.
+Most parts start with an `learn` stage followed by exercises. Some later parts skip the learn stage when no new concept is introduced.
+
+> **Parts 11–12 (Chakras)** are temporarily disabled. Stage IDs 56–67 are reserved but not in the active `JOURNEY_STAGES` array. Navigation uses `getNextStageId()` to skip the gap (Part X stage 55 → Part XIII stage 68).
 
 ---
 

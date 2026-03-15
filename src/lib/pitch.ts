@@ -1,4 +1,4 @@
-import type { Band } from "@/constants/chakras";
+import type { Band } from "@/constants/tone-slots";
 import { VOICE_TYPES } from "@/constants/voice-types";
 import type { VoiceTypeId } from "@/constants/voice-types";
 

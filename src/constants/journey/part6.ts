@@ -5,7 +5,7 @@ export const PART_6_STAGES: JourneyStage[] = [
   {
     id: 26,
     part: 6,
-    stageTypeId: "intro",
+    stageTypeId: "learn",
     title: "Rounded vowels",
     technique: "sustain",
     cardCue: "Sing OO and OH — warm, rounded sounds that build on your U foundation",

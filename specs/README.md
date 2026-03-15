@@ -11,7 +11,8 @@ Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 | [App Overview](./app-overview.md) | Vision, scope, tone system, feature status |
 | [Practice View](./practice-view.md) | Shared pitch canvas + audio; navigation overview |
 | [Train Tab](./train-tab.md) | Free-form practice view |
-| [Journey](./journey.md) | Guided path — 49 stages, 9 parts |
+| [Journey](./journey.md) | Guided path — 20 parts, 116 stages (Parts 11–12 temporarily disabled) |
+| [Exercise Config Flow](./exercise-config-flow.md) | How stage config drives canvas, progress, and UI |
 | [Pitch Canvas](./pitch-canvas.md) | Canvas rendering — dot trail, log-scale |
 | [Audio Engine](./audio-engine.md) | Binaural beats |
 | [Settings](./settings.md) | Tuning, voice type, localStorage persistence |
@@ -26,7 +27,7 @@ Web edition of attunr, built with Next.js + Turbopack, deployed on Vercel.
 | Binaural beats | ✓ |
 | Onboarding with vocal range detection | ✓ |
 | App navigation (Train / Journey tabs) | ✓ |
-| Journey — 49 stages | ✓ |
+| Journey — 104 active stages (116 defined, Parts 11–12 disabled) | ✓ |
 | Settings panel (slide-over) | ✓ |
 | localStorage persistence | ✓ |
 | A432 / A440 / A444 / A528 tuning | ✓ |
