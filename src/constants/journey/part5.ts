@@ -68,8 +68,8 @@ export const PART_5_EXERCISES: JourneyExercise[] = [
       title: "Part V Complete",
       subtitle: "Building Range",
       elements: [
-        { id: "learned", type: "paragraph", text: "Humming and U vowel in mid range, and your first multi-tone sequence." },
-        { id: "tip", type: "paragraph", text: "Sequences build agility. Try singing them a little faster as you improve." },
+        { type: "paragraph", text: "Humming and U vowel in mid range, and your first multi-tone sequence." },
+        { type: "paragraph", text: "Sequences build agility. Try singing them a little faster as you improve." },
       ],
       confetti: true,
     },

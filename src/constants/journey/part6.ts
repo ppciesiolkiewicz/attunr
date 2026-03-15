@@ -9,8 +9,10 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
     title: "Rounded vowels",
     technique: "sustain",
     cardCue: "Sing OO and OH — warm, rounded sounds that build on your U foundation",
-    instruction:
-      "OO (as in 'book') and OH (as in 'go') are rounded vowels — cousins of the U you already know. OO keeps the lips rounded but opens the mouth a touch more. OH opens further, like a gentle 'oh' of surprise. Both maintain vocal tract stability and help develop resonance. We'll start on comfortable low-to-mid tones.",
+    elements: [
+      { type: "paragraph", text: "OO (as in 'book') and OH (as in 'go') are rounded vowels — cousins of the U you already know. OO keeps the lips rounded but opens the mouth a touch more. OH opens further, like a gentle 'oh' of surprise. Both maintain vocal tract stability and help develop resonance. We'll start on comfortable low-to-mid tones." },
+      { type: "video" },
+    ],
   },
   {
     id: 27,
@@ -64,8 +66,8 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
       title: "Part VI Complete",
       subtitle: "Rounded Vowels",
       elements: [
-        { id: "learned", type: "paragraph", text: "The rounded vowels OO (as in 'book') and OH (as in 'go') — warm, stable vowels that build on your U foundation." },
-        { id: "tip", type: "paragraph", text: "OO and OH are great for developing resonance. Use them in your warmup routine." },
+        { type: "paragraph", text: "The rounded vowels OO (as in 'book') and OH (as in 'go') — warm, stable vowels that build on your U foundation." },
+        { type: "paragraph", text: "OO and OH are great for developing resonance. Use them in your warmup routine." },
       ],
       confetti: true,
     },

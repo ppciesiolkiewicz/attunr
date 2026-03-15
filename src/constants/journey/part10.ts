@@ -84,8 +84,8 @@ export const PART_10_EXERCISES: JourneyExercise[] = [
       title: "Part X Complete",
       subtitle: "Sequences & Range",
       elements: [
-        { id: "learned", type: "paragraph", text: "Multi-tone sequences with different vowels — U, Hum, AH, and OO across your expanding range." },
-        { id: "tip", type: "paragraph", text: "Sequences prepare you for real singing. Try connecting them to songs you enjoy." },
+        { type: "paragraph", text: "Multi-tone sequences with different vowels — U, Hum, AH, and OO across your expanding range." },
+        { type: "paragraph", text: "Sequences prepare you for real singing. Try connecting them to songs you enjoy." },
       ],
       confetti: true,
     },

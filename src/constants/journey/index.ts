@@ -1,4 +1,5 @@
-import type { JourneyExercise, JourneyPart } from "./types";
+import type { JourneyExercise, JourneyPart, ModalConfig, ContentElement } from "./types";
+import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
 import { PART_1_EXERCISES } from "./part1";
 import { PART_2_EXERCISES } from "./part2";
 import { PART_3_EXERCISES } from "./part3";
@@ -29,6 +30,9 @@ export type {
   WarningElement,
   ParagraphElement,
   VideoElement,
+  HeadphonesNoticeElement,
+  TipListElement,
+  SeparatorElement,
   TechniqueId,
   BandTarget,
   SustainNoteConfig,
@@ -40,7 +44,81 @@ export type {
   FarinelliBreathworkExercise,
 } from "./types";
 
-export const JOURNEY_CONFIG: JourneyPart[] = [
+/** Build introModal for a non-learn exercise from its existing properties. */
+function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
+  if (exercise.exerciseTypeId === "learn") return undefined;
+  if (exercise.introModal) return exercise.introModal;
+
+  const elements: ContentElement[] = [];
+
+  if (exercise.exerciseTypeId === "breathwork-farinelli") {
+    elements.push({
+      type: "warning",
+      text: "If you have heart or respiratory conditions, or are pregnant, check with your doctor first. Stop immediately if you feel dizzy, lightheaded, or unwell at any time.",
+    });
+    elements.push({ type: "separator" });
+    const firstParagraph = exercise.instruction.split("\n\n")[0];
+    elements.push({ type: "paragraph", text: firstParagraph });
+    elements.push({ type: "video" });
+    elements.push({
+      type: "tip-list",
+      title: "Key tips",
+      tips: [...FARINELLI_TIPS],
+    });
+    return {
+      title: exercise.title,
+      subtitle: `Complete ${exercise.maxCount} cycles — each a bit longer than the last`,
+      elements,
+    };
+  }
+
+  // Pitch exercises — instruction paragraphs
+  for (const line of exercise.instruction.split("\n")) {
+    if (line.trim()) {
+      elements.push({
+        type: "paragraph",
+        text: line,
+        variant: elements.length === 0 ? undefined : "secondary",
+      });
+    }
+  }
+
+  // Lip-roll notice
+  if (exercise.technique === "lip-rolls") {
+    elements.push({
+      type: "paragraph",
+      text: "Lip rolls are tricky for microphone detection — don\u2019t worry if progress is slow. Feel free to skip when you feel you\u2019ve got it.",
+      variant: "secondary",
+    });
+  }
+
+  elements.push({ type: "headphones-notice" });
+
+  // Compute subtitle from exercise shape
+  let subtitle: string;
+  if (exercise.exerciseTypeId === "pitch-detection-slide") {
+    subtitle = "Slide smoothly through the range two or three times";
+  } else if (exercise.notes.length > 1) {
+    subtitle = `Sing each tone in sequence, ${exercise.notes[0]?.seconds ?? 0} seconds each`;
+  } else {
+    subtitle = `Hold the tone in tune for ${exercise.notes[0]?.seconds ?? 0} seconds`;
+  }
+
+  return { title: exercise.title, subtitle, elements };
+}
+
+/** Walk all exercises and generate introModal for non-learn exercises. */
+function withIntroModals(config: JourneyPart[]): JourneyPart[] {
+  return config.map((part) => ({
+    ...part,
+    exercises: part.exercises.map((ex) => {
+      const introModal = buildIntroModal(ex);
+      return introModal ? { ...ex, introModal } : ex;
+    }),
+  }));
+}
+
+export const JOURNEY_CONFIG: JourneyPart[] = withIntroModals([
   { part: 1, title: "Introduction", exercises: PART_1_EXERCISES },
   { part: 2, title: "First Sounds", exercises: PART_2_EXERCISES },
   { part: 3, title: "Lip Rolls & Breath", exercises: PART_3_EXERCISES },
@@ -61,7 +139,7 @@ export const JOURNEY_CONFIG: JourneyPart[] = [
   { part: 18, title: "Vowel Flow", exercises: PART_18_EXERCISES },
   { part: 19, title: "Vowel Mastery", exercises: PART_19_EXERCISES },
   { part: 20, title: "Vocal Control", exercises: PART_20_EXERCISES },
-];
+]);
 
 /** Flat list of all exercises across all parts. */
 export const JOURNEY_EXERCISES: JourneyExercise[] =

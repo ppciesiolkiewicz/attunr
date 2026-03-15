@@ -74,8 +74,8 @@ export const PART_17_EXERCISES: JourneyExercise[] = [
       title: "Part XVII Complete",
       subtitle: "EE & Brightness",
       elements: [
-        { id: "learned", type: "paragraph", text: "EE on high tones, U → EE full vowel flow, full-range EE sequence, and puffy cheeks on high tones." },
-        { id: "tip", type: "paragraph", text: "The U → EE flow is one of the most valuable exercises in singing. It teaches resonance consistency." },
+        { type: "paragraph", text: "EE on high tones, U → EE full vowel flow, full-range EE sequence, and puffy cheeks on high tones." },
+        { type: "paragraph", text: "The U → EE flow is one of the most valuable exercises in singing. It teaches resonance consistency." },
       ],
       confetti: true,
     },

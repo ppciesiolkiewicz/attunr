@@ -8,8 +8,10 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
     exerciseTypeId: "learn",
     title: "Vocal control",
     cardCue: "Combine everything you've learned — full range, all vowels, all techniques",
-    instruction:
-      "This is the culmination of your journey. Every technique — lip rolls, humming, vowels, puffy cheeks, sequences, and flows — comes together. The exercises here use your full range, all vowel shapes, and demand the most control. Take your time. You've earned this.",
+    elements: [
+      { type: "paragraph", text: "This is the culmination of your journey. Every technique — lip rolls, humming, vowels, puffy cheeks, sequences, and flows — comes together. The exercises here use your full range, all vowel shapes, and demand the most control. Take your time. You've earned this." },
+      { type: "video" },
+    ],
   },
   {
     id: 111,
@@ -88,8 +90,8 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
       title: "Part XX Complete",
       subtitle: "Vocal Control",
       elements: [
-        { id: "learned", type: "paragraph", text: "Full vocal control — all techniques combined across your entire range. Puffy cheeks sequences, high vowel flows, descending sequences, and the extended vowel cascade." },
-        { id: "tip", type: "paragraph", text: "You've completed the full journey. Return to any part to deepen your practice, or create your own sequences from the exercises you've learned." },
+        { type: "paragraph", text: "Full vocal control — all techniques combined across your entire range. Puffy cheeks sequences, high vowel flows, descending sequences, and the extended vowel cascade." },
+        { type: "paragraph", text: "You've completed the full journey. Return to any part to deepen your practice, or create your own sequences from the exercises you've learned." },
       ],
       confetti: true,
     },

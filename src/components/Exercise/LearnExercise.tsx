@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, Video } from "@/components/ui";
+import { Button } from "@/components/ui";
+import { ContentElements } from "./components/ContentElements";
 import type { LearnExercise as LearnExerciseConfig } from "@/constants/journey";
 
 interface LearnExerciseProps {
@@ -38,20 +39,9 @@ export function LearnExercise({
               {exercise.title} · {stepIndex} of {stepsInPart}
             </p>
           </div>
-          <div className="flex flex-col gap-1">
-            {exercise.instruction.split("\n").map((line, i) => (
-              <p
-                key={i}
-                className="text-base leading-relaxed"
-                style={{
-                  color: i === 0 ? "rgba(255,255,255,0.88)" : "rgba(255,255,255,0.55)",
-                }}
-              >
-                {line}
-              </p>
-            ))}
+          <div className="flex flex-col gap-4">
+            <ContentElements elements={exercise.elements} />
           </div>
-          <Video />
         </div>
       </div>
 

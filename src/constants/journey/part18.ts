@@ -9,8 +9,10 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
     title: "Vowel flow",
     technique: "sustain",
     cardCue: "Master smooth transitions between all vowels",
-    instruction:
-      "Vowel modification is a core singing skill. By transitioning between vowels while holding the same pitch, you train resonance consistency — the ability to keep a full, supported sound regardless of mouth shape. This is essential for higher notes and vocal efficiency. We'll flow between pairs of vowels, then combine them all.",
+    elements: [
+      { type: "paragraph", text: "Vowel modification is a core singing skill. By transitioning between vowels while holding the same pitch, you train resonance consistency — the ability to keep a full, supported sound regardless of mouth shape. This is essential for higher notes and vocal efficiency. We'll flow between pairs of vowels, then combine them all." },
+      { type: "video" },
+    ],
   },
   {
     id: 99,
@@ -64,8 +66,8 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
       title: "Part XVIII Complete",
       subtitle: "Vowel Flow",
       elements: [
-        { id: "learned", type: "paragraph", text: "Vowel flow mastery — smooth transitions between all vowel pairs: U→OO, OO→AH, AH→EH, EH→EE." },
-        { id: "tip", type: "paragraph", text: "Practice these flows daily. They're the secret to smooth, connected singing." },
+        { type: "paragraph", text: "Vowel flow mastery — smooth transitions between all vowel pairs: U→OO, OO→AH, AH→EH, EH→EE." },
+        { type: "paragraph", text: "Practice these flows daily. They're the secret to smooth, connected singing." },
       ],
       confetti: true,
     },

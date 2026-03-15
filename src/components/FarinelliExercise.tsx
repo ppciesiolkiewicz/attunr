@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
 
 function shuffle<T>(arr: T[]): T[] {
   const out = [...arr];
@@ -49,15 +50,8 @@ export interface FarinelliExerciseProps {
 
 type FarinelliStatus = "ready" | "countdown" | "running" | "complete";
 
-export const FARINELLI_ADVICES = [
-  "Stay relaxed — that matters more than hitting the highest count. Tension defeats the purpose.",
-  "Don't aim for 100% — fill to roughly 80% each cycle. This is about control, not inflating to the top.",
-  "Same amount of breath each cycle — but as the count grows, inhale more slowly. That's the control.",
-  "The hold isn't about stopping breathing — it's about keeping your lungs inflated. Keep ribs expanded; small top-up breaths are fine.",
-  "Let it all out — exhale fully each time so you're ready for the next breath.",
-  "You're training your diaphragm. Control builds over time — go at your own pace.",
-  "If you feel lightheaded or unwell, stop and breathe normally.",
-];
+/** @deprecated Use FARINELLI_TIPS from @/constants/farinelli-tips instead */
+export const FARINELLI_ADVICES = FARINELLI_TIPS;
 
 const FARINELLI_INSTRUCTIONS =
   "Inhale, hold, and exhale to the same count — each cycle adds one beat and flows straight into the next.";
@@ -178,7 +172,7 @@ export function FarinelliExercise({
   }, []);
 
   function handleStart() {
-    setShuffledAdvice(shuffle(FARINELLI_ADVICES));
+    setShuffledAdvice(shuffle(FARINELLI_TIPS));
     setStatus("countdown");
     countdownTimers.current = [
       setTimeout(() => {
@@ -221,7 +215,7 @@ export function FarinelliExercise({
     if (status !== "countdown" && status !== "running") return;
     const id = setInterval(() => {
       setAdviceIndex((i) => {
-        const list = shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES;
+        const list = shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_TIPS;
         return (i + 1) % list.length;
       });
     }, TIP_ROTATE_SECONDS * 1000);
@@ -317,7 +311,7 @@ export function FarinelliExercise({
             </>
           ) : (
             <p className="text-xs text-white/65">
-              Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES)[adviceIndex]}
+              Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_TIPS)[adviceIndex]}
             </p>
           )}
         </div>
@@ -358,7 +352,7 @@ export function FarinelliExercise({
 
       <div className={`${bottomSlotMinH} flex flex-col items-center justify-start max-w-[280px]`}>
         <p className="text-xs text-white/65 text-center">
-          Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_ADVICES)[adviceIndex]}
+          Tip: {(shuffledAdvice.length > 0 ? shuffledAdvice : FARINELLI_TIPS)[adviceIndex]}
         </p>
       </div>
     </div>

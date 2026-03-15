@@ -46,28 +46,44 @@ export type TechniqueId = "sustain" | "mantra" | "lip-rolls" | "puffy-cheeks";
 
 // ── Modal config ─────────────────────────────────────────────────────────────
 
-/** A single content element in a modal body. */
+/** A single content element rendered in a modal or exercise body. */
 export type ContentElement =
   | WarningElement
   | ParagraphElement
-  | VideoElement;
+  | VideoElement
+  | HeadphonesNoticeElement
+  | TipListElement
+  | SeparatorElement;
 
 export interface WarningElement {
-  id: string;
   type: "warning";
   text: string;
 }
 
 export interface ParagraphElement {
-  id: string;
   type: "paragraph";
   text: string;
+  /** "primary" = bright (default), "secondary" = dimmer */
+  variant?: "primary" | "secondary";
 }
 
 export interface VideoElement {
-  id: string;
   type: "video";
-  url: string;
+  url?: string;
+}
+
+export interface HeadphonesNoticeElement {
+  type: "headphones-notice";
+}
+
+export interface TipListElement {
+  type: "tip-list";
+  title: string;
+  tips: string[];
+}
+
+export interface SeparatorElement {
+  type: "separator";
 }
 
 /** Config for a modal shown before or after an exercise. */
@@ -107,8 +123,8 @@ export interface BaseExerciseConfig {
 
 export interface LearnExercise extends BaseExerciseConfig {
   exerciseTypeId: "learn";
-  /** Markdown-ish text shown as scrollable content. */
-  instruction: string;
+  /** Body content rendered as ContentElement[]. */
+  elements: ContentElement[];
 }
 
 export interface PitchDetectionExercise extends BaseExerciseConfig {

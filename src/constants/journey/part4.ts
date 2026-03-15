@@ -9,8 +9,10 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
     title: "Humming and resonance",
     technique: "sustain",
     cardCue: "Hum each tone and feel where it resonates",
-    instruction:
-      "Humming is one of the gentlest and most powerful ways to feel your voice. Close your lips and sing mmmm — feel the buzz in your lips, teeth, and face. In these exercises, we alternate between humming and the U vowel on low tones. Lower tones resonate deep in the chest. There's no rush — let the vibration settle.",
+    elements: [
+      { type: "paragraph", text: "Humming is one of the gentlest and most powerful ways to feel your voice. Close your lips and sing mmmm — feel the buzz in your lips, teeth, and face. In these exercises, we alternate between humming and the U vowel on low tones. Lower tones resonate deep in the chest. There's no rush — let the vibration settle." },
+      { type: "video" },
+    ],
   },
   {
     id: 15,
@@ -64,8 +66,8 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
       title: "Part IV Complete",
       subtitle: "Low Resonance",
       elements: [
-        { id: "learned", type: "paragraph", text: "Humming and the U vowel in your low register — feeling where resonance lives in your chest." },
-        { id: "tip", type: "paragraph", text: "The low register is your foundation. Return here when you need to ground your voice." },
+        { type: "paragraph", text: "Humming and the U vowel in your low register — feeling where resonance lives in your chest." },
+        { type: "paragraph", text: "The low register is your foundation. Return here when you need to ground your voice." },
       ],
       confetti: true,
     },

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import { Button, Modal } from "@/components/ui";
+import { ContentElements } from "@/components/Exercise/components/ContentElements";
 import { BadgeIcon } from "./BadgeIcon";
 import type { ModalConfig } from "@/constants/journey/types";
 
@@ -64,43 +65,7 @@ export function PartCompleteModal({
           <p className="text-sm text-white/80 text-center">{modalConfig.subtitle}</p>
         </div>
         <div className="px-5 py-4 border-t border-white/[0.06] flex flex-col gap-3">
-          {modalConfig.elements.map((el) => {
-            switch (el.type) {
-              case "warning":
-                return (
-                  <div
-                    key={el.id}
-                    className="rounded-xl px-4 py-3"
-                    style={{
-                      border: "2px solid rgba(251,191,36,0.6)",
-                      background: "rgba(251,191,36,0.08)",
-                    }}
-                  >
-                    <p className="text-sm text-white/82 leading-relaxed">{el.text}</p>
-                  </div>
-                );
-              case "paragraph":
-                return (
-                  <p key={el.id} className="text-sm text-white/90 leading-relaxed">
-                    {el.text}
-                  </p>
-                );
-              case "video":
-                return (
-                  <div
-                    key={el.id}
-                    className="rounded-xl px-5 py-8 flex flex-col items-center justify-center gap-2"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px dashed rgba(255,255,255,0.15)",
-                    }}
-                  >
-                    <span className="text-2xl opacity-50">▶</span>
-                    <p className="text-sm text-white/55 font-medium">Video coming soon</p>
-                  </div>
-                );
-            }
-          })}
+          <ContentElements elements={modalConfig.elements} />
         </div>
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06]">
           <Button size="lg" onClick={() => !isClosing && setIsClosing(true)} disabled={isClosing} className="w-full">

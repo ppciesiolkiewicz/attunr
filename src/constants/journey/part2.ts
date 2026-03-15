@@ -9,8 +9,10 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
     title: "Chest and head voice",
     technique: "sustain",
     cardCue: "Find your chest and head voice",
-    instruction:
-      "Your voice has different resonances: chest voice (lower, fuller, felt in the chest) and head voice (lighter, higher, felt in the head and face). The next two exercises help you find them. Low U warms up your chest voice on a low tone. Hoo hoo introduces head voice — a light, owl-like sound on a high tone. Feel where each lands in your body.",
+    elements: [
+      { type: "paragraph", text: "Your voice has different resonances: chest voice (lower, fuller, felt in the chest) and head voice (lighter, higher, felt in the head and face). The next two exercises help you find them. Low U warms up your chest voice on a low tone. Hoo hoo introduces head voice — a light, owl-like sound on a high tone. Feel where each lands in your body." },
+      { type: "video" },
+    ],
   },
   {
     id: 3,
@@ -51,8 +53,10 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
     title: "Lip rolls",
     technique: "lip-rolls",
     cardCue: "Gentle warmup to relax your jaw and warm your voice",
-    instruction:
-      "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. In the next exercises, you'll slide your voice from high to low and low to high — a smooth, continuous glide through your range, not separate notes. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you.",
+    elements: [
+      { type: "paragraph", text: "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. In the next exercises, you'll slide your voice from high to low and low to high — a smooth, continuous glide through your range, not separate notes. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you." },
+      { type: "video" },
+    ],
   },
   {
     id: 7,
@@ -68,8 +72,8 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
       title: "Part II Complete",
       subtitle: "First Sounds",
       elements: [
-        { id: "learned", type: "paragraph", text: "Chest voice (Low U), head voice (Hoo hoo), Farinelli breathwork, and lip roll slides — the foundations of every warmup." },
-        { id: "tip", type: "paragraph", text: "Always warm up before each practice session!" },
+        { type: "paragraph", text: "Chest voice (Low U), head voice (Hoo hoo), Farinelli breathwork, and lip roll slides — the foundations of every warmup." },
+        { type: "paragraph", text: "Always warm up before each practice session!" },
       ],
       confetti: true,
     },

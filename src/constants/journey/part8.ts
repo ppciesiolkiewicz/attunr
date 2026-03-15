@@ -9,8 +9,10 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
     title: "The open vowel — AH",
     technique: "sustain",
     cardCue: "Open your voice with the most natural vowel",
-    instruction:
-      "AH (as in 'father') is the most open, neutral vowel. The jaw drops, the tongue lies flat, and the throat opens naturally. It requires more breath support than rounded vowels like U or OO, but it's the most natural sound the voice can make. We'll also try your first vowel flow — transitioning from U to AH while holding the same pitch.",
+    elements: [
+      { type: "paragraph", text: "AH (as in 'father') is the most open, neutral vowel. The jaw drops, the tongue lies flat, and the throat opens naturally. It requires more breath support than rounded vowels like U or OO, but it's the most natural sound the voice can make. We'll also try your first vowel flow — transitioning from U to AH while holding the same pitch." },
+      { type: "video" },
+    ],
   },
   {
     id: 39,
@@ -69,8 +71,8 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
       title: "Part VIII Complete",
       subtitle: "The Open AH",
       elements: [
-        { id: "learned", type: "paragraph", text: "The open AH vowel and your first vowel flow — transitioning from U to AH while holding pitch." },
-        { id: "tip", type: "paragraph", text: "Vowel flows are one of the most valuable exercises for vocal efficiency." },
+        { type: "paragraph", text: "The open AH vowel and your first vowel flow — transitioning from U to AH while holding pitch." },
+        { type: "paragraph", text: "Vowel flows are one of the most valuable exercises for vocal efficiency." },
       ],
       confetti: true,
     },

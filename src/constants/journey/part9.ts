@@ -9,8 +9,10 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
     title: "Puffy cheeks",
     technique: "puffy-cheeks",
     cardCue: "Build breath control with a playful technique",
-    instruction:
-      "Puffy cheeks is a breath control technique: puff your cheeks out while singing, as if holding air in your mouth. This creates back-pressure that trains your diaphragm and helps you sustain notes with less effort. It feels playful but builds serious control. We'll combine it with AH vowel work to keep expanding your range.",
+    elements: [
+      { type: "paragraph", text: "Puffy cheeks is a breath control technique: puff your cheeks out while singing, as if holding air in your mouth. This creates back-pressure that trains your diaphragm and helps you sustain notes with less effort. It feels playful but builds serious control. We'll combine it with AH vowel work to keep expanding your range." },
+      { type: "video" },
+    ],
   },
   {
     id: 45,
@@ -66,8 +68,8 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
       title: "Part IX Complete",
       subtitle: "Breath & Body",
       elements: [
-        { id: "learned", type: "paragraph", text: "Puffy cheeks for breath control, AH in higher range, and OO → AH vowel flow." },
-        { id: "tip", type: "paragraph", text: "Puffy cheeks is a playful but powerful technique. Use it when you feel tension in your jaw." },
+        { type: "paragraph", text: "Puffy cheeks for breath control, AH in higher range, and OO → AH vowel flow." },
+        { type: "paragraph", text: "Puffy cheeks is a playful but powerful technique. Use it when you feel tension in your jaw." },
       ],
       confetti: true,
     },

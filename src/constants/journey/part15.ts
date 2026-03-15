@@ -8,8 +8,10 @@ export const PART_15_EXERCISES: JourneyExercise[] = [
     exerciseTypeId: "learn",
     title: "Advanced warmup",
     cardCue: "Revisit all techniques with greater range and control",
-    instruction:
-      "You've built a strong foundation: lip rolls, humming, multiple vowels, puffy cheeks, and breathwork. This advanced warmup combines all techniques across a wider range. Think of it as a complete warm-up routine you can return to before any practice session.",
+    elements: [
+      { type: "paragraph", text: "You've built a strong foundation: lip rolls, humming, multiple vowels, puffy cheeks, and breathwork. This advanced warmup combines all techniques across a wider range. Think of it as a complete warm-up routine you can return to before any practice session." },
+      { type: "video" },
+    ],
   },
   {
     id: 81,
@@ -71,8 +73,8 @@ export const PART_15_EXERCISES: JourneyExercise[] = [
       title: "Part XV Complete",
       subtitle: "Warmup III",
       elements: [
-        { id: "learned", type: "paragraph", text: "Advanced warmup combining lip rolls, puffy cheeks, and full-range humming sequences." },
-        { id: "tip", type: "paragraph", text: "This advanced warmup is a complete routine. Use it before performances or longer practice sessions." },
+        { type: "paragraph", text: "Advanced warmup combining lip rolls, puffy cheeks, and full-range humming sequences." },
+        { type: "paragraph", text: "This advanced warmup is a complete routine. Use it before performances or longer practice sessions." },
       ],
       confetti: true,
     },

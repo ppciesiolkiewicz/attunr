@@ -9,8 +9,10 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
     title: "Forward resonance — EH",
     technique: "sustain",
     cardCue: "Place your voice forward with the Spanish-style EH vowel",
-    instruction:
-      "EH (like Spanish 'e', or the vowel in 'bed') places resonance forward in the mouth. It's brighter than AH and more open than EE. The tongue moves forward and the mouth narrows slightly. This vowel increases articulation and forward resonance — essential skills as you move into higher ranges.",
+    elements: [
+      { type: "paragraph", text: "EH (like Spanish 'e', or the vowel in 'bed') places resonance forward in the mouth. It's brighter than AH and more open than EE. The tongue moves forward and the mouth narrows slightly. This vowel increases articulation and forward resonance — essential skills as you move into higher ranges." },
+      { type: "video" },
+    ],
   },
   {
     id: 69,
@@ -64,8 +66,8 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
       title: "Part XIII Complete",
       subtitle: "Forward EH",
       elements: [
-        { id: "learned", type: "paragraph", text: "The forward EH vowel (as in 'bed'), OH → EH vowel flow, and forward resonance placement." },
-        { id: "tip", type: "paragraph", text: "Forward resonance helps with projection. Practice EH when you want your voice to carry." },
+        { type: "paragraph", text: "The forward EH vowel (as in 'bed'), OH → EH vowel flow, and forward resonance placement." },
+        { type: "paragraph", text: "Forward resonance helps with projection. Practice EH when you want your voice to carry." },
       ],
       confetti: true,
     },

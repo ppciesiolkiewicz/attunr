@@ -71,8 +71,8 @@ export const PART_7_EXERCISES: JourneyExercise[] = [
       title: "Part VII Complete",
       subtitle: "Vowel Warmth",
       elements: [
-        { id: "learned", type: "paragraph", text: "OO and OH vowels at different pitches, lip roll sustains, and your first vowel sequence." },
-        { id: "tip", type: "paragraph", text: "Mixing techniques in each session keeps your voice flexible." },
+        { type: "paragraph", text: "OO and OH vowels at different pitches, lip roll sustains, and your first vowel sequence." },
+        { type: "paragraph", text: "Mixing techniques in each session keeps your voice flexible." },
       ],
       confetti: true,
     },

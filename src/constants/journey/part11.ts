@@ -9,8 +9,13 @@ export const PART_11_EXERCISES: JourneyExercise[] = [
     title: "Chakras and Yoga of Sounds",
     technique: "mantra",
     cardCue: "Discover the ancient system of body, tone, and seed syllable",
-    instruction:
-      "Nāda yoga — the yoga of sound — is one of the oldest Indian traditions, teaching that sound is the primordial creative force. The seven chakras are energy centres along the spine, each tied to a tone, body region, colour, and element.\n\nEach chakra has a seed syllable (bija mantra). Singing that sound on the matching tone concentrates vibration in that centre and deepens body awareness:\n\nRoot · LAM · chest and base of spine\nSacral · VAM · lower belly\nSolar Plexus · RAM · centre above the navel\nHeart · YAM · chest and heart area\nThroat · HAM · throat and neck\nThird Eye · OM · behind the forehead\nCrown · AH · top of the head\n\nWe begin with the four lower chakras — Earth energy. Sing each mantra slowly and intentionally.",
+    elements: [
+      { type: "paragraph", text: "Nāda yoga — the yoga of sound — is one of the oldest Indian traditions, teaching that sound is the primordial creative force. The seven chakras are energy centres along the spine, each tied to a tone, body region, colour, and element." },
+      { type: "paragraph", text: "Each chakra has a seed syllable (bija mantra). Singing that sound on the matching tone concentrates vibration in that centre and deepens body awareness:", variant: "secondary" },
+      { type: "paragraph", text: "Root · LAM · chest and base of spine\nSacral · VAM · lower belly\nSolar Plexus · RAM · centre above the navel\nHeart · YAM · chest and heart area\nThroat · HAM · throat and neck\nThird Eye · OM · behind the forehead\nCrown · AH · top of the head", variant: "secondary" },
+      { type: "paragraph", text: "We begin with the four lower chakras — Earth energy. Sing each mantra slowly and intentionally.", variant: "secondary" },
+      { type: "video" },
+    ],
   },
   {
     id: 57,

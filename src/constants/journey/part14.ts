@@ -71,8 +71,8 @@ export const PART_14_EXERCISES: JourneyExercise[] = [
       title: "Part XIV Complete",
       subtitle: "EH Mastery",
       elements: [
-        { id: "learned", type: "paragraph", text: "EH mastery — longer holds, sequences, puffy cheeks at mid range, and AH → EH vowel flow." },
-        { id: "tip", type: "paragraph", text: "Combining techniques (puffy cheeks + vowels + sequences) builds real vocal fitness." },
+        { type: "paragraph", text: "EH mastery — longer holds, sequences, puffy cheeks at mid range, and AH → EH vowel flow." },
+        { type: "paragraph", text: "Combining techniques (puffy cheeks + vowels + sequences) builds real vocal fitness." },
       ],
       confetti: true,
     },

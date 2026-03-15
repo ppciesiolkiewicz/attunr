@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { FARINELLI_ADVICES } from "@/components/FarinelliExercise";
-import { HeadphonesNotice, InfoIcon } from "@/components/TabInfoModal";
-import { Button, CloseButton, Modal, Video } from "@/components/ui";
+import { InfoIcon } from "@/components/TabInfoModal";
+import { Button, CloseButton, Modal } from "@/components/ui";
+import { ContentElements } from "@/components/Exercise/components/ContentElements";
 import { JOURNEY_EXERCISES } from "@/constants/journey";
 import {
   addSkippedInfoExerciseId,
@@ -32,23 +32,10 @@ export function ExerciseInfoModal({
   const [isClosing, setIsClosing] = useState(false);
   const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId)!;
   const isLearnExercise = exercise.exerciseTypeId === "learn";
+  const modal = exercise.introModal;
 
   const exerciseColors = getExerciseDisplayColors(exercise);
   const primaryColor = exerciseColors[0] ?? "#7c3aed";
-
-  const noteTime =
-    exercise.exerciseTypeId === "pitch-detection" ? exercise.notes[0]?.seconds ?? 0 : 0;
-  const isMultiNote =
-    exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length > 1;
-  const objective = isLearnExercise
-    ? "Learn the technique"
-    : exercise.exerciseTypeId === "breathwork-farinelli"
-      ? `Complete 7 cycles — each a bit longer than the last`
-      : exercise.exerciseTypeId === "pitch-detection" && !isMultiNote
-        ? `Hold the tone in tune for ${noteTime} seconds`
-        : exercise.exerciseTypeId === "pitch-detection-slide"
-          ? "Slide smoothly through the range two or three times"
-          : `Sing each tone in sequence, ${noteTime} seconds each`;
 
   function handleBegin() {
     if (isClosing) return;
@@ -97,112 +84,21 @@ export function ExerciseInfoModal({
                 {getStepInPart(exerciseId).stepIndex} of{" "}
                 {getStepInPart(exerciseId).stepsInPart}
               </span>
-              <span className="text-white/45">·</span>
-              <span>
-                {isLearnExercise
-                  ? "Learn"
-                  : exercise.exerciseTypeId === "breathwork-farinelli"
-                    ? "Breathwork"
-                    : exercise.part === 2
-                      ? "Warmup"
-                      : exercise.exerciseTypeId === "pitch-detection-slide"
-                        ? "Slide"
-                        : isMultiNote
-                          ? "Sequence"
-                          : exercise.part >= 5
-                            ? "Technique"
-                            : "Individual"}
-              </span>
             </p>
-            <h2 className="text-xl font-semibold text-white">{exercise.title}</h2>
-            <p className="text-sm mt-1" style={{ color: primaryColor }}>
-              {objective}
-            </p>
+            <h2 className="text-xl font-semibold text-white">
+              {modal?.title ?? exercise.title}
+            </h2>
+            {modal?.subtitle && (
+              <p className="text-sm mt-1" style={{ color: primaryColor }}>
+                {modal.subtitle}
+              </p>
+            )}
           </div>
           <CloseButton onClick={onDismiss} className="ml-4 mt-0.5 shrink-0" />
         </div>
 
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto flex-1 min-h-0">
-          {exercise.exerciseTypeId === "breathwork-farinelli" ? (
-            <>
-              <div
-                className="rounded-xl px-4 py-3"
-                style={{
-                  border: "2px solid rgba(251,191,36,0.6)",
-                  background: "rgba(251,191,36,0.08)",
-                }}
-              >
-                <p className="text-sm font-semibold text-amber-400/95 mb-1.5">
-                  Before you begin
-                </p>
-                <p className="text-sm text-white/82 leading-relaxed">
-                  If you have heart or respiratory conditions, or are pregnant,
-                  check with your doctor first. Stop immediately if you feel
-                  dizzy, lightheaded, or unwell at any time.
-                </p>
-              </div>
-              <div className="flex items-center justify-center py-3">
-                <span className="text-white/55 text-[0.5em] leading-none">
-                  ●
-                </span>
-              </div>
-              <div className="flex flex-col gap-1">
-                <p
-                  className="text-base leading-relaxed"
-                  style={{ color: "rgba(255,255,255,0.88)" }}
-                >
-                  {exercise.instruction.split("\n\n")[0]}
-                </p>
-              </div>
-              <Video />
-              <div className="flex flex-col gap-3">
-                <p className="text-sm font-medium text-white/78 tracking-wide uppercase">
-                  Key tips
-                </p>
-                <ul className="flex flex-col gap-2.5">
-                  {FARINELLI_ADVICES.map((tip, i) => (
-                    <li
-                      key={i}
-                      className="flex gap-2.5 text-[15px] leading-relaxed"
-                      style={{ color: "rgba(255,255,255,0.72)" }}
-                    >
-                      <span className="mt-1.5 shrink-0 w-1.5 h-1.5 rounded-full bg-violet-400/70" />
-                      <span>{tip}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="flex flex-col gap-1">
-                {exercise.instruction.split("\n").map((line, i) => (
-                  <p
-                    key={i}
-                    className="text-base leading-relaxed"
-                    style={{
-                      color:
-                        i === 0
-                          ? "rgba(255,255,255,0.88)"
-                          : "rgba(255,255,255,0.55)",
-                    }}
-                  >
-                    {line}
-                  </p>
-                ))}
-              </div>
-              {isLearnExercise && <Video />}
-              {!isLearnExercise && exercise.technique === "lip-rolls" && (
-                <p className="text-sm text-white/50 leading-relaxed">
-                  Lip rolls are tricky for microphone detection — don&apos;t worry if progress is slow. Feel free to skip when you feel you&apos;ve got it.
-                </p>
-              )}
-            </>
-          )}
-
-          {!isLearnExercise &&
-            exercise.exerciseTypeId !== "breathwork-farinelli" && <HeadphonesNotice />}
-
+          {modal && <ContentElements elements={modal.elements} />}
         </div>
 
         {showDontShowAgain && (
@@ -228,7 +124,7 @@ export function ExerciseInfoModal({
 
         <div className="px-5 pb-5 pt-3 border-t border-white/[0.06] shrink-0">
           <Button size="lg" onClick={handleBegin} disabled={isClosing} className="w-full">
-            {isLearnExercise ? "Continue →" : "Begin exercise →"}
+            {modal?.actionLabel ?? (isLearnExercise ? "Continue →" : "Begin exercise →")}
           </Button>
         </div>
     </Modal>

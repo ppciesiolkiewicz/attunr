@@ -65,8 +65,8 @@ export const PART_19_EXERCISES: JourneyExercise[] = [
       title: "Part XIX Complete",
       subtitle: "Vowel Mastery",
       elements: [
-        { id: "learned", type: "paragraph", text: "Advanced vowel flows, the full vowel cascade (U→OO→OH→AH→EH→EE), and puffy cheeks on the highest tone." },
-        { id: "tip", type: "paragraph", text: "The vowel cascade is a signature exercise. Try it on different pitches to explore your range." },
+        { type: "paragraph", text: "Advanced vowel flows, the full vowel cascade (U→OO→OH→AH→EH→EE), and puffy cheeks on the highest tone." },
+        { type: "paragraph", text: "The vowel cascade is a signature exercise. Try it on different pitches to explore your range." },
       ],
       confetti: true,
     },

@@ -68,8 +68,8 @@ export const PART_3_EXERCISES: JourneyExercise[] = [
       title: "Part III Complete",
       subtitle: "Lip Rolls & Breath",
       elements: [
-        { id: "learned", type: "paragraph", text: "Sustained lip rolls, deeper breathwork, and your first humming — building control and relaxation." },
-        { id: "tip", type: "paragraph", text: "Lip rolls are a great way to start any singing session." },
+        { type: "paragraph", text: "Sustained lip rolls, deeper breathwork, and your first humming — building control and relaxation." },
+        { type: "paragraph", text: "Lip rolls are a great way to start any singing session." },
       ],
       confetti: true,
     },
