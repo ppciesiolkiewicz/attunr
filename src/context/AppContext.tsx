@@ -14,6 +14,7 @@ export interface AppContextValue {
   pitchStatus: string;
   startListening: () => void;
   openSettings: () => void;
+  triggerNotificationPrompt: () => void;
 }
 
 export const AppContext = createContext<AppContextValue | null>(null);

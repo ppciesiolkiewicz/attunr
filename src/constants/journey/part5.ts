@@ -7,6 +7,7 @@ export const PART_5_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Hum — Mid-low",
     subtitle: "Hum · 6 seconds",
+    showNotificationPrompt: true,
     notes: [{ target: { kind: "slot", n: 3 }, seconds: 6 }],
     instruction:
       "Hum with purpose on the mid-low tone.\nFeel the tone grow stronger in your body.\nKeep your breath even.",

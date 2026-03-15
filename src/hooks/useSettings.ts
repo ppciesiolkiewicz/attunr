@@ -11,7 +11,6 @@ export interface Settings {
   vocalRangeHighHz: number; // detected high comfortable Hz (0 = not set)
   notificationsEnabled: boolean;
   practiceFrequency: PracticeFrequency;
-  notificationPromptShown: boolean;
 }
 
 const DEFAULTS: Settings = {
@@ -21,7 +20,6 @@ const DEFAULTS: Settings = {
   vocalRangeHighHz: 0,
   notificationsEnabled: false,
   practiceFrequency: "daily",
-  notificationPromptShown: false,
 };
 
 const KEYS: Record<keyof Settings, string> = {
@@ -31,7 +29,6 @@ const KEYS: Record<keyof Settings, string> = {
   vocalRangeHighHz:         "attunr.vocalRangeHighHz",
   notificationsEnabled:     "attunr.notificationsEnabled",
   practiceFrequency:        "attunr.practiceFrequency",
-  notificationPromptShown:  "attunr.notificationPromptShown",
 };
 
 function readStorage(): Partial<Settings> {
@@ -42,7 +39,6 @@ function readStorage(): Partial<Settings> {
     const highRaw   = localStorage.getItem(KEYS.vocalRangeHighHz);
     const notifEnabled = localStorage.getItem(KEYS.notificationsEnabled);
     const frequency = localStorage.getItem(KEYS.practiceFrequency) as PracticeFrequency | null;
-    const promptShown = localStorage.getItem(KEYS.notificationPromptShown);
     return {
       ...(tuning       && { tuning }),
       ...(stageRaw     && { journeyStage: parseInt(stageRaw, 10) }),
@@ -50,7 +46,6 @@ function readStorage(): Partial<Settings> {
       ...(highRaw      && { vocalRangeHighHz: parseFloat(highRaw) }),
       ...(notifEnabled && { notificationsEnabled: notifEnabled === "true" }),
       ...(frequency    && { practiceFrequency: frequency }),
-      ...(promptShown  && { notificationPromptShown: promptShown === "true" }),
     };
   } catch {
     return {};

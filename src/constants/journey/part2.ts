@@ -19,6 +19,7 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Low U",
     subtitle: "Chest voice · 5 seconds",
     technique: "sustain",
+    showNotificationPrompt: true,
     notes: [{ target: { kind: "range", from: 0, to: 2, accept: "below" }, seconds: 5 }],
     instruction:
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",

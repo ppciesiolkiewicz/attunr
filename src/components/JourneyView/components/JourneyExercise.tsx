@@ -11,6 +11,7 @@ import { PartCompleteModal } from "./PartCompleteModal";
 import { JOURNEY_EXERCISES, JOURNEY_CONFIG, getNextExerciseId } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
+import { useApp } from "@/context/AppContext";
 import type { Band } from "@/constants/tone-slots";
 import type { ModalConfig } from "@/constants/journey/types";
 import type { Settings } from "@/hooks/useSettings";
@@ -42,6 +43,7 @@ export function JourneyExercise({
   onPrev?: (prevExerciseId: number) => void;
 }) {
   const router = useRouter();
+  const { triggerNotificationPrompt } = useApp();
   const highestCompleted = settings.journeyStage;
   const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId)!;
   const isCompleted = exerciseId <= highestCompleted;
@@ -63,6 +65,12 @@ export function JourneyExercise({
     return !getSkippedInfoExerciseIds().has(exerciseId);
   };
   const [showInfoModal, setShowInfoModal] = useState(shouldAutoShowInfo);
+
+  // Trigger notification prompt when info modal is shown for flagged exercises
+  useEffect(() => {
+    if (showInfoModal && exercise.showNotificationPrompt) triggerNotificationPrompt();
+  }, [showInfoModal, exercise.showNotificationPrompt, triggerNotificationPrompt]);
+
   const [partCompleteData, setPartCompleteData] = useState<{
     part: number;
     partName: string;

@@ -119,6 +119,8 @@ export interface BaseExerciseConfig {
   introModal?: ModalConfig;
   /** Shown after exercise completes (e.g. part-complete summary). */
   completionModal?: ModalConfig;
+  /** Show the "enable practice reminders" toast when this exercise's info modal is displayed. */
+  showNotificationPrompt?: boolean;
 }
 
 // ── Layer 2: Specific exercise types ─────────────────────────────────────────

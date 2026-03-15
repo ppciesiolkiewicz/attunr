@@ -51,7 +51,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
   // Notifications: service worker, scheduler, and prompt flow
   useServiceWorker();
   useNotificationScheduler(settings);
-  const { frequencyModalOpen, openFrequencyModal, closeFrequencyModal, handleFrequencySave } =
+  const { frequencyModalOpen, openFrequencyModal, closeFrequencyModal, handleFrequencySave, triggerPrompt } =
     useNotificationPrompt(settings, update);
 
   // Hydrate onboarding flag after mount — also trigger onboarding when voice
@@ -95,6 +95,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
     pitchStatus: status,
     startListening,
     openSettings: handleOpenSettings,
+    triggerNotificationPrompt: triggerPrompt,
   };
 
   function handleOnboardingBegin(result: { lowHz: number; highHz: number; voiceType: string }) {
