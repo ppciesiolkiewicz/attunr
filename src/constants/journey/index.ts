@@ -47,6 +47,9 @@ export type {
   FarinelliBreathworkExercise,
   ToneFollowExercise,
   ToneFollowShape,
+  MelodyExercise,
+  MelodyNoteConfig,
+  MelodyScale,
 } from "./types";
 
 /** Build introModal for a non-learn exercise from its existing properties. */
@@ -74,6 +77,26 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
     return {
       title: exercise.title,
       subtitle: `Complete ${exercise.maxCount} cycles — each a bit longer than the last`,
+      elements,
+    };
+  }
+
+  // Melody exercises — sing along to scrolling notes
+  if (exercise.exerciseTypeId === "melody") {
+    for (const line of exercise.instruction.split("\n")) {
+      if (line.trim()) {
+        elements.push({
+          type: "paragraph",
+          text: line,
+          variant: elements.length === 0 ? undefined : "secondary",
+        });
+      }
+    }
+    elements.push({ type: "headphones-notice" });
+    const noteCount = exercise.melody.flatMap((s) => s.notes).filter((n) => !("rest" in n && n.rest)).length;
+    return {
+      title: exercise.title,
+      subtitle: `Sing along to ${noteCount} notes — score ${exercise.minScore}% to pass`,
       elements,
     };
   }

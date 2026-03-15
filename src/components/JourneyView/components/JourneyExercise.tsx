@@ -12,7 +12,8 @@ import { JOURNEY_EXERCISES, JOURNEY_CONFIG, getNextExerciseId } from "@/constant
 import { analytics } from "@/lib/analytics";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { useApp } from "@/context/AppContext";
-import type { Band } from "@/constants/tone-slots";
+import type { Band, VocalRange } from "@/constants/tone-slots";
+import { hzToNoteName } from "@/lib/pitch";
 import type { ModalConfig } from "@/constants/journey/types";
 import type { Settings } from "@/hooks/useSettings";
 
@@ -49,14 +50,15 @@ export function JourneyExercise({
   const isCompleted = exerciseId <= highestCompleted;
   const partTitle = JOURNEY_CONFIG.find((p) => p.part === exercise.part)?.title ?? "";
 
-  const allBands = useMemo(
-    () => getScaleNotesForRange(
-      settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131,
-      settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523,
-      settings.tuning,
-    ),
-    [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
-  );
+  const vocalRange: VocalRange = useMemo(() => {
+    const lowHz = settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131;
+    const highHz = settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523;
+    return {
+      lowNote: hzToNoteName(lowHz),
+      highNote: hzToNoteName(highHz),
+      allBands: getScaleNotesForRange(lowHz, highHz, settings.tuning),
+    };
+  }, [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning]);
 
   const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1";
   const shouldAutoShowInfo = () => {
@@ -178,7 +180,7 @@ export function JourneyExercise({
         stepIndex={getStepInPart(exerciseId).stepIndex}
         stepsInPart={getStepInPart(exerciseId).stepsInPart}
         isLast={exerciseId === JOURNEY_EXERCISES[JOURNEY_EXERCISES.length - 1]?.id}
-        allBands={allBands}
+        vocalRange={vocalRange}
         pitchHz={pitchHz}
         pitchHzRef={pitchHzRef}
         isAlreadyCompleted={isCompleted}

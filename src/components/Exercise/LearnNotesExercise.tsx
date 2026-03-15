@@ -2,12 +2,12 @@
 
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import { Button, Text } from "@/components/ui";
-import type { Band } from "@/constants/tone-slots";
+import type { Band, VocalRange } from "@/constants/tone-slots";
 
 interface LearnNotesExerciseProps {
   exerciseId: number;
   isLast: boolean;
-  allBands: Band[];
+  vocalRange: VocalRange;
   onComplete: () => void;
   onPrev?: () => void;
 }
@@ -133,12 +133,12 @@ function NoteRangeCanvas({ bands }: { bands: Band[] }) {
 export function LearnNotesExercise({
   exerciseId,
   isLast,
-  allBands,
+  vocalRange,
   onComplete,
   onPrev,
 }: LearnNotesExerciseProps) {
   // Show only the 7 slot bands — keeps the canvas clean
-  const slotBands = useMemo(() => allBands.filter((b) => b.isSlot), [allBands]);
+  const slotBands = useMemo(() => vocalRange.allBands.filter((b) => b.isSlot), [vocalRange.allBands]);
   const lowest = slotBands[0];
   const highest = slotBands[slotBands.length - 1];
 

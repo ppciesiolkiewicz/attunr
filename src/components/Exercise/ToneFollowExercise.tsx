@@ -7,7 +7,7 @@ import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
 import type { ToneFollowExercise as ToneFollowConfig } from "@/constants/journey";
 import { resolveBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/tone-slots";
+import type { Band, VocalRange } from "@/constants/tone-slots";
 
 const SLIDE_HOLD_START_MS = 1000;
 const SLIDE_RAMP_MS = 2500;
@@ -19,7 +19,7 @@ interface ToneFollowExerciseProps {
   exercise: ToneFollowConfig;
   exerciseId: number;
   isLast: boolean;
-  allBands: Band[];
+  vocalRange: VocalRange;
   isAlreadyCompleted: boolean;
   onComplete: () => void;
   onSkip: () => void;
@@ -32,7 +32,7 @@ export function ToneFollowExercise({
   exercise,
   exerciseId,
   isLast,
-  allBands,
+  vocalRange,
   isAlreadyCompleted,
   onComplete,
   onSkip,
@@ -43,27 +43,27 @@ export function ToneFollowExercise({
   // ── Band resolution ──────────────────────────────────────────────────────
   const exerciseBands = useMemo(() => {
     if (exercise.toneShape.kind === "sustain") {
-      return resolveBandTarget(exercise.toneShape.target, allBands);
+      return resolveBandTarget(exercise.toneShape.target, vocalRange.allBands);
     }
-    const fromBands = resolveBandTarget(exercise.toneShape.from, allBands);
-    const toBands = resolveBandTarget(exercise.toneShape.to, allBands);
-    const fromIdx = fromBands[0] ? allBands.indexOf(fromBands[0]) : 0;
-    const toIdx = toBands[0] ? allBands.indexOf(toBands[0]) : allBands.length - 1;
+    const fromBands = resolveBandTarget(exercise.toneShape.from, vocalRange.allBands);
+    const toBands = resolveBandTarget(exercise.toneShape.to, vocalRange.allBands);
+    const fromIdx = fromBands[0] ? vocalRange.allBands.indexOf(fromBands[0]) : 0;
+    const toIdx = toBands[0] ? vocalRange.allBands.indexOf(toBands[0]) : vocalRange.allBands.length - 1;
     const lo = Math.min(fromIdx, toIdx);
     const hi = Math.max(fromIdx, toIdx);
-    return allBands.slice(lo, hi + 1);
-  }, [exercise, allBands]);
+    return vocalRange.allBands.slice(lo, hi + 1);
+  }, [exercise, vocalRange.allBands]);
 
   const displayBands = useMemo(() => {
     if (exerciseBands.length <= 1) return exerciseBands;
     const indices = exerciseBands
-      .map((b) => allBands.findIndex((ab) => ab.id === b.id))
+      .map((b) => vocalRange.allBands.findIndex((ab) => ab.id === b.id))
       .filter((i) => i >= 0);
     if (indices.length === 0) return exerciseBands;
     const minIdx = Math.max(0, Math.min(...indices) - 1);
-    const maxIdx = Math.min(allBands.length - 1, Math.max(...indices) + 1);
-    return allBands.slice(minIdx, maxIdx + 1);
-  }, [exerciseBands, allBands]);
+    const maxIdx = Math.min(vocalRange.allBands.length - 1, Math.max(...indices) + 1);
+    return vocalRange.allBands.slice(minIdx, maxIdx + 1);
+  }, [exerciseBands, vocalRange.allBands]);
 
   const highlightIds = useMemo(() => exerciseBands.map((b) => b.id), [exerciseBands]);
 
@@ -133,8 +133,8 @@ export function ToneFollowExercise({
 
     const shape = exercise.toneShape;
     if (shape.kind === "slide" && onPlaySlide) {
-      const fromBands = resolveBandTarget(shape.from, allBands);
-      const toBands = resolveBandTarget(shape.to, allBands);
+      const fromBands = resolveBandTarget(shape.from, vocalRange.allBands);
+      const toBands = resolveBandTarget(shape.to, vocalRange.allBands);
       const fromBand = fromBands[0];
       const toBand = toBands[0];
       if (fromBand && toBand) {
@@ -147,7 +147,7 @@ export function ToneFollowExercise({
         setPlayCount((c) => c + 1);
       }, SLIDE_TOTAL_MS);
     } else if (shape.kind === "sustain") {
-      const bands = resolveBandTarget(shape.target, allBands);
+      const bands = resolveBandTarget(shape.target, vocalRange.allBands);
       const band = bands[0];
       if (band) {
         const durationMs = shape.seconds * 1000;

@@ -1,12 +1,13 @@
 "use client";
 
 import type { JourneyExercise } from "@/constants/journey";
-import type { Band } from "@/constants/tone-slots";
+import type { Band, VocalRange } from "@/constants/tone-slots";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
 import { PitchExercise } from "./PitchExercise";
 import { ToneFollowExercise } from "./ToneFollowExercise";
+import { MelodyExercise } from "./MelodyExercise";
 
 interface BaseExerciseProps {
   exercise: JourneyExercise;
@@ -16,7 +17,7 @@ interface BaseExerciseProps {
   stepIndex: number;
   stepsInPart: number;
   isLast: boolean;
-  allBands: Band[];
+  vocalRange: VocalRange;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;
@@ -42,7 +43,7 @@ export function BaseExercise({
   stepIndex,
   stepsInPart,
   isLast,
-  allBands,
+  vocalRange,
   pitchHz,
   pitchHzRef,
   isAlreadyCompleted,
@@ -73,7 +74,7 @@ export function BaseExercise({
         <LearnNotesExercise
           exerciseId={exerciseId}
           isLast={isLast}
-          allBands={allBands}
+          vocalRange={vocalRange}
           onComplete={onComplete}
           onPrev={onPrev}
         />
@@ -98,13 +99,28 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          allBands={allBands}
+          vocalRange={vocalRange}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}
           onPrev={onPrev}
           onPlayTone={onPlayTone}
           onPlaySlide={onPlaySlide}
+        />
+      );
+
+    case "melody":
+      return (
+        <MelodyExercise
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
+          vocalRange={vocalRange}
+          pitchHzRef={pitchHzRef}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
         />
       );
 
@@ -115,7 +131,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          allBands={allBands}
+          vocalRange={vocalRange}
           pitchHz={pitchHz}
           pitchHzRef={pitchHzRef}
           isAlreadyCompleted={isAlreadyCompleted}

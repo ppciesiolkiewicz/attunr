@@ -57,6 +57,16 @@ export interface Band {
   slotId?: SlotId;
 }
 
+/** Vocal range data passed to exercises. */
+export interface VocalRange {
+  /** Lowest detected note, e.g. "C3". */
+  lowNote: string;
+  /** Highest detected note, e.g. "C5". */
+  highNote: string;
+  /** Major scale bands with 7 slots — default note pool for non-melody exercises. */
+  allBands: Band[];
+}
+
 // ── Re-exports ───────────────────────────────────────────────────────────────
 
 export { VOICE_TYPES } from "@/constants/voice-types";
@@ -77,4 +87,4 @@ export {
   pitchConfidence,
 } from "@/lib/pitch";
 
-export { getScaleNotesForRange } from "@/lib/vocal-scale";
+export { getScaleNotesForRange, buildScaleForRange } from "@/lib/vocal-scale";

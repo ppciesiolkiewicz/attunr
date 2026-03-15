@@ -20,6 +20,15 @@ export type InTuneOverride = {
   accept: "within" | "below" | "above";
 };
 
+export interface MelodyRectNote {
+  index: number;           // position in melody array (excluding rests)
+  band: Band;              // resolved from BandTarget
+  startMs: number;         // offset from melody start time
+  durationMs: number;      // rectangle width in time
+  silent?: boolean;        // dashed/dimmed visual style
+  status: "upcoming" | "active" | "hit" | "close" | "missed";
+}
+
 interface PitchCanvasProps {
   bands: Band[];
   /** Ref updated synchronously by the pitch detection hook — no React latency */
@@ -29,6 +38,10 @@ interface PitchCanvasProps {
   /** When set, use matchesBandTarget(hz, bands, accept) instead of isInTune. For chest/head exercises. */
   inTuneOverride?: InTuneOverride;
   onBandClick?: (band: Band) => void;
+  /** Melody rectangle notes to render on the canvas */
+  melodyNotes?: MelodyRectNote[];
+  /** performance.now() when melody playback began */
+  melodyStartTime?: number;
 }
 
 const DOT_INTERVAL_MS = 85;
@@ -142,6 +155,8 @@ export default function PitchCanvas({
   highlightIds,
   inTuneOverride,
   onBandClick,
+  melodyNotes,
+  melodyStartTime,
 }: PitchCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<PitchDot[]>([]);
@@ -154,6 +169,8 @@ export default function PitchCanvas({
   const rafRef = useRef<number | null>(null);
   /** Stores canvas dimensions + computed band positions for the click handler */
   const layoutRef = useRef({ W: 0, H: 0, bottomY: 0, topY: 0 });
+  const melodyNotesRef = useRef<MelodyRectNote[] | undefined>(melodyNotes);
+  const melodyStartTimeRef = useRef<number | undefined>(melodyStartTime);
 
   // Sort on every prop change and flush stale dots so they don't appear in
   // the wrong position after a frequency-mode switch.
@@ -172,6 +189,13 @@ export default function PitchCanvas({
     inTuneOverrideRef.current = inTuneOverride;
   }, [inTuneOverride]);
 
+  useEffect(() => {
+    melodyNotesRef.current = melodyNotes;
+  }, [melodyNotes]);
+
+  useEffect(() => {
+    melodyStartTimeRef.current = melodyStartTime;
+  }, [melodyStartTime]);
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -223,6 +247,8 @@ export default function PitchCanvas({
     bgGrad.addColorStop(1, "rgba(30,10,80,0.06)");
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, W, H);
+
+    const now = performance.now();
 
     const override = inTuneOverrideRef.current;
     const getInTune = (h: number) => {
@@ -279,8 +305,74 @@ export default function PitchCanvas({
       ctx.fillText(`${band.frequencyHz} Hz`, 12 + noteW + 9, cy + 1);
     }
 
+    // ── Melody rectangles ──────────────────────────────────────────────────
+    const mNotes = melodyNotesRef.current;
+    const mStart = melodyStartTimeRef.current;
+    if (mNotes && mStart != null) {
+      const elapsedMs = now - mStart;
+      const rectH = Math.min(slotH * 0.75, 36);
+
+      for (const mn of mNotes) {
+        const leftMs = mn.startMs - elapsedMs;
+        const rightMs = mn.startMs + mn.durationMs - elapsedMs;
+
+        // Convert time offset to X position (future = right of newestX)
+        const x1 = newestX + leftMs * PX_PER_MS;
+        const x2 = newestX + rightMs * PX_PER_MS;
+
+        // Off-screen culling
+        if (x2 < 0 || x1 > W) continue;
+
+        const y = hzToY(mn.band.frequencyHz, bands, bottomY, topY);
+        const rectY = y - rectH / 2;
+        const rectW = Math.max(x2 - x1, 2);
+        const rgb = mn.band.rgb;
+        const dimFactor = mn.silent ? 0.5 : 1;
+
+        // Fill based on status
+        let fillStyle: string;
+        switch (mn.status) {
+          case "hit":
+            fillStyle = "rgba(80, 220, 100, 0.4)";
+            break;
+          case "close":
+            fillStyle = "rgba(220, 200, 60, 0.35)";
+            break;
+          case "missed":
+            fillStyle = "rgba(200, 60, 60, 0.25)";
+            break;
+          case "active":
+            fillStyle = `rgba(${rgb}, ${0.4 * dimFactor})`;
+            break;
+          default: // upcoming
+            fillStyle = `rgba(${rgb}, ${0.2 * dimFactor})`;
+        }
+        ctx.fillStyle = fillStyle;
+        ctx.fillRect(x1, rectY, rectW, rectH);
+
+        // Border
+        ctx.save();
+        if (mn.silent) {
+          ctx.setLineDash([4, 4]);
+        }
+        let borderAlpha: number;
+        let borderWidth: number;
+        if (mn.status === "active") {
+          const pulse = (Math.sin(now / 300) + 1) / 2;
+          borderAlpha = (0.6 + pulse * 0.4) * dimFactor;
+          borderWidth = 1.5;
+        } else {
+          borderAlpha = 0.5 * dimFactor;
+          borderWidth = 1;
+        }
+        ctx.strokeStyle = `rgba(${rgb}, ${borderAlpha})`;
+        ctx.lineWidth = borderWidth;
+        ctx.strokeRect(x1, rectY, rectW, rectH);
+        ctx.restore();
+      }
+    }
+
     // ── Accumulate trail dot (every DOT_INTERVAL_MS) ─────────────────────────
-    const now = performance.now();
     if (hz !== null && now - lastDotMs.current > DOT_INTERVAL_MS) {
       dotsRef.current.push({ hz, ts: now });
       lastDotMs.current = now;

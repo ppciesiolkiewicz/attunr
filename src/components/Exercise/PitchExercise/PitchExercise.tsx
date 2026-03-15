@@ -10,13 +10,13 @@ import { usePitchProgress } from "./usePitchProgress";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 import { findClosestBand, isInTune, matchesBandTarget, resolveBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/tone-slots";
+import type { Band, VocalRange } from "@/constants/tone-slots";
 
 interface PitchExerciseProps {
   exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
   exerciseId: number;
   isLast: boolean;
-  allBands: Band[];
+  vocalRange: VocalRange;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;
@@ -31,7 +31,7 @@ export function PitchExercise({
   exercise,
   exerciseId,
   isLast,
-  allBands,
+  vocalRange,
   pitchHz,
   pitchHzRef,
   isAlreadyCompleted,
@@ -44,16 +44,16 @@ export function PitchExercise({
   // ── Band resolution ──────────────────────────────────────────────────────
   const exerciseBands = useMemo(() => {
     if (exercise.exerciseTypeId === "pitch-detection") {
-      return exercise.notes.flatMap((n) => resolveBandTarget(n.target, allBands));
+      return exercise.notes.flatMap((n) => resolveBandTarget(n.target, vocalRange.allBands));
     }
-    const fromBands = resolveBandTarget(exercise.notes[0].from, allBands);
-    const toBands = resolveBandTarget(exercise.notes[0].to, allBands);
-    const fromIdx = fromBands[0] ? allBands.indexOf(fromBands[0]) : 0;
-    const toIdx = toBands[0] ? allBands.indexOf(toBands[0]) : allBands.length - 1;
+    const fromBands = resolveBandTarget(exercise.notes[0].from, vocalRange.allBands);
+    const toBands = resolveBandTarget(exercise.notes[0].to, vocalRange.allBands);
+    const fromIdx = fromBands[0] ? vocalRange.allBands.indexOf(fromBands[0]) : 0;
+    const toIdx = toBands[0] ? vocalRange.allBands.indexOf(toBands[0]) : vocalRange.allBands.length - 1;
     const lo = Math.min(fromIdx, toIdx);
     const hi = Math.max(fromIdx, toIdx);
-    return allBands.slice(lo, hi + 1);
-  }, [exercise, allBands]);
+    return vocalRange.allBands.slice(lo, hi + 1);
+  }, [exercise, vocalRange.allBands]);
 
   const isRangeTarget =
     exercise.exerciseTypeId === "pitch-detection" &&
@@ -63,34 +63,34 @@ export function PitchExercise({
   const displayBands = useMemo(() => {
     if (exerciseBands.length <= 1) return exerciseBands;
     const indices = exerciseBands
-      .map((b) => allBands.findIndex((ab) => ab.id === b.id))
+      .map((b) => vocalRange.allBands.findIndex((ab) => ab.id === b.id))
       .filter((i) => i >= 0);
     if (indices.length === 0) return exerciseBands;
     const minIdx = Math.max(0, Math.min(...indices) - 1);
-    const maxIdx = Math.min(allBands.length - 1, Math.max(...indices) + 1);
-    return allBands.slice(minIdx, maxIdx + 1);
-  }, [exerciseBands, allBands]);
+    const maxIdx = Math.min(vocalRange.allBands.length - 1, Math.max(...indices) + 1);
+    return vocalRange.allBands.slice(minIdx, maxIdx + 1);
+  }, [exerciseBands, vocalRange.allBands]);
 
   const highlightIds = useMemo(() => exerciseBands.map((b) => b.id), [exerciseBands]);
 
   const toneBands = useMemo(() => {
     if (exercise.exerciseTypeId === "pitch-detection") {
-      return exercise.notes.flatMap((n) => resolveBandTarget(n.target, allBands));
+      return exercise.notes.flatMap((n) => resolveBandTarget(n.target, vocalRange.allBands));
     }
     return [
-      ...resolveBandTarget(exercise.notes[0].from, allBands),
-      ...resolveBandTarget(exercise.notes[0].to, allBands),
+      ...resolveBandTarget(exercise.notes[0].from, vocalRange.allBands),
+      ...resolveBandTarget(exercise.notes[0].to, vocalRange.allBands),
     ];
-  }, [exercise, allBands]);
+  }, [exercise, vocalRange.allBands]);
 
   const seqStepBands = useMemo(() => {
     if (exercise.exerciseTypeId !== "pitch-detection" || exercise.notes.length <= 1) return [];
-    return exercise.notes.map((n) => resolveBandTarget(n.target, allBands)[0]).filter(Boolean);
-  }, [exercise, allBands]);
+    return exercise.notes.map((n) => resolveBandTarget(n.target, vocalRange.allBands)[0]).filter(Boolean);
+  }, [exercise, vocalRange.allBands]);
 
   // ── Progress (RAF loop in hook) ──────────────────────────────────────────
   const { progress, seqIndex, slideCount, stageComplete: exerciseComplete, showStepCheck } =
-    usePitchProgress({ exercise, exerciseId, allBands, exerciseBands, pitchHzRef });
+    usePitchProgress({ exercise, exerciseId, allBands: vocalRange.allBands, exerciseBands, pitchHzRef });
 
   const [showCongrats, setShowCongrats] = useState(false);
 

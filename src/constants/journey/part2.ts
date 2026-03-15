@@ -45,6 +45,25 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
   },
   {
     part: 2,
+    exerciseTypeId: "melody",
+    title: "Perfect Fifth",
+    subtitle: "Sing two notes · intervals",
+    technique: "sustain",
+    melody: [
+      {
+        type: "major",
+        root: 1,
+        notes: [
+          { target: { kind: "index", i: 0 }, seconds: 2 },
+          { target: { kind: "index", i: 4 }, seconds: 2 },
+        ],
+      },
+    ],
+    minScore: 0,
+    instruction: "Sing the two notes as they appear — the piano plays each note for you",
+  },
+  {
+    part: 2,
     exerciseTypeId: "learn",
     title: "Lip rolls",
     technique: "lip-rolls",

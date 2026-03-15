@@ -12,7 +12,8 @@ export type ExerciseTypeId =
   | "pitch-detection"             // hold tone(s) — single note or sequence
   | "pitch-detection-slide"       // glide between two pitches
   | "breathwork-farinelli"        // Farinelli breathing cycles, no pitch detection
-  | "tone-follow";                // play tone and follow along (no mic detection)
+  | "tone-follow"                 // play tone and follow along (no mic detection)
+  | "melody";                     // sing along to scrolling melody with scoring
 
 // ── Band targeting ─────────────────────────────────────────────────────────────
 
@@ -170,13 +171,40 @@ export interface ToneFollowExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
+/** A note to sing or a rest (gap) in a melody exercise. */
+export type MelodyNoteConfig =
+  | { target: BandTarget; seconds: number; silent?: boolean }
+  | { rest: true; seconds: number };
+
+/** A scale segment — defines a note pool for a group of melody notes. */
+export interface MelodyScale {
+  /** Tonal.js scale name: "major", "minor", "chromatic", "pentatonic", etc. */
+  type: string;
+  /** 1-indexed chromatic degree from user's lowest note (1 = lowest, 12 = 11 semitones above). */
+  root: number;
+  /** Notes resolved against this scale's note pool. Only index/range targets — not slot. */
+  notes: MelodyNoteConfig[];
+}
+
+export interface MelodyExercise extends BaseExerciseConfig {
+  exerciseTypeId: "melody";
+  /** Scale segments the user sings — rendered as scrolling rectangles, scored for accuracy. */
+  melody: MelodyScale[];
+  /** Optional accompaniment — same structure, not scored, not shown on canvas. */
+  backingTrack?: MelodyScale[];
+  /** Score threshold (0–100) to complete. Always shown. 0 = any score passes. */
+  minScore: number;
+  instruction: string;
+}
+
 export type JourneyExercise =
   | LearnExercise
   | LearnNotesExercise
   | PitchDetectionExercise
   | PitchDetectionSlideExercise
   | FarinelliBreathworkExercise
-  | ToneFollowExercise;
+  | ToneFollowExercise
+  | MelodyExercise;
 
 /** Input type for part files — `id` is assigned automatically in index.ts. */
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
