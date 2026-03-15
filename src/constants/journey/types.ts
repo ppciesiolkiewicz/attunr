@@ -171,20 +171,32 @@ export interface ToneFollowExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
-/** A note to sing, a chord (simultaneous notes), or a rest (gap) in a melody exercise. */
-export type MelodyNoteConfig =
-  | { target: BandTarget; seconds: number; silent?: boolean }
-  | { chord: BandTarget[]; seconds: number }
-  | { rest: true; seconds: number };
+/** Musical note duration in sixteenths. Duration in seconds: (value / 4) * (60 / tempo). */
+export enum NoteDuration {
+  Whole = 16,
+  DottedHalf = 12,
+  Half = 8,
+  DottedQuarter = 6,
+  Quarter = 4,
+  DottedEighth = 3,
+  Eighth = 2,
+  Sixteenth = 1,
+}
 
-/** A scale segment — defines a note pool for a group of melody notes. */
+/** A melody timeline event. */
+export type MelodyEvent =
+  | { type: "note"; target: BandTarget; duration: NoteDuration; silent?: boolean }
+  | { type: "play"; targets: BandTarget[]; duration: NoteDuration }
+  | { type: "pause"; duration: NoteDuration };
+
+/** A scale segment — defines a note pool for a group of melody events. */
 export interface MelodyScale {
   /** Tonal.js scale name: "major", "minor", "chromatic", "pentatonic", etc. */
   type: string;
   /** 1-indexed chromatic degree from user's lowest note (1 = lowest, 12 = 11 semitones above). */
   root: number;
-  /** Notes resolved against this scale's note pool. Only index/range targets — not slot. */
-  notes: MelodyNoteConfig[];
+  /** Events resolved against this scale's note pool. Only index/range targets — not slot. */
+  events: MelodyEvent[];
 }
 
 /** A note to display on the canvas with a specific style. */
@@ -206,10 +218,10 @@ export interface DisplayScale {
 
 export interface MelodyExercise extends BaseExerciseConfig {
   exerciseTypeId: "melody";
-  /** Scale segments the user sings — rendered as scrolling rectangles, scored for accuracy. */
+  /** BPM — quarter note = 1 beat. Duration formula: (NoteDuration / 4) * (60 / tempo) seconds. */
+  tempo: number;
+  /** Scale segments with events — single unified timeline (chords, notes, pauses). */
   melody: MelodyScale[];
-  /** Optional accompaniment — same structure, not scored, not shown on canvas. */
-  backingTrack?: MelodyScale[];
   /** Optional override for which notes appear on the canvas. Omit to auto-derive from melody. */
   displayNotes?: DisplayScale[];
   /** Score threshold (0–100) to complete. Always shown. 0 = any score passes. */
