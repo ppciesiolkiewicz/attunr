@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 9: Breath & Body — puffy cheeks intro, AH range expansion */
-export const PART_9_EXERCISES: JourneyExercise[] = [
+export const PART_9_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 44,
     part: 9,
     exerciseTypeId: "learn",
     title: "Puffy cheeks",
@@ -15,7 +14,6 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 45,
     part: 9,
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Low",
@@ -26,7 +24,6 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
       "Sing on your lowest tone with puffy cheeks.\nPuff your cheeks out while sustaining the note.\nFeel the back-pressure — let it support your voice.",
   },
   {
-    id: 46,
     part: 9,
     exerciseTypeId: "pitch-detection",
     title: "AH — Mid-high",
@@ -36,7 +33,6 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
       "Sing AH on the mid-high tone.\nThis is a step higher than before — keep the openness.\nDon't push. Let the note come naturally.",
   },
   {
-    id: 47,
     part: 9,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -45,7 +41,6 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Let the breath recover after the puffy cheeks challenge.",
   },
   {
-    id: 48,
     part: 9,
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid",
@@ -56,7 +51,6 @@ export const PART_9_EXERCISES: JourneyExercise[] = [
       "Sing on the mid-low tone with puffy cheeks.\nFeel the back-pressure support your voice.\nKeep it steady and relaxed.",
   },
   {
-    id: 49,
     part: 9,
     exerciseTypeId: "pitch-detection",
     title: "OO → AH flow",

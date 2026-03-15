@@ -8,9 +8,11 @@
  */
 export type ExerciseTypeId =
   | "learn"                       // text + video placeholder, no exercise
+  | "learn-notes-1"              // interactive notes introduction with range canvas
   | "pitch-detection"             // hold tone(s) — single note or sequence
   | "pitch-detection-slide"       // glide between two pitches
-  | "breathwork-farinelli";       // Farinelli breathing cycles, no pitch detection
+  | "breathwork-farinelli"        // Farinelli breathing cycles, no pitch detection
+  | "tone-follow";                // play tone and follow along (no mic detection)
 
 // ── Band targeting ─────────────────────────────────────────────────────────────
 
@@ -101,7 +103,7 @@ export interface ModalConfig {
 
 /** Fields shared by all exercise types. */
 export interface BaseExerciseConfig {
-  /** Unique exercise ID (1–116). IDs are stable; gaps exist where parts are disabled. */
+  /** Unique exercise ID — assigned automatically by index.ts from array position. */
   id: number;
   exerciseTypeId: ExerciseTypeId;
   /** Part number (1–20). Shown in headers and completion modals. */
@@ -127,6 +129,10 @@ export interface LearnExercise extends BaseExerciseConfig {
   elements: ContentElement[];
 }
 
+export interface LearnNotesExercise extends BaseExerciseConfig {
+  exerciseTypeId: "learn-notes-1";
+}
+
 export interface PitchDetectionExercise extends BaseExerciseConfig {
   exerciseTypeId: "pitch-detection";
   /** One note = single-tone hold; multiple = sing in sequence. */
@@ -148,11 +154,31 @@ export interface FarinelliBreathworkExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
+/** Shape of the tone played in a tone-follow exercise. */
+export type ToneFollowShape =
+  | { kind: "slide"; from: BandTarget; to: BandTarget }
+  | { kind: "sustain"; target: BandTarget; seconds: number };
+
+export interface ToneFollowExercise extends BaseExerciseConfig {
+  exerciseTypeId: "tone-follow";
+  /** Describes the tone to play (slide glide or sustained note). */
+  toneShape: ToneFollowShape;
+  /** Number of times the user must play the tone to complete. */
+  requiredPlays: number;
+  instruction: string;
+}
+
 export type JourneyExercise =
   | LearnExercise
+  | LearnNotesExercise
   | PitchDetectionExercise
   | PitchDetectionSlideExercise
-  | FarinelliBreathworkExercise;
+  | FarinelliBreathworkExercise
+  | ToneFollowExercise;
+
+/** Input type for part files — `id` is assigned automatically in index.ts. */
+type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
+export type JourneyExerciseInput = DistributiveOmit<JourneyExercise, "id">;
 
 // ── Journey part ─────────────────────────────────────────────────────────────
 
@@ -160,4 +186,11 @@ export interface JourneyPart {
   part: number;
   title: string;
   exercises: JourneyExercise[];
+}
+
+/** Journey part before IDs are assigned. */
+export interface JourneyPartInput {
+  part: number;
+  title: string;
+  exercises: JourneyExerciseInput[];
 }

@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 6: Rounded Vowels — introduce OO and OH */
-export const PART_6_EXERCISES: JourneyExercise[] = [
+export const PART_6_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 26,
     part: 6,
     exerciseTypeId: "learn",
     title: "Rounded vowels",
@@ -15,7 +14,6 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 27,
     part: 6,
     exerciseTypeId: "pitch-detection",
     title: "OO — Low",
@@ -25,7 +23,6 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
       "Sing OO (as in 'book') on the lower-mid tone.\nLips rounded, mouth slightly more open than U.\nKeep it warm and full.",
   },
   {
-    id: 28,
     part: 6,
     exerciseTypeId: "pitch-detection",
     title: "OO — Mid",
@@ -35,7 +32,6 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
       "Sing OO on the mid tone.\nFeel the resonance open compared to U.\nKeep the lips rounded and relaxed.",
   },
   {
-    id: 29,
     part: 6,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -44,7 +40,6 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Centre yourself before the new OH vowel.",
   },
   {
-    id: 30,
     part: 6,
     exerciseTypeId: "pitch-detection",
     title: "OH — Low",
@@ -54,7 +49,6 @@ export const PART_6_EXERCISES: JourneyExercise[] = [
       "Sing OH (as in 'go') on the lower-mid tone.\nSlightly more open than OO — like a gentle 'oh' of surprise.\nKeep it rounded and warm.",
   },
   {
-    id: 31,
     part: 6,
     exerciseTypeId: "pitch-detection",
     title: "OH — Mid",

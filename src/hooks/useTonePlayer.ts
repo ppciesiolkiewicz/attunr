@@ -108,9 +108,9 @@ export function useTonePlayer() {
     ) => {
       const ctx = getCtx();
       const {
-        holdStartMs = 400,
+        holdStartMs = 1000,
         slideDurationMs = 2500,
-        holdEndMs = 600,
+        holdEndMs = 1000,
         binaural = true,
       } = options ?? {};
 

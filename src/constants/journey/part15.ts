@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 15: Warmup III — advanced warmup revisiting all techniques */
-export const PART_15_EXERCISES: JourneyExercise[] = [
+export const PART_15_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 80,
     part: 15,
     exerciseTypeId: "learn",
     title: "Advanced warmup",
@@ -14,29 +13,28 @@ export const PART_15_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 81,
     part: 15,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — high to low",
-    subtitle: "Full range glide · 2–3 times",
+    subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    requiredPlays: 3,
     instruction:
-      "Full range lip roll slide — high to low. Smooth and controlled, covering your entire range.",
+      "Play the tone and lip roll alongside it. Full range slide from high to low — smooth and controlled.",
   },
   {
-    id: 82,
     part: 15,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — low to high",
-    subtitle: "Full range glide · 2–3 times",
+    subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    requiredPlays: 3,
     instruction:
-      "Full range lip roll slide — low to high. Even speed through the passaggio.",
+      "Play the tone and lip roll alongside it. Full range slide from low to high — even speed through the passaggio.",
   },
   {
-    id: 83,
     part: 15,
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid-high",
@@ -47,7 +45,6 @@ export const PART_15_EXERCISES: JourneyExercise[] = [
       "Sing on the mid-high tone with puffy cheeks.\nHigher than before — more breath control needed.\nKeep it steady and supported.",
   },
   {
-    id: 84,
     part: 15,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -56,7 +53,6 @@ export const PART_15_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Deepen the breath between the warmup exercises.",
   },
   {
-    id: 85,
     part: 15,
     exerciseTypeId: "pitch-detection",
     title: "Full range hum sequence",

@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 20: Vocal Control — peak difficulty, all techniques combined */
-export const PART_20_EXERCISES: JourneyExercise[] = [
+export const PART_20_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 110,
     part: 20,
     exerciseTypeId: "learn",
     title: "Vocal control",
@@ -14,7 +13,6 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 111,
     part: 20,
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — rising sequence",
@@ -30,7 +28,6 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
       "Puffy cheeks on four tones spanning your full range.\nBiggest challenge: breath control across big jumps.\nKeep the cheeks puffed through every transition.",
   },
   {
-    id: 112,
     part: 20,
     exerciseTypeId: "pitch-detection",
     title: "AH → EE flow — high",
@@ -40,7 +37,6 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
       "Hold the upper-mid tone and flow from AH (open) to EE (narrow). On a high pitch, this demands precise control — the jaw must stay relaxed while the tongue lifts. Keep the pitch rock-steady.",
   },
   {
-    id: 113,
     part: 20,
     exerciseTypeId: "pitch-detection",
     title: "Descending sequence — OH",
@@ -58,7 +54,6 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
       "Sing OH on all seven tones descending — high to low.\nYour first descending full-range sequence.\nFeel the resonance drop from head to chest.",
   },
   {
-    id: 114,
     part: 20,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -67,18 +62,17 @@ export const PART_20_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. The longest Farinelli yet — your breath control at its peak.",
   },
   {
-    id: 115,
     part: 20,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — precision slide",
-    subtitle: "Full range glide · smooth and even",
+    subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    requiredPlays: 3,
     instruction:
-      "Full range lip roll slide — low to high. Focus on even speed throughout. No rushing through the middle — every part of your range gets equal attention.",
+      "Play the tone and lip roll alongside it. Full range slide — focus on even speed throughout your range.",
   },
   {
-    id: 116,
     part: 20,
     exerciseTypeId: "pitch-detection",
     title: "Vowel cascade — high",

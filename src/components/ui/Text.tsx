@@ -14,7 +14,12 @@ export type TextColor =
   | "muted-2"    // text-white/28 — separators, decorative
   | "accent"     // text-violet-400 — brand highlights
   | "warning"    // text-amber-400 — caution notices
-  | "error";     // text-red-400 — error messages
+  | "error"      // text-red-400 — error messages
+  | "note-low"       // red — lowest slot color
+  | "note-mid-low"   // orange
+  | "note-mid"       // green — middle slot
+  | "note-mid-high"  // blue
+  | "note-high";     // indigo/violet — highest slot color
 
 type TextElement = "h1" | "h2" | "h3" | "h4" | "p" | "span" | "label" | "div" | "li";
 
@@ -43,6 +48,11 @@ const colorValues: Record<TextColor, string> = {
   accent: "text-violet-400",
   warning: "text-amber-400",
   error: "text-red-400",
+  "note-low": "text-red-400",
+  "note-mid-low": "text-orange-400",
+  "note-mid": "text-green-400",
+  "note-mid-high": "text-blue-400",
+  "note-high": "text-indigo-400",
 };
 
 const defaultColor: Record<TextVariant, TextColor> = {

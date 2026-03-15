@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 13: Forward EH — introduce EH vowel and resonance shift */
-export const PART_13_EXERCISES: JourneyExercise[] = [
+export const PART_13_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 68,
     part: 13,
     exerciseTypeId: "learn",
     title: "Forward resonance — EH",
@@ -15,7 +14,6 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 69,
     part: 13,
     exerciseTypeId: "pitch-detection",
     title: "EH — Low",
@@ -25,7 +23,6 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
       "Sing EH (as in 'bed') on the lower-mid tone.\nTongue forward, mouth slightly narrower than AH.\nFeel the resonance move forward in your mouth.",
   },
   {
-    id: 70,
     part: 13,
     exerciseTypeId: "pitch-detection",
     title: "EH — Mid",
@@ -35,7 +32,6 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
       "Sing EH on the mid tone.\nKeep the forward placement — the buzz should feel closer to your lips and teeth.\nStay relaxed.",
   },
   {
-    id: 71,
     part: 13,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -44,7 +40,6 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Reset before the vowel transition work.",
   },
   {
-    id: 72,
     part: 13,
     exerciseTypeId: "pitch-detection",
     title: "OH → EH flow",
@@ -54,7 +49,6 @@ export const PART_13_EXERCISES: JourneyExercise[] = [
       "Hold the mid-low tone steady. Start with OH (rounded) and transition to EH (forward). The pitch stays the same — feel the resonance shift forward as the lips unround and the tongue moves forward.",
   },
   {
-    id: 73,
     part: 13,
     exerciseTypeId: "pitch-detection",
     title: "EH — Mid-high",

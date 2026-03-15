@@ -20,10 +20,11 @@ interface BaseExerciseConfig {
 }
 
 // Discriminated variants:
-LearnExercise        → { exerciseTypeId: "learn",                instruction }
+LearnExercise        → { exerciseTypeId: "learn",                elements }
 PitchDetectionExercise → { exerciseTypeId: "pitch-detection",    notes: SustainNoteConfig[], instruction }
 PitchDetectionSlideExercise → { exerciseTypeId: "pitch-detection-slide", notes: SlideConfig[], instruction }
 FarinelliBreathworkExercise   → { exerciseTypeId: "breathwork-farinelli",           maxCount, instruction }
+ToneFollowExercise   → { exerciseTypeId: "tone-follow",         toneShape, requiredPlays, instruction }
 ```
 
 ### BandTarget — how config points at notes
@@ -80,19 +81,21 @@ exercise
  │   │                       pitch overlay: Hz readout + direction hint
  │   │                       indicators: step dots (bottom-left)
  │   │
- │   └─ "pitch-detection-slide"
- │                         → canvas: PitchCanvas
- │                           progress: zone-crossing (complete after 2)
- │                           pitch overlay: Hz readout
- │                           indicators: slide dots (bottom-left)
+ │   ├─ "pitch-detection-slide"
+ │   │                     → canvas: PitchCanvas
+ │   │                       progress: zone-crossing (complete after 2)
+ │   │                       pitch overlay: Hz readout
+ │   │                       indicators: slide dots (bottom-left)
+ │   │
+ │   └─ "tone-follow"     → canvas: PitchCanvas (simulated cursor, no mic)
+ │                           progress: play count (requiredPlays, typically 3)
+ │                           pitch overlay: instruction text only
+ │                           indicators: play-count dots (bottom-left)
+ │                           toneShape.kind = "slide" → smooth glide playback
+ │                           toneShape.kind = "sustain" → sustained tone playback
  │
- └─ technique (cross-cuts all pitch exercises)
-     ├─ "lip-rolls"       → tolerance: ±8%
-     │                      detection: graduated credit (lipRollCredit 0–1)
-     │                      slide playback: smooth glide
-     │                      slide zones: midpoint boundary (forgiving)
-     │
-     └─ others             → tolerance: ±3%
+ └─ technique (cross-cuts pitch-detection exercises)
+     └─ all techniques     → tolerance: ±3%
         ("sustain",          detection: binary in-tune
          "mantra",           slide playback: discrete start + end tones
          "puffy-cheeks")     slide zones: upper/lower thirds
@@ -133,8 +136,7 @@ complete when progress >= 1
 ```
 
 - **Range targets** (`target.kind === "range"`): `matchesBandTarget(hz, bands, accept)` — "below" accepts any pitch ≤ range, "above" accepts ≥ range
-- **Lip-rolls**: `lipRollCredit(hz, targetHz)` returns 0–1 based on proximity, so approximate pitches earn slow progress
-- **Other techniques**: binary — full credit or nothing
+- All techniques: binary — full credit or nothing
 
 ### Sequence (`pitch-detection`, multiple notes)
 
@@ -160,8 +162,7 @@ slideCount++ when pitch crosses from one zone to the other
 complete when slideCount >= 2
 ```
 
-- Standard: zones are upper/lower thirds of the frequency range
-- Lip-rolls: midpoint as single boundary (much more forgiving)
+- Zones are upper/lower thirds of the frequency range
 
 ### Breathwork
 
@@ -179,8 +180,9 @@ When the user taps "Play tone":
 | -------------------------------------------------- | ------------------------------------------------------------- |
 | `pitch-detection`, 1 note                          | Single binaural tone (1.8s)                                   |
 | `pitch-detection`, N notes                         | N tones sequentially, 2s apart                                |
-| `pitch-detection-slide` + `technique: "lip-rolls"` | Smooth glide high→low (400ms hold + 2500ms ramp + 600ms hold) |
-| `pitch-detection-slide` + other technique          | Start + end tones sequentially                                |
+| `pitch-detection-slide`                            | Start + end tones sequentially                                |
+| `tone-follow`, slide shape                         | Smooth glide (400ms hold + 2500ms ramp + 600ms hold)          |
+| `tone-follow`, sustain shape                       | Sustained binaural tone (duration from config)                 |
 | `breathwork-farinelli` / `learn`                   | No play button                                                |
 
 All tones: binaural rendering (left = hz, right = hz + 6 Hz theta beat).
@@ -197,8 +199,7 @@ All tones: binaural rendering (left = hz, right = hz + 6 Hz theta beat).
   - Slide: "Slide smoothly through the range"
   - Breathwork: "Complete N cycles"
 - **Instruction body** — `exercise.instruction` verbatim
-- **Lip-roll notice** — shown when `technique === "lip-rolls"` (mic detection is tricky)
-- **Headphones notice** — shown for all pitch exercises (binaural beats)
+- **Headphones notice** — shown for all pitch and tone-follow exercises (binaural beats)
 - **"Don't show again"** — per exercise ID in localStorage
 
 Breathwork always shows the modal. Others show unless previously dismissed.
@@ -269,5 +270,5 @@ Progress: `localStorage attunr.journeyStage = max(current, exerciseId)`.
 | `src/components/JourneyView/components/ExerciseInfoModal.tsx` | Config → modal content                                        |
 | `src/components/JourneyView/components/StageCard.tsx`         | Config → journey list card                                    |
 | `src/components/JourneyView/utils.ts`                         | `resolveBandTarget()`, `getStageDisplayColors()`              |
-| `src/lib/pitch.ts`                                            | `isInTune()`, `lipRollCredit()`, `matchesBandTarget()`        |
+| `src/lib/pitch.ts`                                            | `isInTune()`, `matchesBandTarget()`                           |
 | `src/lib/vocal-scale.ts`                                      | `getScaleNotesForRange()` — builds bands from user's Hz range |

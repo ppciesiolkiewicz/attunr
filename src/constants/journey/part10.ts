@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 10: Sequences & Range — multi-tone sequences with known vowels */
-export const PART_10_EXERCISES: JourneyExercise[] = [
+export const PART_10_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 50,
     part: 10,
     exerciseTypeId: "pitch-detection",
     title: "Low sequence — U",
@@ -17,7 +16,6 @@ export const PART_10_EXERCISES: JourneyExercise[] = [
       "Sing U on three rising tones — low range.\nKeep the lips rounded and the transitions smooth.\nFeel each tone connect to the next.",
   },
   {
-    id: 51,
     part: 10,
     exerciseTypeId: "pitch-detection",
     title: "Skip sequence — Hum",
@@ -31,7 +29,6 @@ export const PART_10_EXERCISES: JourneyExercise[] = [
       "Hum three tones, skipping every other note — low, mid-low, mid-high.\nBigger jumps require more control.\nKeep the transitions smooth.",
   },
   {
-    id: 52,
     part: 10,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -40,7 +37,6 @@ export const PART_10_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Centre yourself between the sequences.",
   },
   {
-    id: 53,
     part: 10,
     exerciseTypeId: "pitch-detection",
     title: "Rising sequence — AH",
@@ -55,18 +51,17 @@ export const PART_10_EXERCISES: JourneyExercise[] = [
       "Sing AH on four rising tones — low to mid-high.\nKeep the jaw relaxed and open on each tone.\nThis is your longest rising sequence yet.",
   },
   {
-    id: 54,
     part: 10,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — low to high",
-    subtitle: "Glide · 2–3 times",
+    subtitle: "Glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    requiredPlays: 3,
     instruction:
-      "Lip roll slide from low to high. A quick reset after the sequence work.",
+      "Play the tone and lip roll alongside it. A quick reset glide from low to high.",
   },
   {
-    id: 55,
     part: 10,
     exerciseTypeId: "pitch-detection",
     title: "Rising sequence — OO",

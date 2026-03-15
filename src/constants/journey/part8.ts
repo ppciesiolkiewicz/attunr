@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 8: The Open AH — introduce AH vowel and first vowel flows */
-export const PART_8_EXERCISES: JourneyExercise[] = [
+export const PART_8_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 38,
     part: 8,
     exerciseTypeId: "learn",
     title: "The open vowel — AH",
@@ -15,7 +14,6 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 39,
     part: 8,
     exerciseTypeId: "pitch-detection",
     title: "AH — Low",
@@ -25,7 +23,6 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
       "Sing AH (as in 'father') on the lower-mid tone.\nLet the jaw drop and the throat open.\nKeep the sound grounded and warm.",
   },
   {
-    id: 40,
     part: 8,
     exerciseTypeId: "pitch-detection",
     title: "AH — Mid",
@@ -35,7 +32,6 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
       "Sing AH on the mid tone.\nFeel the openness — more space than OO or OH.\nKeep your breath steady and the jaw relaxed.",
   },
   {
-    id: 41,
     part: 8,
     exerciseTypeId: "pitch-detection",
     title: "U → AH flow",
@@ -45,7 +41,6 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
       "Hold the mid-low tone steady. Start with U (lips rounded) and slowly open into AH (jaw drops). The pitch stays the same — only the vowel changes. Feel the mouth open while the voice stays grounded.",
   },
   {
-    id: 42,
     part: 8,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -54,7 +49,6 @@ export const PART_8_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Recover and centre after the vowel flow work.",
   },
   {
-    id: 43,
     part: 8,
     exerciseTypeId: "pitch-detection",
     title: "Rising sequence — AH",

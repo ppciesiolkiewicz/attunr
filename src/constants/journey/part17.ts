@@ -1,20 +1,19 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 17: EE & Brightness — EE high register, U→EE flow, full range */
-export const PART_17_EXERCISES: JourneyExercise[] = [
+export const PART_17_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 92,
     part: 17,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — low to high",
-    subtitle: "Warmup glide · 2–3 times",
+    subtitle: "Warmup glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    requiredPlays: 3,
     instruction:
-      "Quick lip roll warmup before the high EE work. Slide from low to high, smooth and easy.",
+      "Play the tone and lip roll alongside it. A quick warmup glide from low to high before the EE work.",
   },
   {
-    id: 93,
     part: 17,
     exerciseTypeId: "pitch-detection",
     title: "EE — High",
@@ -24,7 +23,6 @@ export const PART_17_EXERCISES: JourneyExercise[] = [
       "Sing EE on your highest tone.\nBright and lifted — the hardest combination.\nKeep it light. Don't push.",
   },
   {
-    id: 94,
     part: 17,
     exerciseTypeId: "pitch-detection",
     title: "U → EE flow",
@@ -34,7 +32,6 @@ export const PART_17_EXERCISES: JourneyExercise[] = [
       "Hold the mid tone steady. Start with U (round, dark) and slowly shift to EE (spread, bright). Keep the pitch constant — the full vowel spectrum unfolds. Feel the tongue move forward and the lips spread as you transition.",
   },
   {
-    id: 95,
     part: 17,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -43,7 +40,6 @@ export const PART_17_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Recover after the high EE and vowel flow work.",
   },
   {
-    id: 96,
     part: 17,
     exerciseTypeId: "pitch-detection",
     title: "Full range sequence — EE",
@@ -61,7 +57,6 @@ export const PART_17_EXERCISES: JourneyExercise[] = [
       "Sing EE on all seven tones from low to high.\nKeep the brightness consistent through the entire range.\nFeel the resonance lift as you climb.",
   },
   {
-    id: 97,
     part: 17,
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — High",

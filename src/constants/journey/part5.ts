@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 5: Building Range — humming and U in mid range, first sequences */
-export const PART_5_EXERCISES: JourneyExercise[] = [
+export const PART_5_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 20,
     part: 5,
     exerciseTypeId: "pitch-detection",
     title: "Hum — Mid-low",
@@ -13,7 +12,6 @@ export const PART_5_EXERCISES: JourneyExercise[] = [
       "Hum with purpose on the mid-low tone.\nFeel the tone grow stronger in your body.\nKeep your breath even.",
   },
   {
-    id: 21,
     part: 5,
     exerciseTypeId: "pitch-detection",
     title: "U — Mid-low",
@@ -23,7 +21,6 @@ export const PART_5_EXERCISES: JourneyExercise[] = [
       "Sing uuu on the mid-low tone.\nFeel the tone grow stronger.\nKeep the vowel open and relaxed.",
   },
   {
-    id: 22,
     part: 5,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -32,7 +29,6 @@ export const PART_5_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. A moment to centre before we push into mid range.",
   },
   {
-    id: 23,
     part: 5,
     exerciseTypeId: "pitch-detection",
     title: "Hum — Mid",
@@ -42,7 +38,6 @@ export const PART_5_EXERCISES: JourneyExercise[] = [
       "Take a soft breath and hum openly on the mid tone.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
   },
   {
-    id: 24,
     part: 5,
     exerciseTypeId: "pitch-detection",
     title: "U — Mid",
@@ -52,7 +47,6 @@ export const PART_5_EXERCISES: JourneyExercise[] = [
       "Sing uuu on the mid tone.\nOpen and soft — keep it relaxed.\nFeel the resonance in your chest and face.",
   },
   {
-    id: 25,
     part: 5,
     exerciseTypeId: "pitch-detection",
     title: "Low sequence",

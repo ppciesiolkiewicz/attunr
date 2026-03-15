@@ -65,7 +65,7 @@ export function ExerciseCard({
                 : "rgba(255,255,255,0.95)",
             }}
           >
-            {exercise.exerciseTypeId === "learn" && (
+            {(exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1") && (
               <BookIcon
                 className="shrink-0 opacity-70"
                 style={{

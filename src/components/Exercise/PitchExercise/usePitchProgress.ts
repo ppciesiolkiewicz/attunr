@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { isInTune, lipRollCredit, matchesBandTarget, resolveBandTarget } from "@/lib/pitch";
+import { isInTune, matchesBandTarget, resolveBandTarget } from "@/lib/pitch";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 import type { Band } from "@/constants/tone-slots";
 
@@ -65,18 +65,13 @@ export function usePitchProgress({
         const holdSeconds = exercise.notes[0].seconds;
         const target = exercise.notes[0].target;
         const targetBands = resolveBandTarget(target, allBands);
-        if (exercise.technique === "lip-rolls" && targetBands.length > 0) {
-          const credit = lipRollCredit(hz, targetBands[0].frequencyHz);
-          if (credit > 0) holdRef.current += dt * credit;
-        } else {
-          const lipRollTolerance = exercise.technique === "lip-rolls" ? 0.08 : 0.03;
-          const inTune =
-            hz !== null &&
-            (target.kind === "range"
-              ? matchesBandTarget(hz, targetBands, target.accept ?? "within")
-              : targetBands.some((t) => isInTune(hz, t.frequencyHz, lipRollTolerance)));
-          if (inTune) holdRef.current += dt;
-        }
+        const tolerance = exercise.technique === "puffy-cheeks" ? 0.08 : 0.03;
+        const inTune =
+          hz !== null &&
+          (target.kind === "range"
+            ? matchesBandTarget(hz, targetBands, target.accept ?? "within")
+            : targetBands.some((t) => isInTune(hz, t.frequencyHz, tolerance)));
+        if (inTune) holdRef.current += dt;
         const p = holdRef.current / holdSeconds;
         setProgress(p);
         if (p >= 1) setStageComplete(true);
@@ -89,10 +84,8 @@ export function usePitchProgress({
         const freqs = exerciseBands.map((b) => b.frequencyHz);
         const minFreq = Math.min(...freqs);
         const maxFreq = Math.max(...freqs);
-        const isLipRoll = exercise.technique === "lip-rolls";
-        const midFreq = (minFreq + maxFreq) / 2;
-        const highThreshold = isLipRoll ? midFreq : maxFreq * 0.75;
-        const lowThreshold = isLipRoll ? midFreq : minFreq * 1.25;
+        const highThreshold = maxFreq * 0.75;
+        const lowThreshold = minFreq * 1.25;
         const inHigh = hz >= highThreshold;
         const inLow = hz <= lowThreshold;
         let lastZone = slideLastZoneRef.current;
@@ -120,8 +113,7 @@ export function usePitchProgress({
         if (!noteConfig) return;
         const targetBands = resolveBandTarget(noteConfig.target, allBands);
         const noteSeconds = noteConfig.seconds;
-        const tolerance = exercise.technique === "lip-rolls" ? 0.08 : 0.03;
-        if (targetBands.length > 0 && hz !== null && targetBands.some((t) => isInTune(hz, t.frequencyHz, tolerance))) {
+        if (targetBands.length > 0 && hz !== null && targetBands.some((t) => isInTune(hz, t.frequencyHz))) {
           noteHoldRef.current += dt;
           if (noteHoldRef.current >= noteSeconds) {
             noteHoldRef.current = 0;

@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 4: Low Resonance — humming and U alternating in the low range */
-export const PART_4_EXERCISES: JourneyExercise[] = [
+export const PART_4_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 14,
     part: 4,
     exerciseTypeId: "learn",
     title: "Humming and resonance",
@@ -15,7 +14,6 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 15,
     part: 4,
     exerciseTypeId: "pitch-detection",
     title: "Hum — Low",
@@ -25,7 +23,6 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
       "Hum low and steady — mmmm.\nFeel the buzz settle deep in your chest.\nKeep it grounded and relaxed.",
   },
   {
-    id: 16,
     part: 4,
     exerciseTypeId: "pitch-detection",
     title: "U — Low",
@@ -35,7 +32,6 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
       "Sing uuu on the same low tone.\nOpen from the hum into the vowel.\nKeep it warm and grounded.",
   },
   {
-    id: 17,
     part: 4,
     exerciseTypeId: "pitch-detection",
     title: "Hum — Lower-mid",
@@ -45,7 +41,6 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
       "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
   },
   {
-    id: 18,
     part: 4,
     exerciseTypeId: "pitch-detection",
     title: "U — Lower-mid",
@@ -55,7 +50,6 @@ export const PART_4_EXERCISES: JourneyExercise[] = [
       "Sing uuu on the lower-mid tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
   },
   {
-    id: 19,
     part: 4,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",

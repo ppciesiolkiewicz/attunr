@@ -29,8 +29,6 @@ interface PitchCanvasProps {
   /** When set, use matchesBandTarget(hz, bands, accept) instead of isInTune. For chest/head exercises. */
   inTuneOverride?: InTuneOverride;
   onBandClick?: (band: Band) => void;
-  /** When true, use generous tolerance for dot rendering so lip roll exercises look more encouraging. */
-  lipRollMode?: boolean;
 }
 
 const DOT_INTERVAL_MS = 85;
@@ -131,12 +129,11 @@ function checkInTune(
   bands: Band[],
   closest: Band,
   override?: InTuneOverride,
-  lipRoll?: boolean,
 ): boolean {
   if (override && override.bands.length > 0) {
     return matchesBandTarget(hz, override.bands, override.accept);
   }
-  return isInTune(hz, closest.frequencyHz, lipRoll ? 0.15 : 0.03);
+  return isInTune(hz, closest.frequencyHz);
 }
 
 export default function PitchCanvas({
@@ -145,7 +142,6 @@ export default function PitchCanvas({
   highlightIds,
   inTuneOverride,
   onBandClick,
-  lipRollMode = false,
 }: PitchCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<PitchDot[]>([]);
@@ -153,7 +149,7 @@ export default function PitchCanvas({
   const bandsRef = useRef<Band[]>([]);
   const highlightIdsRef = useRef<string[] | undefined>(highlightIds);
   const inTuneOverrideRef = useRef<InTuneOverride | undefined>(inTuneOverride);
-  const lipRollModeRef = useRef(lipRollMode);
+
   const lastDotMs = useRef(0);
   const rafRef = useRef<number | null>(null);
   /** Stores canvas dimensions + computed band positions for the click handler */
@@ -176,9 +172,6 @@ export default function PitchCanvas({
     inTuneOverrideRef.current = inTuneOverride;
   }, [inTuneOverride]);
 
-  useEffect(() => {
-    lipRollModeRef.current = lipRollMode;
-  }, [lipRollMode]);
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -232,10 +225,9 @@ export default function PitchCanvas({
     ctx.fillRect(0, 0, W, H);
 
     const override = inTuneOverrideRef.current;
-    const lipRoll = lipRollModeRef.current;
     const getInTune = (h: number) => {
       const closest = findClosestBand(h, bands);
-      return checkInTune(h, bands, closest, override, lipRoll);
+      return checkInTune(h, bands, closest, override);
     };
 
     // ── Bands + left labels ────────────────────────────────────────────────
@@ -309,7 +301,7 @@ export default function PitchCanvas({
       const r = DOT_RADIUS * (1 - ageFraction * 0.5);
       const y = hzToY(dot.hz, bands, bottomY, topY);
       const closest = findClosestBand(dot.hz, bands);
-      const inTune = checkInTune(dot.hz, bands, closest, override, lipRoll);
+      const inTune = checkInTune(dot.hz, bands, closest, override);
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
@@ -328,7 +320,7 @@ export default function PitchCanvas({
     if (hz !== null) {
       const y = hzToY(hz, bands, bottomY, topY);
       const closest = findClosestBand(hz, bands);
-      const inTune = checkInTune(hz, bands, closest, override, lipRoll);
+      const inTune = checkInTune(hz, bands, closest, override);
       const conf = pitchConfidence(hz, bands);
 
       const pulse = (Math.sin(now / 500) + 1) / 2;

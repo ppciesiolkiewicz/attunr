@@ -1,20 +1,19 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 14: EH Mastery — EH range, sequences, puffy cheeks */
-export const PART_14_EXERCISES: JourneyExercise[] = [
+export const PART_14_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 74,
     part: 14,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — high to low",
-    subtitle: "Warmup glide · 2–3 times",
+    subtitle: "Warmup glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    requiredPlays: 3,
     instruction:
-      "Quick lip roll warmup — slide from high to low. Loosen up after the previous work.",
+      "Play the tone and lip roll alongside it. A quick warmup glide from high to low.",
   },
   {
-    id: 75,
     part: 14,
     exerciseTypeId: "pitch-detection",
     title: "EH — Low",
@@ -24,7 +23,6 @@ export const PART_14_EXERCISES: JourneyExercise[] = [
       "Sing EH on the lower-mid tone.\nLonger hold this time — find stability in the forward resonance.\nKeep the tongue forward and relaxed.",
   },
   {
-    id: 76,
     part: 14,
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid",
@@ -35,7 +33,6 @@ export const PART_14_EXERCISES: JourneyExercise[] = [
       "Sing on the mid tone with puffy cheeks.\nFeel the back-pressure support your voice.\nStay steady and relaxed.",
   },
   {
-    id: 77,
     part: 14,
     exerciseTypeId: "pitch-detection",
     title: "EH rising sequence",
@@ -50,7 +47,6 @@ export const PART_14_EXERCISES: JourneyExercise[] = [
       "Sing EH on four rising tones.\nKeep the forward placement through each shift.\nFeel the brightness increase as you climb.",
   },
   {
-    id: 78,
     part: 14,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -59,7 +55,6 @@ export const PART_14_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Recover after the sequence and puffy cheeks work.",
   },
   {
-    id: 79,
     part: 14,
     exerciseTypeId: "pitch-detection",
     title: "AH → EH flow",

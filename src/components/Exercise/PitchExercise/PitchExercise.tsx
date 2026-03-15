@@ -105,7 +105,6 @@ export function PitchExercise({
   // ── Tone playback ────────────────────────────────────────────────────────
   const TONE_DURATION_MS = 1800;
   const TONE_GAP_MS = 2000;
-  const SLIDE_DURATION_MS = 400 + 2500 + 600;
 
   const [isTonePlaying, setIsTonePlaying] = useState(false);
   const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -122,24 +121,6 @@ export function PitchExercise({
   function handleHearTone() {
     if (isTonePlaying) return;
     setIsTonePlaying(true);
-
-    if (
-      exercise.exerciseTypeId === "pitch-detection-slide" &&
-      exercise.technique === "lip-rolls" &&
-      onPlaySlide &&
-      toneBands.length >= 2
-    ) {
-      const freqs = toneBands.map((b) => b.frequencyHz);
-      const highBand = toneBands[freqs.indexOf(Math.max(...freqs))];
-      const lowBand = toneBands[freqs.indexOf(Math.min(...freqs))];
-      onPlaySlide(highBand, lowBand);
-      if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
-      toneTimeoutRef.current = setTimeout(() => {
-        toneTimeoutRef.current = null;
-        setIsTonePlaying(false);
-      }, SLIDE_DURATION_MS);
-      return;
-    }
 
     toneBands.forEach((band, i) => {
       setTimeout(() => onPlayTone(band), i * TONE_GAP_MS);
@@ -161,12 +142,11 @@ export function PitchExercise({
     isRangeTarget && exercise.notes[0].target.kind === "range"
       ? exercise.notes[0].target.accept ?? "within"
       : "within";
-  const lipRollTolerance = exercise.technique === "lip-rolls" ? 0.08 : 0.03;
   const locked =
     pitchHz && closestBand &&
     (isRangeTarget
       ? matchesBandTarget(pitchHz, exerciseBands, rangeAccept)
-      : isInTune(pitchHz, closestBand.frequencyHz, lipRollTolerance));
+      : isInTune(pitchHz, closestBand.frequencyHz));
 
   const targetBand = (() => {
     if (exercise.exerciseTypeId !== "pitch-detection") return null;
@@ -213,7 +193,6 @@ export function PitchExercise({
                 ? { bands: exerciseBands, accept: rangeAccept }
                 : undefined
             }
-            lipRollMode={exercise.technique === "lip-rolls"}
           />
         )}
 
@@ -271,7 +250,9 @@ export function PitchExercise({
                       style={{ color: closestBand?.color ?? "#fff" }}
                     >
                       {locked ? "✓ " : ""}
-                      {exercise.exerciseTypeId === "pitch-detection" && exercise.notes[0].target.kind === "range" && exercise.notes[0].target.from >= 0 ? "Low tone" : "High tone"}
+                      {locked
+                        ? (exercise.exerciseTypeId === "pitch-detection" && exercise.notes[0].target.kind === "range" && exercise.notes[0].target.from >= 0 ? "Low tone" : "High tone")
+                        : (rangeAccept === "below" ? "Too high" : "Too low")}
                     </Text>
                     {!locked && (
                       <Text variant="body-sm" as="div" color="muted-1" className="mt-1">

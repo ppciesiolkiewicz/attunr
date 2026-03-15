@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 12: Chakras — Sky — Throat to Crown mantras */
-export const PART_12_EXERCISES: JourneyExercise[] = [
+export const PART_12_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 62,
     part: 12,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -12,7 +11,6 @@ export const PART_12_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Centre yourself before the upper chakras — these higher tones ask for more openness.",
   },
   {
-    id: 63,
     part: 12,
     exerciseTypeId: "pitch-detection",
     title: "Throat — HAM",
@@ -23,7 +21,6 @@ export const PART_12_EXERCISES: JourneyExercise[] = [
       "Sing HAM on the Throat tone.\nClear and true — let your voice be heard.",
   },
   {
-    id: 64,
     part: 12,
     exerciseTypeId: "pitch-detection",
     title: "Third Eye — OM",
@@ -34,7 +31,6 @@ export const PART_12_EXERCISES: JourneyExercise[] = [
       "Sing OM on the Third Eye tone.\nGentle and inward — clarity and insight.",
   },
   {
-    id: 65,
     part: 12,
     exerciseTypeId: "pitch-detection",
     title: "Crown — AH",
@@ -45,7 +41,6 @@ export const PART_12_EXERCISES: JourneyExercise[] = [
       "Sing AH on the Crown tone.\nSoft and open — presence and unity.",
   },
   {
-    id: 66,
     part: 12,
     exerciseTypeId: "pitch-detection",
     title: "Full chakra sequence",
@@ -64,7 +59,6 @@ export const PART_12_EXERCISES: JourneyExercise[] = [
       "Sing all seven mantras in sequence — LAM, VAM, RAM, YAM, HAM, OM, AH.\nFeel the energy rise from Root to Crown.\nA complete journey through the chakra system.",
   },
   {
-    id: 67,
     part: 12,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",

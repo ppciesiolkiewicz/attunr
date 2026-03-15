@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 11: Chakras — Earth — Root to Heart mantras */
-export const PART_11_EXERCISES: JourneyExercise[] = [
+export const PART_11_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 56,
     part: 11,
     exerciseTypeId: "learn",
     title: "Chakras and Yoga of Sounds",
@@ -18,7 +17,6 @@ export const PART_11_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 57,
     part: 11,
     exerciseTypeId: "pitch-detection",
     title: "Root — LAM",
@@ -29,7 +27,6 @@ export const PART_11_EXERCISES: JourneyExercise[] = [
       "Sing LAM on the Root tone.\nFeel the 'L' and 'M' shape the sound — the 'ah' carries the pitch.\nFeel the tone settle in your chest and base.",
   },
   {
-    id: 58,
     part: 11,
     exerciseTypeId: "pitch-detection",
     title: "Sacral — VAM",
@@ -40,7 +37,6 @@ export const PART_11_EXERCISES: JourneyExercise[] = [
       "Sing VAM on the Sacral tone.\nLet the sound flow from your lower belly.",
   },
   {
-    id: 59,
     part: 11,
     exerciseTypeId: "pitch-detection",
     title: "Solar Plexus — RAM",
@@ -51,7 +47,6 @@ export const PART_11_EXERCISES: JourneyExercise[] = [
       "Sing RAM on the Solar Plexus tone.\nFeel the power in the 'R' — purpose and centre.",
   },
   {
-    id: 60,
     part: 11,
     exerciseTypeId: "pitch-detection",
     title: "Heart — YAM",
@@ -62,7 +57,6 @@ export const PART_11_EXERCISES: JourneyExercise[] = [
       "Sing YAM on the Heart tone.\nOpen and soft — the bridge between body and mind.",
   },
   {
-    id: 61,
     part: 11,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",

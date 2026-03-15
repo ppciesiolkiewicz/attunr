@@ -1,20 +1,19 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 7: Vowel Warmth — OO/OH deeper, sequences, lip rolls */
-export const PART_7_EXERCISES: JourneyExercise[] = [
+export const PART_7_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 32,
     part: 7,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — high to low",
-    subtitle: "Warmup glide · 2–3 times",
+    subtitle: "Warmup glide · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    requiredPlays: 3,
     instruction:
-      "Start with a quick lip roll warmup — slide from high to low. Keep it loose and easy.",
+      "Play the tone and lip roll alongside it. A quick warmup glide from high to low.",
   },
   {
-    id: 33,
     part: 7,
     exerciseTypeId: "pitch-detection",
     title: "OO — Mid-low",
@@ -24,7 +23,6 @@ export const PART_7_EXERCISES: JourneyExercise[] = [
       "Sing OO on the mid-low tone.\nFeel the warmth settle in your chest and throat.\nKeep the lips rounded.",
   },
   {
-    id: 34,
     part: 7,
     exerciseTypeId: "pitch-detection",
     title: "OH — Mid-low",
@@ -34,7 +32,6 @@ export const PART_7_EXERCISES: JourneyExercise[] = [
       "Sing OH on the mid-low tone.\nCompare the feel with OO — slightly more open.\nKeep the sound warm and grounded.",
   },
   {
-    id: 35,
     part: 7,
     exerciseTypeId: "pitch-detection",
     title: "Low-to-mid sequence — OO",
@@ -49,7 +46,6 @@ export const PART_7_EXERCISES: JourneyExercise[] = [
       "Sing OO on four rising tones — low to mid.\nKeep the lips rounded as you move through each tone.\nFeel the resonance shift upward.",
   },
   {
-    id: 36,
     part: 7,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -58,15 +54,15 @@ export const PART_7_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Let the breath settle after the sequence work.",
   },
   {
-    id: 37,
     part: 7,
-    exerciseTypeId: "pitch-detection",
+    exerciseTypeId: "tone-follow",
     title: "Lip roll sustain",
-    subtitle: "Hold the buzz · 7 seconds",
+    subtitle: "Hold the buzz · play 3 times",
     technique: "lip-rolls",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 7 }],
+    toneShape: { kind: "sustain", target: { kind: "slot", n: 3 }, seconds: 7 },
+    requiredPlays: 3,
     instruction:
-      "Hold one tone and sustain the lip roll for seven seconds. Keep the buzz steady and relaxed.",
+      "Play the tone and lip roll alongside it. Keep the buzz steady and relaxed.",
     completionModal: {
       title: "Part VII Complete",
       subtitle: "Vowel Warmth",

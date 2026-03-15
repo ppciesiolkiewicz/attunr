@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 2: First Sounds — discover chest and head voice, first lip rolls */
-export const PART_2_EXERCISES: JourneyExercise[] = [
+export const PART_2_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 2,
     part: 2,
     exerciseTypeId: "learn",
     title: "Chest and head voice",
@@ -15,7 +14,6 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 3,
     part: 2,
     exerciseTypeId: "pitch-detection",
     title: "Low U",
@@ -26,7 +24,6 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
   {
-    id: 4,
     part: 2,
     exerciseTypeId: "pitch-detection",
     title: "Hoo hoo",
@@ -37,7 +34,6 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
       "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
   },
   {
-    id: 5,
     part: 2,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -47,7 +43,6 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
       "Build diaphragm control and calm your nervous system — a favourite of singers and performers for centuries. Inhale, hold, and exhale for the same count — each cycle adds one beat, flowing straight into the next with no pause.",
   },
   {
-    id: 6,
     part: 2,
     exerciseTypeId: "learn",
     title: "Lip rolls",
@@ -59,15 +54,15 @@ export const PART_2_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 7,
     part: 2,
-    exerciseTypeId: "pitch-detection-slide",
+    exerciseTypeId: "tone-follow",
     title: "Lip rolls — high to low",
-    subtitle: "Glide from high to low · 2–3 times",
+    subtitle: "Glide from high to low · play 3 times",
     technique: "lip-rolls",
-    notes: [{ from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } }],
+    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    requiredPlays: 3,
     instruction:
-      "Slide smoothly from high to low — a continuous glide, not separate notes. Do it two or three times. Detection is loose; focus on the glide and warming up your voice.",
+      "Play the tone and lip roll alongside it. Slide smoothly from high to low — feel the glide in your lips.",
     completionModal: {
       title: "Part II Complete",
       subtitle: "First Sounds",

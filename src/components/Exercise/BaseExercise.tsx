@@ -3,8 +3,10 @@
 import type { JourneyExercise } from "@/constants/journey";
 import type { Band } from "@/constants/tone-slots";
 import { LearnExercise } from "./LearnExercise";
+import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
 import { PitchExercise } from "./PitchExercise";
+import { ToneFollowExercise } from "./ToneFollowExercise";
 
 interface BaseExerciseProps {
   exercise: JourneyExercise;
@@ -66,6 +68,17 @@ export function BaseExercise({
         />
       );
 
+    case "learn-notes-1":
+      return (
+        <LearnNotesExercise
+          exerciseId={exerciseId}
+          isLast={isLast}
+          allBands={allBands}
+          onComplete={onComplete}
+          onPrev={onPrev}
+        />
+      );
+
     case "breathwork-farinelli":
       return (
         <FarinelliBreathworkExerciseContent
@@ -76,6 +89,22 @@ export function BaseExercise({
           onComplete={onComplete}
           onSkip={onSkip}
           onPrev={onPrev}
+        />
+      );
+
+    case "tone-follow":
+      return (
+        <ToneFollowExercise
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
+          allBands={allBands}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
+          onPlayTone={onPlayTone}
+          onPlaySlide={onPlaySlide}
         />
       );
 

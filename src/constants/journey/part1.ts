@@ -1,9 +1,8 @@
-import type { LearnExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
-/** Part 1: Vocal placement (foundation) */
-export const PART_1_EXERCISES: LearnExercise[] = [
+/** Part 1: Introduction */
+export const PART_1_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 1,
     part: 1,
     exerciseTypeId: "learn",
     title: "Vocal placement",
@@ -14,11 +13,17 @@ export const PART_1_EXERCISES: LearnExercise[] = [
       { type: "paragraph", text: "By singing across your range, you develop awareness of where sound lives in your body and build a deeper connection between voice, breath, and presence. The goal is not perfection, but feeling where the sound lands and how it shifts your state.", variant: "secondary" },
       { type: "video" },
     ],
+  },
+  {
+    part: 1,
+    exerciseTypeId: "learn-notes-1",
+    title: "Understanding notes",
+    cardCue: "Learn how musical notes work and see your vocal range",
     completionModal: {
       title: "Part I Complete",
       subtitle: "Introduction",
       elements: [
-        { type: "paragraph", text: "Vocal placement and how sound resonates differently across your body." },
+        { type: "paragraph", text: "You've learned about vocal placement and how musical notes map to your voice." },
       ],
       confetti: true,
     },

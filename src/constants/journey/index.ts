@@ -1,4 +1,4 @@
-import type { JourneyExercise, JourneyPart, ModalConfig, ContentElement } from "./types";
+import type { JourneyExercise, JourneyPart, JourneyPartInput, ModalConfig, ContentElement } from "./types";
 import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
 import { PART_1_EXERCISES } from "./part1";
 import { PART_2_EXERCISES } from "./part2";
@@ -23,7 +23,9 @@ import { PART_20_EXERCISES } from "./part20";
 
 export type {
   JourneyExercise,
+  JourneyExerciseInput,
   JourneyPart,
+  JourneyPartInput,
   ExerciseTypeId,
   ModalConfig,
   ContentElement,
@@ -39,14 +41,18 @@ export type {
   SlideConfig,
   BaseExerciseConfig,
   LearnExercise,
+  LearnNotesExercise,
   PitchDetectionExercise,
   PitchDetectionSlideExercise,
   FarinelliBreathworkExercise,
+  ToneFollowExercise,
+  ToneFollowShape,
 } from "./types";
 
 /** Build introModal for a non-learn exercise from its existing properties. */
 function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
   if (exercise.exerciseTypeId === "learn") return undefined;
+  if (exercise.exerciseTypeId === "learn-notes-1") return undefined;
   if (exercise.introModal) return exercise.introModal;
 
   const elements: ContentElement[] = [];
@@ -72,6 +78,25 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
     };
   }
 
+  // Tone-follow exercises — play and lip roll along
+  if (exercise.exerciseTypeId === "tone-follow") {
+    for (const line of exercise.instruction.split("\n")) {
+      if (line.trim()) {
+        elements.push({
+          type: "paragraph",
+          text: line,
+          variant: elements.length === 0 ? undefined : "secondary",
+        });
+      }
+    }
+    elements.push({ type: "headphones-notice" });
+    return {
+      title: exercise.title,
+      subtitle: `Play the tone ${exercise.requiredPlays} times and lip roll along`,
+      elements,
+    };
+  }
+
   // Pitch exercises — instruction paragraphs
   for (const line of exercise.instruction.split("\n")) {
     if (line.trim()) {
@@ -81,15 +106,6 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
         variant: elements.length === 0 ? undefined : "secondary",
       });
     }
-  }
-
-  // Lip-roll notice
-  if (exercise.technique === "lip-rolls") {
-    elements.push({
-      type: "paragraph",
-      text: "Lip rolls are tricky for microphone detection — don\u2019t worry if progress is slow. Feel free to skip when you feel you\u2019ve got it.",
-      variant: "secondary",
-    });
   }
 
   elements.push({ type: "headphones-notice" });
@@ -107,6 +123,15 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
   return { title: exercise.title, subtitle, elements };
 }
 
+/** Assign sequential IDs (1-based) to all exercises across all parts. */
+function assignIds(parts: JourneyPartInput[]): JourneyPart[] {
+  let nextId = 1;
+  return parts.map((part) => ({
+    ...part,
+    exercises: part.exercises.map((ex) => ({ ...ex, id: nextId++ }) as JourneyExercise),
+  }));
+}
+
 /** Walk all exercises and generate introModal for non-learn exercises. */
 function withIntroModals(config: JourneyPart[]): JourneyPart[] {
   return config.map((part) => ({
@@ -118,7 +143,7 @@ function withIntroModals(config: JourneyPart[]): JourneyPart[] {
   }));
 }
 
-export const JOURNEY_CONFIG: JourneyPart[] = withIntroModals([
+export const JOURNEY_CONFIG: JourneyPart[] = withIntroModals(assignIds([
   { part: 1, title: "Introduction", exercises: PART_1_EXERCISES },
   { part: 2, title: "First Sounds", exercises: PART_2_EXERCISES },
   { part: 3, title: "Lip Rolls & Breath", exercises: PART_3_EXERCISES },
@@ -139,7 +164,7 @@ export const JOURNEY_CONFIG: JourneyPart[] = withIntroModals([
   { part: 18, title: "Vowel Flow", exercises: PART_18_EXERCISES },
   { part: 19, title: "Vowel Mastery", exercises: PART_19_EXERCISES },
   { part: 20, title: "Vocal Control", exercises: PART_20_EXERCISES },
-]);
+]));
 
 /** Flat list of all exercises across all parts. */
 export const JOURNEY_EXERCISES: JourneyExercise[] =

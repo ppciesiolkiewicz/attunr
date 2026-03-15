@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 16: Vowel EE — introduce the narrowest, brightest vowel */
-export const PART_16_EXERCISES: JourneyExercise[] = [
+export const PART_16_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 86,
     part: 16,
     exerciseTypeId: "learn",
     title: "Bright vowel — EE",
@@ -15,7 +14,6 @@ export const PART_16_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 87,
     part: 16,
     exerciseTypeId: "pitch-detection",
     title: "EE — Low",
@@ -25,7 +23,6 @@ export const PART_16_EXERCISES: JourneyExercise[] = [
       "Sing EE (as in 'see') on your lowest tone.\nLips spread, tongue forward.\nA low tone with a bright vowel — notice the blend.",
   },
   {
-    id: 88,
     part: 16,
     exerciseTypeId: "pitch-detection",
     title: "EE — Mid",
@@ -35,7 +32,6 @@ export const PART_16_EXERCISES: JourneyExercise[] = [
       "Sing EE on the mid tone.\nKeep the brightness — the resonance should feel forward.\nStay relaxed despite the narrow vowel shape.",
   },
   {
-    id: 89,
     part: 16,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -44,7 +40,6 @@ export const PART_16_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Reset before pushing EE into higher territory.",
   },
   {
-    id: 90,
     part: 16,
     exerciseTypeId: "pitch-detection",
     title: "EE — Mid-high",
@@ -54,7 +49,6 @@ export const PART_16_EXERCISES: JourneyExercise[] = [
       "Sing EE on the mid-high tone.\nThe brightness intensifies with height.\nKeep the jaw relaxed — don't clench.",
   },
   {
-    id: 91,
     part: 16,
     exerciseTypeId: "pitch-detection",
     title: "Low sequence — EE",

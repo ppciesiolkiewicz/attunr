@@ -91,20 +91,6 @@ export function findClosestBand(hz: number, bands: Band[]): Band {
   );
 }
 
-/**
- * Progress multiplier for lip roll exercises (0–1).
- * Full credit within 8%, partial credit within 20%, slow trickle for any other pitch.
- */
-export function lipRollCredit(
-  detectedHz: number | null,
-  targetHz: number,
-): number {
-  if (detectedHz === null) return 0;
-  const ratio = Math.abs(detectedHz - targetHz) / targetHz;
-  if (ratio <= 0.08) return 1.0;
-  if (ratio <= 0.20) return Math.max(0.2, 0.7 - (ratio - 0.08) * (0.5 / 0.12));
-  return 0.15;
-}
 
 /** Pitch confidence: 0 (far) → 1 (exactly on a band) */
 export function pitchConfidence(hz: number, bands: Band[]): number {

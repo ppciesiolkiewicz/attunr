@@ -1,9 +1,8 @@
-import type { JourneyExercise } from "./types";
+import type { JourneyExerciseInput } from "./types";
 
 /** Part 18: Vowel Flow — vowel transitions mastery */
-export const PART_18_EXERCISES: JourneyExercise[] = [
+export const PART_18_EXERCISES: JourneyExerciseInput[] = [
   {
-    id: 98,
     part: 18,
     exerciseTypeId: "learn",
     title: "Vowel flow",
@@ -15,7 +14,6 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
     ],
   },
   {
-    id: 99,
     part: 18,
     exerciseTypeId: "pitch-detection",
     title: "U → OO flow",
@@ -25,7 +23,6 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
       "Hold the mid-low tone steady. Start with U (round, closed) and open slightly into OO. A subtle shift — the lips stay rounded but the mouth opens a touch. Keep the pitch locked.",
   },
   {
-    id: 100,
     part: 18,
     exerciseTypeId: "pitch-detection",
     title: "OO → AH flow",
@@ -35,7 +32,6 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
       "Hold the mid tone steady. Start with OO (rounded) and open into AH (jaw drops). Feel the space increase as the lips unround and the jaw relaxes. The pitch stays the same.",
   },
   {
-    id: 101,
     part: 18,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
@@ -44,7 +40,6 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
       "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Reset before the more challenging forward vowel transitions.",
   },
   {
-    id: 102,
     part: 18,
     exerciseTypeId: "pitch-detection",
     title: "AH → EH flow",
@@ -54,7 +49,6 @@ export const PART_18_EXERCISES: JourneyExercise[] = [
       "Hold the mid tone steady. Start with AH (open, neutral) and narrow into EH (forward, brighter). Feel the tongue move forward and the resonance shift. The pitch stays constant.",
   },
   {
-    id: 103,
     part: 18,
     exerciseTypeId: "pitch-detection",
     title: "EH → EE flow",

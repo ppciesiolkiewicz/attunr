@@ -56,8 +56,9 @@ export function JourneyExercise({
     [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
 
+  const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1";
   const shouldAutoShowInfo = () => {
-    if (exercise.exerciseTypeId === "learn") return false;
+    if (isLearnType) return false;
     if (exercise.exerciseTypeId === "breathwork-farinelli") return true;
     return !getSkippedInfoExerciseIds().has(exerciseId);
   };
@@ -143,7 +144,7 @@ export function JourneyExercise({
         <Text variant="caption" as="span" color="text-2" className="sm:text-sm font-medium truncate min-w-0">
           {exercise.title}
         </Text>
-        {exercise.exerciseTypeId !== "learn" && (
+        {!isLearnType && (
           <Text as="span" className="ml-auto">
             <InfoButton onClick={() => setShowInfoModal(true)} />
           </Text>
