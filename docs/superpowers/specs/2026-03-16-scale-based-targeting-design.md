@@ -123,6 +123,18 @@ All references throughout the codebase update:
 
 A custom scale type that preserves exact current slot behavior: build all major scale notes across the vocal range, then pick 7 at evenly-spaced array indices (`Math.round(i * (N-1) / 6)` for i=0..6). Handled in `buildScaleForRange`.
 
+### Color assignment
+
+`buildScaleForRange` assigns colors to `ScaleNote` entries. The existing 7-color palette (`SLOTS` colors) is kept as a constant (no longer tied to slot identity). Color strategy per scale type:
+
+- **`even-7-from-major`** — 7 notes, each gets one of the 7 palette colors in order (same as current slots).
+- **`major` and other diatonic scales** — cycle through the 7-color palette (`idx % 7`), same as current `buildScaleForRange` behavior.
+- **`chromatic`** — interpolate colors between the 7 palette anchors across the full note array, same as current `getScaleNotesForRange` interpolation logic.
+
+### `getScaleNotesForRange` consolidation
+
+`getScaleNotesForRange` is kept but simplified: it delegates to `buildScaleForRange("even-7-from-major", ...)` internally. It remains the entry point for `VocalRange.allNotes` construction (used by `TrainView` and `JourneyExercise` to build the default vocal range). Exercise components with an explicit `scale` field call `buildScaleForRange` directly.
+
 ### Exercise config migration
 
 **Former slot exercises** (parts 3–20) get `scale: { type: "even-7-from-major", root: 1 }`. Slot `n` becomes `{ kind: BandTargetKind.Index, i: n - 1 }`:
@@ -181,7 +193,7 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 | File | Change |
 |------|--------|
 | `src/constants/journey/types.ts` | Add `ChromaticDegree`, `BandTargetKind`, `BaseScale`. Rename `BandTarget` → `NoteTarget`, remove `slot`. Add `scale` to exercise types. `MelodyScale extends BaseScale`. |
-| `src/constants/tone-slots.ts` | Remove `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER`. Rename `Band` → `ScaleNote`, drop `isSlot`/`slotId`. `VocalRange.allBands` → `allNotes`. |
+| `src/constants/tone-slots.ts` | Remove `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER`. Rename `Band` → `ScaleNote`, drop `isSlot`/`slotId`. `VocalRange.allBands` → `allNotes`. Update re-exports (`resolveBandTarget` → `resolveNoteTarget`, etc.). |
 | `src/lib/pitch.ts` | Rename functions and types: `resolveBandTarget` → `resolveNoteTarget`, `Band` → `ScaleNote`, etc. Remove slot branch. Use `BandTargetKind` enum. |
 | `src/lib/vocal-scale.ts` | Add `"even-7-from-major"` to `buildScaleForRange`. Remove slot metadata from output. Rename `Band` → `ScaleNote`. |
 | `src/constants/journey/part2.ts` – `part20.ts` | Migrate slot targets to index with `scale`. Add `scale` to range/slide exercises. Update `kind` strings to enum. |
@@ -193,14 +205,18 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 | `src/components/PitchCanvas.tsx` | Rename `Band` → `ScaleNote`. |
 | `src/components/HillBallCanvas.tsx` | Rename `Band` → `ScaleNote`. |
 | `src/components/BalanceBallCanvas.tsx` | Rename `Band` → `ScaleNote`. |
-| `src/components/JourneyView/utils.ts` | Remove slot-based color/id logic, derive from scale. |
-| `src/components/JourneyView/components/JourneyExercise.tsx` | Rename `Band` → `ScaleNote`. |
+| `src/components/JourneyView/utils.ts` | Remove slot-based color/id logic (`getExerciseSlot`, `getExerciseSlotIds`), derive colors from scale. |
+| `src/components/JourneyView/JourneyView.tsx` | Rename `Band` → `ScaleNote` in props. |
+| `src/components/JourneyView/components/JourneyExercise.tsx` | Rename `Band` → `ScaleNote`, update `allBands` → `allNotes`. |
+| `src/components/JourneyView/components/ExerciseCard.tsx` | Update `getExerciseDisplayColors` call (signature may change). |
+| `src/components/JourneyView/components/ExerciseInfoModal.tsx` | Update `getExerciseDisplayColors` call (signature may change). |
 | `src/components/TrainView.tsx` | Rename `Band` → `ScaleNote`, `allBands` → `allNotes`. |
 | `src/components/AppShell/AppShell.tsx` | Rename `Band` → `ScaleNote` in callbacks. |
 | `src/context/AppContext.tsx` | Rename `Band` → `ScaleNote` in context type. |
 | `src/components/Exercise/BaseExercise.tsx` | Rename `Band` → `ScaleNote`. |
 | `src/components/Exercise/LearnNotesExercise.tsx` | Rename `Band` → `ScaleNote`. |
-| `*.stories.tsx` files | Update `Band` → `ScaleNote`. |
+| `src/components/HillBallCanvas.stories.tsx` | Update `Band` → `ScaleNote` in story data. |
+| `src/components/BalanceBallCanvas.stories.tsx` | Update `Band` → `ScaleNote` in story data. |
 | `specs/exercise-config-flow.md` | Update to reflect new types and slot removal. |
 
 ## What does NOT change
