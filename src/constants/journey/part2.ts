@@ -59,13 +59,15 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
       ],
     })),
     backingTrack: (() => {
-      const arp = (root: number) => ({
+      const chord = (root: number) => ({
         type: "major",
         root,
         notes: [
-          { target: { kind: "index" as const, i: 0 }, seconds: 0.3 },
-          { target: { kind: "index" as const, i: 2 }, seconds: 0.3 },
-          { target: { kind: "index" as const, i: 4 }, seconds: 0.3 },
+          { chord: [
+            { kind: "index" as const, i: 0 },
+            { kind: "index" as const, i: 2 },
+            { kind: "index" as const, i: 4 },
+          ], seconds: 0.9 },
         ],
       });
       const silence = (seconds: number) => ({
@@ -73,13 +75,13 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
         root: 1,
         notes: [{ rest: true as const, seconds }],
       });
-      // Segment 1: rest (where prev chord would be) → arpeggio(1)
-      // Segment N: arpeggio(N-1) → arpeggio(N)
-      // After each pair of arpeggios: silence for singing duration (4s)
+      // Segment 1: rest (where prev chord would be) → chord(1)
+      // Segment N: chord(N-1) → chord(N)
+      // After each pair of chords: silence for singing duration (4s)
       return [1, 2, 3, 4, 5, 6, 7].flatMap((root, i) => [
-        i === 0 ? silence(0.9) : arp(i),  // prev chord (or silence for first)
-        arp(root),                          // current chord
-        silence(4),                         // silence during singing
+        i === 0 ? silence(0.9) : chord(i),  // prev chord (or silence for first)
+        chord(root),                          // current chord
+        silence(4),                           // silence during singing
       ]);
     })(),
     minScore: 0,

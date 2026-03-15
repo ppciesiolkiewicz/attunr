@@ -171,9 +171,10 @@ export interface ToneFollowExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
-/** A note to sing or a rest (gap) in a melody exercise. */
+/** A note to sing, a chord (simultaneous notes), or a rest (gap) in a melody exercise. */
 export type MelodyNoteConfig =
   | { target: BandTarget; seconds: number; silent?: boolean }
+  | { chord: BandTarget[]; seconds: number }
   | { rest: true; seconds: number };
 
 /** A scale segment — defines a note pool for a group of melody notes. */

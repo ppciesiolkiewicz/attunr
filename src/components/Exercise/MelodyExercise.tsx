@@ -62,6 +62,19 @@ function resolveScaleTimeline(
       const durationMs = note.seconds * 1000;
       if ("rest" in note && note.rest) {
         entries.push({ startMs: cursor, durationMs, isRest: true });
+      } else if ("chord" in note) {
+        // Chord: multiple notes at the same start time
+        for (const target of note.chord) {
+          const bands = resolveBandTarget(target, localBands);
+          if (bands.length > 0) {
+            entries.push({
+              band: bands[0],
+              startMs: cursor,
+              durationMs,
+              isRest: false,
+            });
+          }
+        }
       } else {
         const n = note as Extract<MelodyNoteConfig, { target: unknown }>;
         const bands = resolveBandTarget(n.target, localBands);
