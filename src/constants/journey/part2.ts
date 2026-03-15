@@ -50,8 +50,8 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Perfect Fifth",
     subtitle: "Sing two notes · intervals",
     technique: "sustain",
-    tempo: 60,
-    melody: [1, 2, 3, 4, 5, 6, 7].flatMap((root, i) => {
+    tempo: 80,
+    melody: [4, 5, 6, 7, 8, 9, 10].flatMap((root, i) => {
       const majorChord = (r: number) => ({
         type: "major",
         root: r,
@@ -64,12 +64,10 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
         ],
       });
       return [
-        // Previous chord (or pause for first pair)
+        // Previous chord (or same chord for first pair)
         i === 0
-          ? { type: "major", root: 1, events: [
-              { type: "pause" as const, duration: NoteDuration.Quarter },
-            ]}
-          : majorChord(i),
+          ? majorChord(root)
+          : majorChord(i + 3),
         // Current chord → pause → sing root → sing fifth
         {
           type: "major",
