@@ -58,7 +58,7 @@ function resolveScaleTimeline(
   scales: MelodyConfig["melody"],
   tempo: number,
   vocalRange: VocalRange,
-): TimelineEntry[] {
+): { entries: TimelineEntry[]; totalDurationMs: number } {
   const entries: TimelineEntry[] = [];
   let cursor = 0;
   for (const segment of scales) {
@@ -99,7 +99,7 @@ function resolveScaleTimeline(
       cursor += durationMs;
     }
   }
-  return entries;
+  return { entries, totalDurationMs: cursor };
 }
 
 export function MelodyExercise({
@@ -116,15 +116,10 @@ export function MelodyExercise({
   const { scheduleMelody, stop: stopSampler, isLoaded } = usePianoSampler();
 
   // ── Resolve melody timeline ─────────────────────────────────────────────
-  const melodyTimeline = useMemo(
+  const { entries: melodyTimeline, totalDurationMs } = useMemo(
     () => resolveScaleTimeline(exercise.melody, exercise.tempo, vocalRange),
     [exercise.melody, exercise.tempo, vocalRange],
   );
-
-  const totalDurationMs = useMemo(() => {
-    const last = melodyTimeline[melodyTimeline.length - 1];
-    return last ? last.startMs + last.durationMs : 0;
-  }, [melodyTimeline]);
 
   // Singable notes only (no rests, no audioOnly) — used for scoring and rendering
   const singableNotes = useMemo(
