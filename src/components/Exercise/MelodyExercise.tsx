@@ -6,7 +6,7 @@ import PitchCanvas from "@/components/PitchCanvas";
 import type { MelodyRectNote } from "@/components/PitchCanvas";
 import { Button, Text, Modal } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
-import type { MelodyExercise as MelodyConfig, MelodyNoteConfig, MelodyScale } from "@/constants/journey";
+import type { MelodyExercise as MelodyConfig } from "@/constants/journey";
 import { resolveBandTarget, isInTune } from "@/lib/pitch";
 import type { Band, VocalRange } from "@/constants/tone-slots";
 import { buildScaleForRange } from "@/lib/vocal-scale";
@@ -36,6 +36,7 @@ interface NoteTimeline {
   startMs: number;
   durationMs: number;
   silent?: boolean;
+  audioOnly?: boolean;
   isRest: false;
 }
 
@@ -47,9 +48,15 @@ interface RestTimeline {
 
 type TimelineEntry = NoteTimeline | RestTimeline;
 
+/** Convert a NoteDuration to milliseconds at a given tempo. */
+function durationToMs(duration: number, tempo: number): number {
+  return (duration / 4) * (60 / tempo) * 1000;
+}
+
 /** Resolve MelodyScale[] segments into a flat timeline of entries. */
 function resolveScaleTimeline(
-  scales: MelodyScale[],
+  scales: MelodyConfig["melody"],
+  tempo: number,
   vocalRange: VocalRange,
 ): TimelineEntry[] {
   const entries: TimelineEntry[] = [];
@@ -58,32 +65,33 @@ function resolveScaleTimeline(
     const localBands = buildScaleForRange(
       vocalRange.lowNote, vocalRange.highNote, segment.type, segment.root,
     );
-    for (const note of segment.notes) {
-      const durationMs = note.seconds * 1000;
-      if ("rest" in note && note.rest) {
-        entries.push({ startMs: cursor, durationMs, isRest: true });
-      } else if ("chord" in note) {
-        // Chord: multiple notes at the same start time
-        for (const target of note.chord) {
+    for (const event of segment.events) {
+      const durationMs = durationToMs(event.duration, tempo);
+      if (event.type === "pause") {
+        // Advance cursor only — no entry emitted
+      } else if (event.type === "play") {
+        // Audio-only: emit one entry per target at same startMs
+        for (const target of event.targets) {
           const bands = resolveBandTarget(target, localBands);
           if (bands.length > 0) {
             entries.push({
               band: bands[0],
               startMs: cursor,
               durationMs,
+              audioOnly: true,
               isRest: false,
             });
           }
         }
       } else {
-        const n = note as Extract<MelodyNoteConfig, { target: unknown }>;
-        const bands = resolveBandTarget(n.target, localBands);
+        // note: singable, shown on canvas, scored
+        const bands = resolveBandTarget(event.target, localBands);
         if (bands.length > 0) {
           entries.push({
             band: bands[0],
             startMs: cursor,
             durationMs,
-            silent: n.silent,
+            silent: event.silent,
             isRest: false,
           });
         }
@@ -109,15 +117,8 @@ export function MelodyExercise({
 
   // ── Resolve melody timeline ─────────────────────────────────────────────
   const melodyTimeline = useMemo(
-    () => resolveScaleTimeline(exercise.melody, vocalRange),
-    [exercise.melody, vocalRange],
-  );
-
-  const backingTimeline = useMemo(
-    () => exercise.backingTrack
-      ? resolveScaleTimeline(exercise.backingTrack, vocalRange)
-      : [],
-    [exercise.backingTrack, vocalRange],
+    () => resolveScaleTimeline(exercise.melody, exercise.tempo, vocalRange),
+    [exercise.melody, exercise.tempo, vocalRange],
   );
 
   const totalDurationMs = useMemo(() => {
@@ -125,9 +126,9 @@ export function MelodyExercise({
     return last ? last.startMs + last.durationMs : 0;
   }, [melodyTimeline]);
 
-  // Singable notes only (no rests) — used for scoring and rendering
+  // Singable notes only (no rests, no audioOnly) — used for scoring and rendering
   const singableNotes = useMemo(
-    () => melodyTimeline.filter((e): e is NoteTimeline => !e.isRest),
+    () => melodyTimeline.filter((e): e is NoteTimeline => !e.isRest && !e.audioOnly),
     [melodyTimeline],
   );
 
@@ -201,21 +202,13 @@ export function MelodyExercise({
   const handleStart = useCallback(() => {
     if (!isLoaded || isPlaying) return;
 
-    // Build schedule for Tone.js — melody (non-silent) + backing track
+    // Build schedule for Tone.js — all non-silent entries with audio
     const audioNotes: { frequencyHz: number; startSec: number; durationSec: number }[] = [];
 
-    for (const n of singableNotes) {
-      if (!n.silent) {
-        audioNotes.push({
-          frequencyHz: n.band.frequencyHz,
-          startSec: (n.startMs + PRE_ROLL_MS) / 1000,
-          durationSec: n.durationMs / 1000,
-        });
-      }
-    }
-
-    for (const n of backingTimeline) {
+    for (const n of melodyTimeline) {
       if (n.isRest) continue;
+      // Skip silent notes (shown but not played)
+      if (n.silent) continue;
       audioNotes.push({
         frequencyHz: n.band.frequencyHz,
         startSec: (n.startMs + PRE_ROLL_MS) / 1000,
@@ -234,7 +227,7 @@ export function MelodyExercise({
     const startTime = performance.now();
     setMelodyStartTime(startTime);
     setIsPlaying(true);
-  }, [isLoaded, isPlaying, singableNotes, backingTimeline, scheduleMelody, buildRectNotes]);
+  }, [isLoaded, isPlaying, singableNotes, melodyTimeline, scheduleMelody, buildRectNotes]);
 
   // ── RAF scoring loop ───────────────────────────────────────────────────
   useEffect(() => {
