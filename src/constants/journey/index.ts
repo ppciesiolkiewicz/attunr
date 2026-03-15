@@ -50,6 +50,8 @@ export type {
   MelodyExercise,
   MelodyNoteConfig,
   MelodyScale,
+  DisplayNote,
+  DisplayScale,
 } from "./types";
 
 /** Build introModal for a non-learn exercise from its existing properties. */

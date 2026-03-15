@@ -186,12 +186,31 @@ export interface MelodyScale {
   notes: MelodyNoteConfig[];
 }
 
+/** A note to display on the canvas with a specific style. */
+export interface DisplayNote {
+  target: BandTarget;
+  /** "full" = normal band with label (default). "muted" = faint line, no label. */
+  style?: "full" | "muted";
+}
+
+/** A scale segment defining which notes to show on the canvas and how. */
+export interface DisplayScale {
+  /** Tonal.js scale name. */
+  type: string;
+  /** 1-indexed chromatic degree from user's lowest note. */
+  root: number;
+  /** Notes resolved against this scale's note pool. */
+  notes: DisplayNote[];
+}
+
 export interface MelodyExercise extends BaseExerciseConfig {
   exerciseTypeId: "melody";
   /** Scale segments the user sings — rendered as scrolling rectangles, scored for accuracy. */
   melody: MelodyScale[];
   /** Optional accompaniment — same structure, not scored, not shown on canvas. */
   backingTrack?: MelodyScale[];
+  /** Optional override for which notes appear on the canvas. Omit to auto-derive from melody. */
+  displayNotes?: DisplayScale[];
   /** Score threshold (0–100) to complete. Always shown. 0 = any score passes. */
   minScore: number;
   instruction: string;

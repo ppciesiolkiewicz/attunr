@@ -49,16 +49,39 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Perfect Fifth",
     subtitle: "Sing two notes · intervals",
     technique: "sustain",
-    melody: [
-      {
+    melody: [1, 2, 3, 4, 5, 6, 7].map((root) => ({
+      type: "major",
+      root,
+      notes: [
+        { rest: true as const, seconds: 0.3 },
+        { target: { kind: "index" as const, i: 0 }, seconds: 2 },
+        { target: { kind: "index" as const, i: 4 }, seconds: 2 },
+      ],
+    })),
+    backingTrack: (() => {
+      const arp = (root: number) => ({
+        type: "major",
+        root,
+        notes: [
+          { target: { kind: "index" as const, i: 0 }, seconds: 0.3 },
+          { target: { kind: "index" as const, i: 2 }, seconds: 0.3 },
+          { target: { kind: "index" as const, i: 4 }, seconds: 0.3 },
+        ],
+      });
+      const silence = (seconds: number) => ({
         type: "major",
         root: 1,
-        notes: [
-          { target: { kind: "index", i: 0 }, seconds: 2 },
-          { target: { kind: "index", i: 4 }, seconds: 2 },
-        ],
-      },
-    ],
+        notes: [{ rest: true as const, seconds }],
+      });
+      // Segment 1: rest (where prev chord would be) → arpeggio(1)
+      // Segment N: arpeggio(N-1) → arpeggio(N)
+      // After each pair of arpeggios: silence for singing duration (4s)
+      return [1, 2, 3, 4, 5, 6, 7].flatMap((root, i) => [
+        i === 0 ? silence(0.9) : arp(i),  // prev chord (or silence for first)
+        arp(root),                          // current chord
+        silence(4),                         // silence during singing
+      ]);
+    })(),
     minScore: 0,
     instruction: "Sing the two notes as they appear — the piano plays each note for you",
   },
