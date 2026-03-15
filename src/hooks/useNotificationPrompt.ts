@@ -10,7 +10,7 @@ import type { PracticeFrequency } from "@/constants/notifications";
 /**
  * Encapsulates the notification prompt flow.
  *
- * - `triggerPrompt()` — call when an exercise with `showNotificationPrompt: true`
+ * - `triggerPrompt()` — call when an exercise with `showEnableNotificationsPrompt: true`
  *   shows its info modal. Guards: only fires if notifications are not yet enabled
  *   and browser permission is not denied.
  * - Manages frequency modal state and save handler.
@@ -25,7 +25,7 @@ export function useNotificationPrompt(
   const openFrequencyModal = useCallback(() => setFrequencyModalOpen(true), []);
   const closeFrequencyModal = useCallback(() => setFrequencyModalOpen(false), []);
 
-  /** Call when an exercise's info modal is shown (only if exercise has showNotificationPrompt). */
+  /** Call when an exercise's info modal is shown (only if exercise has showEnableNotificationsPrompt). */
   const triggerPrompt = useCallback(() => {
     if (settings.notificationsEnabled) return;
     if (!isNotificationSupported()) return;

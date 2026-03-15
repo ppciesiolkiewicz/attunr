@@ -68,8 +68,8 @@ export function JourneyExercise({
 
   // Trigger notification prompt when info modal is shown for flagged exercises
   useEffect(() => {
-    if (showInfoModal && exercise.showNotificationPrompt) triggerNotificationPrompt();
-  }, [showInfoModal, exercise.showNotificationPrompt, triggerNotificationPrompt]);
+    if (showInfoModal && exercise.showEnableNotificationsPrompt) triggerNotificationPrompt();
+  }, [showInfoModal, exercise.showEnableNotificationsPrompt, triggerNotificationPrompt]);
 
   const [partCompleteData, setPartCompleteData] = useState<{
     part: number;

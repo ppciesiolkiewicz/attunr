@@ -19,7 +19,7 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     title: "Puffy cheeks — Low",
     subtitle: "Breath control · 7 seconds",
     technique: "puffy-cheeks",
-    showNotificationPrompt: true,
+    showEnableNotificationsPrompt: true,
     notes: [{ target: { kind: "slot", n: 1 }, seconds: 7 }],
     instruction:
       "Sing on your lowest tone with puffy cheeks.\nPuff your cheeks out while sustaining the note.\nFeel the back-pressure — let it support your voice.",
