@@ -125,7 +125,7 @@ All references throughout the codebase update:
 
 - `BandTarget` → `NoteTarget`
 - `Band` → `ResolvedNote` (colorless) / `ColoredNote` (with color, extends `ResolvedNote`)
-- `resolveBandTarget` → `resolveNoteTarget`
+- `resolveBandTarget` → `Scale.resolve` (method, not standalone function)
 - `matchesBandTarget` → `matchesNoteTarget`
 - `findClosestBand` → `findClosestNote`
 - `isInBandRange` → `isInNoteRange`
@@ -143,19 +143,43 @@ Types that reference `BandTarget` and update to `NoteTarget`:
 
 A custom scale type that preserves exact current slot behavior: build all major scale notes across the vocal range, then pick 7 at evenly-spaced array indices (`Math.round(i * (N-1) / 6)` for i=0..6). Handled in `buildScaleForRange`.
 
+### `Scale` class
+
+A class that encapsulates note pool construction, target resolution, and colorization:
+
+```ts
+class Scale {
+  /** All notes in this scale, sorted low → high. */
+  readonly notes: ResolvedNote[];
+
+  constructor(definition: BaseScale, vocalRange: VocalRange);
+
+  /** Pick specific note(s) by index or range. */
+  resolve(target: NoteTarget): ResolvedNote[];
+
+  /** Map colors from VocalRange onto the scale's notes. */
+  colorize(): ColoredNote[];
+}
+```
+
+- **Constructor** builds the note pool from the scale definition + vocal range (replaces `buildScaleForRange`)
+- **`resolve`** selects from the pool by index/range (replaces `resolveNoteTarget` / `resolveBandTarget`)
+- **`colorize`** looks up each note's color by midi from `vocalRange.allNotes` (replaces `colorizeNotes`)
+- **`notes`** exposes the full pool for pitch detection logic
+
+This eliminates `buildScaleForRange`, `resolveNoteTarget`/`resolveBandTarget`, and `colorizeNotes` as standalone functions.
+
 ### Color assignment
 
 Colors are a property of the user's vocal range, not the exercise's scale. A given note (e.g. C3) always has the same color for a given user, regardless of which exercise is playing.
 
-**`VocalRange.allNotes`** is `ColoredNote[]` — `getResolvedNotesForRange` assigns colors across the chromatic range using the existing 7-color palette with interpolation (same as current behavior). This is the single source of truth for note colors.
+**`VocalRange.allNotes`** is `ColoredNote[]` — `getScaleNotesForRange` assigns colors across the range using the existing 7-color palette with interpolation (same as current behavior). This is the single source of truth for note colors.
 
-**`buildScaleForRange`** returns `ResolvedNote[]` — no color fields. It only resolves which notes belong to the scale.
+**`Scale.colorize()`** looks up each note's color by midi from `vocalRange.allNotes`. Fallback for notes not in the vocal range: interpolate from nearest colored notes.
 
-**`colorizeNotes`** — new utility function: `(notes: ResolvedNote[], vocalRange: VocalRange) => ColoredNote[]`. Looks up each note's color by midi from `vocalRange.allNotes`. Exercise components call this after building their scale to get colored notes for canvas rendering.
+### `getScaleNotesForRange` consolidation
 
-### `getResolvedNotesForRange` consolidation
-
-`getResolvedNotesForRange` is kept but simplified: it delegates to `buildScaleForRange("even-7-from-major", ...)` internally. It remains the entry point for `VocalRange.allNotes` construction (used by `TrainView` and `JourneyExercise` to build the default vocal range). Exercise components with an explicit `scale` field call `buildScaleForRange` directly.
+`getScaleNotesForRange` is kept but simplified: it uses `Scale` internally with `"even-7-from-major"`. It remains the entry point for `VocalRange.allNotes` construction (used by `TrainView` and `JourneyExercise` to build the default vocal range).
 
 ### Exercise config migration
 
@@ -200,15 +224,15 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 
 ### Runtime changes
 
-**`resolveNoteTarget`** (in `pitch.ts`) — remove slot branch, use `BandTargetKind` enum. Signature: `(target: NoteTarget, notes: ResolvedNote[]) => ResolvedNote[]`. Works with both `ResolvedNote` and `ColoredNote` (since `ColoredNote extends ResolvedNote`).
+**`Scale` class** (new, in `src/lib/scale.ts`) — encapsulates pool building, target resolution, and colorization. Replaces standalone `buildScaleForRange`, `resolveBandTarget`, and the proposed `colorizeNotes`. Handles `"even-7-from-major"` and delegates to tonal.js for standard scale types.
 
-**`buildScaleForRange`** (in `vocal-scale.ts`) — add `"even-7-from-major"` handler that extracts current `getResolvedNotesForRange` logic. Returns `ResolvedNote[]` (no colors).
+**`pitch.ts`** — standalone pitch utilities (`findClosestNote`, `isInTune`, `isInNoteRange`, `matchesNoteTarget`, `pitchConfidence`) remain as free functions. They operate on `ResolvedNote[]` and don't need scale context. `resolveBandTarget` is removed (replaced by `Scale.resolve`). Remove slot branch from `matchesNoteTarget`.
 
-**`colorizeNotes`** (new, in `vocal-scale.ts`) — `(notes: ResolvedNote[], vocalRange: VocalRange) => ColoredNote[]`. Matches each note by midi against `vocalRange.allNotes` to assign colors. Fallback for notes not in the vocal range: interpolate from nearest colored notes.
+**Exercise components** (`PitchExercise`, `ToneFollowExercise`) — construct `new Scale(exercise.scale, vocalRange)`. Use `scale.resolve(target)` for pitch detection, `scale.colorize()` for canvas rendering.
 
-**Exercise components** (`PitchExercise`, `ToneFollowExercise`) — build note pool via `buildScaleForRange`, then `colorizeNotes` for canvas rendering. Pitch detection logic works with `ResolvedNote` (doesn't need color); canvas components receive `ColoredNote[]`.
+**`MelodyExercise`** — constructs a `Scale` per `MelodyScale` segment (same pattern, `MelodyScale extends BaseScale`).
 
-**`JourneyView/utils.ts`** — `getExerciseDisplayColors` derives colors from the exercise's resolved scale notes via `colorizeNotes`. `getExerciseSlot` and `getExerciseSlotIds` removed.
+**`JourneyView/utils.ts`** — `getExerciseDisplayColors` uses `Scale` to derive colors. `getExerciseSlot` and `getExerciseSlotIds` removed.
 
 **`tone-slots.ts`** — `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER` removed. The 7-color palette is kept as a standalone constant (e.g. `NOTE_PALETTE`). `ResolvedNote` and `ColoredNote` interfaces live here. `VocalRange.allBands` → `VocalRange.allNotes: ColoredNote[]`.
 
@@ -218,13 +242,14 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/constants/journey/types.ts`                              | Add `ChromaticDegree`, `BandTargetKind`, `BaseScale`. Rename `BandTarget` → `NoteTarget`, remove `slot`. Add `scale` to exercise types. `MelodyScale extends BaseScale`.                                                               |
 | `src/constants/tone-slots.ts`                                 | Remove `Slot`, `SlotId`, `SLOTS`, `SLOT_ORDER`. Replace `Band` with `ResolvedNote` + `ColoredNote`, drop `isSlot`/`slotId`. Keep 7-color palette as `NOTE_PALETTE`. `VocalRange.allBands` → `allNotes: ColoredNote[]`. Update re-exports. |
-| `src/lib/pitch.ts`                                            | Rename functions and types: `resolveBandTarget` → `resolveNoteTarget`, `Band` → `ResolvedNote`, etc. Remove slot branch. Use `BandTargetKind` enum.                                                                                       |
-| `src/lib/vocal-scale.ts`                                      | Add `"even-7-from-major"` to `buildScaleForRange`. `buildScaleForRange` returns `ResolvedNote[]` (no colors). Add `colorizeNotes` utility. `getResolvedNotesForRange` returns `ColoredNote[]` for `VocalRange`.                              |
+| `src/lib/scale.ts`                                            | New file: `Scale` class with constructor, `resolve`, `colorize`. Handles `"even-7-from-major"` and tonal.js scale types.                                                                                                               |
+| `src/lib/pitch.ts`                                            | Remove `resolveBandTarget` (moved to `Scale.resolve`). Rename remaining functions: `Band` → `ResolvedNote`, `findClosestBand` → `findClosestNote`, etc. Remove slot branch from `matchesNoteTarget`.                                    |
+| `src/lib/vocal-scale.ts`                                      | Simplify `getScaleNotesForRange` to use `Scale` internally. Remove `buildScaleForRange` (moved to `Scale` constructor).                                                                                                                |
 | `src/constants/journey/part2.ts` – `part20.ts`                | Migrate slot targets to index with `scale`. Add `scale` to range/slide exercises. Update `kind` strings to enum.                                                                                                                       |
 | `src/constants/journey/index.ts`                              | Update exports.                                                                                                                                                                                                                        |
-| `src/components/Exercise/PitchExercise/PitchExercise.tsx`     | Use `exercise.scale` + `colorizeNotes`. `Band` → `ColoredNote` for canvas, `ResolvedNote` for pitch logic.                                                                                                                                |
+| `src/components/Exercise/PitchExercise/PitchExercise.tsx`     | Construct `Scale` from `exercise.scale`. Use `scale.resolve()` + `scale.colorize()`. `Band` → `ColoredNote`/`ResolvedNote`.                                                                                                           |
 | `src/components/Exercise/PitchExercise/usePitchProgress.ts`   | `Band` → `ResolvedNote` (pitch detection doesn't need color).                                                                                                                                                                             |
-| `src/components/Exercise/ToneFollowExercise.tsx`              | Use `exercise.scale` + `colorizeNotes`, add `displayNotes` support.                                                                                                                                                                    |
+| `src/components/Exercise/ToneFollowExercise.tsx`              | Construct `Scale`, use `scale.resolve()` + `scale.colorize()`, add `displayNotes` support.                                                                                                                                             |
 | `src/components/Exercise/MelodyExercise.tsx`                  | Update `kind` strings to enum, `Band` → `ColoredNote`/`ResolvedNote`.                                                                                                                                                                     |
 | `src/components/PitchCanvas.tsx`                              | `Band` → `ColoredNote` (needs color for rendering).                                                                                                                                                                                    |
 | `src/components/HillBallCanvas.tsx`                           | `Band` → `ColoredNote`.                                                                                                                                                                                                                |
@@ -245,7 +270,7 @@ toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { k
 
 ## What does NOT change
 
-- `buildScaleForRange` core logic (tonal.js scale resolution) — unchanged, just extended with `"even-7-from-major"`
+- Scale building core logic (tonal.js scale resolution) — unchanged, moved into `Scale` class and extended with `"even-7-from-major"`
 - `MelodyExercise` structure — already scale-based, only `kind` strings update to enum
 - PitchCanvas rendering logic — same, just renamed types
 - Scoring logic — unchanged
