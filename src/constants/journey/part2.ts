@@ -1,5 +1,5 @@
-import type { JourneyExerciseInput } from "./types";
-import { NoteDuration } from "./types";
+import type { JourneyExerciseInput, MelodyScale } from "./types";
+import { BandTargetKind, NoteDuration } from "./types";
 
 /** Part 2: First Sounds — discover chest and head voice, first lip rolls */
 export const PART_2_EXERCISES: JourneyExerciseInput[] = [
@@ -20,8 +20,9 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Low U",
     subtitle: "Chest voice · 5 seconds",
     technique: "sustain",
+    scale: { type: "chromatic", root: 1 },
     showEnableNotificationsPrompt: true,
-    notes: [{ target: { kind: "range", from: 0, to: 2, accept: "below" }, seconds: 5 }],
+    notes: [{ target: { kind: BandTargetKind.Range, from: 0, to: 2, accept: "below" }, seconds: 5 }],
     instruction:
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
@@ -31,7 +32,8 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Hoo hoo",
     subtitle: "Head voice · 5 seconds",
     technique: "sustain",
-    notes: [{ target: { kind: "range", from: -3, to: -1, accept: "above" }, seconds: 5 }],
+    scale: { type: "chromatic", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Range, from: -3, to: -1, accept: "above" }, seconds: 5 }],
     instruction:
       "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
   },
@@ -51,15 +53,15 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     subtitle: "Sing two notes · intervals",
     technique: "sustain",
     tempo: 80,
-    melody: [4, 5, 6, 7, 8, 9, 10].flatMap((root, i) => {
-      const majorChord = (r: number) => ({
+    melody: [4, 5, 6, 7, 8, 9, 10].flatMap((root, i): MelodyScale[] => {
+      const majorChord = (r: number): MelodyScale => ({
         type: "major",
         root: r,
         events: [
           { type: "play" as const, targets: [
-            { kind: "index" as const, i: 0 },
-            { kind: "index" as const, i: 2 },
-            { kind: "index" as const, i: 4 },
+            { kind: BandTargetKind.Index, i: 0 },
+            { kind: BandTargetKind.Index, i: 2 },
+            { kind: BandTargetKind.Index, i: 4 },
           ], duration: NoteDuration.Quarter },
         ],
       });
@@ -74,13 +76,13 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
           root,
           events: [
             { type: "play" as const, targets: [
-              { kind: "index" as const, i: 0 },
-              { kind: "index" as const, i: 2 },
-              { kind: "index" as const, i: 4 },
+              { kind: BandTargetKind.Index, i: 0 },
+              { kind: BandTargetKind.Index, i: 2 },
+              { kind: BandTargetKind.Index, i: 4 },
             ], duration: NoteDuration.Quarter },
             { type: "pause" as const, duration: NoteDuration.Eighth },
-            { type: "note" as const, target: { kind: "index" as const, i: 0 }, duration: NoteDuration.Half },
-            { type: "note" as const, target: { kind: "index" as const, i: 4 }, duration: NoteDuration.Half },
+            { type: "note" as const, target: { kind: BandTargetKind.Index, i: 0 }, duration: NoteDuration.Half },
+            { type: "note" as const, target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
           ],
         },
       ];
@@ -105,7 +107,8 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip rolls — high to low",
     subtitle: "Glide from high to low · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    scale: { type: "chromatic", root: 1 },
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 0 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Slide smoothly from high to low — feel the glide in your lips.",

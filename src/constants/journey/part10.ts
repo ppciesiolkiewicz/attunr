@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 10: Sequences & Range — multi-tone sequences with known vowels */
 export const PART_10_EXERCISES: JourneyExerciseInput[] = [
@@ -7,10 +8,11 @@ export const PART_10_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Low sequence — U",
     subtitle: "3 tones rising · 2 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 2 },
     ],
     instruction:
       "Sing U on three rising tones — low range.\nKeep the lips rounded and the transitions smooth.\nFeel each tone connect to the next.",
@@ -20,10 +22,11 @@ export const PART_10_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Skip sequence — Hum",
     subtitle: "3 tones skipping · 3 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 3 },
-      { target: { kind: "slot", n: 3 }, seconds: 3 },
-      { target: { kind: "slot", n: 5 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 4 }, seconds: 3 },
     ],
     instruction:
       "Hum three tones, skipping every other note — low, mid-low, mid-high.\nBigger jumps require more control.\nKeep the transitions smooth.",
@@ -41,11 +44,12 @@ export const PART_10_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Rising sequence — AH",
     subtitle: "5 tones rising · 2 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
-      { target: { kind: "slot", n: 5 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 3 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 4 }, seconds: 2 },
     ],
     instruction:
       "Sing AH on four rising tones — low to mid-high.\nKeep the jaw relaxed and open on each tone.\nThis is your longest rising sequence yet.",
@@ -56,7 +60,8 @@ export const PART_10_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip rolls — low to high",
     subtitle: "Glide · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    scale: { type: "chromatic", root: 1 },
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. A quick reset glide from low to high.",
@@ -66,12 +71,13 @@ export const PART_10_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Rising sequence — OO",
     subtitle: "5 tones rising · 2 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
-      { target: { kind: "slot", n: 5 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 3 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 4 }, seconds: 2 },
     ],
     instruction:
       "Sing OO on five rising tones — low to mid-high.\nKeep the lips rounded through every tone.\nFeel the range opening up.",

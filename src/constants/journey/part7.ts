@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 7: Vowel Warmth — OO/OH deeper, sequences, lip rolls */
 export const PART_7_EXERCISES: JourneyExerciseInput[] = [
@@ -8,7 +9,8 @@ export const PART_7_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip rolls — high to low",
     subtitle: "Warmup glide · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    scale: { type: "chromatic", root: 1 },
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 0 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. A quick warmup glide from high to low.",
@@ -18,7 +20,8 @@ export const PART_7_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OO — Mid-low",
     subtitle: "Vowel OO · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 7 }],
     instruction:
       "Sing OO on the mid-low tone.\nFeel the warmth settle in your chest and throat.\nKeep the lips rounded.",
   },
@@ -27,7 +30,8 @@ export const PART_7_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OH — Mid-low",
     subtitle: "Vowel OH · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 7 }],
     instruction:
       "Sing OH on the mid-low tone.\nCompare the feel with OO — slightly more open.\nKeep the sound warm and grounded.",
   },
@@ -36,11 +40,12 @@ export const PART_7_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Low-to-mid sequence — OO",
     subtitle: "4 tones rising · 2 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 3 }, seconds: 2 },
     ],
     instruction:
       "Sing OO on four rising tones — low to mid.\nKeep the lips rounded as you move through each tone.\nFeel the resonance shift upward.",
@@ -59,7 +64,8 @@ export const PART_7_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip roll sustain",
     subtitle: "Hold the buzz · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "sustain", target: { kind: "slot", n: 3 }, seconds: 7 },
+    scale: { type: "even-7-from-major", root: 1 },
+    toneShape: { kind: "sustain", target: { kind: BandTargetKind.Index, i: 2 }, seconds: 7 },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Keep the buzz steady and relaxed.",

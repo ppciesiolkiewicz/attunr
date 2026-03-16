@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 18: Vowel Flow — vowel transitions mastery */
 export const PART_18_EXERCISES: JourneyExerciseInput[] = [
@@ -18,7 +19,8 @@ export const PART_18_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "U → OO flow",
     subtitle: "Vowel transition · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 10 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 10 }],
     instruction:
       "Hold the mid-low tone steady. Start with U (round, closed) and open slightly into OO. A subtle shift — the lips stay rounded but the mouth opens a touch. Keep the pitch locked.",
   },
@@ -27,7 +29,8 @@ export const PART_18_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OO → AH flow",
     subtitle: "Vowel transition · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 10 }],
     instruction:
       "Hold the mid tone steady. Start with OO (rounded) and open into AH (jaw drops). Feel the space increase as the lips unround and the jaw relaxes. The pitch stays the same.",
   },
@@ -44,7 +47,8 @@ export const PART_18_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "AH → EH flow",
     subtitle: "Vowel transition · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 10 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 10 }],
     instruction:
       "Hold the mid tone steady. Start with AH (open, neutral) and narrow into EH (forward, brighter). Feel the tongue move forward and the resonance shift. The pitch stays constant.",
   },
@@ -53,7 +57,8 @@ export const PART_18_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EH → EE flow",
     subtitle: "Vowel transition · 10 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 10 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 10 }],
     instruction:
       "Hold the mid-high tone steady. Start with EH and narrow further into EE. The lips spread and the tongue lifts. A small but precise shift — keep the pitch locked and the resonance forward.",
     completionModal: {

@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 16: Vowel EE — introduce the narrowest, brightest vowel */
 export const PART_16_EXERCISES: JourneyExerciseInput[] = [
@@ -18,7 +19,8 @@ export const PART_16_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EE — Low",
     subtitle: "Vowel EE · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 8 }],
     instruction:
       "Sing EE (as in 'see') on your lowest tone.\nLips spread, tongue forward.\nA low tone with a bright vowel — notice the blend.",
   },
@@ -27,7 +29,8 @@ export const PART_16_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EE — Mid",
     subtitle: "Vowel EE · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 8 }],
     instruction:
       "Sing EE on the mid tone.\nKeep the brightness — the resonance should feel forward.\nStay relaxed despite the narrow vowel shape.",
   },
@@ -44,7 +47,8 @@ export const PART_16_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EE — Mid-high",
     subtitle: "Vowel EE · 9 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 9 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 9 }],
     instruction:
       "Sing EE on the mid-high tone.\nThe brightness intensifies with height.\nKeep the jaw relaxed — don't clench.",
   },
@@ -53,10 +57,11 @@ export const PART_16_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Low sequence — EE",
     subtitle: "3 tones rising · 3 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 3 },
-      { target: { kind: "slot", n: 2 }, seconds: 3 },
-      { target: { kind: "slot", n: 3 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 3 },
     ],
     instruction:
       "Sing EE on three rising tones — low range.\nKeep the brightness consistent as you rise.\nFeel the forward resonance on every note.",

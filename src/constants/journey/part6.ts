@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 6: Rounded Vowels — introduce OO and OH */
 export const PART_6_EXERCISES: JourneyExerciseInput[] = [
@@ -18,7 +19,8 @@ export const PART_6_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OO — Low",
     subtitle: "Vowel OO · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 7 }],
     instruction:
       "Sing OO (as in 'book') on the lower-mid tone.\nLips rounded, mouth slightly more open than U.\nKeep it warm and full.",
   },
@@ -27,7 +29,8 @@ export const PART_6_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OO — Mid",
     subtitle: "Vowel OO · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 7 }],
     instruction:
       "Sing OO on the mid tone.\nFeel the resonance open compared to U.\nKeep the lips rounded and relaxed.",
   },
@@ -44,7 +47,8 @@ export const PART_6_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OH — Low",
     subtitle: "Vowel OH · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 7 }],
     instruction:
       "Sing OH (as in 'go') on the lower-mid tone.\nSlightly more open than OO — like a gentle 'oh' of surprise.\nKeep it rounded and warm.",
   },
@@ -53,7 +57,8 @@ export const PART_6_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OH — Mid",
     subtitle: "Vowel OH · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 7 }],
     instruction:
       "Sing OH on the mid tone.\nFeel the mouth open more than OO.\nKeep the sound warm and resonant.",
     completionModal: {
