@@ -15,31 +15,38 @@ export type ExerciseTypeId =
   | "tone-follow"                 // play tone and follow along (no mic detection)
   | "melody";                     // sing along to scrolling melody with scoring
 
-// ── Band targeting ─────────────────────────────────────────────────────────────
+/** 1-indexed chromatic degree from user's lowest note (1 = lowest). */
+export type ChromaticDegree = number;
+
+/** Discriminant for NoteTarget union. */
+export enum BandTargetKind {
+  Index = "index",
+  Range = "range",
+}
+
+// ── Note targeting ─────────────────────────────────────────────────────────────
 
 /**
- * Describes which band(s) in the user's vocal scale an exercise targets.
+ * Describes which note(s) in a scale an exercise targets.
  *
- * - slot: one of 7 evenly-spaced reference points (n=1 lowest, n=7 highest)
- * - index: 0-based position in allBands; negative counts from end (-1 = last note)
+ * - index: 0-based position in the scale's note pool; negative counts from end (-1 = last note)
  * - range: inclusive index range (negative indices supported); used for loose detection exercises
- *   - accept: "below" = any tone at or below the range (chest voice); "above" = any tone at or above (head voice)
+ *   - accept: "below" = any tone at or below the range; "above" = any tone at or above
  */
-export type BandTarget =
-  | { kind: "slot"; n: 1 | 2 | 3 | 4 | 5 | 6 | 7 }
-  | { kind: "index"; i: number }
+export type NoteTarget =
+  | { kind: BandTargetKind.Index; i: number }
   | {
-      kind: "range";
+      kind: BandTargetKind.Range;
       from: number;
       to: number;
       accept?: "within" | "below" | "above";
     };
 
 /** A single tone the user must hold in-tune for `seconds`. */
-export type SustainNoteConfig = { target: BandTarget; seconds: number };
+export type SustainNoteConfig = { target: NoteTarget; seconds: number };
 
 /** Start and end targets for a pitch glide exercise. */
-export type SlideConfig = { from: BandTarget; to: BandTarget };
+export type SlideConfig = { from: NoteTarget; to: NoteTarget };
 
 /**
  * Vocal technique — affects detection tolerance and playback style.
@@ -138,6 +145,7 @@ export interface LearnNotesExercise extends BaseExerciseConfig {
 
 export interface PitchDetectionExercise extends BaseExerciseConfig {
   exerciseTypeId: "pitch-detection";
+  scale: BaseScale;
   /** One note = single-tone hold; multiple = sing in sequence. */
   notes: SustainNoteConfig[];
   instruction: string;
@@ -145,8 +153,10 @@ export interface PitchDetectionExercise extends BaseExerciseConfig {
 
 export interface PitchDetectionSlideExercise extends BaseExerciseConfig {
   exerciseTypeId: "pitch-detection-slide";
+  scale: BaseScale;
   /** Typically one slide config (from → to). */
   notes: SlideConfig[];
+  displayNotes?: DisplayScale[];
   instruction: string;
 }
 
@@ -157,13 +167,22 @@ export interface FarinelliBreathworkExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
+/** Shared scale definition — specifies which note pool to build. */
+export interface BaseScale {
+  /** Tonal.js scale name or custom identifier (e.g. "even-7-from-major"). */
+  type: string;
+  /** 1-indexed chromatic degree from user's lowest note. */
+  root: ChromaticDegree;
+}
+
 /** Shape of the tone played in a tone-follow exercise. */
 export type ToneFollowShape =
-  | { kind: "slide"; from: BandTarget; to: BandTarget }
-  | { kind: "sustain"; target: BandTarget; seconds: number };
+  | { kind: "slide"; from: NoteTarget; to: NoteTarget }
+  | { kind: "sustain"; target: NoteTarget; seconds: number };
 
 export interface ToneFollowExercise extends BaseExerciseConfig {
   exerciseTypeId: "tone-follow";
+  scale: BaseScale;
   /** Describes the tone to play (slide glide or sustained note). */
   toneShape: ToneFollowShape;
   /** Number of times the user must play the tone to complete. */
@@ -185,23 +204,19 @@ export enum NoteDuration {
 
 /** A melody timeline event. */
 export type MelodyEvent =
-  | { type: "note"; target: BandTarget; duration: NoteDuration; silent?: boolean }
-  | { type: "play"; targets: BandTarget[]; duration: NoteDuration }
+  | { type: "note"; target: NoteTarget; duration: NoteDuration; silent?: boolean }
+  | { type: "play"; targets: NoteTarget[]; duration: NoteDuration }
   | { type: "pause"; duration: NoteDuration };
 
 /** A scale segment — defines a note pool for a group of melody events. */
-export interface MelodyScale {
-  /** Tonal.js scale name: "major", "minor", "chromatic", "pentatonic", etc. */
-  type: string;
-  /** 1-indexed chromatic degree from user's lowest note (1 = lowest, 12 = 11 semitones above). */
-  root: number;
-  /** Events resolved against this scale's note pool. Only index/range targets — not slot. */
+export interface MelodyScale extends BaseScale {
+  /** Events resolved against this scale's note pool. */
   events: MelodyEvent[];
 }
 
 /** A note to display on the canvas with a specific style. */
 export interface DisplayNote {
-  target: BandTarget;
+  target: NoteTarget;
   /** "full" = normal band with label (default). "muted" = faint line, no label. */
   style?: "full" | "muted";
 }
