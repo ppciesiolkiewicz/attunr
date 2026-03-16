@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import LandingPage from "@/components/LandingPage";
+import { LandingRouter } from "@/components/LandingPage/LandingRouter";
 
 export const metadata: Metadata = {
   title: "attunr — your voice, your calm",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <LandingPage />;
+  return <LandingRouter />;
 }
