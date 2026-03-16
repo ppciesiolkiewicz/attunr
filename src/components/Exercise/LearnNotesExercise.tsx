@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import { Button, Text } from "@/components/ui";
-import type { Band, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
 
 interface LearnNotesExerciseProps {
   exerciseId: number;
@@ -18,7 +18,7 @@ const PAD_TOP = 28;
 const PAD_BOTTOM = 28;
 const MAX_SLOT_H = 48;
 
-function NoteRangeCanvas({ bands }: { bands: Band[] }) {
+function NoteRangeCanvas({ bands }: { bands: ColoredNote[] }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const draw = useCallback(() => {
@@ -137,10 +137,9 @@ export function LearnNotesExercise({
   onComplete,
   onPrev,
 }: LearnNotesExerciseProps) {
-  // Show only the 7 slot bands — keeps the canvas clean
-  const slotBands = useMemo(() => vocalRange.allBands.filter((b) => b.isSlot), [vocalRange.allBands]);
-  const lowest = slotBands[0];
-  const highest = slotBands[slotBands.length - 1];
+  const allNotes = useMemo(() => vocalRange.allNotes, [vocalRange.allNotes]);
+  const lowest = allNotes[0];
+  const highest = allNotes[allNotes.length - 1];
 
   return (
     <>
@@ -166,7 +165,7 @@ export function LearnNotesExercise({
 
           {/* Range canvas — slots only */}
           <div className="h-72 rounded-xl overflow-hidden border border-white/[0.08]">
-            <NoteRangeCanvas bands={slotBands} />
+            <NoteRangeCanvas bands={allNotes} />
           </div>
 
           {/* Low / High explanation */}

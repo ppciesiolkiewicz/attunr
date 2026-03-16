@@ -3,13 +3,13 @@
 import { useRouter } from "next/navigation";
 import { JourneyList } from "./components/JourneyList";
 import type { Settings } from "@/hooks/useSettings";
-import type { Band } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
 
 interface JourneyViewProps {
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  onPlayTone: (band: Band) => void;
+  onPlayTone: (band: ColoredNote) => void;
   onSettingsUpdate: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
