@@ -258,7 +258,7 @@ export function MelodyExercise({
           }
           // Score: check pitch
           if (hz !== null && dt > 0) {
-            const tolerance = exercise.technique === "puffy-cheeks" ? 0.08 : 0.03;
+            const tolerance = 0.03;
             if (isInTune(hz, rect.note.frequencyHz, tolerance)) {
               inTuneTimeRef.current[i] += dt;
             }

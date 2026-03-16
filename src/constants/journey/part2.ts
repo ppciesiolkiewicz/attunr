@@ -7,7 +7,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     part: 2,
     exerciseTypeId: "learn",
     title: "Chest and head voice",
-    technique: "sustain",
     cardCue: "Find your chest and head voice",
     elements: [
       { type: "paragraph", text: "Your voice has different resonances: chest voice (lower, fuller, felt in the chest) and head voice (lighter, higher, felt in the head and face). The next two exercises help you find them. Low U warms up your chest voice on a low tone. Hoo hoo introduces head voice — a light, owl-like sound on a high tone. Feel where each lands in your body." },
@@ -19,7 +18,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Low U",
     subtitle: "Chest voice · 5 seconds",
-    technique: "sustain",
     scale: { type: "chromatic", root: 1 },
     showEnableNotificationsPrompt: true,
     notes: [{ target: { kind: BandTargetKind.Range, from: 1, to: 3, accept: "below" }, seconds: 5 }],
@@ -31,7 +29,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Hoo hoo",
     subtitle: "Head voice · 5 seconds",
-    technique: "sustain",
     scale: { type: "chromatic", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Range, from: -3, to: -1, accept: "above" }, seconds: 5 }],
     instruction:
@@ -51,7 +48,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "melody",
     title: "Perfect Fifth",
     subtitle: "Sing two notes · intervals",
-    technique: "sustain",
     tempo: 80,
     melody: [4, 5, 6, 7, 8, 9, 10].flatMap((root, i): MelodyScale[] => {
       const majorChord = (r: number): MelodyScale => ({
@@ -94,7 +90,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     part: 2,
     exerciseTypeId: "learn",
     title: "Lip rolls",
-    technique: "lip-rolls",
     cardCue: "Gentle warmup to relax your jaw and warm your voice",
     elements: [
       { type: "paragraph", text: "Lip rolls are a vocal warmup where you let your lips buzz loosely — like a motorboat — while you sing. They're one of the gentlest ways to start: the buzz relaxes your jaw, warms your voice, and encourages steady breath without strain. In the next exercises, you'll slide your voice from high to low and low to high — a smooth, continuous glide through your range, not separate notes. Many singers and voice teachers use them first, before scales or songs. Do them for a few minutes before each session — your voice will thank you." },
@@ -106,7 +101,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "tone-follow",
     title: "Lip rolls — high to low",
     subtitle: "Glide from high to low · play 3 times",
-    technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
     displayNotes: [{ type: "major", root: 1, notes: [] }],
     toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 1 } },

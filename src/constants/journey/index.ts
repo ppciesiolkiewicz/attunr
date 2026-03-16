@@ -36,7 +36,6 @@ export type {
   HeadphonesNoticeElement,
   TipListElement,
   SeparatorElement,
-  TechniqueId,
   NoteTarget,
   BaseScale,
   ChromaticDegree,

@@ -48,12 +48,6 @@ export type SustainNoteConfig = { target: NoteTarget; seconds: number };
 /** Start and end targets for a pitch glide exercise. */
 export type SlideConfig = { from: NoteTarget; to: NoteTarget };
 
-/**
- * Vocal technique — affects detection tolerance and playback style.
- * e.g. lip-rolls get ±8% tolerance (vs ±3% default) and graduated credit.
- */
-export type TechniqueId = "sustain" | "mantra" | "lip-rolls" | "puffy-cheeks";
-
 // ── Modal config ─────────────────────────────────────────────────────────────
 
 /** A single content element rendered in a modal or exercise body. */
@@ -121,8 +115,6 @@ export interface BaseExerciseConfig {
   subtitle?: string;
   /** Short description shown on the journey list card (falls back to subtitle). */
   cardCue?: string;
-  /** Vocal technique — controls detection tolerance and playback style. */
-  technique?: TechniqueId;
   /** Shown before exercise starts. */
   introModal?: ModalConfig;
   /** Shown after exercise completes (e.g. part-complete summary). */

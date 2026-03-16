@@ -46,7 +46,6 @@ export const PART_19_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — High",
     subtitle: "Breath control · 10 seconds",
-    technique: "puffy-cheeks",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 6 }, seconds: 10 }],
     instruction:

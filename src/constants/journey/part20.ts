@@ -18,7 +18,6 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — rising sequence",
     subtitle: "4 tones skipping · 3 seconds each",
-    technique: "puffy-cheeks",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [
       { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 3 },
@@ -70,7 +69,6 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "tone-follow",
     title: "Lip rolls — precision slide",
     subtitle: "Full range glide · play 3 times",
-    technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
     displayNotes: [{ type: "major", root: 1, notes: [] }],
     toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },

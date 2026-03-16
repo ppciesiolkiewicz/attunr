@@ -66,7 +66,7 @@ export function usePitchProgress({
         const holdSeconds = exercise.notes[0].seconds;
         const target = exercise.notes[0].target;
         const targetNotes = scale.resolve(target);
-        const tolerance = exercise.technique === "puffy-cheeks" ? 0.08 : 0.03;
+        const tolerance = 0.03;
         const inTune =
           hz !== null &&
           (target.kind === "range"

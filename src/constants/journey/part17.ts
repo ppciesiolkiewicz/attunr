@@ -8,7 +8,6 @@ export const PART_17_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "tone-follow",
     title: "Lip rolls — low to high",
     subtitle: "Warmup glide · play 3 times",
-    technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
     displayNotes: [{ type: "major", root: 1, notes: [] }],
     toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },
@@ -67,7 +66,6 @@ export const PART_17_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — High",
     subtitle: "Breath control · 8 seconds",
-    technique: "puffy-cheeks",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 5 }, seconds: 8 }],
     instruction:

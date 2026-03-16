@@ -7,7 +7,6 @@ export const PART_4_EXERCISES: JourneyExerciseInput[] = [
     part: 4,
     exerciseTypeId: "learn",
     title: "Humming and resonance",
-    technique: "sustain",
     cardCue: "Hum each tone and feel where it resonates",
     elements: [
       { type: "paragraph", text: "Humming is one of the gentlest and most powerful ways to feel your voice. Close your lips and sing mmmm — feel the buzz in your lips, teeth, and face. In these exercises, we alternate between humming and the U vowel on low tones. Lower tones resonate deep in the chest. There's no rush — let the vibration settle." },

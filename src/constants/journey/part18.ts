@@ -7,7 +7,6 @@ export const PART_18_EXERCISES: JourneyExerciseInput[] = [
     part: 18,
     exerciseTypeId: "learn",
     title: "Vowel flow",
-    technique: "sustain",
     cardCue: "Master smooth transitions between all vowels",
     elements: [
       { type: "paragraph", text: "Vowel modification is a core singing skill. By transitioning between vowels while holding the same pitch, you train resonance consistency — the ability to keep a full, supported sound regardless of mouth shape. This is essential for higher notes and vocal efficiency. We'll flow between pairs of vowels, then combine them all." },

@@ -7,7 +7,6 @@ export const PART_13_EXERCISES: JourneyExerciseInput[] = [
     part: 13,
     exerciseTypeId: "learn",
     title: "Forward resonance — EH",
-    technique: "sustain",
     cardCue: "Place your voice forward with the Spanish-style EH vowel",
     elements: [
       { type: "paragraph", text: "EH (like Spanish 'e', or the vowel in 'bed') places resonance forward in the mouth. It's brighter than AH and more open than EE. The tongue moves forward and the mouth narrows slightly. This vowel increases articulation and forward resonance — essential skills as you move into higher ranges." },

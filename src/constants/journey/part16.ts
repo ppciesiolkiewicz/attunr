@@ -7,7 +7,6 @@ export const PART_16_EXERCISES: JourneyExerciseInput[] = [
     part: 16,
     exerciseTypeId: "learn",
     title: "Bright vowel — EE",
-    technique: "sustain",
     cardCue: "The narrowest vowel — lips spread, tongue forward, bright resonance",
     elements: [
       { type: "paragraph", text: "EE (as in 'see') is the narrowest, brightest vowel. Lips spread wide, tongue pushed high and forward. It's the opposite of U — where U is dark, round, and back, EE is bright, narrow, and forward. EE requires the most precise tongue position and is the hardest vowel to control, especially on higher tones. We start low and build up." },

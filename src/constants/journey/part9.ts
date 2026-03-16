@@ -7,7 +7,6 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     part: 9,
     exerciseTypeId: "learn",
     title: "Puffy cheeks",
-    technique: "puffy-cheeks",
     cardCue: "Build breath control with a playful technique",
     elements: [
       { type: "paragraph", text: "Puffy cheeks is a breath control technique: puff your cheeks out while singing, as if holding air in your mouth. This creates back-pressure that trains your diaphragm and helps you sustain notes with less effort. It feels playful but builds serious control. We'll combine it with AH vowel work to keep expanding your range." },
@@ -19,7 +18,6 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Low",
     subtitle: "Breath control · 7 seconds",
-    technique: "puffy-cheeks",
     scale: { type: "even-7-from-major", root: 1 },
     showEnableNotificationsPrompt: true,
     notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 7 }],
@@ -49,7 +47,6 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Puffy cheeks — Mid",
     subtitle: "Breath control · 7 seconds",
-    technique: "puffy-cheeks",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 7 }],
     instruction:

@@ -6,7 +6,6 @@ export const PART_1_EXERCISES: JourneyExerciseInput[] = [
     part: 1,
     exerciseTypeId: "learn",
     title: "Vocal placement",
-    technique: "sustain",
     cardCue: "Discover vocal placement and how it connects voice to body awareness",
     elements: [
       { type: "paragraph", text: "Vocal placement is the practice of directing your voice to resonate in different parts of your body. Lower tones naturally settle in the chest, mid-range tones open in the throat and mouth, and higher tones lift into the sinuses and head." },

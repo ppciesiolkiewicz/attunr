@@ -7,7 +7,6 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     part: 11,
     exerciseTypeId: "learn",
     title: "Chakras and Yoga of Sounds",
-    technique: "mantra",
     cardCue: "Discover the ancient system of body, tone, and seed syllable",
     elements: [
       { type: "paragraph", text: "Nāda yoga — the yoga of sound — is one of the oldest Indian traditions, teaching that sound is the primordial creative force. The seven chakras are energy centres along the spine, each tied to a tone, body region, colour, and element." },
@@ -22,7 +21,6 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Root — LAM",
     subtitle: "Mantra · Root tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 8 }],
     instruction:
@@ -33,7 +31,6 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Sacral — VAM",
     subtitle: "Mantra · Sacral tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 8 }],
     instruction:
@@ -44,7 +41,6 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Solar Plexus — RAM",
     subtitle: "Mantra · Solar Plexus tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 8 }],
     instruction:
@@ -55,7 +51,6 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Heart — YAM",
     subtitle: "Mantra · Heart tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 8 }],
     instruction:

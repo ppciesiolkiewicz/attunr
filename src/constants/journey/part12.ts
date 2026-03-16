@@ -16,7 +16,6 @@ export const PART_12_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Throat — HAM",
     subtitle: "Mantra · Throat tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 8 }],
     instruction:
@@ -27,7 +26,6 @@ export const PART_12_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Third Eye — OM",
     subtitle: "Mantra · Third Eye tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 5 }, seconds: 8 }],
     instruction:
@@ -38,7 +36,6 @@ export const PART_12_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Crown — AH",
     subtitle: "Mantra · Crown tone · 8 seconds",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [{ target: { kind: BandTargetKind.Index, i: 6 }, seconds: 8 }],
     instruction:
@@ -49,7 +46,6 @@ export const PART_12_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Full chakra sequence",
     subtitle: "All 7 mantras · 3 seconds each",
-    technique: "mantra",
     scale: { type: "even-7-from-major", root: 1 },
     notes: [
       { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 3 },

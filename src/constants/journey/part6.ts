@@ -7,7 +7,6 @@ export const PART_6_EXERCISES: JourneyExerciseInput[] = [
     part: 6,
     exerciseTypeId: "learn",
     title: "Rounded vowels",
-    technique: "sustain",
     cardCue: "Sing OO and OH — warm, rounded sounds that build on your U foundation",
     elements: [
       { type: "paragraph", text: "OO (as in 'book') and OH (as in 'go') are rounded vowels — cousins of the U you already know. OO keeps the lips rounded but opens the mouth a touch more. OH opens further, like a gentle 'oh' of surprise. Both maintain vocal tract stability and help develop resonance. We'll start on comfortable low-to-mid tones." },
