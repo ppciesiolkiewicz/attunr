@@ -40,10 +40,12 @@ type StageConfig = {
 ## New exercise type: volume-detection
 
 ```typescript
-type VolumeDetectionExercise = {
+// Extends BaseExerciseConfig (title, subtitle, cardCue, introModal, etc.)
+type VolumeDetectionExercise = BaseExerciseConfig & {
   exerciseTypeId: "volume-detection"
   targetSeconds: number       // total seconds of sound to accumulate
   cues: string[]              // visual cues that loop endlessly, e.g. ["sss", "zzz", "sss"]
+  cueDurationSeconds?: number // how long each cue displays before cycling (default: 3)
   instruction: string
 }
 ```
@@ -51,9 +53,10 @@ type VolumeDetectionExercise = {
 ### Behaviour
 
 - Microphone listens for volume above a threshold (no pitch analysis)
+- Volume threshold is determined empirically — start with a simple RMS threshold, calibrate during implementation
 - A vertical progress bar fills as the user accumulates sound time
 - Pauses filling when the user stops making sound
-- Cues cycle on screen as visual guidance — they loop until targetSeconds is reached
+- Cues cycle on screen at `cueDurationSeconds` intervals (default 3s) — they loop until targetSeconds is reached
 - Exercise completes when accumulated sound time reaches targetSeconds
 
 ---
@@ -148,6 +151,37 @@ Recommended before each session (prompted if >4h since last warmup).
 
 ---
 
+## Progress and navigation
+
+### Replacing `part` with chapter/stage addressing
+
+The existing `BaseExerciseConfig.part: number` field is replaced by position within the chapter/stage hierarchy. Each exercise is addressed by `(chapterIndex, stageIndex, exerciseIndex)`.
+
+### Exercise IDs
+
+IDs are still auto-assigned sequentially across all chapters (warmup exercises included). The flat `JOURNEY_EXERCISES` array is derived from `JOURNEY: Chapter[]` by flattening. This preserves URL compatibility (`/journey/[id]`).
+
+### Progress tracking
+
+Progress remains a single high-water mark: `journeyExerciseId: number` in localStorage (renamed from `journeyStage` for clarity). The journey list UI derives chapter/stage completion from this value.
+
+Warmup completion is tracked separately via `lastWarmupCompletedAt`.
+
+### Warmup UX flow
+
+When the user navigates to a stage in a chapter with a warmup and the warmup is stale (>4h):
+- Show a prompt screen: "Warm up first?" with two options: "Start warmup" / "Skip"
+- If they start warmup → run warmup exercises → update `lastWarmupCompletedAt` → continue to stage
+- Warmup completion does NOT advance `journeyExerciseId` — it's separate from main progress
+
+### Completion modals
+
+- Completion modal appears after the **last exercise of each stage** (not each exercise)
+- Chapter completion modal appears after the last exercise of the last stage in a chapter
+- Content follows existing pattern: title, subtitle, summary text, confetti on chapter completion
+
+---
+
 ## Secret stage hooks
 
 Per [ideas-progression.md](../../../specs/ideas-progression.md), secret stages can branch off from chapters. The Chapter model supports this naturally — a secret stage is just a `StageConfig` unlocked by a prerequisite or achievement badge. The unlock mechanism is not designed here but the data model accommodates it.
@@ -182,9 +216,25 @@ This catalog serves as a pool for designing Chapter 2+ stages and secret stages.
 | localStorage | Add `lastWarmupCompletedAt` timestamp |
 | Journey UI | Show chapters, stages within chapters, warmup prompt |
 
+## Exercise config details
+
+The exercise tables above use human-readable descriptions. Actual config values (scale, NoteTarget indices, accept directions) follow the same patterns as existing part files:
+
+- **"Low"** = `even-7-from-major`, index 1
+- **"Mid-low"** = index 2
+- **"Mid"** = index 4
+- **"High range, accept above"** = range target with `accept: "above"` (same as current Hoo hoo config)
+- **"× 3 reps"** = 3 separate `SustainNoteConfig` entries with the same target
+- **"Low→high slide"** = tone-follow with `kind: "slide"`, from index 1 to index -1
+
+Full configs are derived during implementation using existing exercises as templates.
+
+---
+
 ## What does NOT change
 
 - Existing exercise types (pitch-detection, tone-follow, melody, breathwork-farinelli, learn, learn-notes-1)
 - Scale and resolution system
 - Exercise components (PitchExercise, ToneFollowExercise, MelodyExercise, etc.)
 - Color spectrum system
+- `exercise-config-flow.md` spec must be updated to include `volume-detection`
