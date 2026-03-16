@@ -53,6 +53,11 @@ Add a `// Core idea: ...` comment above each part entry (both active and comment
 - `mantra` technique — only used in chakra parts (already removed)
 - `pitch-detection-slide` exercise type — defined in types but not used in any part
 
+### Known side effects
+
+- **Exercise ID renumbering:** `assignIds` assigns sequential IDs based on array position. Removing parts changes all IDs. Saved user progress (`journeyStage`) may point to a different exercise. Acceptable — this is a dev build, progress resets are expected.
+- **JourneyList.tsx intro copy mentions "mantras"** — out of scope for this change, can be updated separately.
+
 ## Files to modify
 
 | File | Change |
