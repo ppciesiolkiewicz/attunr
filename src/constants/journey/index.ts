@@ -36,7 +36,9 @@ export type {
   TipListElement,
   SeparatorElement,
   TechniqueId,
-  BandTarget,
+  NoteTarget,
+  BaseScale,
+  ChromaticDegree,
   SustainNoteConfig,
   SlideConfig,
   BaseExerciseConfig,
@@ -54,7 +56,7 @@ export type {
   DisplayScale,
 } from "./types";
 
-export { NoteDuration } from "./types";
+export { NoteDuration, BandTargetKind } from "./types";
 
 /** Build introModal for a non-learn exercise from its existing properties. */
 function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
