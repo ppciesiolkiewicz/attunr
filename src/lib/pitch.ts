@@ -1,8 +1,6 @@
-import type { Band } from "@/constants/tone-slots";
-import { SLOT_ORDER } from "@/constants/tone-slots";
+import type { ResolvedNote } from "@/constants/tone-slots";
 import { VOICE_TYPES } from "@/constants/voice-types";
 import type { VoiceTypeId } from "@/constants/voice-types";
-import type { BandTarget } from "@/constants/journey";
 
 export const NOTE_NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"] as const;
 
@@ -49,24 +47,24 @@ export function isInTune(
   return Math.abs(detectedHz - targetHz) / targetHz <= tolerance;
 }
 
-/** Check if pitch is anywhere within the frequency range of the given bands. Uses ±10% buffer at edges for loose detection. */
-export function isInBandRange(detectedHz: number, bands: Band[]): boolean {
-  return matchesBandTarget(detectedHz, bands, "within");
+/** Check if pitch is anywhere within the frequency range of the given notes. Uses ±10% buffer at edges. */
+export function isInNoteRange(detectedHz: number, notes: ResolvedNote[]): boolean {
+  return matchesNoteTarget(detectedHz, notes, "within");
 }
 
 /**
- * Check if pitch matches a band target with optional accept mode.
- * - within: pitch must be in the band range (±10% buffer)
- * - below: accept any pitch at or below the target range (chest/low voice)
- * - above: accept any pitch at or above the target range (head/high voice)
+ * Check if pitch matches resolved notes with optional accept mode.
+ * - within: pitch must be in the note range (±10% buffer)
+ * - below: accept any pitch at or below the range (chest/low voice)
+ * - above: accept any pitch at or above the range (head/high voice)
  */
-export function matchesBandTarget(
+export function matchesNoteTarget(
   detectedHz: number,
-  bands: Band[],
-  accept: "within" | "below" | "above" = "within"
+  notes: ResolvedNote[],
+  accept: "within" | "below" | "above" = "within",
 ): boolean {
-  if (bands.length === 0) return false;
-  const freqs = bands.map((b) => b.frequencyHz);
+  if (notes.length === 0) return false;
+  const freqs = notes.map((n) => n.frequencyHz);
   const minHz = Math.min(...freqs);
   const maxHz = Math.max(...freqs);
   const buffer = 0.1;
@@ -82,51 +80,18 @@ export function matchesBandTarget(
   }
 }
 
-export function findClosestBand(hz: number, bands: Band[]): Band {
-  if (bands.length === 0) {
-    throw new Error("findClosestBand requires at least one band");
+export function findClosestNote(hz: number, notes: ResolvedNote[]): ResolvedNote {
+  if (notes.length === 0) {
+    throw new Error("findClosestNote requires at least one note");
   }
-  return bands.reduce((best, b) =>
-    Math.abs(b.frequencyHz - hz) < Math.abs(best.frequencyHz - hz) ? b : best
+  return notes.reduce((best, n) =>
+    Math.abs(n.frequencyHz - hz) < Math.abs(best.frequencyHz - hz) ? n : best
   );
 }
 
-
-/** Pitch confidence: 0 (far) → 1 (exactly on a band) */
-export function pitchConfidence(hz: number, bands: Band[]): number {
-  const closest = findClosestBand(hz, bands);
+/** Pitch confidence: 0 (far) → 1 (exactly on a note) */
+export function pitchConfidence(hz: number, notes: ResolvedNote[]): number {
+  const closest = findClosestNote(hz, notes);
   const ratio = Math.abs(hz - closest.frequencyHz) / closest.frequencyHz;
   return Math.max(0, 1 - ratio / 0.03);
-}
-
-/** Resolve a BandTarget to concrete Band(s) from the user's vocal scale. */
-export function resolveBandTarget(
-  target: BandTarget,
-  allBands: Band[],
-): Band[] {
-  const n = allBands.length;
-  if (n === 0) return [];
-
-  if (target.kind === "slot") {
-    const slotId = SLOT_ORDER[target.n - 1];
-    const band = allBands.find(
-      (b) => b.isSlot && b.slotId === slotId,
-    );
-    return band ? [band] : [];
-  }
-
-  if (target.kind === "index") {
-    const i = target.i < 0 ? n + target.i : target.i;
-    return i >= 0 && i < n ? [allBands[i]] : [];
-  }
-
-  if (target.kind === "range") {
-    const from = target.from < 0 ? n + target.from : target.from;
-    const to = target.to < 0 ? n + target.to : target.to;
-    const lo = Math.max(0, Math.min(from, to));
-    const hi = Math.min(n - 1, Math.max(from, to));
-    return allBands.slice(lo, hi + 1);
-  }
-
-  return [];
 }
