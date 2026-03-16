@@ -58,7 +58,6 @@ interface ResolvedTimelineEntry {
   silent?: boolean;
   /** True for "play" events (piano-only chords) — not scored, not sung, but scheduled for playback. */
   audioOnly?: boolean;
-  isRest: boolean;
 }
 
 type ResolvedExercise =
@@ -109,7 +108,7 @@ function resolveExercise(
    - For each event:
      - `"note"` → one `ResolvedTimelineEntry` with `audioOnly: false`
      - `"play"` (chord) → one entry per target at the same `startMs`, each with `audioOnly: true` (piano playback only, not scored)
-     - `"pause"` → one entry with `isRest: true`
+     - `"pause"` → no entry emitted; only advances the cursor (matches existing behavior)
    - Compute `startMs`/`durationMs` from `exercise.tempo`
 2. Flatten into `timeline: ResolvedTimelineEntry[]` with cumulative `startMs`
 3. Compute `totalDurationMs`
