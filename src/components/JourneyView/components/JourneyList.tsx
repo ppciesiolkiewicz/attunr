@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import {
   JOURNEY_CONFIG,
 } from "@/constants/journey";
@@ -15,7 +16,10 @@ interface JourneyListProps {
 }
 
 export function JourneyList({ settings, onSelect }: JourneyListProps) {
-  const { journeyStage: highestCompleted } = settings;
+  const searchParams = useSearchParams();
+  const unlockAll = searchParams.has("unlock");
+  const { journeyStage } = settings;
+  const highestCompleted = unlockAll ? Infinity : journeyStage;
 
   return (
     <div className="h-full overflow-y-auto">
