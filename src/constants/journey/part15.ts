@@ -20,6 +20,7 @@ export const PART_15_EXERCISES: JourneyExerciseInput[] = [
     subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
+    displayNotes: [{ type: "major", root: 1, notes: [] }],
     toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 0 } },
     requiredPlays: 3,
     instruction:
@@ -32,6 +33,7 @@ export const PART_15_EXERCISES: JourneyExerciseInput[] = [
     subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
+    displayNotes: [{ type: "major", root: 1, notes: [] }],
     toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },
     requiredPlays: 3,
     instruction:

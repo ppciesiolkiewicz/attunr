@@ -185,6 +185,8 @@ export interface ToneFollowExercise extends BaseExerciseConfig {
   scale: BaseScale;
   /** Describes the tone to play (slide glide or sustained note). */
   toneShape: ToneFollowShape;
+  /** Reference notes to highlight on the canvas (e.g. major scale over chromatic). notes: [] = all notes from scale. */
+  displayNotes?: DisplayScale[];
   /** Number of times the user must play the tone to complete. */
   requiredPlays: number;
   instruction: string;

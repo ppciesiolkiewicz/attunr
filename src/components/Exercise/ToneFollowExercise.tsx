@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
-import type { ToneFollowExercise as ToneFollowConfig } from "@/constants/journey";
+import type { ToneFollowExercise as ToneFollowConfig, DisplayNote } from "@/constants/journey";
 import { Scale } from "@/lib/scale";
 import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
 
@@ -67,6 +67,22 @@ export function ToneFollowExercise({
     return coloredNotes.filter((n) => noteIds.has(n.id));
   }, [exerciseNotes, coloredNotes]);
 
+  // ── Display notes & highlights ──────────────────────────────────────────
+  // When exercise.displayNotes is set, build a display scale to determine
+  // which notes are highlighted (e.g. major scale on a chromatic canvas).
+  // notes: [] means "highlight all notes from the display scale".
+  const displayScaleNotes = useMemo(() => {
+    if (!exercise.displayNotes || exercise.displayNotes.length === 0) return null;
+    const ds = exercise.displayNotes[0];
+    const dsScale = new Scale({ type: ds.type, root: ds.root }, vocalRange);
+    if (ds.notes.length === 0) {
+      // Empty notes = all notes from the display scale
+      return dsScale.notes;
+    }
+    // Specific notes listed
+    return ds.notes.flatMap((dn: DisplayNote) => dsScale.resolve(dn.target));
+  }, [exercise.displayNotes, vocalRange]);
+
   const displayNotes = useMemo(() => {
     if (exerciseColoredNotes.length <= 1) return exerciseColoredNotes;
     const indices = exerciseColoredNotes
@@ -78,7 +94,14 @@ export function ToneFollowExercise({
     return coloredNotes.slice(minIdx, maxIdx + 1);
   }, [exerciseColoredNotes, coloredNotes]);
 
-  const highlightIds = useMemo(() => exerciseColoredNotes.map((n) => n.id), [exerciseColoredNotes]);
+  const highlightIds = useMemo(() => {
+    if (displayScaleNotes) {
+      // Highlight display scale notes that fall within displayed range
+      const displayIds = new Set(displayScaleNotes.map((n) => n.id));
+      return displayNotes.filter((n) => displayIds.has(n.id)).map((n) => n.id);
+    }
+    return exerciseColoredNotes.map((n) => n.id);
+  }, [displayScaleNotes, displayNotes, exerciseColoredNotes]);
 
   // ── Simulated Hz ref (fed to PitchCanvas instead of mic input) ─────────
   const simulatedHzRef = useRef<number | null>(null);
