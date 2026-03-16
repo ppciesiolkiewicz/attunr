@@ -1,85 +1,73 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useRef, useEffect } from "react";
 import HillBallCanvas from "./HillBallCanvas";
-import type { Band } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
 
 // ── Mock bands (simulating 3 low-range notes for Low U, 3 high-range for Hoo Hoo) ──
 
-const LOW_BANDS: Band[] = [
+const LOW_BANDS: ColoredNote[] = [
   {
-    id: "low-1",
+    id: "C3",
     midi: 48,
     frequencyHz: 131,
     note: "C",
     octave: 3,
     color: "#ef4444",
     rgb: "239, 68, 68",
-    name: "Low C",
-    isSlot: true,
-    slotId: "slot-1",
+    name: "C3",
   },
   {
-    id: "low-2",
+    id: "D3",
     midi: 50,
     frequencyHz: 147,
     note: "D",
     octave: 3,
     color: "#f97316",
     rgb: "249, 115, 22",
-    name: "Low D",
-    isSlot: true,
-    slotId: "slot-2",
+    name: "D3",
   },
   {
-    id: "low-3",
+    id: "E3",
     midi: 52,
     frequencyHz: 165,
     note: "E",
     octave: 3,
     color: "#eab308",
     rgb: "234, 179, 8",
-    name: "Low E",
-    isSlot: true,
-    slotId: "slot-3",
+    name: "E3",
   },
 ];
 
-const HIGH_BANDS: Band[] = [
+const HIGH_BANDS: ColoredNote[] = [
   {
-    id: "high-1",
+    id: "E4",
     midi: 64,
     frequencyHz: 330,
     note: "E",
     octave: 4,
     color: "#22c55e",
     rgb: "34, 197, 94",
-    name: "High E",
-    isSlot: true,
-    slotId: "slot-4",
+    name: "E4",
   },
   {
-    id: "high-2",
+    id: "F#4",
     midi: 66,
     frequencyHz: 370,
     note: "F#",
     octave: 4,
     color: "#3b82f6",
     rgb: "59, 130, 246",
-    name: "High F#",
-    isSlot: true,
-    slotId: "slot-5",
+    name: "F#4",
   },
   {
-    id: "high-3",
+    id: "Ab4",
     midi: 68,
     frequencyHz: 415,
     note: "Ab",
     octave: 4,
     color: "#8b5cf6",
     rgb: "139, 92, 246",
-    name: "High Ab",
-    isSlot: true,
-    slotId: "slot-6",
+    name: "Ab4",
   },
 ];
 
@@ -93,7 +81,7 @@ function SimWrapper({
   accept,
   pattern,
 }: {
-  bands: Band[];
+  bands: ColoredNote[];
   direction: "up" | "down";
   accept: "above" | "below";
   pattern: SimPattern;

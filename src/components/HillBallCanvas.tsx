@@ -1,11 +1,16 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { findClosestBand, matchesBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/tone-slots";
+import { findClosestNote as findClosestResolvedNote, matchesNoteTarget } from "@/lib/pitch";
+import type { ColoredNote } from "@/constants/tone-slots";
+
+/** Typed wrapper — preserves ColoredNote return type when input is ColoredNote[]. */
+function findClosestNote(hz: number, notes: ColoredNote[]): ColoredNote {
+  return findClosestResolvedNote(hz, notes) as ColoredNote;
+}
 
 interface HillBallCanvasProps {
-  bands: Band[];
+  bands: ColoredNote[];
   /** Ref updated synchronously by pitch detection — no React latency */
   currentHzRef: React.RefObject<number | null>;
   /** "up" = user pushes ball uphill (Hoo hoo), "down" = user pushes ball downhill (Low U) */
@@ -68,7 +73,7 @@ function slopePoint(
  */
 function hzToT(
   hz: number,
-  bands: Band[],
+  bands: ColoredNote[],
   direction: "up" | "down",
 ): number {
   if (bands.length === 0) return 0.5;
@@ -92,7 +97,7 @@ export default function HillBallCanvas({
   accept,
 }: HillBallCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const bandsRef = useRef<Band[]>([]);
+  const bandsRef = useRef<ColoredNote[]>([]);
   const rafRef = useRef<number | null>(null);
 
   const ballTRef = useRef(0.2);
@@ -286,8 +291,8 @@ export default function HillBallCanvas({
         lastTrailMs.current = now;
       }
 
-      const closest = findClosestBand(hz, bands);
-      const inTune = matchesBandTarget(hz, bands, accept);
+      const closest = findClosestNote(hz, bands);
+      const inTune = matchesNoteTarget(hz, bands, accept);
       const { x: bx, y: by } = slopePoint(ballTRef.current, W, H, direction);
 
       // Trail — fading ghost balls

@@ -2,12 +2,17 @@
 
 import { useRef, useEffect, useCallback } from "react";
 import {
-  findClosestBand,
+  findClosestNote as findClosestResolvedNote,
   isInTune,
-  matchesBandTarget,
+  matchesNoteTarget,
   pitchConfidence,
 } from "@/lib/pitch";
-import type { Band } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
+
+/** Typed wrapper — preserves ColoredNote return type when input is ColoredNote[]. */
+function findClosestNote(hz: number, notes: ColoredNote[]): ColoredNote {
+  return findClosestResolvedNote(hz, notes) as ColoredNote;
+}
 
 interface PitchDot {
   hz: number;
@@ -16,13 +21,13 @@ interface PitchDot {
 
 /** When set, use this instead of exact-pitch isInTune. E.g. "below" = chest voice (any tone low enough), "above" = head voice. */
 export type InTuneOverride = {
-  bands: Band[];
+  bands: ColoredNote[];
   accept: "within" | "below" | "above";
 };
 
 export interface MelodyRectNote {
   index: number;           // position in melody array (excluding rests)
-  band: Band;              // resolved from BandTarget
+  note: ColoredNote;       // resolved from NoteTarget
   startMs: number;         // offset from melody start time
   durationMs: number;      // rectangle width in time
   silent?: boolean;        // dashed/dimmed visual style
@@ -30,14 +35,14 @@ export interface MelodyRectNote {
 }
 
 interface PitchCanvasProps {
-  bands: Band[];
+  bands: ColoredNote[];
   /** Ref updated synchronously by the pitch detection hook — no React latency */
   currentHzRef: React.RefObject<number | null>;
   /** When set, non-listed band IDs are dimmed (Journey mode) */
   highlightIds?: string[];
-  /** When set, use matchesBandTarget(hz, bands, accept) instead of isInTune. For chest/head exercises. */
+  /** When set, use matchesNoteTarget(hz, notes, accept) instead of isInTune. For chest/head exercises. */
   inTuneOverride?: InTuneOverride;
-  onBandClick?: (band: Band) => void;
+  onBandClick?: (note: ColoredNote) => void;
   /** Melody rectangle notes to render on the canvas */
   melodyNotes?: MelodyRectNote[];
   /** performance.now() when melody playback began */
@@ -100,36 +105,36 @@ function bandIndexY(idx: number, n: number, bottomY: number, topY: number): numb
 /**
  * Map a detected Hz value to canvas Y by linear interpolation in band-index
  * space. Adjacent bands are always equally spaced visually, regardless of
- * their actual Hz gap. Requires bands[] sorted ascending by frequencyHz.
+ * their actual Hz gap. Requires notes[] sorted ascending by frequencyHz.
  */
-function hzToY(hz: number, bands: Band[], bottomY: number, topY: number): number {
-  const n = bands.length;
+function hzToY(hz: number, notes: ColoredNote[], bottomY: number, topY: number): number {
+  const n = notes.length;
   if (n <= 1) return (bottomY + topY) / 2;
 
   const idxY = (i: number) => bandIndexY(i, n, bottomY, topY);
 
   // Below lowest — extrapolate
-  if (hz <= bands[0].frequencyHz) {
+  if (hz <= notes[0].frequencyHz) {
     const t =
-      (hz - bands[0].frequencyHz) /
-      (bands[1].frequencyHz - bands[0].frequencyHz);
+      (hz - notes[0].frequencyHz) /
+      (notes[1].frequencyHz - notes[0].frequencyHz);
     return idxY(0) + t * (idxY(1) - idxY(0));
   }
 
   // Above highest — extrapolate
-  if (hz >= bands[n - 1].frequencyHz) {
+  if (hz >= notes[n - 1].frequencyHz) {
     const t =
-      (hz - bands[n - 2].frequencyHz) /
-      (bands[n - 1].frequencyHz - bands[n - 2].frequencyHz);
+      (hz - notes[n - 2].frequencyHz) /
+      (notes[n - 1].frequencyHz - notes[n - 2].frequencyHz);
     return idxY(n - 2) + t * (idxY(n - 1) - idxY(n - 2));
   }
 
-  // Interpolate between the two bracketing bands
+  // Interpolate between the two bracketing notes
   for (let i = 0; i < n - 1; i++) {
-    if (hz >= bands[i].frequencyHz && hz <= bands[i + 1].frequencyHz) {
+    if (hz >= notes[i].frequencyHz && hz <= notes[i + 1].frequencyHz) {
       const t =
-        (hz - bands[i].frequencyHz) /
-        (bands[i + 1].frequencyHz - bands[i].frequencyHz);
+        (hz - notes[i].frequencyHz) /
+        (notes[i + 1].frequencyHz - notes[i].frequencyHz);
       return idxY(i) + t * (idxY(i + 1) - idxY(i));
     }
   }
@@ -139,12 +144,12 @@ function hzToY(hz: number, bands: Band[], bottomY: number, topY: number): number
 
 function checkInTune(
   hz: number,
-  bands: Band[],
-  closest: Band,
+  notes: ColoredNote[],
+  closest: ColoredNote,
   override?: InTuneOverride,
 ): boolean {
   if (override && override.bands.length > 0) {
-    return matchesBandTarget(hz, override.bands, override.accept);
+    return matchesNoteTarget(hz, override.bands, override.accept);
   }
   return isInTune(hz, closest.frequencyHz);
 }
@@ -161,7 +166,7 @@ export default function PitchCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<PitchDot[]>([]);
   /** Kept sorted ascending by frequencyHz so index-based rendering is correct */
-  const bandsRef = useRef<Band[]>([]);
+  const bandsRef = useRef<ColoredNote[]>([]);
   const highlightIdsRef = useRef<string[] | undefined>(highlightIds);
   const inTuneOverrideRef = useRef<InTuneOverride | undefined>(inTuneOverride);
 
@@ -252,7 +257,7 @@ export default function PitchCanvas({
 
     const override = inTuneOverrideRef.current;
     const getInTune = (h: number) => {
-      const closest = findClosestBand(h, bands);
+      const closest = findClosestNote(h, bands);
       return checkInTune(h, bands, closest, override);
     };
 
@@ -323,10 +328,10 @@ export default function PitchCanvas({
         // Off-screen culling
         if (x2 < 0 || x1 > W) continue;
 
-        const y = hzToY(mn.band.frequencyHz, bands, bottomY, topY);
+        const y = hzToY(mn.note.frequencyHz, bands, bottomY, topY);
         const rectY = y - rectH / 2;
         const rectW = Math.max(x2 - x1, 2);
-        const rgb = mn.band.rgb;
+        const rgb = mn.note.rgb;
         const dimFactor = mn.silent ? 0.5 : 1;
 
         // Fill based on status
@@ -392,7 +397,7 @@ export default function PitchCanvas({
       const opacity = (1 - ageFraction) * 0.8;
       const r = DOT_RADIUS * (1 - ageFraction * 0.5);
       const y = hzToY(dot.hz, bands, bottomY, topY);
-      const closest = findClosestBand(dot.hz, bands);
+      const closest = findClosestNote(dot.hz, bands);
       const inTune = checkInTune(dot.hz, bands, closest, override);
 
       ctx.beginPath();
@@ -411,7 +416,7 @@ export default function PitchCanvas({
     // ── Live cursor dot + waveform ring (60 fps) ──────────────────────────────
     if (hz !== null) {
       const y = hzToY(hz, bands, bottomY, topY);
-      const closest = findClosestBand(hz, bands);
+      const closest = findClosestNote(hz, bands);
       const inTune = checkInTune(hz, bands, closest, override);
       const conf = pitchConfidence(hz, bands);
 

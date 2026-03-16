@@ -9,8 +9,9 @@ import { Button, CircularProgress, Text } from "@/components/ui";
 import { usePitchProgress } from "./usePitchProgress";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
-import { findClosestBand, isInTune, matchesBandTarget, resolveBandTarget } from "@/lib/pitch";
-import type { Band, VocalRange } from "@/constants/tone-slots";
+import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
+import { Scale } from "@/lib/scale";
+import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
 
 interface PitchExerciseProps {
   exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
@@ -23,8 +24,8 @@ interface PitchExerciseProps {
   onComplete: () => void;
   onSkip: () => void;
   onPrev?: () => void;
-  onPlayTone: (band: Band) => void;
-  onPlaySlide?: (fromBand: Band, toBand: Band) => void;
+  onPlayTone: (note: ColoredNote) => void;
+  onPlaySlide?: (from: ColoredNote, to: ColoredNote) => void;
 }
 
 export function PitchExercise({
@@ -41,56 +42,77 @@ export function PitchExercise({
   onPlayTone,
   onPlaySlide,
 }: PitchExerciseProps) {
-  // ── Band resolution ──────────────────────────────────────────────────────
-  const exerciseBands = useMemo(() => {
+  // ── Scale construction ─────────────────────────────────────────────────────
+  const scale = useMemo(
+    () => new Scale(exercise.scale, vocalRange),
+    [exercise.scale, vocalRange],
+  );
+
+  const coloredNotes = useMemo(() => scale.colorize(), [scale]);
+
+  // ── Note resolution ────────────────────────────────────────────────────────
+  const exerciseNotes = useMemo(() => {
     if (exercise.exerciseTypeId === "pitch-detection") {
-      return exercise.notes.flatMap((n) => resolveBandTarget(n.target, vocalRange.allBands));
+      return exercise.notes.flatMap((n) => scale.resolve(n.target));
     }
-    const fromBands = resolveBandTarget(exercise.notes[0].from, vocalRange.allBands);
-    const toBands = resolveBandTarget(exercise.notes[0].to, vocalRange.allBands);
-    const fromIdx = fromBands[0] ? vocalRange.allBands.indexOf(fromBands[0]) : 0;
-    const toIdx = toBands[0] ? vocalRange.allBands.indexOf(toBands[0]) : vocalRange.allBands.length - 1;
+    const fromNotes = scale.resolve(exercise.notes[0].from);
+    const toNotes = scale.resolve(exercise.notes[0].to);
+    const fromIdx = fromNotes[0] ? scale.notes.indexOf(fromNotes[0]) : 0;
+    const toIdx = toNotes[0] ? scale.notes.indexOf(toNotes[0]) : scale.notes.length - 1;
     const lo = Math.min(fromIdx, toIdx);
     const hi = Math.max(fromIdx, toIdx);
-    return vocalRange.allBands.slice(lo, hi + 1);
-  }, [exercise, vocalRange.allBands]);
+    return scale.notes.slice(lo, hi + 1);
+  }, [exercise, scale]);
+
+  const exerciseColoredNotes = useMemo(() => {
+    const noteIds = new Set(exerciseNotes.map((n) => n.id));
+    return coloredNotes.filter((n) => noteIds.has(n.id));
+  }, [exerciseNotes, coloredNotes]);
 
   const isRangeTarget =
     exercise.exerciseTypeId === "pitch-detection" &&
     exercise.notes.length === 1 &&
     exercise.notes[0].target.kind === "range";
 
-  const displayBands = useMemo(() => {
-    if (exerciseBands.length <= 1) return exerciseBands;
-    const indices = exerciseBands
-      .map((b) => vocalRange.allBands.findIndex((ab) => ab.id === b.id))
+  const displayNotes = useMemo(() => {
+    if (exerciseColoredNotes.length <= 1) return exerciseColoredNotes;
+    const indices = exerciseColoredNotes
+      .map((n) => coloredNotes.findIndex((cn) => cn.id === n.id))
       .filter((i) => i >= 0);
-    if (indices.length === 0) return exerciseBands;
+    if (indices.length === 0) return exerciseColoredNotes;
     const minIdx = Math.max(0, Math.min(...indices) - 1);
-    const maxIdx = Math.min(vocalRange.allBands.length - 1, Math.max(...indices) + 1);
-    return vocalRange.allBands.slice(minIdx, maxIdx + 1);
-  }, [exerciseBands, vocalRange.allBands]);
+    const maxIdx = Math.min(coloredNotes.length - 1, Math.max(...indices) + 1);
+    return coloredNotes.slice(minIdx, maxIdx + 1);
+  }, [exerciseColoredNotes, coloredNotes]);
 
-  const highlightIds = useMemo(() => exerciseBands.map((b) => b.id), [exerciseBands]);
+  const highlightIds = useMemo(() => exerciseColoredNotes.map((n) => n.id), [exerciseColoredNotes]);
 
-  const toneBands = useMemo(() => {
+  const toneNotes = useMemo(() => {
     if (exercise.exerciseTypeId === "pitch-detection") {
-      return exercise.notes.flatMap((n) => resolveBandTarget(n.target, vocalRange.allBands));
+      const notes = exercise.notes.flatMap((n) => scale.resolve(n.target));
+      const noteIds = new Set(notes.map((n) => n.id));
+      return coloredNotes.filter((n) => noteIds.has(n.id));
     }
-    return [
-      ...resolveBandTarget(exercise.notes[0].from, vocalRange.allBands),
-      ...resolveBandTarget(exercise.notes[0].to, vocalRange.allBands),
-    ];
-  }, [exercise, vocalRange.allBands]);
+    const fromNotes = scale.resolve(exercise.notes[0].from);
+    const toNotes = scale.resolve(exercise.notes[0].to);
+    const noteIds = new Set([...fromNotes, ...toNotes].map((n) => n.id));
+    return coloredNotes.filter((n) => noteIds.has(n.id));
+  }, [exercise, scale, coloredNotes]);
 
-  const seqStepBands = useMemo(() => {
+  const seqStepNotes = useMemo(() => {
     if (exercise.exerciseTypeId !== "pitch-detection" || exercise.notes.length <= 1) return [];
-    return exercise.notes.map((n) => resolveBandTarget(n.target, vocalRange.allBands)[0]).filter(Boolean);
-  }, [exercise, vocalRange.allBands]);
+    return exercise.notes
+      .map((n) => {
+        const resolved = scale.resolve(n.target)[0];
+        if (!resolved) return null;
+        return coloredNotes.find((cn) => cn.id === resolved.id) ?? null;
+      })
+      .filter((n): n is ColoredNote => n !== null);
+  }, [exercise, scale, coloredNotes]);
 
   // ── Progress (RAF loop in hook) ──────────────────────────────────────────
   const { progress, seqIndex, slideCount, stageComplete: exerciseComplete, showStepCheck } =
-    usePitchProgress({ exercise, exerciseId, allBands: vocalRange.allBands, exerciseBands, pitchHzRef });
+    usePitchProgress({ exercise, exerciseId, scale, exerciseNotes, pitchHzRef });
 
   const [showCongrats, setShowCongrats] = useState(false);
 
@@ -122,10 +144,10 @@ export function PitchExercise({
     if (isTonePlaying) return;
     setIsTonePlaying(true);
 
-    toneBands.forEach((band, i) => {
-      setTimeout(() => onPlayTone(band), i * TONE_GAP_MS);
+    toneNotes.forEach((note, i) => {
+      setTimeout(() => onPlayTone(note), i * TONE_GAP_MS);
     });
-    const totalMs = (toneBands.length - 1) * TONE_GAP_MS + TONE_DURATION_MS;
+    const totalMs = (toneNotes.length - 1) * TONE_GAP_MS + TONE_DURATION_MS;
     if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
     toneTimeoutRef.current = setTimeout(() => {
       toneTimeoutRef.current = null;
@@ -134,25 +156,28 @@ export function PitchExercise({
   }
 
   // ── Derived values for pitch overlay ─────────────────────────────────────
-  const closestBand =
-    pitchHz && exerciseBands.length > 0
-      ? findClosestBand(pitchHz, exerciseBands)
+  const closestNote =
+    pitchHz && exerciseNotes.length > 0
+      ? findClosestNote(pitchHz, exerciseNotes)
       : null;
+  const closestColoredNote = closestNote
+    ? coloredNotes.find((cn) => cn.id === closestNote.id) ?? null
+    : null;
   const rangeAccept =
     isRangeTarget && exercise.notes[0].target.kind === "range"
       ? exercise.notes[0].target.accept ?? "within"
       : "within";
   const locked =
-    pitchHz && closestBand &&
+    pitchHz && closestNote &&
     (isRangeTarget
-      ? matchesBandTarget(pitchHz, exerciseBands, rangeAccept)
-      : isInTune(pitchHz, closestBand.frequencyHz));
+      ? matchesNoteTarget(pitchHz, exerciseNotes, rangeAccept)
+      : isInTune(pitchHz, closestNote.frequencyHz));
 
-  const targetBand = (() => {
+  const targetNote = (() => {
     if (exercise.exerciseTypeId !== "pitch-detection") return null;
     if (isRangeTarget) return null;
-    if (exercise.notes.length === 1) return exerciseBands[0] ?? null;
-    return seqStepBands[seqIndex] ?? null;
+    if (exercise.notes.length === 1) return exerciseColoredNotes[0] ?? null;
+    return seqStepNotes[seqIndex] ?? null;
   })();
 
   return (
@@ -171,26 +196,26 @@ export function PitchExercise({
         {/* Canvas */}
         {exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length === 1 && isRangeTarget && exercise.notes[0].target.kind === "range" ? (
           <HillBallCanvas
-            bands={exerciseBands}
+            bands={exerciseColoredNotes}
             currentHzRef={pitchHzRef}
             direction={rangeAccept === "below" ? "down" : "up"}
             accept={rangeAccept as "above" | "below"}
           />
         ) : exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length === 1 ? (
           <BalanceBallCanvas
-            bands={exerciseBands}
+            bands={exerciseColoredNotes}
             currentHzRef={pitchHzRef}
             highlightIds={highlightIds}
             inTuneOverride={undefined}
           />
         ) : (
           <PitchCanvas
-            bands={displayBands}
+            bands={displayNotes}
             currentHzRef={pitchHzRef}
             highlightIds={highlightIds}
             inTuneOverride={
               isRangeTarget && exercise.notes[0].target.kind === "range"
-                ? { bands: exerciseBands, accept: rangeAccept }
+                ? { bands: exerciseColoredNotes, accept: rangeAccept }
                 : undefined
             }
           />
@@ -247,7 +272,7 @@ export function PitchExercise({
                       as="div"
                       variant="heading-lg"
                       className="font-light"
-                      style={{ color: closestBand?.color ?? "#fff" }}
+                      style={{ color: closestColoredNote?.color ?? "#fff" }}
                     >
                       {locked ? "✓ " : ""}
                       {locked
@@ -266,26 +291,24 @@ export function PitchExercise({
                       as="div"
                       variant="heading-lg"
                       className="text-3xl font-light tabular-nums"
-                      style={{ color: closestBand?.color ?? "#fff" }}
+                      style={{ color: closestColoredNote?.color ?? "#fff" }}
                     >
                       {Math.round(pitchHz)} Hz
                     </Text>
-                    {closestBand && (
+                    {closestNote && (
                       <Text
                         as="div"
                         variant="body-sm"
                         className="mt-0.5"
-                        style={{ color: `${closestBand.color}cc` }}
+                        style={{ color: `${closestColoredNote?.color ?? "#fff"}cc` }}
                       >
                         {locked ? "✓ " : "→ "}
-                        {closestBand.isSlot
-                          ? `${closestBand.note}${closestBand.octave}`
-                          : closestBand.name}
+                        {closestNote.name}
                       </Text>
                     )}
-                    {!locked && targetBand && (
+                    {!locked && targetNote && (
                       <Text variant="body-sm" as="div" color="muted-1" className="mt-1">
-                        {pitchHz < targetBand.frequencyHz ? "↓ Too low" : "↑ Too high"}
+                        {pitchHz < targetNote.frequencyHz ? "↓ Too low" : "↑ Too high"}
                       </Text>
                     )}
                   </>
@@ -317,18 +340,18 @@ export function PitchExercise({
         )}
         {exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length > 1 && !exerciseComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
-            {seqStepBands.map((b, i) => {
+            {seqStepNotes.map((n, i) => {
               const done = i < seqIndex;
               const active = i === seqIndex;
               return (
                 <div
-                  key={b.id}
+                  key={n.id}
                   className="rounded-full transition-all"
                   style={{
                     width: active ? 10 : 7,
                     height: active ? 10 : 7,
-                    backgroundColor: done ? b.color : active ? `${b.color}99` : "rgba(255,255,255,0.15)",
-                    boxShadow: active ? `0 0 8px ${b.color}88` : "none",
+                    backgroundColor: done ? n.color : active ? `${n.color}99` : "rgba(255,255,255,0.15)",
+                    boxShadow: active ? `0 0 8px ${n.color}88` : "none",
                   }}
                 />
               );
@@ -375,7 +398,7 @@ export function PitchExercise({
                 Playing…
               </>
             ) : (
-              <>▶ Play {toneBands.length > 1 ? "tones" : "tone"}</>
+              <>▶ Play {toneNotes.length > 1 ? "tones" : "tone"}</>
             )}
           </Button>
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">

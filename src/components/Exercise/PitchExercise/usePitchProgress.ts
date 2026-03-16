@@ -1,21 +1,22 @@
 import { useState, useRef, useEffect, useCallback } from "react";
-import { isInTune, matchesBandTarget, resolveBandTarget } from "@/lib/pitch";
+import { isInTune, matchesNoteTarget } from "@/lib/pitch";
+import { Scale } from "@/lib/scale";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
-import type { Band } from "@/constants/tone-slots";
+import type { ResolvedNote } from "@/constants/tone-slots";
 
 interface UsePitchProgressOptions {
   exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
   exerciseId: number;
-  allBands: Band[];
-  exerciseBands: Band[];
+  scale: Scale;
+  exerciseNotes: ResolvedNote[];
   pitchHzRef: React.RefObject<number | null>;
 }
 
 export function usePitchProgress({
   exercise,
   exerciseId,
-  allBands,
-  exerciseBands,
+  scale,
+  exerciseNotes,
   pitchHzRef,
 }: UsePitchProgressOptions) {
   const holdRef = useRef(0);
@@ -64,24 +65,24 @@ export function usePitchProgress({
       if (exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length === 1) {
         const holdSeconds = exercise.notes[0].seconds;
         const target = exercise.notes[0].target;
-        const targetBands = resolveBandTarget(target, allBands);
+        const targetNotes = scale.resolve(target);
         const tolerance = exercise.technique === "puffy-cheeks" ? 0.08 : 0.03;
         const inTune =
           hz !== null &&
           (target.kind === "range"
-            ? matchesBandTarget(hz, targetBands, target.accept ?? "within")
-            : targetBands.some((t) => isInTune(hz, t.frequencyHz, tolerance)));
+            ? matchesNoteTarget(hz, targetNotes, target.accept ?? "within")
+            : targetNotes.some((t) => isInTune(hz, t.frequencyHz, tolerance)));
         if (inTune) holdRef.current += dt;
         const p = holdRef.current / holdSeconds;
         setProgress(p);
         if (p >= 1) setStageComplete(true);
       } else if (exercise.exerciseTypeId === "pitch-detection-slide" && hz !== null) {
-        const fromBands = resolveBandTarget(exercise.notes[0].from, allBands);
-        const toBands = resolveBandTarget(exercise.notes[0].to, allBands);
-        const fromHz = fromBands[0]?.frequencyHz ?? 0;
-        const toHz = toBands[0]?.frequencyHz ?? 0;
+        const fromNotes = scale.resolve(exercise.notes[0].from);
+        const toNotes = scale.resolve(exercise.notes[0].to);
+        const fromHz = fromNotes[0]?.frequencyHz ?? 0;
+        const toHz = toNotes[0]?.frequencyHz ?? 0;
         const isHighToLow = fromHz > toHz;
-        const freqs = exerciseBands.map((b) => b.frequencyHz);
+        const freqs = exerciseNotes.map((n) => n.frequencyHz);
         const minFreq = Math.min(...freqs);
         const maxFreq = Math.max(...freqs);
         const highThreshold = maxFreq * 0.75;
@@ -111,9 +112,9 @@ export function usePitchProgress({
         const idx = seqIndexRef.current;
         const noteConfig = exercise.notes[idx];
         if (!noteConfig) return;
-        const targetBands = resolveBandTarget(noteConfig.target, allBands);
+        const targetNotes = scale.resolve(noteConfig.target);
         const noteSeconds = noteConfig.seconds;
-        if (targetBands.length > 0 && hz !== null && targetBands.some((t) => isInTune(hz, t.frequencyHz))) {
+        if (targetNotes.length > 0 && hz !== null && targetNotes.some((t) => isInTune(hz, t.frequencyHz))) {
           noteHoldRef.current += dt;
           if (noteHoldRef.current >= noteSeconds) {
             noteHoldRef.current = 0;

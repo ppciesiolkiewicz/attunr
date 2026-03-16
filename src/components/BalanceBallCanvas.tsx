@@ -1,12 +1,17 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { findClosestBand, isInTune, matchesBandTarget } from "@/lib/pitch";
-import type { Band } from "@/constants/tone-slots";
+import { findClosestNote as findClosestResolvedNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
+import type { ColoredNote } from "@/constants/tone-slots";
+
+/** Typed wrapper — preserves ColoredNote return type when input is ColoredNote[]. */
+function findClosestNote(hz: number, notes: ColoredNote[]): ColoredNote {
+  return findClosestResolvedNote(hz, notes) as ColoredNote;
+}
 import type { InTuneOverride } from "./PitchCanvas";
 
 interface BalanceBallCanvasProps {
-  bands: Band[];
+  bands: ColoredNote[];
   /** Ref updated synchronously by pitch detection — no React latency */
   currentHzRef: React.RefObject<number | null>;
   /** When set, non-listed band IDs are dimmed (Journey mode) */
@@ -57,7 +62,7 @@ const SINGLE_NOTE_RANGE_ST = 5;
  * Notes are positioned in [NOTE_INSET, 1−NOTE_INSET].
  * Out-of-range pitch maps outside that zone → ball rolls down the slopes.
  */
-function hzToT(hz: number, bands: Band[]): number {
+function hzToT(hz: number, bands: ColoredNote[]): number {
   const n = bands.length;
   const noteRange = 1 - 2 * NOTE_INSET;
 
@@ -94,12 +99,12 @@ function hzToT(hz: number, bands: Band[]): number {
 
 function checkInTune(
   hz: number,
-  bands: Band[],
-  closest: Band,
+  notes: ColoredNote[],
+  closest: ColoredNote,
   override?: InTuneOverride,
 ): boolean {
   if (override?.bands.length) {
-    return matchesBandTarget(hz, override.bands, override.accept);
+    return matchesNoteTarget(hz, override.bands, override.accept);
   }
   return isInTune(hz, closest.frequencyHz);
 }
@@ -111,7 +116,7 @@ export default function BalanceBallCanvas({
   inTuneOverride,
 }: BalanceBallCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const bandsRef = useRef<Band[]>([]);
+  const bandsRef = useRef<ColoredNote[]>([]);
   const highlightIdsRef = useRef(highlightIds);
   const inTuneOverrideRef = useRef(inTuneOverride);
   const rafRef = useRef<number | null>(null);
@@ -255,7 +260,7 @@ export default function BalanceBallCanvas({
         lastTrailMs.current = now;
       }
 
-      const closest = findClosestBand(hz, bands);
+      const closest = findClosestNote(hz, bands);
       const inTune = checkInTune(hz, bands, closest, override);
       const { x: bx, y: by } = curvePoint(ballTRef.current, W, H);
 
