@@ -1,6 +1,6 @@
 // ── Chakra domain data ───────────────────────────────────────────────────────
 // Only used by chakra-themed exercises (Parts 11–12, currently commented out).
-// Core app plumbing uses SlotId / Band from tone-slots.ts instead.
+// Core app plumbing uses ResolvedNote / ColoredNote from tone-slots.ts instead.
 
 export type ChakraId =
   | "root"

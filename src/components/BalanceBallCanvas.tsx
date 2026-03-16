@@ -16,7 +16,7 @@ interface BalanceBallCanvasProps {
   currentHzRef: React.RefObject<number | null>;
   /** When set, non-listed band IDs are dimmed (Journey mode) */
   highlightIds?: string[];
-  /** When set, use matchesBandTarget instead of isInTune. For chest/head exercises. */
+  /** When set, use matchesNoteTarget instead of isInTune. For chest/head exercises. */
   inTuneOverride?: InTuneOverride;
 }
 
