@@ -1,7 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import type { JourneyExercise } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import { resolveExercise } from "@/lib/resolve-exercise";
+import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneFollow, ResolvedMelody } from "@/lib/resolve-exercise";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
@@ -53,6 +56,17 @@ export function BaseExercise({
   onPlayTone,
   onPlaySlide,
 }: BaseExerciseProps) {
+  const resolved = useMemo(() => {
+    if (
+      exercise.exerciseTypeId === "learn" ||
+      exercise.exerciseTypeId === "learn-notes-1" ||
+      exercise.exerciseTypeId === "breathwork-farinelli"
+    ) {
+      return null;
+    }
+    return resolveExercise(exercise, vocalRange);
+  }, [exercise, vocalRange]);
+
   switch (exercise.exerciseTypeId) {
     case "learn":
       return (
@@ -99,7 +113,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          vocalRange={vocalRange}
+          resolved={resolved as ResolvedToneFollow}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}
@@ -115,7 +129,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          vocalRange={vocalRange}
+          resolved={resolved as ResolvedMelody}
           pitchHzRef={pitchHzRef}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
@@ -131,7 +145,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          vocalRange={vocalRange}
+          resolved={resolved as ResolvedPitchDetection | ResolvedPitchDetectionSlide}
           pitchHz={pitchHz}
           pitchHzRef={pitchHzRef}
           isAlreadyCompleted={isAlreadyCompleted}

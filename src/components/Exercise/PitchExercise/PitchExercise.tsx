@@ -112,7 +112,7 @@ export function PitchExercise({
   // ── Derived values for pitch overlay ─────────────────────────────────────
   const closestNote =
     pitchHz && exerciseColoredNotes.length > 0
-      ? findClosestNote(pitchHz, exerciseColoredNotes)
+      ? (findClosestNote(pitchHz, exerciseColoredNotes) as ColoredNote)
       : null;
   const rangeAccept =
     isRangeTarget && resolved.exerciseTypeId === "pitch-detection"
