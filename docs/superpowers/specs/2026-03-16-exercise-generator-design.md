@@ -131,7 +131,6 @@ zoneBetween(params: CommonParams & { lowNote: number; highNote: number; seconds:
 lipRoll(params: CommonParams & {
   startNote: number;
   endNote: number;
-  slides: number;          // number of slide repetitions
   requiredPlays: number;   // times user must play along
 })
 ```
