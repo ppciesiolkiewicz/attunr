@@ -64,6 +64,7 @@ interval(params: CommonParams & {
   chromaticDegree: number;
   tempo?: number;          // default 80
   noteDuration?: NoteDuration; // default Half
+  minScore?: number;       // default 0 (any score passes)
 })
 
 // Scale run — ascend then descend through scale
@@ -73,6 +74,7 @@ scale(params: CommonParams & {
   scaleType: string;       // tonal.js name: "major", "minor", "chromatic", etc.
   tempo?: number;
   noteDuration?: NoteDuration;
+  minScore?: number;       // default 0
 })
 
 // Scale degree patterns — root-degree-root for each degree
@@ -83,17 +85,18 @@ scaleDegrees(params: CommonParams & {
   scaleType?: string;      // default "major"
   tempo?: number;
   noteDuration?: NoteDuration;
+  minScore?: number;       // default 0
 })
 ```
 
 **Named convenience methods** — predefined structure, accept overrides:
 
 ```ts
-fifth(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number })
-octave(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number })
-majorScale(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number })
-minorScale(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number })
-pentatonic(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number })
+fifth(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number; minScore?: number })
+octave(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number; minScore?: number })
+majorScale(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number; minScore?: number })
+minorScale(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number; minScore?: number })
+pentatonic(params: CommonParams & { startNote?: number; endNote?: number; tempo?: number; minScore?: number })
 ```
 
 Named methods delegate to generic methods:
@@ -145,12 +148,12 @@ All melody and zone exercises auto-generate `displayNotes` so that every note be
 ## Melody Event Generation
 
 **`interval()`** — For each root stepping chromatically from `startNote` to `endNote - chromaticDegree + 1`:
-1. Play chord (root + interval via `"play"` event)
-2. Pause
+1. Play chord (root + interval via `"play"` event, `Quarter` duration)
+2. Pause (`Eighth` duration)
 3. Sing root note
 4. Sing interval note
 
-**`scale()`** — Single `MelodyScale` with given `scaleType`. Events walk each scale degree ascending then descending, each as a `"note"` event.
+**`scale()`** — Single `MelodyScale` with `root` derived from `startNote` and given `scaleType`. Events walk each scale degree ascending then descending, each as a `"note"` event.
 
 **`scaleDegrees()`** — For each degree `d` in the scale (2nd through octave): generates root → degree → root pattern as note events.
 
@@ -212,6 +215,8 @@ export const PART_6_EXERCISES: JourneyExerciseInput[] = [
 ```
 
 ## Remove `technique`
+
+The `technique` field currently only affects tolerance in two places (puffy-cheeks gets 0.08, everything else gets 0.03). All exercises using wider tolerance (puffy-cheeks, lip-rolls) are in parts 6-20 which are currently commented out. A separate tolerance mechanism will be introduced later. For now, hardcode 0.03.
 
 1. Delete `TechniqueId` type and `technique` field from `BaseExerciseConfig` in `types.ts`
 2. Remove all `technique` assignments from part files (1-20)
