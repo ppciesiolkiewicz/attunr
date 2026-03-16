@@ -4,8 +4,8 @@ import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
 import TabInfoModal, { InfoButton, HeadphonesNotice } from "./TabInfoModal";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
-import { findClosestBand, isInTune } from "@/lib/pitch";
-import type { Band } from "@/constants/tone-slots";
+import { findClosestNote, isInTune } from "@/lib/pitch";
+import type { ColoredNote } from "@/constants/tone-slots";
 import type { Settings } from "@/hooks/useSettings";
 import { Text } from "@/components/ui";
 
@@ -34,7 +34,7 @@ interface TrainViewProps {
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  onPlayTone: (band: Band) => void;
+  onPlayTone: (band: ColoredNote) => void;
   onSettingsUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
 }
 
@@ -52,7 +52,7 @@ export default function TrainView({
     if (!localStorage.getItem(STORAGE_KEY)) setShowInfo(true);
   }, []);
 
-  const allBands = useMemo(
+  const allNotes = useMemo(
     () =>
       getScaleNotesForRange(
         settings.vocalRangeLowHz,
@@ -62,21 +62,15 @@ export default function TrainView({
     [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
 
-  // Only show slot bands as buttons (avoid 13+ buttons for all notes)
-  const slotBands = useMemo(
-    () => allBands.filter((b) => b.isSlot),
-    [allBands],
-  );
-
-  const closestBand: Band | null = pitchHz
-    ? findClosestBand(pitchHz, allBands)
+  const closestNote: ColoredNote | null = pitchHz
+    ? findClosestNote(pitchHz, allNotes) as ColoredNote
     : null;
   const locked =
-    closestBand && pitchHz
-      ? isInTune(pitchHz, closestBand.frequencyHz)
+    closestNote && pitchHz
+      ? isInTune(pitchHz, closestNote.frequencyHz)
       : false;
 
-  function handlePlay(band: Band) {
+  function handlePlay(band: ColoredNote) {
     setPlayingId(band.id);
     onPlayTone(band);
     setTimeout(() => setPlayingId(null), 1800);
@@ -98,7 +92,7 @@ export default function TrainView({
       {/* ── Canvas ───────────────────────────────────────────────────────── */}
       <div className="relative flex-1 min-h-0">
         <PitchCanvas
-          bands={allBands}
+          bands={allNotes}
           currentHzRef={pitchHzRef}
           onBandClick={handlePlay}
         />
@@ -110,19 +104,19 @@ export default function TrainView({
               as="div"
               variant="heading-lg"
               className="font-light tabular-nums tracking-tight text-3xl!"
-              style={{ color: closestBand?.color ?? "#fff" }}
+              style={{ color: closestNote?.color ?? "#fff" }}
             >
               {Math.round(pitchHz)} Hz
             </Text>
-            {closestBand && (
+            {closestNote && (
               <Text
                 as="div"
                 variant="body-sm"
                 className="font-medium mt-0.5"
-                style={{ color: closestBand.color + "aa" }}
+                style={{ color: closestNote.color + "aa" }}
               >
                 {locked ? "✓ " : "→ "}
-                {closestBand.frequencyHz} Hz
+                {closestNote.frequencyHz} Hz
               </Text>
             )}
           </div>
@@ -133,9 +127,9 @@ export default function TrainView({
       {/* ── Bottom panel ─────────────────────────────────────────────────── */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-5 pt-3 pb-4 flex flex-col gap-3">
         <div className="flex flex-wrap gap-2 justify-center">
-          {slotBands.map((band) => {
+          {allNotes.map((band) => {
             const isPlaying = playingId === band.id;
-            const isActive = locked && closestBand?.id === band.id;
+            const isActive = locked && closestNote?.id === band.id;
             return (
               <button
                 key={band.id}

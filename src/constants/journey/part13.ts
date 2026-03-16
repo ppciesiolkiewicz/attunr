@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 13: Forward EH — introduce EH vowel and resonance shift */
 export const PART_13_EXERCISES: JourneyExerciseInput[] = [
@@ -18,7 +19,8 @@ export const PART_13_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EH — Low",
     subtitle: "Vowel EH · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 8 }],
     instruction:
       "Sing EH (as in 'bed') on the lower-mid tone.\nTongue forward, mouth slightly narrower than AH.\nFeel the resonance move forward in your mouth.",
   },
@@ -27,7 +29,8 @@ export const PART_13_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EH — Mid",
     subtitle: "Vowel EH · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 8 }],
     instruction:
       "Sing EH on the mid tone.\nKeep the forward placement — the buzz should feel closer to your lips and teeth.\nStay relaxed.",
   },
@@ -44,7 +47,8 @@ export const PART_13_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OH → EH flow",
     subtitle: "Vowel transition · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 8 }],
     instruction:
       "Hold the mid-low tone steady. Start with OH (rounded) and transition to EH (forward). The pitch stays the same — feel the resonance shift forward as the lips unround and the tongue moves forward.",
   },
@@ -53,7 +57,8 @@ export const PART_13_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "EH — Mid-high",
     subtitle: "Vowel EH · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 8 }],
     instruction:
       "Sing EH on the mid-high tone.\nA step higher — keep the forward placement.\nDon't push. Let the brightness come naturally.",
     completionModal: {

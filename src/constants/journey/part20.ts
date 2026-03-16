@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 20: Vocal Control — peak difficulty, all techniques combined */
 export const PART_20_EXERCISES: JourneyExerciseInput[] = [
@@ -18,11 +19,12 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     title: "Puffy cheeks — rising sequence",
     subtitle: "4 tones skipping · 3 seconds each",
     technique: "puffy-cheeks",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 3 },
-      { target: { kind: "slot", n: 3 }, seconds: 3 },
-      { target: { kind: "slot", n: 5 }, seconds: 3 },
-      { target: { kind: "slot", n: 7 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 4 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 6 }, seconds: 3 },
     ],
     instruction:
       "Puffy cheeks on four tones spanning your full range.\nBiggest challenge: breath control across big jumps.\nKeep the cheeks puffed through every transition.",
@@ -32,7 +34,8 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "AH → EE flow — high",
     subtitle: "Vowel transition · 12 seconds",
-    notes: [{ target: { kind: "slot", n: 6 }, seconds: 12 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 5 }, seconds: 12 }],
     instruction:
       "Hold the upper-mid tone and flow from AH (open) to EE (narrow). On a high pitch, this demands precise control — the jaw must stay relaxed while the tongue lifts. Keep the pitch rock-steady.",
   },
@@ -41,14 +44,15 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Descending sequence — OH",
     subtitle: "All 7 tones descending · 2 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 7 }, seconds: 2 },
-      { target: { kind: "slot", n: 6 }, seconds: 2 },
-      { target: { kind: "slot", n: 5 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 6 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 5 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 4 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 3 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 2 },
     ],
     instruction:
       "Sing OH on all seven tones descending — high to low.\nYour first descending full-range sequence.\nFeel the resonance drop from head to chest.",
@@ -67,7 +71,9 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip rolls — precision slide",
     subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    scale: { type: "chromatic", root: 1 },
+    displayNotes: [{ type: "major", root: 1, notes: [] }],
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Full range slide — focus on even speed throughout your range.",
@@ -77,7 +83,8 @@ export const PART_20_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Vowel cascade — high",
     subtitle: "All vowels on one pitch · 15 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 15 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 15 }],
     instruction:
       "Hold the mid-high tone and flow through all six vowels: U → OO → OH → AH → EH → EE. Fifteen seconds — the longest sustained exercise. Take your time with each transition. This is mastery: full vowel control on a single pitch.",
     completionModal: {

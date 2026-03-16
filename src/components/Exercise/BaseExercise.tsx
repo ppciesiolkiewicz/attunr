@@ -1,7 +1,7 @@
 "use client";
 
 import type { JourneyExercise } from "@/constants/journey";
-import type { Band, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
@@ -24,8 +24,8 @@ interface BaseExerciseProps {
   onComplete: () => void;
   onSkip: () => void;
   onPrev?: () => void;
-  onPlayTone: (band: Band) => void;
-  onPlaySlide?: (fromBand: Band, toBand: Band) => void;
+  onPlayTone: (band: ColoredNote) => void;
+  onPlaySlide?: (fromBand: ColoredNote, toBand: ColoredNote) => void;
 }
 
 /**

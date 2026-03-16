@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 15: Warmup III — advanced warmup revisiting all techniques */
 export const PART_15_EXERCISES: JourneyExerciseInput[] = [
@@ -18,7 +19,9 @@ export const PART_15_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip rolls — high to low",
     subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "slide", from: { kind: "index", i: -1 }, to: { kind: "index", i: 0 } },
+    scale: { type: "chromatic", root: 1 },
+    displayNotes: [{ type: "major", root: 1, notes: [] }],
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 0 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Full range slide from high to low — smooth and controlled.",
@@ -29,7 +32,9 @@ export const PART_15_EXERCISES: JourneyExerciseInput[] = [
     title: "Lip rolls — low to high",
     subtitle: "Full range glide · play 3 times",
     technique: "lip-rolls",
-    toneShape: { kind: "slide", from: { kind: "index", i: 0 }, to: { kind: "index", i: -1 } },
+    scale: { type: "chromatic", root: 1 },
+    displayNotes: [{ type: "major", root: 1, notes: [] }],
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Full range slide from low to high — even speed through the passaggio.",
@@ -40,7 +45,8 @@ export const PART_15_EXERCISES: JourneyExerciseInput[] = [
     title: "Puffy cheeks — Mid-high",
     subtitle: "Breath control · 8 seconds",
     technique: "puffy-cheeks",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 8 }],
     instruction:
       "Sing on the mid-high tone with puffy cheeks.\nHigher than before — more breath control needed.\nKeep it steady and supported.",
   },
@@ -57,11 +63,12 @@ export const PART_15_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Full range hum sequence",
     subtitle: "4 tones skipping · 3 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 3 },
-      { target: { kind: "slot", n: 3 }, seconds: 3 },
-      { target: { kind: "slot", n: 5 }, seconds: 3 },
-      { target: { kind: "slot", n: 7 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 4 }, seconds: 3 },
+      { target: { kind: BandTargetKind.Index, i: 6 }, seconds: 3 },
     ],
     instruction:
       "Hum four tones spanning your full range — skipping every other note.\nLow, mid-low, mid-high, high.\nFeel the resonance shift from chest to head as you climb.",

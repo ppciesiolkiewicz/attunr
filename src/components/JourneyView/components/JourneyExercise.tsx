@@ -12,7 +12,7 @@ import { JOURNEY_EXERCISES, JOURNEY_CONFIG, getNextExerciseId } from "@/constant
 import { analytics } from "@/lib/analytics";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { useApp } from "@/context/AppContext";
-import type { Band, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
 import { hzToNoteName } from "@/lib/pitch";
 import type { ModalConfig } from "@/constants/journey/types";
 import type { Settings } from "@/hooks/useSettings";
@@ -33,8 +33,8 @@ export function JourneyExercise({
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  onPlayTone: (band: Band) => void;
-  onPlaySlide?: (fromBand: Band, toBand: Band) => void;
+  onPlayTone: (band: ColoredNote) => void;
+  onPlaySlide?: (fromBand: ColoredNote, toBand: ColoredNote) => void;
   onSettingsUpdate: <K extends keyof Settings>(
     key: K,
     value: Settings[K],
@@ -56,7 +56,7 @@ export function JourneyExercise({
     return {
       lowNote: hzToNoteName(lowHz),
       highNote: hzToNoteName(highHz),
-      allBands: getScaleNotesForRange(lowHz, highHz, settings.tuning),
+      allNotes: getScaleNotesForRange(lowHz, highHz, settings.tuning),
     };
   }, [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning]);
 

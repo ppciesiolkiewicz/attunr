@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 9: Breath & Body — puffy cheeks intro, AH range expansion */
 export const PART_9_EXERCISES: JourneyExerciseInput[] = [
@@ -19,8 +20,9 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     title: "Puffy cheeks — Low",
     subtitle: "Breath control · 7 seconds",
     technique: "puffy-cheeks",
+    scale: { type: "even-7-from-major", root: 1 },
     showEnableNotificationsPrompt: true,
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 7 }],
+    notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 7 }],
     instruction:
       "Sing on your lowest tone with puffy cheeks.\nPuff your cheeks out while sustaining the note.\nFeel the back-pressure — let it support your voice.",
   },
@@ -29,7 +31,8 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "AH — Mid-high",
     subtitle: "Vowel AH · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 5 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 4 }, seconds: 8 }],
     instruction:
       "Sing AH on the mid-high tone.\nThis is a step higher than before — keep the openness.\nDon't push. Let the note come naturally.",
   },
@@ -47,7 +50,8 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     title: "Puffy cheeks — Mid",
     subtitle: "Breath control · 7 seconds",
     technique: "puffy-cheeks",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 7 }],
     instruction:
       "Sing on the mid-low tone with puffy cheeks.\nFeel the back-pressure support your voice.\nKeep it steady and relaxed.",
   },
@@ -56,7 +60,8 @@ export const PART_9_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "OO → AH flow",
     subtitle: "Vowel transition · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 8 }],
     instruction:
       "Hold the mid tone steady. Start with OO (rounded lips) and slowly open into AH (jaw drops). The pitch stays the same — the vowel opens from rounded to neutral. Feel the space increase.",
     completionModal: {

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext } from "react";
-import type { Band } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
 import type { Settings } from "@/hooks/useSettings";
 
 export interface AppContextValue {
@@ -9,8 +9,8 @@ export interface AppContextValue {
   updateSettings: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
-  playTone: (band: Band) => void;
-  playSlide: (fromBand: Band, toBand: Band) => void;
+  playTone: (band: ColoredNote) => void;
+  playSlide: (fromBand: ColoredNote, toBand: ColoredNote) => void;
   pitchStatus: string;
   startListening: () => void;
   openSettings: () => void;

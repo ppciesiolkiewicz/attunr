@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 11: Chakras — Earth — Root to Heart mantras */
 export const PART_11_EXERCISES: JourneyExerciseInput[] = [
@@ -22,7 +23,8 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     title: "Root — LAM",
     subtitle: "Mantra · Root tone · 8 seconds",
     technique: "mantra",
-    notes: [{ target: { kind: "slot", n: 1 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 8 }],
     instruction:
       "Sing LAM on the Root tone.\nFeel the 'L' and 'M' shape the sound — the 'ah' carries the pitch.\nFeel the tone settle in your chest and base.",
   },
@@ -32,7 +34,8 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     title: "Sacral — VAM",
     subtitle: "Mantra · Sacral tone · 8 seconds",
     technique: "mantra",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 8 }],
     instruction:
       "Sing VAM on the Sacral tone.\nLet the sound flow from your lower belly.",
   },
@@ -42,7 +45,8 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     title: "Solar Plexus — RAM",
     subtitle: "Mantra · Solar Plexus tone · 8 seconds",
     technique: "mantra",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 8 }],
     instruction:
       "Sing RAM on the Solar Plexus tone.\nFeel the power in the 'R' — purpose and centre.",
   },
@@ -52,7 +56,8 @@ export const PART_11_EXERCISES: JourneyExerciseInput[] = [
     title: "Heart — YAM",
     subtitle: "Mantra · Heart tone · 8 seconds",
     technique: "mantra",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 8 }],
     instruction:
       "Sing YAM on the Heart tone.\nOpen and soft — the bridge between body and mind.",
   },

@@ -1,73 +1,63 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useRef, useEffect } from "react";
 import BalanceBallCanvas from "./BalanceBallCanvas";
-import type { Band } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
 
 // ── Mock bands ──────────────────────────────────────────────────────────────
 
-const ROOT: Band = {
-  id: "root",
+const ROOT: ColoredNote = {
+  id: "Bb3",
   midi: 58,
   frequencyHz: 233,
   note: "Bb",
   octave: 3,
   color: "#ef4444",
   rgb: "239, 68, 68",
-  name: "Root",
-  isSlot: true,
-  slotId: "slot-1",
+  name: "Bb3",
 };
 
-const SACRAL: Band = {
-  id: "sacral",
+const SACRAL: ColoredNote = {
+  id: "Eb4",
   midi: 63,
   frequencyHz: 311,
   note: "Eb",
   octave: 4,
   color: "#f97316",
   rgb: "249, 115, 22",
-  name: "Sacral",
-  isSlot: true,
-  slotId: "slot-2",
+  name: "Eb4",
 };
 
-const SOLAR: Band = {
-  id: "solar-plexus",
+const SOLAR: ColoredNote = {
+  id: "F#4",
   midi: 66,
   frequencyHz: 370,
   note: "F#",
   octave: 4,
   color: "#eab308",
   rgb: "234, 179, 8",
-  name: "Solar Plexus",
-  isSlot: true,
-  slotId: "slot-3",
+  name: "F#4",
 };
 
-const HEART: Band = {
-  id: "heart",
+const HEART: ColoredNote = {
+  id: "C4",
   midi: 60,
   frequencyHz: 262,
   note: "C",
   octave: 4,
   color: "#22c55e",
   rgb: "34, 197, 94",
-  name: "Heart",
-  isSlot: true,
-  slotId: "slot-4",
+  name: "C4",
 };
 
-const THROAT: Band = {
-  id: "throat",
+const THROAT: ColoredNote = {
+  id: "G4",
   midi: 67,
   frequencyHz: 392,
   note: "G",
   octave: 4,
   color: "#3b82f6",
   rgb: "59, 130, 246",
-  name: "Throat",
-  isSlot: true,
-  slotId: "slot-5",
+  name: "G4",
 };
 
 // ── Simulated-pitch wrapper ─────────────────────────────────────────────────
@@ -79,7 +69,7 @@ function SimWrapper({
   pattern,
   highlightIds,
 }: {
-  bands: Band[];
+  bands: ColoredNote[];
   pattern: SimPattern;
   highlightIds?: string[];
 }) {

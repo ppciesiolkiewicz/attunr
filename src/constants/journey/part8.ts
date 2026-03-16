@@ -1,4 +1,5 @@
 import type { JourneyExerciseInput } from "./types";
+import { BandTargetKind } from "./types";
 
 /** Part 8: The Open AH — introduce AH vowel and first vowel flows */
 export const PART_8_EXERCISES: JourneyExerciseInput[] = [
@@ -18,7 +19,8 @@ export const PART_8_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "AH — Low",
     subtitle: "Vowel AH · 7 seconds",
-    notes: [{ target: { kind: "slot", n: 2 }, seconds: 7 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 7 }],
     instruction:
       "Sing AH (as in 'father') on the lower-mid tone.\nLet the jaw drop and the throat open.\nKeep the sound grounded and warm.",
   },
@@ -27,7 +29,8 @@ export const PART_8_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "AH — Mid",
     subtitle: "Vowel AH · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 4 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 8 }],
     instruction:
       "Sing AH on the mid tone.\nFeel the openness — more space than OO or OH.\nKeep your breath steady and the jaw relaxed.",
   },
@@ -36,7 +39,8 @@ export const PART_8_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "U → AH flow",
     subtitle: "Vowel transition · 8 seconds",
-    notes: [{ target: { kind: "slot", n: 3 }, seconds: 8 }],
+    scale: { type: "even-7-from-major", root: 1 },
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 8 }],
     instruction:
       "Hold the mid-low tone steady. Start with U (lips rounded) and slowly open into AH (jaw drops). The pitch stays the same — only the vowel changes. Feel the mouth open while the voice stays grounded.",
   },
@@ -53,11 +57,12 @@ export const PART_8_EXERCISES: JourneyExerciseInput[] = [
     exerciseTypeId: "pitch-detection",
     title: "Rising sequence — AH",
     subtitle: "4 tones rising · 2 seconds each",
+    scale: { type: "even-7-from-major", root: 1 },
     notes: [
-      { target: { kind: "slot", n: 1 }, seconds: 2 },
-      { target: { kind: "slot", n: 2 }, seconds: 2 },
-      { target: { kind: "slot", n: 3 }, seconds: 2 },
-      { target: { kind: "slot", n: 4 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 0 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 2 }, seconds: 2 },
+      { target: { kind: BandTargetKind.Index, i: 3 }, seconds: 2 },
     ],
     instruction:
       "Sing AH on four rising tones — low to mid.\nKeep the jaw relaxed and the vowel open on every tone.\nFeel the resonance lift as you ascend.",

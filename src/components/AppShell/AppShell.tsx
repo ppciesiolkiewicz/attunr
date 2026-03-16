@@ -17,7 +17,7 @@ import { useNotificationPrompt } from "@/hooks/useNotificationPrompt";
 import { AppContext } from "@/context/AppContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { analytics } from "@/lib/analytics";
-import type { Band } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
 import { Button, Text } from "@/components/ui";
 import Logo from "../Logo";
 import { SettingsIcon, HamburgerIcon } from "./components/icons";
@@ -71,12 +71,12 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
   }, [pathname]);
 
   // Binaural is always on — no user toggle needed
-  function handlePlayTone(band: Band) {
+  function handlePlayTone(band: ColoredNote) {
     playTone(band.frequencyHz, { binaural: true });
     analytics.tonePlayed(band.id, pathname?.startsWith("/train") ? "explore" : "journey");
   }
 
-  function handlePlaySlide(fromBand: Band, toBand: Band) {
+  function handlePlaySlide(fromBand: ColoredNote, toBand: ColoredNote) {
     playSlide(fromBand.frequencyHz, toBand.frequencyHz, { binaural: true });
   }
 
