@@ -11,7 +11,7 @@ export const PART_3_EXERCISES: JourneyExerciseInput[] = [
     technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
     displayNotes: [{ type: "major", root: 1, notes: [] }],
-    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 0 }, to: { kind: BandTargetKind.Index, i: -1 } },
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: 1 }, to: { kind: BandTargetKind.Index, i: -1 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Slide smoothly from low to high — feel the glide in your lips.",
@@ -23,7 +23,7 @@ export const PART_3_EXERCISES: JourneyExerciseInput[] = [
     subtitle: "Hold the buzz · play 3 times",
     technique: "lip-rolls",
     scale: { type: "even-7-from-major", root: 1 },
-    toneShape: { kind: "sustain", target: { kind: BandTargetKind.Index, i: 3 }, seconds: 5 },
+    toneShape: { kind: "sustain", target: { kind: BandTargetKind.Index, i: 4 }, seconds: 5 },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Keep the buzz steady — lips vibrating without force.",
@@ -43,7 +43,7 @@ export const PART_3_EXERCISES: JourneyExerciseInput[] = [
     subtitle: "Chest voice · 5 seconds",
     technique: "sustain",
     scale: { type: "chromatic", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Range, from: 0, to: 2, accept: "below" }, seconds: 5 }],
+    notes: [{ target: { kind: BandTargetKind.Range, from: 1, to: 3, accept: "below" }, seconds: 5 }],
     instruction:
       "Sing uuuu low and steady. Feel the warmth in your chest. This revisits chest voice — let the sound settle deeper this time.",
   },
@@ -53,7 +53,7 @@ export const PART_3_EXERCISES: JourneyExerciseInput[] = [
     title: "Hum — Low",
     subtitle: "Hum · 5 seconds",
     scale: { type: "even-7-from-major", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 5 }],
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 }],
     instruction:
       "Close your lips and hum mmmm on the lowest tone. Feel the buzz in your lips and teeth. This is your first taste of humming — one of the gentlest ways to feel your voice.",
   },
@@ -65,7 +65,7 @@ export const PART_3_EXERCISES: JourneyExerciseInput[] = [
     technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
     displayNotes: [{ type: "major", root: 1, notes: [] }],
-    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 0 } },
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 1 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. One more glide from high to low — keep it smooth and easy.",

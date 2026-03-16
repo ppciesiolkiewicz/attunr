@@ -24,15 +24,17 @@ export class Scale {
     if (n === 0) return [];
 
     if (target.kind === BandTargetKind.Index) {
-      const i = target.i < 0 ? n + target.i : target.i;
-      return i >= 0 && i < n ? [this.notes[i]] : [];
+      // 1-indexed: positive i maps to array index i-1, negative i maps from end
+      const idx = target.i < 0 ? n + target.i : target.i - 1;
+      return idx >= 0 && idx < n ? [this.notes[idx]] : [];
     }
 
     if (target.kind === BandTargetKind.Range) {
-      const from = target.from < 0 ? n + target.from : target.from;
-      const to = target.to < 0 ? n + target.to : target.to;
-      const lo = Math.max(0, Math.min(from, to));
-      const hi = Math.min(n - 1, Math.max(from, to));
+      // Convert 1-indexed from/to to 0-indexed array positions
+      const fromIdx = target.from < 0 ? n + target.from : target.from - 1;
+      const toIdx = target.to < 0 ? n + target.to : target.to - 1;
+      const lo = Math.max(0, Math.min(fromIdx, toIdx));
+      const hi = Math.min(n - 1, Math.max(fromIdx, toIdx));
       return this.notes.slice(lo, hi + 1);
     }
 

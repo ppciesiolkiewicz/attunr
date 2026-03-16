@@ -15,7 +15,7 @@ export type ExerciseTypeId =
   | "tone-follow"                 // play tone and follow along (no mic detection)
   | "melody";                     // sing along to scrolling melody with scoring
 
-/** 1-indexed chromatic degree from user's lowest note (1 = lowest). */
+/** 1-indexed chromatic degree from user's lowest note (1 = lowest). Negative values count from top (-1 = highest). */
 export type ChromaticDegree = number;
 
 /** Discriminant for NoteTarget union. */
@@ -29,8 +29,8 @@ export enum BandTargetKind {
 /**
  * Describes which note(s) in a scale an exercise targets.
  *
- * - index: 0-based position in the scale's note pool; negative counts from end (-1 = last note)
- * - range: inclusive index range (negative indices supported); used for loose detection exercises
+ * - index: 1-indexed ChromaticDegree position in the scale's note pool; negative counts from end (-1 = last note)
+ * - range: inclusive ChromaticDegree range (negative supported); used for loose detection exercises
  *   - accept: "below" = any tone at or below the range; "above" = any tone at or above
  */
 export type NoteTarget =

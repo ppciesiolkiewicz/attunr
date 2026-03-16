@@ -20,7 +20,7 @@ export const PART_4_EXERCISES: JourneyExerciseInput[] = [
     title: "Hum — Low",
     subtitle: "Hum · 5 seconds",
     scale: { type: "even-7-from-major", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 5 }],
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 }],
     instruction:
       "Hum low and steady — mmmm.\nFeel the buzz settle deep in your chest.\nKeep it grounded and relaxed.",
   },
@@ -30,7 +30,7 @@ export const PART_4_EXERCISES: JourneyExerciseInput[] = [
     title: "U — Low",
     subtitle: "Vowel U · 6 seconds",
     scale: { type: "even-7-from-major", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Index, i: 0 }, seconds: 6 }],
+    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 }],
     instruction:
       "Sing uuu on the same low tone.\nOpen from the hum into the vowel.\nKeep it warm and grounded.",
   },
@@ -40,7 +40,7 @@ export const PART_4_EXERCISES: JourneyExerciseInput[] = [
     title: "Hum — Lower-mid",
     subtitle: "Hum · 5 seconds",
     scale: { type: "even-7-from-major", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 }],
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 5 }],
     instruction:
       "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
   },
@@ -50,7 +50,7 @@ export const PART_4_EXERCISES: JourneyExerciseInput[] = [
     title: "U — Lower-mid",
     subtitle: "Vowel U · 6 seconds",
     scale: { type: "even-7-from-major", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 }],
+    notes: [{ target: { kind: BandTargetKind.Index, i: 2 }, seconds: 6 }],
     instruction:
       "Sing uuu on the lower-mid tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
   },

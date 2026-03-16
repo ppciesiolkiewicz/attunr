@@ -22,7 +22,7 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     technique: "sustain",
     scale: { type: "chromatic", root: 1 },
     showEnableNotificationsPrompt: true,
-    notes: [{ target: { kind: BandTargetKind.Range, from: 0, to: 2, accept: "below" }, seconds: 5 }],
+    notes: [{ target: { kind: BandTargetKind.Range, from: 1, to: 3, accept: "below" }, seconds: 5 }],
     instruction:
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
@@ -59,9 +59,9 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
         root: r,
         events: [
           { type: "play" as const, targets: [
-            { kind: BandTargetKind.Index, i: 0 },
-            { kind: BandTargetKind.Index, i: 2 },
-            { kind: BandTargetKind.Index, i: 4 },
+            { kind: BandTargetKind.Index, i: 1 },
+            { kind: BandTargetKind.Index, i: 3 },
+            { kind: BandTargetKind.Index, i: 5 },
           ], duration: NoteDuration.Quarter },
         ],
       });
@@ -76,13 +76,13 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
           root,
           events: [
             { type: "play" as const, targets: [
-              { kind: BandTargetKind.Index, i: 0 },
-              { kind: BandTargetKind.Index, i: 2 },
-              { kind: BandTargetKind.Index, i: 4 },
+              { kind: BandTargetKind.Index, i: 1 },
+              { kind: BandTargetKind.Index, i: 3 },
+              { kind: BandTargetKind.Index, i: 5 },
             ], duration: NoteDuration.Quarter },
             { type: "pause" as const, duration: NoteDuration.Eighth },
-            { type: "note" as const, target: { kind: BandTargetKind.Index, i: 0 }, duration: NoteDuration.Half },
-            { type: "note" as const, target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
+            { type: "note" as const, target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+            { type: "note" as const, target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
           ],
         },
       ];
@@ -109,7 +109,7 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     technique: "lip-rolls",
     scale: { type: "chromatic", root: 1 },
     displayNotes: [{ type: "major", root: 1, notes: [] }],
-    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 0 } },
+    toneShape: { kind: "slide", from: { kind: BandTargetKind.Index, i: -1 }, to: { kind: BandTargetKind.Index, i: 1 } },
     requiredPlays: 3,
     instruction:
       "Play the tone and lip roll alongside it. Slide smoothly from high to low — feel the glide in your lips.",
