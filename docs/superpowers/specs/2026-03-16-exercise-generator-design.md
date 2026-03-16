@@ -9,16 +9,19 @@ The journey has 20 parts (116 exercises planned) but only 5 are active. Exercise
 1. **ExerciseGenerator class** — stateless class with generic and named convenience methods that produce `JourneyExerciseInput` configs
 2. **Remove `technique`** — delete `TechniqueId` and the `technique` field from `BaseExerciseConfig`; hardcode tolerance (0.03) in the two places that check it (`MelodyExercise.tsx`, `usePitchProgress.ts`)
 
-## Note Parameter Convention
+## Unify on ChromaticDegree everywhere
 
-All generator methods that take note positions use plain integers:
+Currently `ChromaticDegree` is 1-indexed (positive from bottom) while `NoteTarget.i` is 0-indexed — a constant source of off-by-one confusion. We unify on `ChromaticDegree` everywhere:
 
-- **Positive** = chromatic degree from bottom (1-indexed, matching existing `ChromaticDegree`)
+- **Positive** = chromatic degree from bottom (1-indexed, as today)
 - **Negative** = from top (-1 = highest note, -2 = second highest)
 
-Internally, the generator converts these to `NoteTarget` objects:
-- Positive `n` → `{ kind: BandTargetKind.Index, i: n - 1 }` (1-indexed to 0-indexed)
-- Negative `n` → `{ kind: BandTargetKind.Index, i: n }` (already valid)
+Changes:
+1. Update `ChromaticDegree` doc comment to note that negative values are supported
+2. Change `NoteTarget.i` to use 1-indexed `ChromaticDegree` instead of 0-indexed
+3. Update `Scale` resolver to handle 1-indexed `i` values (and negative)
+4. Update existing exercise configs in parts 1-5 (shift `i` values by +1). Parts 6-20 are commented out — update them when uncommenting.
+5. The generator passes `ChromaticDegree` values straight through — no conversion needed
 
 ## Exercise Types Produced
 
