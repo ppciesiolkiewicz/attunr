@@ -15,12 +15,12 @@ interface UsePianoSamplerReturn {
 }
 
 const SAMPLE_MAP: Record<string, string> = {
-  G3: "/instruments/PIANO/pianoG3.wav",
-  C4: "/instruments/PIANO/pianoC4.wav",
-  G4: "/instruments/PIANO/pianoG4.wav",
-  C5: "/instruments/PIANO/pianoC5.wav",
-  G5: "/instruments/PIANO/pianoG5.wav",
-  C6: "/instruments/PIANO/pianoC6.wav",
+  G3: "/instruments/PIANO/pianoG3.mp3",
+  C4: "/instruments/PIANO/pianoC4.mp3",
+  G4: "/instruments/PIANO/pianoG4.mp3",
+  C5: "/instruments/PIANO/pianoC5.mp3",
+  G5: "/instruments/PIANO/pianoG5.mp3",
+  C6: "/instruments/PIANO/pianoC6.mp3",
 };
 
 export function usePianoSampler(): UsePianoSamplerReturn {

@@ -10,7 +10,7 @@ This design adds a **melody exercise type** — a classic singing-app experience
 
 - `tonal` (v6.4.3, installed) — music theory: note frequencies, intervals, scales
 - `tone` (Tone.js, to install) — Web Audio framework: `Tone.Sampler` for piano sample playback with automatic pitch interpolation, `Tone.Transport` for precise scheduling
-- Piano samples in `public/instruments/PIANO/` (pianoG3.wav, pianoC4.wav, pianoG4.wav, pianoC5.wav, pianoG5.wav, pianoC6.wav)
+- Piano samples in `public/instruments/PIANO/` (pianoG3.mp3, pianoC4.mp3, pianoG4.mp3, pianoC5.mp3, pianoG5.mp3, pianoC6.mp3)
 
 ## Exercise Type Config
 
@@ -105,12 +105,12 @@ Uses `Tone.Sampler` to load piano WAV files and play any note with automatic pit
 **Available samples:**
 | File | Note |
 |------|------|
-| pianoG3.wav | G3 |
-| pianoC4.wav | C4 |
-| pianoG4.wav | G4 |
-| pianoC5.wav | C5 |
-| pianoG5.wav | G5 |
-| pianoC6.wav | C6 |
+| pianoG3.mp3 | G3 |
+| pianoC4.mp3 | C4 |
+| pianoG4.mp3 | G4 |
+| pianoC5.mp3 | C5 |
+| pianoG5.mp3 | G5 |
+| pianoC6.mp3 | C6 |
 
 **API:**
 
