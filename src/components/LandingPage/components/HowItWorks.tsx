@@ -2,17 +2,17 @@ const STEPS = [
   {
     title: "Find your range",
     description:
-      "A quick vocal scan sets everything to your voice. Takes about a minute.",
+      "A quick vocal scan tunes everything to your voice. Takes about a minute.",
   },
   {
-    title: "Follow along",
+    title: "Follow the path",
     description:
-      "Open the app, pick up where you left off. Each stage builds on the last.",
+      "Voice. Breath. Rhythm. Each stage builds on the last. Open the app and pick up where you left off.",
   },
   {
     title: "Feel the difference",
     description:
-      "Not just relaxation \u2014 real progress. Better breath control, wider range, deeper body awareness. You grow every session.",
+      "Not just relaxation. Something shifts in how you carry yourself. You\u2019ll notice.",
   },
 ] as const;
 
@@ -24,9 +24,8 @@ export function HowItWorks() {
           Start in two minutes
         </p>
         <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-14">
-          As simple as humming along
+          As easy as taking a deep breath
         </h2>
-
         <div className="relative flex flex-col gap-16 pl-12 sm:pl-16">
           {/* Connecting line */}
           <div

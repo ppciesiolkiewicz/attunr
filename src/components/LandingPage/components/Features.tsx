@@ -2,9 +2,9 @@ const FEATURES = [
   {
     color: "#a855f7",
     glow: "rgba(168,85,247,0.15)",
-    title: "Singing just feels good",
+    title: "It just feels good",
     description:
-      "You already know this. A long hum, a melody in the shower \u2014 your body relaxes. attunr just gives that a structure.",
+      "A long hum, a melody in the shower \u2014 your body relaxes. You\u2019ve always known this. attunr just gives it a path.",
   },
   {
     color: "#6366f1",
@@ -23,9 +23,9 @@ const FEATURES = [
   {
     color: "#22c55e",
     glow: "rgba(34,197,94,0.15)",
-    title: "You actually get better",
+    title: "It deepens every time",
     description:
-      "This isn\u2019t background noise. Each stage builds real skill \u2014 breath control, vocal range, body awareness \u2014 that you carry with you.",
+      "This isn\u2019t background noise. Each stage opens something new \u2014 something you carry with you.",
   },
 ] as const;
 
