@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
-import type { ToneFollowExercise as ToneFollowConfig, DisplayNote } from "@/constants/journey";
-import { Scale } from "@/lib/scale";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ToneFollowExercise as ToneFollowConfig } from "@/constants/journey";
+import type { ColoredNote } from "@/constants/tone-slots";
+import type { ResolvedToneFollow } from "@/lib/resolve-exercise";
 
 const SLIDE_HOLD_START_MS = 1000;
 const SLIDE_RAMP_MS = 2500;
@@ -19,7 +19,7 @@ interface ToneFollowExerciseProps {
   exercise: ToneFollowConfig;
   exerciseId: number;
   isLast: boolean;
-  vocalRange: VocalRange;
+  resolved: ResolvedToneFollow;
   isAlreadyCompleted: boolean;
   onComplete: () => void;
   onSkip: () => void;
@@ -32,7 +32,7 @@ export function ToneFollowExercise({
   exercise,
   exerciseId,
   isLast,
-  vocalRange,
+  resolved,
   isAlreadyCompleted,
   onComplete,
   onSkip,
@@ -40,68 +40,8 @@ export function ToneFollowExercise({
   onPlayTone,
   onPlaySlide,
 }: ToneFollowExerciseProps) {
-  // ── Scale construction ─────────────────────────────────────────────────────
-  const scale = useMemo(
-    () => new Scale(exercise.scale, vocalRange),
-    [exercise.scale, vocalRange],
-  );
-
-  const coloredNotes = useMemo(() => scale.colorize(), [scale]);
-
-  // ── Note resolution ────────────────────────────────────────────────────────
-  const exerciseNotes = useMemo(() => {
-    if (exercise.toneShape.kind === "sustain") {
-      return scale.resolve(exercise.toneShape.target);
-    }
-    const fromNotes = scale.resolve(exercise.toneShape.from);
-    const toNotes = scale.resolve(exercise.toneShape.to);
-    const fromIdx = fromNotes[0] ? scale.notes.indexOf(fromNotes[0]) : 0;
-    const toIdx = toNotes[0] ? scale.notes.indexOf(toNotes[0]) : scale.notes.length - 1;
-    const lo = Math.min(fromIdx, toIdx);
-    const hi = Math.max(fromIdx, toIdx);
-    return scale.notes.slice(lo, hi + 1);
-  }, [exercise, scale]);
-
-  const exerciseColoredNotes = useMemo(() => {
-    const noteIds = new Set(exerciseNotes.map((n) => n.id));
-    return coloredNotes.filter((n) => noteIds.has(n.id));
-  }, [exerciseNotes, coloredNotes]);
-
-  // ── Display notes & highlights ──────────────────────────────────────────
-  // When exercise.displayNotes is set, build a display scale to determine
-  // which notes are highlighted (e.g. major scale on a chromatic canvas).
-  // notes: [] means "highlight all notes from the display scale".
-  const displayScaleNotes = useMemo(() => {
-    if (!exercise.displayNotes || exercise.displayNotes.length === 0) return null;
-    const ds = exercise.displayNotes[0];
-    const dsScale = new Scale({ type: ds.type, root: ds.root }, vocalRange);
-    if (ds.notes.length === 0) {
-      // Empty notes = all notes from the display scale
-      return dsScale.notes;
-    }
-    // Specific notes listed
-    return ds.notes.flatMap((dn: DisplayNote) => dsScale.resolve(dn.target));
-  }, [exercise.displayNotes, vocalRange]);
-
-  const displayNotes = useMemo(() => {
-    if (exerciseColoredNotes.length <= 1) return exerciseColoredNotes;
-    const indices = exerciseColoredNotes
-      .map((n) => coloredNotes.findIndex((cn) => cn.id === n.id))
-      .filter((i) => i >= 0);
-    if (indices.length === 0) return exerciseColoredNotes;
-    const minIdx = Math.max(0, Math.min(...indices) - 1);
-    const maxIdx = Math.min(coloredNotes.length - 1, Math.max(...indices) + 1);
-    return coloredNotes.slice(minIdx, maxIdx + 1);
-  }, [exerciseColoredNotes, coloredNotes]);
-
-  const highlightIds = useMemo(() => {
-    if (displayScaleNotes) {
-      // Highlight display scale notes that fall within displayed range
-      const displayIds = new Set(displayScaleNotes.map((n) => n.id));
-      return displayNotes.filter((n) => displayIds.has(n.id)).map((n) => n.id);
-    }
-    return exerciseColoredNotes.map((n) => n.id);
-  }, [displayScaleNotes, displayNotes, exerciseColoredNotes]);
+  // ── Derived from resolved data ──────────────────────────────────────────────
+  const { displayNotes, highlightIds } = resolved;
 
   // ── Simulated Hz ref (fed to PitchCanvas instead of mic input) ─────────
   const simulatedHzRef = useRef<number | null>(null);
@@ -167,35 +107,19 @@ export function ToneFollowExercise({
     if (isTonePlaying) return;
     setIsTonePlaying(true);
 
-    const shape = exercise.toneShape;
+    const shape = resolved.toneShape;
     if (shape.kind === "slide" && onPlaySlide) {
-      const fromNotes = scale.resolve(shape.from);
-      const toNotes = scale.resolve(shape.to);
-      const fromResolved = fromNotes[0];
-      const toResolved = toNotes[0];
-      if (fromResolved && toResolved) {
-        const fromColored = coloredNotes.find((cn) => cn.id === fromResolved.id);
-        const toColored = coloredNotes.find((cn) => cn.id === toResolved.id);
-        if (fromColored && toColored) {
-          onPlaySlide(fromColored, toColored);
-        }
-        animateSlide(fromResolved.frequencyHz, toResolved.frequencyHz);
-      }
+      onPlaySlide(shape.from, shape.to);
+      animateSlide(shape.from.frequencyHz, shape.to.frequencyHz);
       toneTimeoutRef.current = setTimeout(() => {
         toneTimeoutRef.current = null;
         setIsTonePlaying(false);
         setPlayCount((c) => c + 1);
       }, SLIDE_TOTAL_MS);
     } else if (shape.kind === "sustain") {
-      const notes = scale.resolve(shape.target);
-      const resolved = notes[0];
-      if (resolved) {
-        const colored = coloredNotes.find((cn) => cn.id === resolved.id);
-        const durationMs = shape.seconds * 1000;
-        if (colored) onPlayTone(colored);
-        animateSustain(resolved.frequencyHz, durationMs);
-      }
       const durationMs = shape.seconds * 1000;
+      onPlayTone(shape.note);
+      animateSustain(shape.note.frequencyHz, durationMs);
       toneTimeoutRef.current = setTimeout(() => {
         toneTimeoutRef.current = null;
         setIsTonePlaying(false);

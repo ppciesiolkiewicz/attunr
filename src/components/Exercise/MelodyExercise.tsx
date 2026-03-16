@@ -8,8 +8,8 @@ import { Button, Text, Modal } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyExercise as MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
-import { Scale } from "@/lib/scale";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
+import type { ResolvedMelody, ResolvedTimelineEntry } from "@/lib/resolve-exercise";
 import { usePianoSampler } from "@/hooks/usePianoSampler";
 
 /** Pre-roll time (ms) — visual lead-in before first note */
@@ -23,7 +23,7 @@ interface MelodyExerciseProps {
   exercise: MelodyConfig;
   exerciseId: number;
   isLast: boolean;
-  vocalRange: VocalRange;
+  resolved: ResolvedMelody;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;
   onComplete: () => void;
@@ -31,87 +31,11 @@ interface MelodyExerciseProps {
   onPrev?: () => void;
 }
 
-interface NoteTimeline {
-  note: ColoredNote;
-  startMs: number;
-  durationMs: number;
-  silent?: boolean;
-  audioOnly?: boolean;
-  isRest: false;
-}
-
-interface RestTimeline {
-  startMs: number;
-  durationMs: number;
-  isRest: true;
-}
-
-type TimelineEntry = NoteTimeline | RestTimeline;
-
-/** Convert a NoteDuration to milliseconds at a given tempo. */
-function durationToMs(duration: number, tempo: number): number {
-  return (duration / 4) * (60 / tempo) * 1000;
-}
-
-/** Resolve MelodyScale[] segments into a flat timeline of entries. */
-function resolveScaleTimeline(
-  scales: MelodyConfig["melody"],
-  tempo: number,
-  vocalRange: VocalRange,
-): { entries: TimelineEntry[]; totalDurationMs: number } {
-  const entries: TimelineEntry[] = [];
-  let cursor = 0;
-  for (const segment of scales) {
-    const localScale = new Scale({ type: segment.type, root: segment.root }, vocalRange);
-    const localColoredNotes = localScale.colorize();
-    for (const event of segment.events) {
-      const durationMs = durationToMs(event.duration, tempo);
-      if (event.type === "pause") {
-        // Advance cursor only — no entry emitted
-      } else if (event.type === "play") {
-        // Audio-only: emit one entry per target at same startMs
-        for (const target of event.targets) {
-          const resolved = localScale.resolve(target);
-          if (resolved.length > 0) {
-            const colored = localColoredNotes.find((cn) => cn.id === resolved[0].id);
-            if (colored) {
-              entries.push({
-                note: colored,
-                startMs: cursor,
-                durationMs,
-                audioOnly: true,
-                isRest: false,
-              });
-            }
-          }
-        }
-      } else {
-        // note: singable, shown on canvas, scored
-        const resolved = localScale.resolve(event.target);
-        if (resolved.length > 0) {
-          const colored = localColoredNotes.find((cn) => cn.id === resolved[0].id);
-          if (colored) {
-            entries.push({
-              note: colored,
-              startMs: cursor,
-              durationMs,
-              silent: event.silent,
-              isRest: false,
-            });
-          }
-        }
-      }
-      cursor += durationMs;
-    }
-  }
-  return { entries, totalDurationMs: cursor };
-}
-
 export function MelodyExercise({
   exercise,
   exerciseId,
   isLast,
-  vocalRange,
+  resolved,
   pitchHzRef,
   isAlreadyCompleted,
   onComplete,
@@ -120,39 +44,12 @@ export function MelodyExercise({
 }: MelodyExerciseProps) {
   const { scheduleMelody, stop: stopSampler, isLoaded } = usePianoSampler();
 
-  // ── Resolve melody timeline ─────────────────────────────────────────────
-  const { entries: melodyTimeline, totalDurationMs } = useMemo(
-    () => resolveScaleTimeline(exercise.melody, exercise.tempo, vocalRange),
-    [exercise.melody, exercise.tempo, vocalRange],
-  );
+  // ── Derived from resolved data ──────────────────────────────────────────────
+  const { timeline: melodyTimeline, totalDurationMs, displayNotes, highlightIds } = resolved;
 
-  // Singable notes only (no rests, no audioOnly) — used for scoring and rendering
   const singableNotes = useMemo(
-    () => melodyTimeline.filter((e): e is NoteTimeline => !e.isRest && !e.audioOnly),
+    () => melodyTimeline.filter((e) => !e.audioOnly),
     [melodyTimeline],
-  );
-
-  // ── Display notes — melody notes ±1 neighbor ───────────────────────────
-  const exerciseNotes = useMemo(
-    () => singableNotes.map((n) => n.note),
-    [singableNotes],
-  );
-
-  const displayNotes = useMemo(() => {
-    if (exerciseNotes.length === 0) return vocalRange.allNotes.slice(0, 3);
-    // Deduplicate by id, sort by frequency
-    const seen = new Set<string>();
-    const unique: ColoredNote[] = [];
-    for (const n of exerciseNotes) {
-      if (!seen.has(n.id)) { seen.add(n.id); unique.push(n); }
-    }
-    unique.sort((a, b) => a.frequencyHz - b.frequencyHz);
-    return unique;
-  }, [exerciseNotes, vocalRange.allNotes]);
-
-  const highlightIds = useMemo(
-    () => exerciseNotes.map((n) => n.id),
-    [exerciseNotes],
   );
 
   // ── Playback state ─────────────────────────────────────────────────────
@@ -206,7 +103,6 @@ export function MelodyExercise({
     const audioNotes: { frequencyHz: number; startSec: number; durationSec: number }[] = [];
 
     for (const n of melodyTimeline) {
-      if (n.isRest) continue;
       // Skip silent notes (shown but not played)
       if (n.silent) continue;
       audioNotes.push({

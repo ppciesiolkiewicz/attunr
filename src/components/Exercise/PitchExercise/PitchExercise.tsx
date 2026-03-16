@@ -10,14 +10,14 @@ import { usePitchProgress } from "./usePitchProgress";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
-import { Scale } from "@/lib/scale";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/constants/tone-slots";
+import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide } from "@/lib/resolve-exercise";
 
 interface PitchExerciseProps {
   exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
   exerciseId: number;
   isLast: boolean;
-  vocalRange: VocalRange;
+  resolved: ResolvedPitchDetection | ResolvedPitchDetectionSlide;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;
@@ -32,7 +32,7 @@ export function PitchExercise({
   exercise,
   exerciseId,
   isLast,
-  vocalRange,
+  resolved,
   pitchHz,
   pitchHzRef,
   isAlreadyCompleted,
@@ -42,77 +42,31 @@ export function PitchExercise({
   onPlayTone,
   onPlaySlide,
 }: PitchExerciseProps) {
-  // ── Scale construction ─────────────────────────────────────────────────────
-  const scale = useMemo(
-    () => new Scale(exercise.scale, vocalRange),
-    [exercise.scale, vocalRange],
-  );
-
-  const coloredNotes = useMemo(() => scale.colorize(), [scale]);
-
-  // ── Note resolution ────────────────────────────────────────────────────────
-  const exerciseNotes = useMemo(() => {
-    if (exercise.exerciseTypeId === "pitch-detection") {
-      return exercise.notes.flatMap((n) => scale.resolve(n.target));
-    }
-    const fromNotes = scale.resolve(exercise.notes[0].from);
-    const toNotes = scale.resolve(exercise.notes[0].to);
-    const fromIdx = fromNotes[0] ? scale.notes.indexOf(fromNotes[0]) : 0;
-    const toIdx = toNotes[0] ? scale.notes.indexOf(toNotes[0]) : scale.notes.length - 1;
-    const lo = Math.min(fromIdx, toIdx);
-    const hi = Math.max(fromIdx, toIdx);
-    return scale.notes.slice(lo, hi + 1);
-  }, [exercise, scale]);
+  // ── Derived from resolved data ──────────────────────────────────────────────
+  const { displayNotes, highlightIds } = resolved;
 
   const exerciseColoredNotes = useMemo(() => {
-    const noteIds = new Set(exerciseNotes.map((n) => n.id));
-    return coloredNotes.filter((n) => noteIds.has(n.id));
-  }, [exerciseNotes, coloredNotes]);
+    if (resolved.exerciseTypeId === "pitch-detection") {
+      return resolved.targets.map((t) => t.note);
+    }
+    return [resolved.from, resolved.to];
+  }, [resolved]);
 
   const isRangeTarget =
-    exercise.exerciseTypeId === "pitch-detection" &&
-    exercise.notes.length === 1 &&
-    exercise.notes[0].target.kind === "range";
+    resolved.exerciseTypeId === "pitch-detection" &&
+    resolved.targets.length === 1 &&
+    resolved.targets[0].accept !== undefined;
 
-  const displayNotes = useMemo(() => {
-    if (exerciseColoredNotes.length <= 1) return exerciseColoredNotes;
-    const indices = exerciseColoredNotes
-      .map((n) => coloredNotes.findIndex((cn) => cn.id === n.id))
-      .filter((i) => i >= 0);
-    if (indices.length === 0) return exerciseColoredNotes;
-    const minIdx = Math.max(0, Math.min(...indices) - 1);
-    const maxIdx = Math.min(coloredNotes.length - 1, Math.max(...indices) + 1);
-    return coloredNotes.slice(minIdx, maxIdx + 1);
-  }, [exerciseColoredNotes, coloredNotes]);
-
-  const highlightIds = useMemo(() => exerciseColoredNotes.map((n) => n.id), [exerciseColoredNotes]);
-
-  const toneNotes = useMemo(() => {
-    if (exercise.exerciseTypeId === "pitch-detection") {
-      const notes = exercise.notes.flatMap((n) => scale.resolve(n.target));
-      const noteIds = new Set(notes.map((n) => n.id));
-      return coloredNotes.filter((n) => noteIds.has(n.id));
-    }
-    const fromNotes = scale.resolve(exercise.notes[0].from);
-    const toNotes = scale.resolve(exercise.notes[0].to);
-    const noteIds = new Set([...fromNotes, ...toNotes].map((n) => n.id));
-    return coloredNotes.filter((n) => noteIds.has(n.id));
-  }, [exercise, scale, coloredNotes]);
+  const toneNotes = exerciseColoredNotes;
 
   const seqStepNotes = useMemo(() => {
-    if (exercise.exerciseTypeId !== "pitch-detection" || exercise.notes.length <= 1) return [];
-    return exercise.notes
-      .map((n) => {
-        const resolved = scale.resolve(n.target)[0];
-        if (!resolved) return null;
-        return coloredNotes.find((cn) => cn.id === resolved.id) ?? null;
-      })
-      .filter((n): n is ColoredNote => n !== null);
-  }, [exercise, scale, coloredNotes]);
+    if (resolved.exerciseTypeId !== "pitch-detection" || resolved.targets.length <= 1) return [];
+    return resolved.targets.map((t) => t.note);
+  }, [resolved]);
 
   // ── Progress (RAF loop in hook) ──────────────────────────────────────────
   const { progress, seqIndex, slideCount, stageComplete: exerciseComplete, showStepCheck } =
-    usePitchProgress({ exercise, exerciseId, scale, exerciseNotes, pitchHzRef });
+    usePitchProgress({ exercise, exerciseId, resolved, pitchHzRef });
 
   const [showCongrats, setShowCongrats] = useState(false);
 
@@ -157,26 +111,27 @@ export function PitchExercise({
 
   // ── Derived values for pitch overlay ─────────────────────────────────────
   const closestNote =
-    pitchHz && exerciseNotes.length > 0
-      ? findClosestNote(pitchHz, exerciseNotes)
+    pitchHz && exerciseColoredNotes.length > 0
+      ? (findClosestNote(pitchHz, exerciseColoredNotes) as ColoredNote)
       : null;
-  const closestColoredNote = closestNote
-    ? coloredNotes.find((cn) => cn.id === closestNote.id) ?? null
-    : null;
   const rangeAccept =
-    isRangeTarget && exercise.notes[0].target.kind === "range"
-      ? exercise.notes[0].target.accept ?? "within"
+    isRangeTarget && resolved.exerciseTypeId === "pitch-detection"
+      ? resolved.targets[0].accept ?? "within"
       : "within";
+  const rangeNotes =
+    isRangeTarget && resolved.exerciseTypeId === "pitch-detection"
+      ? resolved.targets[0].rangeNotes ?? exerciseColoredNotes
+      : exerciseColoredNotes;
   const locked =
     pitchHz && closestNote &&
     (isRangeTarget
-      ? matchesNoteTarget(pitchHz, exerciseNotes, rangeAccept)
+      ? matchesNoteTarget(pitchHz, rangeNotes, rangeAccept)
       : isInTune(pitchHz, closestNote.frequencyHz));
 
   const targetNote = (() => {
-    if (exercise.exerciseTypeId !== "pitch-detection") return null;
+    if (resolved.exerciseTypeId !== "pitch-detection") return null;
     if (isRangeTarget) return null;
-    if (exercise.notes.length === 1) return exerciseColoredNotes[0] ?? null;
+    if (resolved.targets.length === 1) return exerciseColoredNotes[0] ?? null;
     return seqStepNotes[seqIndex] ?? null;
   })();
 
@@ -194,14 +149,14 @@ export function PitchExercise({
         )}
 
         {/* Canvas */}
-        {exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length === 1 && isRangeTarget && exercise.notes[0].target.kind === "range" ? (
+        {resolved.exerciseTypeId === "pitch-detection" && resolved.targets.length === 1 && isRangeTarget ? (
           <HillBallCanvas
             bands={exerciseColoredNotes}
             currentHzRef={pitchHzRef}
             direction={rangeAccept === "below" ? "down" : "up"}
             accept={rangeAccept as "above" | "below"}
           />
-        ) : exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length === 1 ? (
+        ) : resolved.exerciseTypeId === "pitch-detection" && resolved.targets.length === 1 ? (
           <BalanceBallCanvas
             bands={exerciseColoredNotes}
             currentHzRef={pitchHzRef}
@@ -214,7 +169,7 @@ export function PitchExercise({
             currentHzRef={pitchHzRef}
             highlightIds={highlightIds}
             inTuneOverride={
-              isRangeTarget && exercise.notes[0].target.kind === "range"
+              isRangeTarget
                 ? { bands: exerciseColoredNotes, accept: rangeAccept }
                 : undefined
             }
@@ -272,11 +227,11 @@ export function PitchExercise({
                       as="div"
                       variant="heading-lg"
                       className="font-light"
-                      style={{ color: closestColoredNote?.color ?? "#fff" }}
+                      style={{ color: closestNote?.color ?? "#fff" }}
                     >
                       {locked ? "✓ " : ""}
                       {locked
-                        ? (exercise.exerciseTypeId === "pitch-detection" && exercise.notes[0].target.kind === "range" && exercise.notes[0].target.from >= 0 ? "Low tone" : "High tone")
+                        ? (rangeAccept === "below" || rangeAccept === "within" ? "Low tone" : "High tone")
                         : (rangeAccept === "below" ? "Too high" : "Too low")}
                     </Text>
                     {!locked && (
@@ -291,7 +246,7 @@ export function PitchExercise({
                       as="div"
                       variant="heading-lg"
                       className="text-3xl font-light tabular-nums"
-                      style={{ color: closestColoredNote?.color ?? "#fff" }}
+                      style={{ color: closestNote?.color ?? "#fff" }}
                     >
                       {Math.round(pitchHz)} Hz
                     </Text>
@@ -300,7 +255,7 @@ export function PitchExercise({
                         as="div"
                         variant="body-sm"
                         className="mt-0.5"
-                        style={{ color: `${closestColoredNote?.color ?? "#fff"}cc` }}
+                        style={{ color: `${closestNote?.color ?? "#fff"}cc` }}
                       >
                         {locked ? "✓ " : "→ "}
                         {closestNote.name}
@@ -322,7 +277,7 @@ export function PitchExercise({
         )}
 
         {/* Step indicator dots */}
-        {exercise.exerciseTypeId === "pitch-detection-slide" && !exerciseComplete && (
+        {resolved.exerciseTypeId === "pitch-detection-slide" && !exerciseComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
             {[1, 2].map((i) => (
               <div
@@ -338,7 +293,7 @@ export function PitchExercise({
             <Text variant="caption" as="span" color="text-2" className="ml-1">slide {slideCount}/2</Text>
           </div>
         )}
-        {exercise.exerciseTypeId === "pitch-detection" && exercise.notes.length > 1 && !exerciseComplete && (
+        {resolved.exerciseTypeId === "pitch-detection" && resolved.targets.length > 1 && !exerciseComplete && (
           <div className="pointer-events-none absolute bottom-3 left-4 flex items-center gap-2">
             {seqStepNotes.map((n, i) => {
               const done = i < seqIndex;
