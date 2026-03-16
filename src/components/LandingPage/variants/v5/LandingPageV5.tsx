@@ -129,7 +129,20 @@ export default function LandingPageV5() {
             </p>
 
             <Link href="/journey">
-              <Button size="lg" className="px-12 text-lg glow-pulse" style={{ fontFamily: fraunces, letterSpacing: "0.08em", fontSize: "0.95rem" }}>
+              <Button
+                size="lg"
+                className="px-14 text-lg cursor-pointer"
+                style={{
+                  fontFamily: fraunces,
+                  letterSpacing: "0.08em",
+                  fontSize: "0.95rem",
+                  background: "linear-gradient(135deg, rgba(139,92,246,0.25), rgba(99,102,241,0.15))",
+                  border: "1px solid rgba(139,92,246,0.5)",
+                  color: "#e0d4ff",
+                  boxShadow: "0 0 30px rgba(139,92,246,0.2), 0 0 60px rgba(139,92,246,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  transition: "all 0.4s ease",
+                }}
+              >
                 Try it now
               </Button>
             </Link>
@@ -279,7 +292,20 @@ export default function LandingPageV5() {
               attunr shows you how to play it.
             </p>
             <Link href="/journey">
-              <Button size="lg" className="px-14 text-lg glow-pulse" style={{ fontFamily: fraunces, letterSpacing: "0.08em", fontSize: "0.95rem" }}>
+              <Button
+                size="lg"
+                className="px-14 text-lg cursor-pointer"
+                style={{
+                  fontFamily: fraunces,
+                  letterSpacing: "0.08em",
+                  fontSize: "0.95rem",
+                  background: "linear-gradient(135deg, rgba(139,92,246,0.25), rgba(99,102,241,0.15))",
+                  border: "1px solid rgba(139,92,246,0.5)",
+                  color: "#e0d4ff",
+                  boxShadow: "0 0 30px rgba(139,92,246,0.2), 0 0 60px rgba(139,92,246,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
+                  transition: "all 0.4s ease",
+                }}
+              >
                 Start your practice
               </Button>
             </Link>

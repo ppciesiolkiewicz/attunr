@@ -6,11 +6,13 @@ import Logo from "@/components/Logo";
 import { Button } from "@/components/ui";
 import { LandingHeader } from "../../components/LandingHeader";
 
+const FEATURE_COLORS = ["#7c3aed", "#3b82f6", "#22c55e", "#f97316"];
+
 const FEATURES = [
-  { title: "It just feels good", body: "A long hum, a melody in the shower \u2014 your body relaxes. You\u2019ve always known this. attunr just gives it a path." },
-  { title: "Breathing finds its rhythm", body: "Your voice gives your breath something to do. Slow exhales happen naturally, without forcing anything." },
-  { title: "You feel it in your body", body: "Low tones land in your chest. High tones light up your skull. The vibration is the practice." },
-  { title: "It deepens every time", body: "This isn\u2019t background noise. Each stage opens something new \u2014 something you carry with you." },
+  { title: "It just feels good", body: "A long hum, a melody in the shower \u2014 your body relaxes. You\u2019ve always known this. attunr just gives it a path.", color: FEATURE_COLORS[0] },
+  { title: "Breathing finds its rhythm", body: "Your voice gives your breath something to do. Slow exhales happen naturally, without forcing anything.", color: FEATURE_COLORS[1] },
+  { title: "You feel it in your body", body: "Low tones land in your chest. High tones light up your skull. The vibration is the practice.", color: FEATURE_COLORS[2] },
+  { title: "It deepens every time", body: "This isn\u2019t background noise. Each stage opens something new \u2014 something you carry with you.", color: FEATURE_COLORS[3] },
 ] as const;
 
 const STEPS = [
@@ -26,43 +28,18 @@ const TAGS = [
   { label: "Rhythm", color: "#f97316" },
 ] as const;
 
-const font = `"Inter Tight", "Manrope", sans-serif`;
+const SPECTRUM = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#8b5cf6", "#a855f7"];
 
-function Section({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <section className={`landing-section px-6 py-20 sm:py-28 ${className}`}>{children}</section>;
-}
-
-function Heading({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return (
-    <h2 className={`text-3xl sm:text-4xl font-black tracking-[-0.04em] text-white ${className}`} style={{ fontFamily: font }}>
-      {children}
-    </h2>
-  );
-}
-
-function CtaButton({ children, href }: { children: React.ReactNode; href: string }) {
-  return (
-    <Link href={href}>
-      <Button size="lg" className="px-10 hover:scale-[1.03] transition-transform duration-200">
-        {children}
-      </Button>
-    </Link>
-  );
-}
+const sora = `"Sora", sans-serif`;
 
 export default function LandingPageV3() {
   useEffect(() => {
     const els = document.querySelectorAll(".landing-section");
     if (!els.length) return;
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("landing-visible");
-            observer.unobserve(e.target);
-          }
-        });
-      },
+      (entries) => entries.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add("landing-visible"); observer.unobserve(e.target); }
+      }),
       { threshold: 0.12 },
     );
     els.forEach((el) => observer.observe(el));
@@ -70,124 +47,160 @@ export default function LandingPageV3() {
   }, []);
 
   return (
-    <div className="h-full overflow-y-auto landing-scroll" style={{ fontFamily: font, background: "#0a0a0f" }}>
+    <div className="h-full overflow-y-auto landing-scroll" style={{ fontFamily: sora, background: "#09090f" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
+        @keyframes ring-cw { to { transform: rotate(360deg); } }
+        @keyframes ring-ccw { to { transform: rotate(-360deg); } }
+        @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+        @keyframes glow-pulse { 0%,100% { box-shadow: 0 0 24px rgba(124,58,237,0.4); } 50% { box-shadow: 0 0 40px rgba(124,58,237,0.7); } }
+        @keyframes grain { 0%,100% { transform: translate(0,0); } 10% { transform: translate(-5%,-10%); } 30% { transform: translate(3%,5%); } 50% { transform: translate(-3%,2%); } 70% { transform: translate(7%,-5%); } 90% { transform: translate(-2%,8%); } }
+        .landing-section { opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease-out, transform 0.4s ease-out; }
+        .landing-visible { opacity: 1; transform: translateY(0); }
+        .glass-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        .glass-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.15); }
+      `}</style>
+
+      {/* Grain overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none z-100"
+        style={{ opacity: 0.03, backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, animation: "grain 8s steps(10) infinite" }}
+      />
+
       <LandingHeader />
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;900&display=swap');`}</style>
 
       {/* Hero */}
-      <section className="landing-section relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 sm:pt-36 sm:pb-32 overflow-hidden">
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 60% 50% at 50% 30%, rgba(124,58,237,0.18) 0%, transparent 70%)" }}
-        />
+      <section className="landing-section relative flex flex-col items-center justify-center text-center px-6 pt-28 pb-24 sm:pt-40 sm:pb-36 overflow-hidden min-h-[90vh]">
+        {/* Radial glow */}
+        <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(800px circle at 50% 35%, rgba(124,58,237,0.12) 0%, transparent 70%)" }} />
+
+        {/* Dashed rotating rings */}
+        <svg className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 sm:w-200 sm:h-200 pointer-events-none" viewBox="0 0 800 800">
+          <circle cx="400" cy="400" r="280" fill="none" stroke="rgba(124,58,237,0.15)" strokeWidth="1" strokeDasharray="12 8" style={{ animation: "ring-cw 60s linear infinite", transformOrigin: "400px 400px" }} />
+          <circle cx="400" cy="400" r="360" fill="none" stroke="rgba(124,58,237,0.08)" strokeWidth="1" strokeDasharray="8 14" style={{ animation: "ring-ccw 60s linear infinite", transformOrigin: "400px 400px" }} />
+        </svg>
+
         <div className="relative z-10 flex flex-col items-center gap-8">
           <Logo layout="vertical" size="lg" animate={3} />
-          <h1
-            className="text-4xl sm:text-6xl font-black tracking-[-0.04em] leading-[1.1] text-white max-w-2xl"
-            style={{ fontFamily: font }}
-          >
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-[-0.03em] leading-[1.08] text-white max-w-2xl">
             Feel your voice<br />
-            <span className="bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent">in your body</span>
+            <span style={{ background: "linear-gradient(135deg, #a78bfa, #7c3aed)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>in your body</span>
           </h1>
-          <p className="text-base sm:text-lg text-white/70 max-w-md">
-            You already know how this feels. We just gave it a path.
+          <p className="text-base sm:text-lg text-white/70 max-w-md leading-relaxed">
+            You already know how this feels.
+            <br />
+            We just gave it a path.
           </p>
           <div className="flex flex-col items-center gap-3">
-            <CtaButton href="/journey">Try it now</CtaButton>
-            <span className="text-sm text-white/40">Free. No account needed.</span>
+            <Link href="/journey">
+              <Button size="lg" className="px-10 hover:scale-[1.03] transition-transform duration-200" style={{ animation: "glow-pulse 3s ease-in-out infinite" }}>
+                Try it now
+              </Button>
+            </Link>
+            <span className="text-sm text-white/35">Free &middot; No account needed</span>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <Section>
-        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Features — 2x2 glassmorphic grid */}
+      <section className="landing-section px-6 py-20 sm:py-28">
+        <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-5">
           {FEATURES.map((f, i) => (
             <div
               key={i}
-              className="rounded-xl p-5 border border-white/[0.06] hover:translate-y-[-2px] transition-transform duration-200"
-              style={{ background: "rgba(255,255,255,0.03)", backdropFilter: "blur(12px)", borderTop: "2px solid rgba(124,58,237,0.5)" }}
+              className="glass-card rounded-xl p-6 cursor-default"
+              style={{ borderTop: `2px solid ${f.color}66` }}
+              onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 8px 32px ${f.color}20`; e.currentTarget.style.borderTopColor = `${f.color}`; }}
+              onMouseLeave={(e) => { e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.borderTopColor = `${f.color}66`; }}
             >
-              <span className="inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold text-violet-400 border border-violet-500/30 mb-3">
-                {i + 1}
-              </span>
-              <h3 className="text-lg font-bold text-white mb-2 tracking-[-0.02em]" style={{ fontFamily: font }}>{f.title}</h3>
+              <h3 className="text-lg font-bold text-white mb-2 tracking-[-0.02em]">{f.title}</h3>
               <p className="text-sm text-white/70 leading-relaxed">{f.body}</p>
             </div>
           ))}
         </div>
-      </Section>
+      </section>
 
       {/* What You Do */}
-      <Section>
-        <div className="max-w-2xl mx-auto text-center flex flex-col gap-6">
+      <section className="landing-section px-6 py-20 sm:py-28">
+        <div className="max-w-2xl mx-auto text-center flex flex-col items-center gap-6">
           <div>
-            <Heading>Not singing lessons.</Heading>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white">Not singing lessons.</h2>
             <p className="text-white/70 mt-3 text-base sm:text-lg">A body practice that uses sound.</p>
           </div>
-          <p className="text-sm sm:text-base text-white/60 leading-relaxed max-w-lg mx-auto">
+          <p className="text-sm sm:text-base text-white/60 leading-relaxed max-w-lg">
             The pitch visualizer isn&apos;t a score &mdash; it&apos;s a mirror. You watch your voice move in real time so you can feel where it lands in your body.
           </p>
+          {/* Spectrum dots */}
+          <div className="flex items-center gap-4 mt-2">
+            {SPECTRUM.map((c, i) => (
+              <div key={i} className="w-3 h-3 rounded-full transition-transform duration-200 hover:scale-150 cursor-default" style={{ background: c }} />
+            ))}
+          </div>
+          {/* Tags */}
           <div className="flex flex-wrap justify-center gap-2 mt-2">
             {TAGS.map((t) => (
               <span
                 key={t.label}
-                className="inline-flex items-center text-xs font-semibold text-white/80 rounded-full px-3 py-1.5"
-                style={{ background: "rgba(255,255,255,0.05)", borderLeft: `3px solid ${t.color}` }}
+                className="inline-flex items-center text-xs font-semibold text-white/80 rounded-full px-3.5 py-1.5 transition-colors duration-200 hover:text-white cursor-default"
+                style={{ background: "rgba(255,255,255,0.04)", borderLeft: `2px solid ${t.color}` }}
               >
                 {t.label}
               </span>
             ))}
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* How It Works */}
-      <Section>
+      {/* How It Works — 3 columns */}
+      <section className="landing-section px-6 py-20 sm:py-28">
         <div className="max-w-3xl mx-auto text-center flex flex-col gap-10">
           <div>
-            <span className="text-xs font-semibold uppercase tracking-widest text-violet-400 mb-3 block">Start in two minutes</span>
-            <Heading>As easy as taking a deep breath</Heading>
+            <span className="text-xs font-semibold uppercase tracking-[0.15em] text-violet-400 mb-3 block">Start in two minutes</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white">As easy as taking a deep breath</h2>
           </div>
-          <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-6">
-            {/* Connector line (desktop) */}
+          <div className="relative grid grid-cols-1 sm:grid-cols-3 gap-10 sm:gap-6">
+            {/* Connecting line with shimmer */}
             <div
-              className="hidden sm:block absolute top-[22px] left-[16.67%] right-[16.67%] h-px"
-              style={{ background: "linear-gradient(90deg, rgba(124,58,237,0.4), rgba(124,58,237,0.15))" }}
+              className="hidden sm:block absolute top-[22px] left-[16.67%] right-[16.67%] h-0.5 rounded-full"
+              style={{ background: "linear-gradient(90deg, #7c3aed44, #7c3aed, #7c3aed44)", backgroundSize: "200% 100%", animation: "shimmer 3s linear infinite" }}
             />
             {STEPS.map((s, i) => (
               <div key={i} className="relative flex flex-col items-center gap-4 text-center">
                 <span
-                  className="relative z-10 flex items-center justify-center w-11 h-11 rounded-full text-sm font-bold text-white border-2 border-violet-500/50"
-                  style={{ background: "#0a0a0f" }}
+                  className="relative z-10 flex items-center justify-center w-11 h-11 rounded-full text-sm font-bold text-white border-2 border-violet-500"
+                  style={{ background: "#09090f" }}
                 >
                   {i + 1}
                 </span>
-                <h3 className="text-base font-bold text-white tracking-[-0.02em]" style={{ fontFamily: font }}>{s.title}</h3>
+                <h3 className="text-base font-bold text-white tracking-[-0.02em]">{s.title}</h3>
                 <p className="text-sm text-white/60 leading-relaxed max-w-[260px]">{s.body}</p>
               </div>
             ))}
           </div>
         </div>
-      </Section>
+      </section>
 
-      {/* Call to Action */}
-      <Section className="text-center">
+      {/* CTA */}
+      <section className="landing-section px-6 py-24 sm:py-32 text-center">
         <div className="max-w-xl mx-auto flex flex-col items-center gap-6">
-          <Heading className="leading-snug">
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-white leading-snug">
             Your voice is already<br />the instrument.
-          </Heading>
+          </h2>
           <p className="text-white/70 text-base sm:text-lg">attunr shows you how to play it.</p>
-          <CtaButton href="/journey">Start your practice</CtaButton>
+          <Link href="/journey">
+            <Button size="lg" className="px-10 hover:scale-[1.03] transition-transform duration-200" style={{ background: "linear-gradient(135deg, #7c3aed, #6d28d9)", animation: "glow-pulse 3s ease-in-out infinite" }}>
+              Start your practice
+            </Button>
+          </Link>
         </div>
-      </Section>
+      </section>
 
       {/* Footer */}
       <footer className="px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/[0.06] max-w-3xl mx-auto">
         <Logo layout="horizontal" size="sm" />
         <div className="flex gap-6 text-xs text-white/40">
-          <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
-          <Link href="/terms" className="hover:text-white/70 transition-colors">Terms</Link>
+          <Link href="/privacy" className="hover:text-white/70 transition-colors duration-200">Privacy</Link>
+          <Link href="/terms" className="hover:text-white/70 transition-colors duration-200">Terms</Link>
         </div>
       </footer>
     </div>

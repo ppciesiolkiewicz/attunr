@@ -7,10 +7,10 @@ import { Button } from "@/components/ui";
 import { LandingHeader } from "../../components/LandingHeader";
 
 const FEATURES = [
-  { title: "It just feels good", body: "A long hum, a melody in the shower \u2014 your body relaxes. You\u2019ve always known this. attunr just gives it a path.", color: "#a855f7", glow: "rgba(168,85,247,0.15)" },
-  { title: "Breathing finds its rhythm", body: "Your voice gives your breath something to do. Slow exhales happen naturally, without forcing anything.", color: "#6366f1", glow: "rgba(99,102,241,0.15)" },
-  { title: "You feel it in your body", body: "Low tones land in your chest. High tones light up your skull. The vibration is the practice.", color: "#3b82f6", glow: "rgba(59,130,246,0.15)" },
-  { title: "It deepens every time", body: "This isn\u2019t background noise. Each stage opens something new \u2014 something you carry with you.", color: "#22c55e", glow: "rgba(34,197,94,0.15)" },
+  { title: "It just feels good", body: "A long hum, a melody in the shower \u2014 your body relaxes. You\u2019ve always known this. attunr just gives it a path." },
+  { title: "Breathing finds its rhythm", body: "Your voice gives your breath something to do. Slow exhales happen naturally, without forcing anything." },
+  { title: "You feel it in your body", body: "Low tones land in your chest. High tones light up your skull. The vibration is the practice." },
+  { title: "It deepens every time", body: "This isn\u2019t background noise. Each stage opens something new \u2014 something you carry with you." },
 ] as const;
 
 const STEPS = [
@@ -28,23 +28,29 @@ const TAGS = [
 
 const TONE_COLORS = ["#ef4444", "#f97316", "#eab308", "#22c55e", "#3b82f6", "#6366f1", "#a855f7"];
 
-const RING_COLORS = [
-  "rgba(139,92,246,0.65)",
-  "rgba(99,102,241,0.48)",
-  "rgba(59,130,246,0.32)",
-];
-
 const cinzel = `"Cinzel", serif`;
-const cormorant = `"Cormorant Garamond", serif`;
+const outfit = `"Outfit", sans-serif`;
 
-function Divider() {
+function Star() {
   return (
-    <div className="flex justify-center py-2">
-      <div
-        className="w-48 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.2), transparent)" }}
-      />
+    <div className="flex justify-center py-10">
+      <span style={{ color: "#c9a96e", fontFamily: cinzel, fontSize: "0.75rem", opacity: 0.5 }}>{"\u2726"}</span>
     </div>
+  );
+}
+
+function Diamond({ color, size = 6 }: { color: string; size?: number }) {
+  return (
+    <span
+      className="inline-block"
+      style={{
+        width: size,
+        height: size,
+        backgroundColor: color,
+        transform: "rotate(45deg)",
+        flexShrink: 0,
+      }}
+    />
   );
 }
 
@@ -68,189 +74,242 @@ export default function LandingPageV4() {
   }, []);
 
   return (
-    <div className="h-full overflow-y-auto landing-scroll" style={{ background: "#080810", color: "#ebe8f5" }}>
+    <div className="h-full overflow-y-auto landing-scroll" style={{ background: "#08070e", color: "#e2ddd4" }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;900&family=Outfit:wght@300;400;500;600&display=swap');
+
+        @keyframes v4-ring-a { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+        @keyframes v4-ring-b { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(-360deg); } }
+        @keyframes v4-ring-c { from { transform: translate(-50%,-50%) rotate(0deg); } to { transform: translate(-50%,-50%) rotate(360deg); } }
+        @keyframes v4-glow-pulse { 0%, 100% { opacity: 0.12; transform: translate(-50%,-50%) scale(1); } 50% { opacity: 0.22; transform: translate(-50%,-50%) scale(1.05); } }
+        @keyframes v4-fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
         .v4-grain::after {
           content: '';
           position: fixed;
           inset: 0;
           pointer-events: none;
           z-index: 11;
-          opacity: 0.045;
+          opacity: 0.05;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
           background-repeat: repeat;
           background-size: 256px 256px;
         }
+
+        .v4-vignette::before {
+          content: '';
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 10;
+          background: radial-gradient(ellipse 70% 60% at 50% 50%, transparent 30%, #08070e 100%);
+        }
+
+        .v4-gold-btn {
+          border: 1px solid #c9a96e;
+          color: #c9a96e;
+          background: transparent;
+          transition: all 1s ease;
+        }
+        .v4-gold-btn:hover {
+          background: linear-gradient(135deg, rgba(201,169,110,0.15), rgba(232,213,176,0.08));
+          box-shadow: 0 0 30px rgba(201,169,110,0.15);
+        }
+
+        .landing-section {
+          opacity: 0;
+          transform: translateY(24px);
+          transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+        .landing-visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
       `}</style>
 
       <LandingHeader />
-      <div className="v4-grain relative">
+
+      <div className="v4-grain v4-vignette relative">
         {/* ── Hero ── */}
         <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 overflow-hidden">
-          {/* Background glow */}
+          {/* Ambient golden glow */}
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full pointer-events-none"
+            className="absolute top-1/2 left-1/2 pointer-events-none rounded-full"
             style={{
-              background: "radial-gradient(circle, rgba(139,92,246,0.20) 0%, rgba(99,102,241,0.10) 35%, transparent 65%)",
-              animation: "landing-breathe 4s ease-in-out infinite",
+              width: 600,
+              height: 600,
+              background: "radial-gradient(circle, rgba(201,169,110,0.25) 0%, transparent 65%)",
+              animation: "v4-glow-pulse 8s ease-in-out infinite",
             }}
           />
 
-          {/* Concentric rings */}
-          {RING_COLORS.map((color, i) => (
+          {/* Three concentric golden circles */}
+          {[
+            { size: 400, opacity: 0.15, duration: 40, anim: "v4-ring-a" },
+            { size: 560, opacity: 0.10, duration: 55, anim: "v4-ring-b" },
+            { size: 720, opacity: 0.08, duration: 70, anim: "v4-ring-c" },
+          ].map((ring) => (
             <div
-              key={i}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none border"
+              key={ring.size}
+              className="absolute top-1/2 left-1/2 rounded-full pointer-events-none"
               style={{
-                width: `${280 + i * 160}px`,
-                height: `${280 + i * 160}px`,
-                borderColor: color,
-                animation: `landing-ring-pulse ${2 + i * 0.5}s ease-out ${i * 0.4}s infinite backwards`,
+                width: ring.size,
+                height: ring.size,
+                border: `0.5px solid rgba(201,169,110,${ring.opacity})`,
+                animation: `${ring.anim} ${ring.duration}s linear infinite`,
               }}
             />
           ))}
 
-          <div className="relative z-10 flex flex-col items-center text-center max-w-2xl">
-            <Logo layout="vertical" size="lg" animate={3} className="mb-12" />
+          <div className="relative z-10 flex flex-col items-center text-center max-w-2xl" style={{ animation: "v4-fade-in 1.2s ease-out" }}>
+            <Logo layout="vertical" size="lg" animate={3} className="mb-14" />
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight mb-6" style={{ fontFamily: cinzel, fontWeight: 700 }}>
+            <h1
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] tracking-tight mb-6"
+              style={{ fontFamily: cinzel, fontWeight: 700, color: "#e2ddd4" }}
+            >
               Feel your voice
               <br />
-              <span className="bg-gradient-to-r from-violet-400 via-purple-300 to-indigo-400 bg-clip-text text-transparent">
+              <span
+                style={{
+                  background: "linear-gradient(135deg, #c9a96e, #e8d5b0)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                }}
+              >
                 in your body
               </span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-white/60 leading-relaxed max-w-md mb-12">
+            <p className="text-lg sm:text-xl leading-relaxed max-w-md mb-14" style={{ fontFamily: outfit, color: "rgba(226,221,212,0.5)" }}>
               You already know how this feels.
               <br />
               We just gave it a path.
             </p>
 
             <Link href="/journey">
-              <Button size="lg" className="px-12 text-lg glow-pulse" style={{ fontFamily: cinzel, letterSpacing: "0.08em", fontSize: "0.95rem" }}>
+              <Button
+                size="lg"
+                className="px-14 cursor-pointer"
+                style={{ fontFamily: cinzel, letterSpacing: "0.12em", fontSize: "0.9rem", border: "1px solid #c9a96e", color: "#c9a96e", background: "transparent" }}
+              >
                 Try it now
               </Button>
             </Link>
           </div>
 
           {/* Scroll hint */}
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-white/25">
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2" style={{ color: "rgba(201,169,110,0.2)" }}>
             <svg width="20" height="28" viewBox="0 0 20 28" fill="none" className="animate-bounce">
-              <rect x="1" y="1" width="18" height="26" rx="9" stroke="currentColor" strokeWidth="1.5" />
+              <rect x="1" y="1" width="18" height="26" rx="9" stroke="currentColor" strokeWidth="1" />
               <circle cx="10" cy="8" r="2" fill="currentColor" className="animate-pulse" />
             </svg>
           </div>
         </section>
 
-        <Divider />
-
         {/* ── Features ── */}
-        <section className="landing-section px-6 py-16 sm:py-20">
-          <div className="max-w-4xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3" style={{ fontFamily: cinzel }}>
-              You already know this
-            </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-white text-center mb-14" style={{ fontFamily: cinzel, fontWeight: 700 }}>
-              The reset your body already knows
-            </h2>
-
-            <div className="grid sm:grid-cols-2 gap-5">
-              {FEATURES.map((f) => (
-                <div
-                  key={f.title}
-                  className="group relative rounded-2xl border border-white/[0.06] p-7 sm:p-8 transition-all duration-300 hover:border-white/[0.12] hover:translate-y-[-2px]"
-                  style={{ background: "rgba(255,255,255,0.015)" }}
+        <section className="landing-section px-6 py-20 sm:py-28">
+          <div className="max-w-xl mx-auto flex flex-col items-center gap-20">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="flex flex-col items-center text-center">
+                <h3
+                  className="text-xl sm:text-2xl mb-3"
+                  style={{ fontFamily: cinzel, fontWeight: 600, color: "#e2ddd4" }}
                 >
-                  <div
-                    className="absolute top-0 left-8 right-8 h-px"
-                    style={{ background: `linear-gradient(90deg, transparent, ${f.color}40, transparent)` }}
-                  />
-                  <div className="w-10 h-10 rounded-full mb-5 flex items-center justify-center" style={{ background: f.glow }}>
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: f.color }} />
-                  </div>
-                  <h3 className="text-lg mb-2 text-white" style={{ fontFamily: cinzel, fontWeight: 600 }}>{f.title}</h3>
-                  <p className="text-sm text-white/55 leading-relaxed" style={{ fontFamily: cormorant }}>{f.body}</p>
-                </div>
-              ))}
-            </div>
+                  {f.title}
+                </h3>
+                <div className="w-10 h-px mb-5" style={{ backgroundColor: "rgba(201,169,110,0.4)" }} />
+                <p className="text-base leading-relaxed max-w-md" style={{ fontFamily: outfit, fontWeight: 300, color: "rgba(226,221,212,0.5)" }}>
+                  {f.body}
+                </p>
+                {i < FEATURES.length - 1 && <Star />}
+              </div>
+            ))}
           </div>
         </section>
 
-        <Divider />
+        <Star />
 
         {/* ── What You Do ── */}
-        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(99,102,241,0.04), transparent)" }} />
-          <div className="relative max-w-2xl mx-auto text-center">
-            <div className="flex justify-center gap-1 mb-12">
+        <section className="landing-section relative px-6 py-20 sm:py-28 overflow-hidden">
+          <div className="relative max-w-xl mx-auto text-center">
+            {/* Tone diamonds */}
+            <div className="flex justify-center gap-3 mb-14">
               {TONE_COLORS.map((color) => (
-                <div key={color} className="w-8 sm:w-10 h-0.5 rounded-full" style={{ backgroundColor: color, opacity: 0.5 }} />
+                <Diamond key={color} color={color} size={8} />
               ))}
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-white mb-4 leading-tight" style={{ fontFamily: cinzel, fontWeight: 700 }}>
+
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl mb-4 leading-tight"
+              style={{ fontFamily: cinzel, fontWeight: 700, color: "#e2ddd4" }}
+            >
               Not singing lessons.
             </h2>
-            <p className="text-xl sm:text-2xl text-white/40 mb-8" style={{ fontFamily: cormorant, fontStyle: "italic" }}>
+            <p className="text-xl sm:text-2xl mb-8" style={{ fontFamily: outfit, fontWeight: 300, color: "rgba(139,123,181,0.7)" }}>
               A body practice that uses sound.
             </p>
-            <p className="text-white/55 leading-relaxed max-w-md mx-auto mb-14" style={{ fontFamily: cormorant }}>
+            <p
+              className="leading-relaxed max-w-md mx-auto mb-16"
+              style={{ fontFamily: outfit, fontWeight: 300, color: "rgba(226,221,212,0.45)" }}
+            >
               The pitch visualizer isn&apos;t a score &mdash; it&apos;s a mirror. You watch your voice move in real time so you can feel where it lands in your body.
             </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              {TAGS.map((p) => (
+
+            <div className="flex flex-wrap justify-center gap-6">
+              {TAGS.map((t) => (
                 <span
-                  key={p.label}
-                  className="inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-sm text-white/75 border transition-colors hover:bg-white/[0.04]"
-                  style={{ borderColor: `${p.color}25`, background: `${p.color}08`, fontFamily: cinzel, fontWeight: 500, letterSpacing: "0.05em" }}
+                  key={t.label}
+                  className="inline-flex items-center gap-2.5 text-sm"
+                  style={{ fontFamily: cinzel, fontWeight: 500, letterSpacing: "0.08em", color: "rgba(226,221,212,0.6)" }}
                 >
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color, boxShadow: `0 0 8px ${p.color}60` }} />
-                  {p.label}
+                  <Diamond color={t.color} size={5} />
+                  {t.label}
                 </span>
               ))}
             </div>
           </div>
         </section>
 
-        <Divider />
+        <Star />
 
         {/* ── How It Works ── */}
-        <section className="landing-section px-6 py-16 sm:py-20">
-          <div className="max-w-3xl mx-auto">
-            <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3" style={{ fontFamily: cinzel }}>
+        <section className="landing-section px-6 py-20 sm:py-28">
+          <div className="max-w-2xl mx-auto">
+            <p
+              className="text-xs uppercase tracking-[0.3em] text-center mb-3"
+              style={{ fontFamily: cinzel, color: "rgba(201,169,110,0.4)" }}
+            >
               Start in two minutes
             </p>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl text-white text-center mb-14" style={{ fontFamily: cinzel, fontWeight: 700 }}>
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl text-center mb-20"
+              style={{ fontFamily: cinzel, fontWeight: 700, color: "#e2ddd4" }}
+            >
               As easy as taking a deep breath
             </h2>
 
-            <div className="relative flex flex-col gap-16 pl-12 sm:pl-16">
-              <div
-                className="absolute left-[15px] sm:left-[19px] top-3 bottom-3 w-px"
-                style={{ background: "linear-gradient(to bottom, rgba(139,92,246,0.3), rgba(139,92,246,0.08))" }}
-              />
+            <div className="flex flex-col gap-20">
               {STEPS.map((step, i) => (
-                <div key={step.title} className="relative flex gap-6 sm:gap-8 items-start">
-                  <div className="absolute left-[-48px] sm:left-[-64px] top-1 flex items-center justify-center">
-                    <div
-                      className="w-[30px] h-[30px] sm:w-[38px] sm:h-[38px] rounded-full flex items-center justify-center text-xs sm:text-sm"
-                      style={{
-                        background: "rgba(139,92,246,0.12)",
-                        border: "1px solid rgba(139,92,246,0.25)",
-                        color: "rgba(167,139,250,0.8)",
-                        fontFamily: cinzel,
-                        fontWeight: 700,
-                      }}
+                <div key={step.title} className="relative text-center">
+                  {/* Watermark number */}
+                  <span
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-7xl sm:text-8xl pointer-events-none select-none"
+                    style={{ fontFamily: cinzel, fontWeight: 900, color: "rgba(201,169,110,0.15)" }}
+                  >
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="relative z-10">
+                    <h3
+                      className="text-xl sm:text-2xl mb-3"
+                      style={{ fontFamily: cinzel, fontWeight: 600, color: "#e2ddd4" }}
                     >
-                      {String(i + 1).padStart(2, "0")}
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="text-xl sm:text-2xl text-white mb-2" style={{ fontFamily: cinzel, fontWeight: 600 }}>
                       {step.title}
                     </h3>
-                    <p className="text-white/55 leading-relaxed text-base" style={{ fontFamily: cormorant }}>
+                    <p
+                      className="leading-relaxed max-w-sm mx-auto"
+                      style={{ fontFamily: outfit, fontWeight: 300, color: "rgba(226,221,212,0.5)" }}
+                    >
                       {step.body}
                     </p>
                   </div>
@@ -260,23 +319,33 @@ export default function LandingPageV4() {
           </div>
         </section>
 
-        <Divider />
+        <Star />
 
         {/* ── Call to Action ── */}
-        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+        <section className="landing-section relative px-6 py-20 sm:py-28 overflow-hidden">
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)" }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 h-100 rounded-full pointer-events-none"
+            style={{ background: "radial-gradient(circle, rgba(201,169,110,0.06) 0%, transparent 60%)" }}
           />
           <div className="relative max-w-xl mx-auto text-center">
-            <p className="text-2xl sm:text-3xl md:text-4xl text-white leading-snug mb-3" style={{ fontFamily: cinzel, fontWeight: 600 }}>
+            <p
+              className="text-2xl sm:text-3xl md:text-4xl leading-snug mb-3"
+              style={{ fontFamily: cinzel, fontWeight: 600, color: "#e2ddd4" }}
+            >
               Your voice is already the instrument.
             </p>
-            <p className="text-xl sm:text-2xl md:text-3xl text-white/45 leading-snug mb-12" style={{ fontFamily: cormorant, fontStyle: "italic" }}>
+            <p
+              className="text-xl sm:text-2xl md:text-3xl leading-snug mb-14"
+              style={{ fontFamily: outfit, fontWeight: 300, color: "rgba(139,123,181,0.5)" }}
+            >
               attunr shows you how to play it.
             </p>
             <Link href="/journey">
-              <Button size="lg" className="px-14 text-lg glow-pulse" style={{ fontFamily: cinzel, letterSpacing: "0.08em", fontSize: "0.95rem" }}>
+              <Button
+                size="lg"
+                className="px-16 cursor-pointer"
+                style={{ fontFamily: cinzel, letterSpacing: "0.12em", fontSize: "0.9rem", border: "1px solid #c9a96e", color: "#c9a96e", background: "transparent" }}
+              >
                 Start your practice
               </Button>
             </Link>
@@ -284,12 +353,12 @@ export default function LandingPageV4() {
         </section>
 
         {/* ── Footer ── */}
-        <footer className="px-6 py-12 border-t border-white/[0.04]">
+        <footer className="px-6 py-12" style={{ borderTop: "1px solid rgba(201,169,110,0.08)" }}>
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
             <Logo layout="horizontal" size="sm" />
-            <div className="flex items-center gap-6 text-xs text-white/35">
-              <Link href="/privacy" className="hover:text-white/55 transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white/55 transition-colors">Terms</Link>
+            <div className="flex items-center gap-6 text-xs" style={{ fontFamily: outfit, color: "rgba(226,221,212,0.3)" }}>
+              <Link href="/privacy" className="hover:text-white/55 transition-colors duration-800">Privacy</Link>
+              <Link href="/terms" className="hover:text-white/55 transition-colors duration-800">Terms</Link>
             </div>
           </div>
         </footer>

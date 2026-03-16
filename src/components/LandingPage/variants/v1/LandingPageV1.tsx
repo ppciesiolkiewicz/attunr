@@ -6,11 +6,15 @@ import Logo from "@/components/Logo";
 import { Button } from "@/components/ui";
 import { LandingHeader } from "../../components/LandingHeader";
 
+const AMBER = "#d4a574";
+const MOON = "#94a3c4";
+const BG = "#060B18";
+
 const FEATURES = [
   {
     title: "It just feels good",
     description:
-      "A long hum, a melody in the shower \u2014 your body relaxes. You\u2019ve always known this. attunr just gives it a path.",
+      "A long hum, a melody in the shower — your body relaxes. You\u2019ve always known this. attunr just gives it a path.",
   },
   {
     title: "Breathing finds its rhythm",
@@ -25,15 +29,8 @@ const FEATURES = [
   {
     title: "It deepens every time",
     description:
-      "This isn\u2019t background noise. Each stage opens something new \u2014 something you carry with you.",
+      "This isn\u2019t background noise. Each stage opens something new — something you carry with you.",
   },
-] as const;
-
-const PRACTICES = [
-  { label: "Voice", color: "#a855f7" },
-  { label: "Body", color: "#3b82f6" },
-  { label: "Breathwork", color: "#22c55e" },
-  { label: "Rhythm", color: "#f97316" },
 ] as const;
 
 const STEPS = [
@@ -54,10 +51,9 @@ const STEPS = [
   },
 ] as const;
 
-const AMBER = "#c4956a";
-const SAGE = "#8a9a7b";
-const CREAM = "#e8e0d4";
-const CHARCOAL = "#0f0e0c";
+const PRACTICES = ["Voice", "Body", "Breathwork", "Rhythm"] as const;
+
+const HERO_WORDS = ["Feel", "your", "voice"];
 
 const NOISE_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")`;
 
@@ -81,89 +77,125 @@ export default function LandingPageV1() {
   }, []);
 
   return (
-    <div className="h-full overflow-y-auto landing-scroll" style={{ background: CHARCOAL }}>
+    <div className="h-full overflow-y-auto landing-scroll" style={{ background: BG }}>
       <LandingHeader />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
-        .v1-heading { font-family: 'DM Serif Display', serif; }
-        @keyframes v1-drift {
-          0%, 100% { transform: translate(-50%, -50%) translate(0px, 0px); }
-          25% { transform: translate(-50%, -50%) translate(60px, -40px); }
-          50% { transform: translate(-50%, -50%) translate(-30px, 50px); }
-          75% { transform: translate(-50%, -50%) translate(-50px, -20px); }
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Outfit:wght@300;400;500&display=swap');
+        .v1-serif { font-family: 'Cormorant', serif; font-weight: 300; }
+        .v1-sans { font-family: 'Outfit', sans-serif; font-weight: 300; }
+        @keyframes v1-ocean {
+          0%, 100% { background-position: 50% 50%; transform: scale(1); }
+          50% { background-position: 50% 50%; transform: scale(1.15); }
         }
-        @keyframes v1-breathe {
-          0%, 100% { opacity: 0.12; transform: translate(-50%, -50%) scale(1); }
-          50% { opacity: 0.18; transform: translate(-50%, -50%) scale(1.08); }
+        @keyframes v1-orbit {
+          0% { transform: translate(-50%, -50%) rotate(0deg) translateX(200px) rotate(0deg); }
+          100% { transform: translate(-50%, -50%) rotate(360deg) translateX(200px) rotate(-360deg); }
         }
-        @keyframes v1-fade-up {
-          from { opacity: 0; transform: translateY(16px); }
+        @keyframes v1-letter {
+          0% { opacity: 0; transform: translateY(12px); }
+          100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes v1-fade {
+          from { opacity: 0; transform: translateY(20px); }
           to { opacity: 1; transform: translateY(0); }
         }
+        @keyframes v1-spectrum {
+          0% { background-position: 0% 50%; }
+          100% { background-position: 200% 50%; }
+        }
+        .v1-word { opacity: 0; animation: v1-letter 1s ease-out forwards; }
+        .landing-section { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+        .landing-visible { opacity: 1; transform: translateY(0); }
       `}</style>
 
-      {/* Noise texture overlay */}
+      {/* Grain overlay */}
       <div
-        className="fixed inset-0 pointer-events-none z-10"
+        className="fixed inset-0 pointer-events-none z-30"
         style={{ backgroundImage: NOISE_SVG, backgroundRepeat: "repeat", opacity: 0.5 }}
       />
 
-      {/* Ambient gradient orb */}
+      {/* Breathing ocean gradient */}
+      <div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{
+          background: `radial-gradient(ellipse 80% 80% at 50% 50%, #0c1a3a 0%, #060B18 70%)`,
+          animation: "v1-ocean 6s ease-in-out infinite",
+        }}
+      />
+
+      {/* Ambient orbiting light */}
       <div
         className="fixed pointer-events-none z-0"
         style={{
-          top: "40%",
+          top: "50%",
           left: "50%",
-          width: 600,
-          height: 600,
+          width: 1200,
+          height: 1200,
           borderRadius: "50%",
-          background: `radial-gradient(circle, ${AMBER}18 0%, ${SAGE}10 40%, transparent 70%)`,
-          animation: "v1-drift 25s ease-in-out infinite, v1-breathe 6s ease-in-out infinite",
+          background: `radial-gradient(circle, ${MOON}08 0%, transparent 60%)`,
+          animation: "v1-orbit 30s linear infinite",
+          opacity: 0.06,
         }}
       />
 
       {/* Hero */}
       <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 z-20">
-        <div className="flex flex-col items-center text-center max-w-xl" style={{ animation: "v1-fade-up 2s ease-out" }}>
-          <Logo layout="vertical" size="lg" animate={3} className="mb-16" />
+        <div className="flex flex-col items-center text-center max-w-2xl">
+          <Logo layout="vertical" size="lg" animate={3} className="mb-20" />
 
-          <h1 className="v1-heading text-4xl sm:text-5xl md:text-6xl leading-[1.15] tracking-tight mb-8" style={{ color: CREAM }}>
-            Feel your voice
+          <h1 className="v1-serif text-5xl sm:text-6xl md:text-7xl leading-[1.1] tracking-tight mb-2">
+            {HERO_WORDS.map((word, i) => (
+              <span
+                key={word}
+                className="v1-word inline-block mr-[0.3em]"
+                style={{ color: MOON, animationDelay: `${0.6 + i * 0.25}s` }}
+              >
+                {word}
+              </span>
+            ))}
             <br />
             <span
+              className="v1-word inline-block"
               style={{
-                background: `linear-gradient(135deg, ${AMBER}, #d4a574)`,
+                background: `linear-gradient(135deg, ${AMBER}, #e8c4a0)`,
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                animationDelay: "1.5s",
               }}
             >
               in your body
             </span>
           </h1>
 
-          <p className="text-lg leading-relaxed max-w-sm mb-14" style={{ color: `${CREAM}88` }}>
+          <p
+            className="v1-sans text-lg sm:text-xl leading-relaxed max-w-md mt-10 mb-16"
+            style={{ color: `${MOON}88`, animation: "v1-fade 1.5s ease-out 2s both" }}
+          >
             You already know how this feels.
             <br />
             We just gave it a path.
           </p>
 
-          <Link href="/journey">
-            <Button size="lg" className="px-12 text-lg">
-              Try it now
-            </Button>
+          <Link
+            href="/journey"
+            className="v1-serif text-xl tracking-wide transition-opacity hover:opacity-70"
+            style={{ color: AMBER, animation: "v1-fade 1.5s ease-out 2.5s both" }}
+          >
+            Try it now &rarr;
           </Link>
         </div>
       </section>
 
       {/* Features */}
-      <section className="landing-section relative z-20 px-6 py-24 sm:py-32">
-        <div className="max-w-lg mx-auto flex flex-col gap-16">
+      <section className="landing-section relative z-20 px-6 py-32 sm:py-40">
+        <div className="max-w-xl mx-auto flex flex-col gap-24 sm:gap-32">
           {FEATURES.map((f) => (
-            <div key={f.title} className="relative pl-6" style={{ borderLeft: `1px solid ${AMBER}30` }}>
-              <h3 className="v1-heading text-xl sm:text-2xl mb-3" style={{ color: CREAM }}>
+            <div key={f.title} className="text-center">
+              <div className="mx-auto mb-8" style={{ width: 60, height: 1, background: `${AMBER}40` }} />
+              <h3 className="v1-serif text-3xl sm:text-4xl mb-5" style={{ color: MOON }}>
                 {f.title}
               </h3>
-              <p className="text-sm sm:text-base leading-relaxed" style={{ color: `${CREAM}77` }}>
+              <p className="v1-sans text-base sm:text-lg leading-relaxed max-w-md mx-auto" style={{ color: `${MOON}77` }}>
                 {f.description}
               </p>
             </div>
@@ -172,28 +204,37 @@ export default function LandingPageV1() {
       </section>
 
       {/* What You Do */}
-      <section className="landing-section relative z-20 px-6 py-24 sm:py-32">
-        <div className="max-w-lg mx-auto text-center">
-          <h2 className="v1-heading text-3xl sm:text-4xl mb-4" style={{ color: CREAM }}>
+      <section className="landing-section relative z-20 px-6 py-32 sm:py-40">
+        <div className="max-w-2xl mx-auto text-center">
+          {/* Spectrum bar */}
+          <div
+            className="mx-auto mb-16 rounded-full"
+            style={{
+              width: "100%",
+              maxWidth: 400,
+              height: 3,
+              background: "linear-gradient(90deg, #ef4444, #f97316, #eab308, #22c55e, #3b82f6, #6366f1, #a855f7, #ef4444, #f97316, #eab308, #22c55e, #3b82f6)",
+              backgroundSize: "200% 100%",
+              animation: "v1-spectrum 20s linear infinite",
+            }}
+          />
+
+          <h2 className="v1-serif text-6xl sm:text-7xl md:text-8xl leading-none mb-6" style={{ color: MOON }}>
             Not singing lessons.
           </h2>
-          <p className="text-xl mb-8" style={{ color: `${CREAM}55` }}>
+          <p className="v1-serif text-2xl sm:text-3xl mb-10" style={{ color: `${MOON}55` }}>
             A body practice that uses sound.
           </p>
-          <p className="leading-relaxed max-w-md mx-auto mb-12" style={{ color: `${CREAM}77` }}>
+          <p className="v1-sans text-base sm:text-lg leading-relaxed max-w-lg mx-auto mb-14" style={{ color: `${MOON}66` }}>
             The pitch visualizer isn&apos;t a score &mdash; it&apos;s a mirror.
             You watch your voice move in real time so you can feel where it
             lands in your body.
           </p>
 
-          <div className="flex flex-wrap justify-center gap-6">
+          <div className="flex flex-wrap justify-center gap-8">
             {PRACTICES.map((p) => (
-              <span
-                key={p.label}
-                className="text-sm tracking-wide"
-                style={{ color: p.color, opacity: 0.7 }}
-              >
-                {p.label}
+              <span key={p} className="v1-sans text-sm tracking-[0.15em] uppercase" style={{ color: `${MOON}44` }}>
+                {p}
               </span>
             ))}
           </div>
@@ -201,29 +242,29 @@ export default function LandingPageV1() {
       </section>
 
       {/* How It Works */}
-      <section className="landing-section relative z-20 px-6 py-24 sm:py-32">
-        <div className="max-w-lg mx-auto">
-          <p className="text-xs uppercase tracking-[0.3em] text-center mb-3" style={{ color: `${SAGE}99` }}>
+      <section className="landing-section relative z-20 px-6 py-32 sm:py-40">
+        <div className="max-w-xl mx-auto">
+          <p className="v1-sans text-xs uppercase tracking-[0.3em] text-center mb-3" style={{ color: `${AMBER}66` }}>
             Start in two minutes
           </p>
-          <h2 className="v1-heading text-3xl sm:text-4xl text-center mb-16" style={{ color: CREAM }}>
+          <h2 className="v1-serif text-3xl sm:text-4xl text-center mb-20" style={{ color: MOON }}>
             As easy as taking a deep breath
           </h2>
 
-          <div className="flex flex-col gap-14">
+          <div className="flex flex-col gap-20">
             {STEPS.map((step, i) => (
-              <div key={step.title} className="flex gap-5 items-baseline">
+              <div key={step.title} className="relative text-center">
                 <span
-                  className="v1-heading text-2xl shrink-0"
-                  style={{ color: `${AMBER}66`, minWidth: "1.5rem" }}
+                  className="v1-serif text-[8rem] sm:text-[10rem] leading-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none"
+                  style={{ color: MOON, opacity: 0.04 }}
                 >
                   {i + 1}
                 </span>
-                <div>
-                  <h3 className="v1-heading text-lg sm:text-xl mb-2" style={{ color: CREAM }}>
+                <div className="relative">
+                  <h3 className="v1-serif text-2xl sm:text-3xl mb-3" style={{ color: MOON }}>
                     {step.title}
                   </h3>
-                  <p className="text-sm leading-relaxed" style={{ color: `${CREAM}77` }}>
+                  <p className="v1-sans text-base leading-relaxed max-w-sm mx-auto" style={{ color: `${MOON}66` }}>
                     {step.description}
                   </p>
                 </div>
@@ -233,35 +274,33 @@ export default function LandingPageV1() {
         </div>
       </section>
 
-      {/* Call to Action */}
-      <section className="landing-section relative z-20 px-6 py-24 sm:py-32">
-        <div className="max-w-xl mx-auto text-center">
-          <p className="v1-heading text-2xl sm:text-3xl leading-snug mb-3" style={{ color: CREAM }}>
+      {/* CTA */}
+      <section className="landing-section relative z-20 px-6 py-32 sm:py-40">
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="v1-serif text-3xl sm:text-4xl md:text-5xl leading-snug mb-4" style={{ color: MOON }}>
             Your voice is already the instrument.
           </p>
-          <p className="v1-heading text-xl sm:text-2xl leading-snug mb-14" style={{ color: `${CREAM}55` }}>
+          <p className="v1-serif text-xl sm:text-2xl mb-16" style={{ color: `${MOON}44` }}>
             attunr shows you how to play it.
           </p>
 
-          <Link href="/journey">
-            <Button size="lg" className="px-14 text-lg">
-              Start your practice
-            </Button>
+          <Link
+            href="/journey"
+            className="v1-serif text-xl tracking-wide transition-opacity hover:opacity-70"
+            style={{ color: AMBER }}
+          >
+            Begin &rarr;
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="relative z-20 px-6 py-12" style={{ borderTop: `1px solid ${CREAM}08` }}>
+      <footer className="relative z-20 px-6 py-12" style={{ borderTop: `1px solid ${MOON}08` }}>
         <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <Logo layout="horizontal" size="sm" />
-          <div className="flex items-center gap-6 text-xs" style={{ color: `${CREAM}44` }}>
-            <Link href="/privacy" className="hover:opacity-70 transition-opacity">
-              Privacy
-            </Link>
-            <Link href="/terms" className="hover:opacity-70 transition-opacity">
-              Terms
-            </Link>
+          <div className="flex items-center gap-6 v1-sans text-xs" style={{ color: `${MOON}44` }}>
+            <Link href="/privacy" className="hover:opacity-70 transition-opacity">Privacy</Link>
+            <Link href="/terms" className="hover:opacity-70 transition-opacity">Terms</Link>
           </div>
         </div>
       </footer>
