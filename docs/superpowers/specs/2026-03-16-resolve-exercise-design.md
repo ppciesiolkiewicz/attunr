@@ -10,7 +10,7 @@ A pure function `resolveExercise(exercise, vocalRange)` that transforms abstract
 
 ## Resolved Types
 
-All `ColoredNote` references point to objects in `VocalRange.allNotes` (shared references, not copies).
+All `ColoredNote` references point to objects in `VocalRange.allNotes` (shared references, not copies). The resolver looks up notes by MIDI number in `VocalRange.allNotes` rather than using `Scale.colorize()` output (which creates new objects via spread). This preserves reference equality for React memoization.
 
 ```ts
 // Base — shared by all resolved exercises
@@ -56,6 +56,8 @@ interface ResolvedTimelineEntry {
   startMs: number;
   durationMs: number;
   silent?: boolean;
+  /** True for "play" events (piano-only chords) — not scored, not sung, but scheduled for playback. */
+  audioOnly?: boolean;
   isRest: boolean;
 }
 
@@ -104,7 +106,11 @@ function resolveExercise(
 1. For each `MelodyScale` segment in `exercise.melody`:
    - Instantiate `Scale({ type: segment.type, root: segment.root }, vocalRange)`
    - Colorize the scale
-   - For each event, resolve target(s) → `ColoredNote`, compute `startMs`/`durationMs` from `exercise.tempo`
+   - For each event:
+     - `"note"` → one `ResolvedTimelineEntry` with `audioOnly: false`
+     - `"play"` (chord) → one entry per target at the same `startMs`, each with `audioOnly: true` (piano playback only, not scored)
+     - `"pause"` → one entry with `isRest: true`
+   - Compute `startMs`/`durationMs` from `exercise.tempo`
 2. Flatten into `timeline: ResolvedTimelineEntry[]` with cumulative `startMs`
 3. Compute `totalDurationMs`
 4. Display notes = deduplicated sorted set of all notes in timeline
@@ -133,7 +139,7 @@ Note-bearing components receive `resolved` as a prop. Non-note components receiv
 
 **MelodyExercise:** Receives `ResolvedMelody`. Deletes `resolveScaleTimeline` function entirely. Uses `resolved.timeline` and `resolved.totalDurationMs` directly. Scoring uses `resolved.timeline[i].note.frequencyHz` for pitch comparison.
 
-**usePitchProgress hook:** Takes resolved targets (with `ColoredNote` containing Hz) instead of calling `scale.resolve()` internally.
+**usePitchProgress hook:** New interface — receives `ResolvedPitchDetection | ResolvedPitchDetectionSlide` instead of `exercise + scale`. For single-target detection: uses `resolved.targets[0].note.frequencyHz` and `resolved.targets[0].seconds`. For multi-target sequences: iterates `resolved.targets[]`. For slides: uses `resolved.from`/`resolved.to`. Removes all internal `scale.resolve()` calls.
 
 **LearnNotesExercise, FarinelliExercise:** No changes.
 
