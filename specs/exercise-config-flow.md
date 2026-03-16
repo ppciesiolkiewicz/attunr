@@ -21,23 +21,23 @@ interface BaseExerciseConfig {
 
 // Discriminated variants:
 LearnExercise        → { exerciseTypeId: "learn",                elements }
-PitchDetectionExercise → { exerciseTypeId: "pitch-detection",    notes: SustainNoteConfig[], instruction }
-PitchDetectionSlideExercise → { exerciseTypeId: "pitch-detection-slide", notes: SlideConfig[], instruction }
+PitchDetectionExercise → { exerciseTypeId: "pitch-detection",    scale: BaseScale, notes: SustainNoteConfig[], instruction }
+PitchDetectionSlideExercise → { exerciseTypeId: "pitch-detection-slide", scale: BaseScale, notes: SlideConfig[], instruction }
 FarinelliBreathworkExercise   → { exerciseTypeId: "breathwork-farinelli",           maxCount, instruction }
-ToneFollowExercise   → { exerciseTypeId: "tone-follow",         toneShape, requiredPlays, instruction }
+ToneFollowExercise   → { exerciseTypeId: "tone-follow",         scale: BaseScale, toneShape, requiredPlays, instruction }
+MelodyExercise       → { exerciseTypeId: "melody",              melody: MelodyScale[], instruction }
 ```
 
-### BandTarget — how config points at notes
+### NoteTarget — how config points at notes
 
-Exercises don't hardcode frequencies. They reference positions in the user's vocal scale via `BandTarget`:
+Exercises don't hardcode frequencies. Each exercise declares a `scale: BaseScale` (e.g. `{ type: "even-7-from-major", root: 1 }` or `{ type: "chromatic", root: 1 }`), and references positions within that scale via `NoteTarget`:
 
 ```typescript
-{ kind: "slot",  n: 3 }           // 3rd of 7 evenly-spaced slots
-{ kind: "index", i: 0 }           // first note in allBands (i: -1 = last)
-{ kind: "range", from: 0, to: 3, accept: "below" }  // chest voice range
+{ kind: BandTargetKind.Index, i: 2 }           // 3rd note in the scale (0-based)
+{ kind: BandTargetKind.Range, from: 0, to: 3, accept: "below" }  // chest voice range
 ```
 
-At runtime, `resolveBandTarget(target, allBands)` maps these to actual `Band` objects with real frequencies based on the user's detected vocal range and tuning.
+At runtime, `new Scale(exercise.scale, vocalRange)` builds the note pool, and `scale.resolve(target)` maps targets to `ResolvedNote` objects with real frequencies. `scale.colorize()` adds colors from the user's `VocalRange`.
 
 ---
 
@@ -135,7 +135,7 @@ progress = holdRef / notes[0].seconds
 complete when progress >= 1
 ```
 
-- **Range targets** (`target.kind === "range"`): `matchesBandTarget(hz, bands, accept)` — "below" accepts any pitch ≤ range, "above" accepts ≥ range
+- **Range targets** (`target.kind === BandTargetKind.Range`): `matchesNoteTarget(hz, resolvedNotes, accept)` — "below" accepts any pitch ≤ range, "above" accepts ≥ range
 - All techniques: binary — full credit or nothing
 
 ### Sequence (`pitch-detection`, multiple notes)
@@ -213,7 +213,7 @@ Breathwork always shows the modal. Others show unless previously dismissed.
 ```
 exercise.title          → primary text
 exercise.cardCue ?? exercise.subtitle → secondary text
-getStageDisplayColors(exercise)    → left accent bar (gradient for multi-slot exercises)
+getExerciseDisplayColors(exercise)  → left accent bar (gradient from NOTE_PALETTE)
 ```
 
 ---
@@ -264,11 +264,12 @@ Progress: `localStorage attunr.journeyStage = max(current, exerciseId)`.
 
 | File                                                          | Role                                                          |
 | ------------------------------------------------------------- | ------------------------------------------------------------- |
-| `src/constants/journey/types.ts`                              | Exercise types, BandTarget, TechniqueId                       |
+| `src/constants/journey/types.ts`                              | Exercise types, NoteTarget, BandTargetKind, BaseScale         |
 | `src/constants/journey/*.ts`                                  | Per-part exercise configs                                     |
 | `src/components/JourneyView/components/JourneyExercise.tsx`   | Config → canvas, progress, completion                         |
 | `src/components/JourneyView/components/ExerciseInfoModal.tsx` | Config → modal content                                        |
 | `src/components/JourneyView/components/StageCard.tsx`         | Config → journey list card                                    |
-| `src/components/JourneyView/utils.ts`                         | `resolveBandTarget()`, `getStageDisplayColors()`              |
-| `src/lib/pitch.ts`                                            | `isInTune()`, `matchesBandTarget()`                           |
-| `src/lib/vocal-scale.ts`                                      | `getScaleNotesForRange()` — builds bands from user's Hz range |
+| `src/components/JourneyView/utils.ts`                         | `getExerciseDisplayColors()`                                  |
+| `src/lib/scale.ts`                                            | `Scale` class — note pool, `resolve()`, `colorize()`          |
+| `src/lib/pitch.ts`                                            | `isInTune()`, `matchesNoteTarget()`, `findClosestNote()`      |
+| `src/lib/vocal-scale.ts`                                      | `getScaleNotesForRange()` — builds notes from user's Hz range |
