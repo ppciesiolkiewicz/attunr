@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { JourneyList } from "./components/JourneyList";
 import type { Settings } from "@/hooks/useSettings";
@@ -27,10 +28,12 @@ export default function JourneyView({
 
   return (
     <div className="h-full">
-      <JourneyList
-        settings={settings}
-        onSelect={(exerciseId) => router.push(`/journey/${exerciseId}`)}
-      />
+      <Suspense>
+        <JourneyList
+          settings={settings}
+          onSelect={(exerciseId) => router.push(`/journey/${exerciseId}`)}
+        />
+      </Suspense>
     </div>
   );
 }
