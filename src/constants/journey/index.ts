@@ -1,11 +1,11 @@
-import type { JourneyExercise, Chapter, ChapterInput, StageConfigInput, ModalConfig, ContentElement } from "./types";
+import type { ExerciseConfig, Chapter, ChapterInput, StageConfigInput, ModalConfig, ContentElement } from "./types";
 import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
 import { CHAPTER_1_STAGES } from "./chapter1";
 import { CHAPTER_2_WARMUP, CHAPTER_2_STAGES } from "./chapter2";
 
 export type {
-  JourneyExercise,
-  JourneyExerciseInput,
+  ExerciseConfig,
+  ExerciseConfigInput,
   Chapter,
   ChapterInput,
   StageConfig,
@@ -25,27 +25,27 @@ export type {
   SustainNoteConfig,
   SlideConfig,
   BaseExerciseConfig,
-  LearnExercise,
-  LearnNotesExercise,
-  PitchDetectionExercise,
-  PitchDetectionSlideExercise,
-  FarinelliBreathworkExercise,
-  ToneFollowExercise,
+  LearnConfig,
+  LearnNotesConfig,
+  PitchDetectionConfig,
+  PitchDetectionSlideConfig,
+  FarinelliBreathworkConfig,
+  ToneFollowConfig,
   ToneFollowShape,
-  MelodyExercise,
+  MelodyConfig,
   MelodyScale,
   MelodyEvent,
   DisplayNote,
   DisplayScale,
-  VolumeDetectionExercise,
-  RhythmExercise,
+  VolumeDetectionConfig,
+  RhythmConfig,
   RhythmEvent,
 } from "./types";
 
 export { NoteDuration, BandTargetKind } from "./types";
 
 /** Build introModal for a non-learn exercise from its existing properties. */
-function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
+function buildIntroModal(exercise: ExerciseConfig): ModalConfig | undefined {
   if (exercise.exerciseTypeId === "learn") return undefined;
   if (exercise.exerciseTypeId === "learn-notes-1") return undefined;
   if (exercise.introModal) return exercise.introModal;
@@ -186,7 +186,7 @@ function assignIds(chapters: ChapterInput[]): Chapter[] {
           id: nextId++,
           chapter: ch.chapter,
           stageId: stage.id,
-        }) as JourneyExercise),
+        }) as ExerciseConfig),
       };
     }
     return {
@@ -221,7 +221,7 @@ export const JOURNEY_CONFIG: Chapter[] = withIntroModals(assignIds([
 ]));
 
 /** Flat list of all exercises across all chapters. */
-export const JOURNEY_EXERCISES: JourneyExercise[] =
+export const JOURNEY_EXERCISES: ExerciseConfig[] =
   JOURNEY_CONFIG.flatMap((ch) => {
     const stages = ch.warmup ? [ch.warmup, ...ch.stages] : ch.stages;
     return stages.flatMap((s) => s.exercises);

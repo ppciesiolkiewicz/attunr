@@ -1,12 +1,12 @@
 import { Scale } from "./scale";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import type {
-  JourneyExercise,
-  PitchDetectionExercise,
-  PitchDetectionSlideExercise,
-  ToneFollowExercise,
-  MelodyExercise,
-  RhythmExercise,
+  ExerciseConfig,
+  PitchDetectionConfig,
+  PitchDetectionSlideConfig,
+  ToneFollowConfig,
+  MelodyConfig,
+  RhythmConfig,
   DisplayNote,
   ToneShape,
 } from "@/constants/journey/types";
@@ -106,7 +106,7 @@ function durationToMs(duration: number, tempo: number): number {
 // ── Resolvers ─────────────────────────────────────────────────────────────────
 
 function resolvePitchDetection(
-  exercise: PitchDetectionExercise,
+  exercise: PitchDetectionConfig,
   vocalRange: VocalRange,
 ): ResolvedPitchDetection {
   const scale = new Scale(exercise.scale, vocalRange);
@@ -135,7 +135,7 @@ function resolvePitchDetection(
 }
 
 function resolvePitchDetectionSlide(
-  exercise: PitchDetectionSlideExercise,
+  exercise: PitchDetectionSlideConfig,
   vocalRange: VocalRange,
 ): ResolvedPitchDetectionSlide {
   const scale = new Scale(exercise.scale, vocalRange);
@@ -171,7 +171,7 @@ function resolvePitchDetectionSlide(
 }
 
 function resolveToneFollow(
-  exercise: ToneFollowExercise,
+  exercise: ToneFollowConfig,
   vocalRange: VocalRange,
 ): ResolvedToneFollow {
   const scale = new Scale(exercise.scale, vocalRange);
@@ -230,7 +230,7 @@ function resolveToneFollow(
 }
 
 function resolveMelody(
-  exercise: MelodyExercise,
+  exercise: MelodyConfig,
   vocalRange: VocalRange,
 ): ResolvedMelody {
   const allNotes = vocalRange.allNotes;
@@ -290,7 +290,7 @@ function resolveMelody(
 }
 
 function resolveRhythm(
-  exercise: RhythmExercise,
+  exercise: RhythmConfig,
   _vocalRange: VocalRange,
 ): ResolvedRhythm {
   const beats: ResolvedBeat[] = [];
@@ -319,7 +319,7 @@ function resolveRhythm(
 // ── Main entry point ──────────────────────────────────────────────────────────
 
 export function resolveExercise(
-  exercise: JourneyExercise,
+  exercise: ExerciseConfig,
   vocalRange: VocalRange,
 ): ResolvedExercise {
   switch (exercise.exerciseTypeId) {
@@ -334,6 +334,6 @@ export function resolveExercise(
     case "rhythm":
       return resolveRhythm(exercise, vocalRange);
     default:
-      throw new Error(`Cannot resolve exercise type: ${(exercise as JourneyExercise).exerciseTypeId}`);
+      throw new Error(`Cannot resolve exercise type: ${(exercise as ExerciseConfig).exerciseTypeId}`);
   }
 }

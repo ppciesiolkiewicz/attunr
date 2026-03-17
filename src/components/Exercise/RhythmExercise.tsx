@@ -6,7 +6,7 @@ import { Button, Text, Modal } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
 import { RhythmCanvas } from "./RhythmCanvas";
 import type { RhythmBeatState, BeatStatus } from "./RhythmCanvas";
-import type { RhythmExercise as RhythmConfig } from "@/constants/journey";
+import type { RhythmConfig } from "@/constants/journey";
 import type { ResolvedRhythm } from "@/lib/resolve-exercise";
 
 /** Pre-roll time (ms) — visual lead-in before first beat */

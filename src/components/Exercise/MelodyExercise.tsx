@@ -7,7 +7,7 @@ import type { MelodyRectNote } from "@/components/PitchCanvas";
 import { Button, Text, Modal } from "@/components/ui";
 import { ExerciseStartOverlay } from "./ExerciseStartOverlay";
 import { ProgressArc } from "./components/ProgressArc";
-import type { MelodyExercise as MelodyConfig } from "@/constants/journey";
+import type { MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import type { ResolvedMelody, ResolvedTimelineEntry } from "@/lib/resolve-exercise";

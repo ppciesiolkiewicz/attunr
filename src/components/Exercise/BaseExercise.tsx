@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import type { JourneyExercise } from "@/constants/journey";
+import type { ExerciseConfig } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import { resolveExercise } from "@/lib/resolve-exercise";
 import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneFollow, ResolvedMelody, ResolvedRhythm } from "@/lib/resolve-exercise";
@@ -15,7 +15,7 @@ import { MelodyExercise } from "./MelodyExercise";
 import { RhythmExercise } from "./RhythmExercise";
 
 interface BaseExerciseProps {
-  exercise: JourneyExercise;
+  exercise: ExerciseConfig;
   exerciseId: number;
   partTitle: string;
   partRoman: string;

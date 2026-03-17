@@ -10,11 +10,11 @@ import type {
 import { VocalRange } from "@/lib/VocalRange";
 import { BandTargetKind, NoteDuration } from "@/constants/journey/types";
 import type {
-  PitchDetectionExercise,
-  PitchDetectionSlideExercise,
-  ToneFollowExercise,
-  MelodyExercise,
-  RhythmExercise,
+  PitchDetectionConfig,
+  PitchDetectionSlideConfig,
+  ToneFollowConfig,
+  MelodyConfig,
+  RhythmConfig,
 } from "@/constants/journey/types";
 
 // ── Test vocal range (C3–C5) ────────────────────────────────────────────────
@@ -34,7 +34,7 @@ const base = {
 // ── pitch-detection ─────────────────────────────────────────────────────────
 
 describe("resolveExercise — pitch-detection", () => {
-  const exercise: PitchDetectionExercise = {
+  const exercise: PitchDetectionConfig = {
     ...base,
     exerciseTypeId: "pitch-detection",
     scale: { type: "chromatic", root: 1 },
@@ -75,7 +75,7 @@ describe("resolveExercise — pitch-detection", () => {
   });
 
   it("resolves range target with accept and rangeNotes", () => {
-    const rangeExercise: PitchDetectionExercise = {
+    const rangeExercise: PitchDetectionConfig = {
       ...base,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
@@ -94,7 +94,7 @@ describe("resolveExercise — pitch-detection", () => {
   });
 
   it("resolves multi-note sequence", () => {
-    const seqExercise: PitchDetectionExercise = {
+    const seqExercise: PitchDetectionConfig = {
       ...base,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
@@ -113,7 +113,7 @@ describe("resolveExercise — pitch-detection", () => {
 // ── pitch-detection-slide ───────────────────────────────────────────────────
 
 describe("resolveExercise — pitch-detection-slide", () => {
-  const exercise: PitchDetectionSlideExercise = {
+  const exercise: PitchDetectionSlideConfig = {
     ...base,
     exerciseTypeId: "pitch-detection-slide",
     scale: { type: "chromatic", root: 1 },
@@ -147,7 +147,7 @@ describe("resolveExercise — pitch-detection-slide", () => {
 
 describe("resolveExercise — tone-follow", () => {
   it("resolves slide toneShape", () => {
-    const exercise: ToneFollowExercise = {
+    const exercise: ToneFollowConfig = {
       ...base,
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: 1 },
@@ -169,7 +169,7 @@ describe("resolveExercise — tone-follow", () => {
   });
 
   it("resolves sustain toneShape", () => {
-    const exercise: ToneFollowExercise = {
+    const exercise: ToneFollowConfig = {
       ...base,
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: 1 },
@@ -189,7 +189,7 @@ describe("resolveExercise — tone-follow", () => {
   });
 
   it("uses displayNotes config for highlights when present", () => {
-    const exercise: ToneFollowExercise = {
+    const exercise: ToneFollowConfig = {
       ...base,
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: 1 },
@@ -210,7 +210,7 @@ describe("resolveExercise — tone-follow", () => {
 // ── melody ──────────────────────────────────────────────────────────────────
 
 describe("resolveExercise — melody", () => {
-  const exercise: MelodyExercise = {
+  const exercise: MelodyConfig = {
     ...base,
     exerciseTypeId: "melody",
     tempo: 120,
@@ -299,7 +299,7 @@ describe("resolveExercise — melody", () => {
   });
 
   it("handles silent notes", () => {
-    const silentExercise: MelodyExercise = {
+    const silentExercise: MelodyConfig = {
       ...base,
       exerciseTypeId: "melody",
       tempo: 120,
@@ -320,7 +320,7 @@ describe("resolveExercise — melody", () => {
 // ── rhythm ─────────────────────────────────────────────────────────────────
 
 describe("resolveExercise — rhythm", () => {
-  const exercise: RhythmExercise = {
+  const exercise: RhythmConfig = {
     ...base,
     exerciseTypeId: "rhythm",
     tempo: 120,
@@ -374,7 +374,7 @@ describe("resolveExercise — rhythm", () => {
   });
 
   it("defaults metronome to false when omitted", () => {
-    const noMetronome: RhythmExercise = {
+    const noMetronome: RhythmConfig = {
       ...base,
       exerciseTypeId: "rhythm",
       tempo: 80,
@@ -386,7 +386,7 @@ describe("resolveExercise — rhythm", () => {
   });
 
   it("handles all-pause pattern with no beats", () => {
-    const allPause: RhythmExercise = {
+    const allPause: RhythmConfig = {
       ...base,
       exerciseTypeId: "rhythm",
       tempo: 120,

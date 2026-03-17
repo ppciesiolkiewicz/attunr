@@ -10,13 +10,13 @@ import { usePitchProgress } from "./usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { ExerciseStartOverlay } from "../ExerciseStartOverlay";
 import { ProgressArc } from "../components/ProgressArc";
-import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
+import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide } from "@/lib/resolve-exercise";
 
 interface PitchExerciseProps {
-  exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
+  exercise: PitchDetectionConfig | PitchDetectionSlideConfig;
   exerciseId: number;
   isLast: boolean;
   resolved: ResolvedPitchDetection | ResolvedPitchDetectionSlide;

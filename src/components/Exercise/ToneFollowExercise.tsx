@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
-import type { ToneFollowExercise as ToneFollowConfig } from "@/constants/journey";
+import type { ToneFollowConfig } from "@/constants/journey";
 import type { ColoredNote } from "@/lib/VocalRange";
 import type { ResolvedToneFollow } from "@/lib/resolve-exercise";
 

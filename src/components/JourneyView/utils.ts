@@ -1,11 +1,11 @@
 import {
   JOURNEY_EXERCISES,
 } from "@/constants/journey";
-import type { JourneyExercise } from "@/constants/journey";
+import type { ExerciseConfig } from "@/constants/journey";
 import { NOTE_PALETTE } from "@/lib/VocalRange";
 
 /** Get display colors for an exercise (for ExerciseCard color strip). */
-export function getExerciseDisplayColors(exercise: JourneyExercise): string[] {
+export function getExerciseDisplayColors(exercise: ExerciseConfig): string[] {
   return NOTE_PALETTE.map((p) => p.color);
 }
 
