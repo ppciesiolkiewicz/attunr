@@ -130,6 +130,24 @@ sustain(params: SustainParams): ExerciseConfigInput
 //   notes: [{ target: { kind: Index, i: 1 }, seconds }] repeated `repeats` times
 ```
 
+### New `lipRollSustain()` method
+
+For tone-follow sustain exercises:
+
+```ts
+interface LipRollSustainParams extends CommonParams {
+  note: number;        // ChromaticDegree — scale root, target is i: 1
+  seconds: number;
+  requiredPlays: number;
+}
+
+lipRollSustain(params: LipRollSustainParams): ExerciseConfigInput
+// Produces a tone-follow config with:
+//   scale: { type: "chromatic", root: note }
+//   toneShape: { kind: "sustain", target: { kind: Index, i: 1 }, seconds }
+//   displayNotes: []
+```
+
 ## Chapter Config Simplification
 
 ### Multi-note pitch-detection -> melody
@@ -153,7 +171,7 @@ Chapter 2:
 
 Chapter 1:
 - "Gentle hum" — `sustain({ note: 1, seconds: 5 })`
-- "Hoo hoo" — stays as `zoneAbove()` (range target, HillBall)
+- "Hoo hoo" — `zoneAbove({ boundaryNote: -6, seconds: 5 })`
 - "Simple U" — `sustain({ note: 1, seconds: 6 })`
 - "Hum — mid-low" — `sustain({ note: 4, seconds: 5 })`
 - "U — mid-low" — `sustain({ note: 4, seconds: 6 })`
@@ -166,9 +184,33 @@ Chapter 2:
 - "Hum — mid" — `sustain({ note: 7, seconds: 8 })`
 - "U — mid" — `sustain({ note: 7, seconds: 8 })`
 
+### Tone-follow exercises -> generator
+
+Chapter 1:
+- "Lip roll slide" — `lipRoll({ startNote: 1, endNote: -1, requiredPlays: 3 })`
+- "Lip roll sustain" — `lipRollSustain({ note: 5, seconds: 5, requiredPlays: 3 })`
+
+Chapter 2 warmup:
+- "Lip rolls — low to high" — `lipRoll({ startNote: 1, endNote: -1, requiredPlays: 2 })`
+
+Chapter 2:
+- "Lip rolls — high to low" — `lipRoll({ startNote: -1, endNote: 1, requiredPlays: 3 })`
+- "Lip roll sustain" — `lipRollSustain({ note: 7, seconds: 6, requiredPlays: 3 })`
+
+### Breathwork exercises -> generator
+
+Chapter 1:
+- "Farinelli breathwork" — `farinelli({ maxCount: 5 })`
+
+Chapter 2 warmup:
+- "Farinelli breathwork" — `farinelli({ maxCount: 5 })`
+
+Chapter 2:
+- "Farinelli breathwork" — `farinelli({ maxCount: 7 })`
+
 ### What stays inline
 
-Not every exercise must use the generator. Exercises with unique structure or one-off configs can remain inline.
+Volume-detection exercises stay inline — they're already minimal. Any exercise with unique structure or one-off config can remain inline.
 
 ## File Changes
 
