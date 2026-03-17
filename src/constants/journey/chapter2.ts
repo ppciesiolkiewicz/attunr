@@ -1,4 +1,4 @@
-import { BandTargetKind } from "./types";
+import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 
 // ── Chapter 2: Building Foundation ──────────────────────────────────────────
@@ -93,6 +93,26 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         displayNotes: [],
         requiredPlays: 3,
         instruction: "Play the tone and lip roll alongside it.\nSlide smoothly from high to low — keep it smooth and easy.",
+      },
+      {
+        exerciseTypeId: "rhythm",
+        title: "Feel the Beat",
+        cardCue: "Tap along to the beat",
+        tempo: 80,
+        pattern: [
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "pause", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+        ],
+        metronome: true,
+        minScore: 60,
+        instruction: "Tap the spacebar or touch the screen on each beat",
       },
     ],
   },
