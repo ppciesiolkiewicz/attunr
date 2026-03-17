@@ -52,16 +52,16 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       {
         exerciseTypeId: "melody",
         title: "Hum — low to mid",
-        subtitle: "Hum · 5 seconds × 3 pitches",
-        tempo: 24,
+        subtitle: "Hum · 3 rising pitches",
+        tempo: 40,
         melody: [
           {
             type: "chromatic",
             root: 1,
             events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: NoteDuration.Half },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: 8 },
             ],
           },
         ],
@@ -71,16 +71,16 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       {
         exerciseTypeId: "melody",
         title: "U — low to mid",
-        subtitle: "Vowel U · 6 seconds × 3 pitches",
-        tempo: 20,
+        subtitle: "Vowel U · 3 rising pitches",
+        tempo: 40,
         melody: [
           {
             type: "chromatic",
             root: 1,
             events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: NoteDuration.Half },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: 8 },
             ],
           },
         ],
@@ -152,16 +152,16 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       {
         exerciseTypeId: "melody",
         title: "Hum sequence",
-        subtitle: "3 tones rising · 5 seconds each",
-        tempo: 24,
+        subtitle: "3 tones rising",
+        tempo: 40,
         melody: [
           {
             type: "chromatic",
             root: 1,
             events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: 8 },
             ],
           },
         ],
@@ -171,16 +171,16 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       {
         exerciseTypeId: "melody",
         title: "U sequence",
-        subtitle: "3 tones rising · 6 seconds each",
-        tempo: 20,
+        subtitle: "3 tones rising",
+        tempo: 40,
         melody: [
           {
             type: "chromatic",
             root: 1,
             events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
+              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: 8 },
             ],
           },
         ],
