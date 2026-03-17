@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, usePathname, useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { JourneyExercise } from "@/components/JourneyView";
 import { useApp } from "@/context/AppContext";
@@ -13,7 +13,6 @@ import { journey } from "@/constants/journey";
  */
 export default function ChapterExercisePage() {
   const params = useParams();
-  const pathname = usePathname();
   const router = useRouter();
   const { settings, pitchHz, pitchHzRef, playTone, playSlide, updateSettings } =
     useApp();

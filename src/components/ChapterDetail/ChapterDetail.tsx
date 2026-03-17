@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { journey } from "@/constants/journey";
 import { Text, Button } from "@/components/ui";
 import { toRoman } from "@/lib/format";
-import { ExerciseCard } from "@/components/JourneyView/components/ExerciseCard";
+import { ExerciseCard } from "@/components/JourneyView";
 import type { Chapter } from "@/constants/journey";
 import type { Settings } from "@/hooks/useSettings";
 
