@@ -10,6 +10,7 @@ import { BaseExercise } from "@/components/Exercise";
 import { PartCompleteModal } from "./PartCompleteModal";
 import { journey } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
+import { toRoman } from "@/lib/format";
 import { useApp } from "@/context/AppContext";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { VocalRange } from "@/lib/VocalRange";
@@ -137,7 +138,7 @@ export function JourneyExercise({
         </Button>
         <Text variant="caption" as="span" color="muted-2">|</Text>
         <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
-          Ch {exercise.chapter}
+          Ch {toRoman(exercise.chapter)}
         </Text>
         <Text variant="caption" as="span" color="text-2" className="hidden md:inline font-medium shrink-0">
           — {stageTitle}
@@ -173,7 +174,7 @@ export function JourneyExercise({
         exercise={exercise}
         exerciseId={exerciseId}
         partTitle={stageTitle}
-        partRoman={String(exercise.chapter)}
+        partRoman={toRoman(exercise.chapter)}
         stepIndex={getStepInStage(exerciseId).stepIndex}
         stepsInPart={getStepInStage(exerciseId).stepsInStage}
         isLast={exerciseId === journey.exercises[journey.exercises.length - 1]?.id}

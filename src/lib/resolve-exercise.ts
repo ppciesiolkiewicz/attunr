@@ -4,6 +4,7 @@ import type {
   ExerciseConfig,
   PitchDetectionConfig,
   PitchDetectionSlideConfig,
+  PitchDetectionHillConfig,
   ToneFollowConfig,
   MelodyConfig,
   RhythmConfig,
@@ -36,6 +37,13 @@ export interface PitchDetectionSlideExercise extends ExerciseBase {
   exerciseTypeId: "pitch-detection-slide";
   from: ColoredNote;
   to: ColoredNote;
+}
+
+export interface PitchDetectionHillExercise extends ExerciseBase {
+  exerciseTypeId: "pitch-detection-hill";
+  targets: PitchTarget[];
+  toneShape: ToneShape;
+  direction: "up" | "down";
 }
 
 export interface ToneFollowExercise extends ExerciseBase {
@@ -73,12 +81,15 @@ export interface RhythmExercise extends ExerciseBase {
   metronome: boolean;
   minScore: number;
   beats: Beat[];
+  /** Timestamps (ms) for all metronome clicks (taps + pauses). */
+  metronomeTicks: number[];
   totalDurationMs: number;
 }
 
 export type Exercise =
   | PitchDetectionExercise
   | PitchDetectionSlideExercise
+  | PitchDetectionHillExercise
   | ToneFollowExercise
   | MelodyExercise
   | RhythmExercise;
@@ -289,11 +300,48 @@ function resolveMelody(
   };
 }
 
+function resolvePitchDetectionHill(
+  exercise: PitchDetectionHillConfig,
+  vocalRange: VocalRange,
+): PitchDetectionHillExercise {
+  const scale = new Scale(exercise.scale, vocalRange);
+  const allNotes = vocalRange.allNotes;
+
+  const targets: PitchTarget[] = [];
+  for (const n of exercise.notes) {
+    const resolved = scale.resolve(n.target);
+    const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
+    if (!colored) continue;
+    const target: PitchTarget = { note: colored, seconds: n.seconds };
+    if (n.target.kind === "range") {
+      target.accept = n.target.accept ?? "within";
+      target.rangeNotes = resolved
+        .map((r) => vocalRange.findNote(r.midi))
+        .filter((c): c is ColoredNote => c !== null);
+    }
+    targets.push(target);
+  }
+
+  const exerciseColoredNotes = targets.map((t) => t.note);
+  const displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
+  const highlightIds = exerciseColoredNotes.map((n) => n.id);
+
+  return {
+    exerciseTypeId: "pitch-detection-hill",
+    targets,
+    displayNotes,
+    highlightIds,
+    toneShape: exercise.toneShape ?? { kind: "sustain" },
+    direction: exercise.direction,
+  };
+}
+
 function resolveRhythm(
   exercise: RhythmConfig,
   _vocalRange: VocalRange,
 ): RhythmExercise {
   const beats: Beat[] = [];
+  const metronomeTicks: number[] = [];
   let cursor = 0;
 
   for (const event of exercise.pattern) {
@@ -301,6 +349,8 @@ function resolveRhythm(
     if (event.type === "tap") {
       beats.push({ startMs: cursor, durationMs: ms });
     }
+    // All events (tap + pause) get a metronome tick at their start
+    metronomeTicks.push(cursor);
     cursor += ms;
   }
 
@@ -310,6 +360,7 @@ function resolveRhythm(
     metronome: exercise.metronome ?? false,
     minScore: exercise.minScore,
     beats,
+    metronomeTicks,
     totalDurationMs: cursor,
     displayNotes: [],
     highlightIds: [],
@@ -327,6 +378,8 @@ export function resolveExercise(
       return resolvePitchDetection(exercise, vocalRange);
     case "pitch-detection-slide":
       return resolvePitchDetectionSlide(exercise, vocalRange);
+    case "pitch-detection-hill":
+      return resolvePitchDetectionHill(exercise, vocalRange);
     case "tone-follow":
       return resolveToneFollow(exercise, vocalRange);
     case "melody":

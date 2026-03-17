@@ -11,6 +11,7 @@ export type ExerciseTypeId =
   | "learn-notes-1"              // interactive notes introduction with range canvas
   | "pitch-detection"             // hold tone(s) — single note or sequence
   | "pitch-detection-slide"       // glide between two pitches
+  | "pitch-detection-hill"        // roll ball uphill or downhill by pitch direction
   | "breathwork-farinelli"        // Farinelli breathing cycles, no pitch detection
   | "tone-follow"                 // play tone and follow along (no mic detection)
   | "melody"                      // sing along to scrolling melody with scoring
@@ -164,6 +165,16 @@ export interface PitchDetectionSlideConfig extends BaseExerciseConfig {
   instruction: string;
 }
 
+export interface PitchDetectionHillConfig extends BaseExerciseConfig {
+  exerciseTypeId: "pitch-detection-hill";
+  scale: BaseScale;
+  toneShape?: ToneShape;
+  notes: SustainNoteConfig[];
+  /** Ball rolls uphill or downhill based on pitch direction. */
+  direction: "up" | "down";
+  instruction: string;
+}
+
 export interface FarinelliBreathworkConfig extends BaseExerciseConfig {
   exerciseTypeId: "breathwork-farinelli";
   /** Number of breathing cycles to complete (typically 7). */
@@ -282,6 +293,7 @@ export type ExerciseConfig =
   | LearnNotesConfig
   | PitchDetectionConfig
   | PitchDetectionSlideConfig
+  | PitchDetectionHillConfig
   | FarinelliBreathworkConfig
   | ToneFollowConfig
   | MelodyConfig

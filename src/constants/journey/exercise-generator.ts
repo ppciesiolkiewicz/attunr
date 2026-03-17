@@ -97,6 +97,14 @@ export interface LipRollSustainParams extends CommonParams {
   requiredPlays: number;
 }
 
+export interface HillSustainParams extends CommonParams {
+  note: number;
+  seconds: number;
+  repeats?: number;
+  direction: "up" | "down";
+  toneShape?: ToneShape;
+}
+
 // ── Helper functions ──────────────────────────────────────────────────────────
 
 /** Returns a NoteTarget for a 1-indexed ChromaticDegree. Passes straight through. */
@@ -326,6 +334,16 @@ export class ExerciseGenerator {
     });
   }
 
+  /** Major second interval exercise (chromaticDegree = 3, defaults startNote=1, endNote=6). */
+  majorSecond(params: NamedMelodyParams): ExerciseConfigInput {
+    return this.interval({
+      ...params,
+      startNote: params.startNote ?? 1,
+      endNote: params.endNote ?? 6,
+      chromaticDegree: 3,
+    });
+  }
+
   /** Octave interval exercise (chromaticDegree = 13, defaults startNote=4, endNote=-4). */
   octave(params: NamedMelodyParams): ExerciseConfigInput {
     return this.interval({
@@ -437,9 +455,10 @@ export class ExerciseGenerator {
       instruction,
       introModal,
       completionModal,
-      exerciseTypeId: "pitch-detection",
+      exerciseTypeId: "pitch-detection-hill",
       scale: { type: "chromatic", root: 1 },
       toneShape: { kind: "owl-hoot" },
+      direction: "up",
       notes,
     };
   }
@@ -574,6 +593,40 @@ export class ExerciseGenerator {
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: note },
       ...(toneShape && { toneShape }),
+      notes,
+    };
+  }
+
+  /** Hill sustain exercise. Pitch-detection-hill with sustained note. */
+  hillSustain(params: HillSustainParams): ExerciseConfigInput {
+    const {
+      title,
+      subtitle,
+      cardCue,
+      instruction,
+      introModal,
+      completionModal,
+      note,
+      seconds,
+      repeats = 3,
+      direction,
+      toneShape,
+    } = params;
+
+    const target = { kind: BandTargetKind.Index as const, i: 1 };
+    const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
+
+    return {
+      title,
+      subtitle,
+      cardCue,
+      instruction,
+      introModal,
+      completionModal,
+      exerciseTypeId: "pitch-detection-hill",
+      scale: { type: "chromatic", root: note },
+      toneShape,
+      direction,
       notes,
     };
   }

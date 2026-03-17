@@ -9,9 +9,6 @@ import type { RhythmBeatState, BeatStatus } from "./RhythmCanvas";
 import type { RhythmConfig } from "@/constants/journey";
 import type { RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
 
-/** Pre-roll time (ms) — visual lead-in before first beat */
-const PRE_ROLL_MS = 2000;
-
 /** Scoring windows (ms) */
 const HIT_WINDOW_MS = 80;
 const CLOSE_WINDOW_MS = 150;
@@ -47,7 +44,7 @@ export function RhythmExercise({
   onSkip,
   onPrev,
 }: RhythmExerciseProps) {
-  const { beats, totalDurationMs, metronome, minScore } = resolved;
+  const { beats, metronomeTicks, totalDurationMs, metronome, minScore } = resolved;
 
   // ── Playback state ──────────────────────────────────────────────────────
   const [isPlaying, setIsPlaying] = useState(false);
@@ -64,7 +61,7 @@ export function RhythmExercise({
   const tapMatchedRef = useRef<boolean[]>([]);
   const tapFlashTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const audioCtxRef = useRef<AudioContext | null>(null);
-  const metronomePlayedRef = useRef<boolean[]>([]);
+  const metronomeTickPlayedRef = useRef<boolean[]>([]);
 
   // State for canvas rendering (updated from RAF)
   const [beatStates, setBeatStates] = useState<RhythmBeatState[]>([]);
@@ -80,7 +77,7 @@ export function RhythmExercise({
     setElapsedMs(0);
     beatStatesRef.current = [];
     tapMatchedRef.current = [];
-    metronomePlayedRef.current = [];
+    metronomeTickPlayedRef.current = [];
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     if (tapFlashTimerRef.current) clearTimeout(tapFlashTimerRef.current);
   }, [exerciseId]);
@@ -124,8 +121,8 @@ export function RhythmExercise({
 
     for (let i = 0; i < beats.length; i++) {
       if (tapMatchedRef.current[i]) continue;
-      const beatCenter = beats[i].startMs + PRE_ROLL_MS + beats[i].durationMs / 2;
-      const dist = Math.abs(tapElapsed - beatCenter);
+      const beatStart = beats[i].startMs;
+      const dist = Math.abs(tapElapsed - beatStart);
       if (dist < bestDist && dist <= CLOSE_WINDOW_MS) {
         bestDist = dist;
         bestIdx = i;
@@ -168,14 +165,13 @@ export function RhythmExercise({
 
     beatStatesRef.current = beats.map(() => "upcoming" as BeatStatus);
     tapMatchedRef.current = beats.map(() => false);
-    metronomePlayedRef.current = beats.map(() => false);
 
-    // Bake PRE_ROLL_MS into beat startMs for the canvas (resolver returns 0-based)
     const initialStates: RhythmBeatState[] = beats.map((beat) => ({
-      beat: { ...beat, startMs: beat.startMs + PRE_ROLL_MS },
+      beat,
       status: "upcoming" as BeatStatus,
     }));
     setBeatStates(initialStates);
+    metronomeTickPlayedRef.current = metronomeTicks.map(() => false);
 
     startTimeRef.current = performance.now();
     elapsedMsRef.current = 0;
@@ -191,15 +187,19 @@ export function RhythmExercise({
       const elapsed = now - startTimeRef.current;
       elapsedMsRef.current = elapsed;
 
-      for (let i = 0; i < beats.length; i++) {
-        const beatStartMs = beats[i].startMs + PRE_ROLL_MS;
-        const beatEndMs = beatStartMs + beats[i].durationMs;
-
-        // Metronome click
-        if (metronome && !metronomePlayedRef.current[i] && elapsed >= beatStartMs) {
-          metronomePlayedRef.current[i] = true;
-          playClick();
+      // New metronome tick loop
+      if (metronome) {
+        for (let t = 0; t < metronomeTicks.length; t++) {
+          if (!metronomeTickPlayedRef.current[t] && elapsed >= metronomeTicks[t]) {
+            metronomeTickPlayedRef.current[t] = true;
+            playClick();
+          }
         }
+      }
+
+      for (let i = 0; i < beats.length; i++) {
+        const beatStartMs = beats[i].startMs;
+        const beatEndMs = beatStartMs + beats[i].durationMs;
 
         const current = beatStatesRef.current[i];
 
@@ -220,16 +220,16 @@ export function RhythmExercise({
         }
       }
 
-      // Sync state for canvas (bake PRE_ROLL_MS into startMs for canvas positioning)
+      // Sync state for canvas
       const states: RhythmBeatState[] = beats.map((beat, i) => ({
-        beat: { ...beat, startMs: beat.startMs + PRE_ROLL_MS },
+        beat,
         status: beatStatesRef.current[i],
       }));
       setBeatStates(states);
       setElapsedMs(elapsed);
 
       // Check completion
-      if (elapsed >= totalDurationMs + PRE_ROLL_MS) {
+      if (elapsed >= totalDurationMs) {
         // Finalize any remaining active beats as missed
         for (let i = 0; i < beats.length; i++) {
           if (beatStatesRef.current[i] === "upcoming" || beatStatesRef.current[i] === "active") {
@@ -250,7 +250,7 @@ export function RhythmExercise({
 
         // Final canvas update
         setBeatStates(beats.map((beat, i) => ({
-          beat: { ...beat, startMs: beat.startMs + PRE_ROLL_MS },
+          beat,
           status: beatStatesRef.current[i],
         })));
 
@@ -290,7 +290,7 @@ export function RhythmExercise({
   }, [onComplete]);
 
   const progress = isPlaying
-    ? Math.min(1, elapsedMs / (totalDurationMs + PRE_ROLL_MS))
+    ? Math.min(1, elapsedMs / totalDurationMs)
     : showScoreModal ? 1 : 0;
 
   return (

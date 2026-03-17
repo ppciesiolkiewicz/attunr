@@ -8,7 +8,7 @@ import HillBallCanvas from "@/components/HillBallCanvas";
 import { Button, CircularProgress, Text } from "@/components/ui";
 import { usePitchProgress } from "./usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
-import { ExerciseStartOverlay } from "../ExerciseStartOverlay";
+import { ExerciseStartButton } from "../ExerciseStartButton";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
@@ -189,7 +189,7 @@ export function PitchExercise({
         )}
 
         {/* Start overlay */}
-        {!hasStarted && <ExerciseStartOverlay onStart={handleExerciseStart} />}
+        {!hasStarted && <ExerciseStartButton onStart={handleExerciseStart} />}
 
         {/* Per-step checkmark (sequences only) */}
         {showStepCheck && (

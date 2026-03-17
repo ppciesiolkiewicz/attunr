@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { journey } from "@/constants/journey";
 import { Text } from "@/components/ui";
 import type { Settings } from "@/hooks/useSettings";
+import { toRoman } from "@/lib/format";
 import { ExerciseCard } from "./ExerciseCard";
 import { BadgeIcon } from "./BadgeIcon";
 
@@ -48,7 +49,7 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
               <header className="flex items-center gap-3 mb-0.5">
                 <div className="flex items-center gap-2 shrink-0">
                   <Text variant="label" as="span" color="muted-1">
-                    Chapter {chapter.chapter}
+                    Chapter {toRoman(chapter.chapter)}
                   </Text>
                   <Text variant="caption" as="span" color="text-2" className="font-medium">
                     {chapter.title}

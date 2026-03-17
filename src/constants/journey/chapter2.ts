@@ -101,11 +101,33 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         cardCue: "Tap along to the beat",
         tempo: 80,
         pattern: [
-          { type: "tap", duration: NoteDuration.Quarter },
-          { type: "tap", duration: NoteDuration.Quarter },
-          { type: "tap", duration: NoteDuration.Quarter },
-          { type: "tap", duration: NoteDuration.Quarter },
+          // 4-beat intro (metronome plays, not scored)
           { type: "pause", duration: NoteDuration.Quarter },
+          { type: "pause", duration: NoteDuration.Quarter },
+          { type: "pause", duration: NoteDuration.Quarter },
+          { type: "pause", duration: NoteDuration.Quarter },
+          // Row 1
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          // 2-beat pause
+          { type: "pause", duration: NoteDuration.Half },
+          // Row 2
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          // 2-beat pause
+          { type: "pause", duration: NoteDuration.Half },
+          // Row 3
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          { type: "tap", duration: NoteDuration.Quarter },
+          // 2-beat pause
+          { type: "pause", duration: NoteDuration.Half },
+          // Row 4
           { type: "tap", duration: NoteDuration.Quarter },
           { type: "tap", duration: NoteDuration.Quarter },
           { type: "tap", duration: NoteDuration.Quarter },

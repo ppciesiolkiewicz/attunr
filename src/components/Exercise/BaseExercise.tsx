@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { ExerciseConfig } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import { journey } from "@/constants/journey";
-import type { PitchDetectionExercise, PitchDetectionSlideExercise, ToneFollowExercise as ToneFollowExerciseType, MelodyExercise as MelodyExerciseType, RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise, PitchDetectionHillExercise as ResolvedHillExercise, ToneFollowExercise as ToneFollowExerciseType, MelodyExercise as MelodyExerciseType, RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
@@ -13,6 +13,7 @@ import { PitchExercise } from "./PitchExercise";
 import { ToneFollowExercise } from "./ToneFollowExercise";
 import { MelodyExercise } from "./MelodyExercise";
 import { RhythmExercise } from "./RhythmExercise";
+import { HillExercise } from "./HillExercise";
 
 interface BaseExerciseProps {
   exercise: ExerciseConfig;
@@ -161,6 +162,22 @@ export function BaseExercise({
           exerciseId={exerciseId}
           isLast={isLast}
           resolved={resolved as RhythmExerciseType}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
+        />
+      );
+
+    case "pitch-detection-hill":
+      return (
+        <HillExercise
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
+          resolved={resolved as ResolvedHillExercise}
+          pitchHz={pitchHz}
+          pitchHzRef={pitchHzRef}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}

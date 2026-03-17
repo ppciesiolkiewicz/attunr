@@ -1,4 +1,3 @@
-import { BandTargetKind } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator } from "./exercise-generator";
 
@@ -42,7 +41,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardCue: "Wake up your breath with simple sounds",
         targetSeconds: 15,
         cues: ["sss", "zzz", "sss"],
-        instruction: "Alternate between sss and zzz sounds. No pitch needed — just feel the vibration shift from voiceless to voiced.",
+        instruction: "Alternate between sss and zzz sounds. No pitch needed — just feel the vibration shift from voiceless to voiced.\nIt's okay to take breaths between sounds.",
       },
       {
         exerciseTypeId: "volume-detection",
@@ -51,7 +50,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardCue: "Get your lips buzzing without pitch pressure",
         targetSeconds: 15,
         cues: ["lip roll"],
-        instruction: "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz. Keep your jaw relaxed.",
+        instruction: "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
       },
     ],
   },
@@ -78,12 +77,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardCue: "Find your head voice with a light, owl-like sound",
         instruction: "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
       }),
-      gen.sustain({
+      gen.hillSustain({
         note: 1,
         seconds: 6,
-        title: "Simple U",
+        direction: "down",
+        title: "Low Uu",
         subtitle: "Chest voice · 6 seconds × 3",
-        cardCue: "Warm up your chest voice with a low U vowel",
+        cardCue: "Warm up your chest voice with a low Uu vowel",
         instruction: "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
       }),
       gen.lipRoll({
@@ -110,26 +110,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         subtitle: "Hum · 5 seconds × 3",
         instruction: "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
       }),
-      {
-        exerciseTypeId: "melody",
+      gen.majorSecond({
         title: "Major Second",
         subtitle: "Sing two notes · intervals",
         cardCue: "Your first melody — just two adjacent notes",
         tempo: 50,
-        melody: [
-          {
-            type: "major",
-            root: 3,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 2 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-            ],
-          },
-        ],
-        minScore: 0,
         instruction: "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match.",
-      },
+      }),
       gen.sustain({
         note: 4,
         seconds: 6,

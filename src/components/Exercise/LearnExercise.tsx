@@ -33,7 +33,9 @@ export function LearnExercise({
         <div className="max-w-lg mx-auto px-5 py-6 flex flex-col gap-6">
           <div className="pb-2 border-b border-white/[0.08]">
             <Text variant="heading">
-              Part {partRoman} — {partTitle}
+              <span className="hidden sm:inline">Chapter</span>
+              <span className="sm:hidden">Ch</span>
+              {" "}{partRoman} — {partTitle}
             </Text>
             <Text variant="body-sm" color="text-2" className="mt-0.5">
               {exercise.title} · {stepIndex} of {stepsInPart}

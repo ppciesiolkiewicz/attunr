@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import type { MelodyRectNote } from "@/components/PitchCanvas";
 import { Button, Text, Modal } from "@/components/ui";
-import { ExerciseStartOverlay } from "./ExerciseStartOverlay";
+import { ExerciseStartButton } from "./ExerciseStartButton";
 import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
@@ -273,7 +273,7 @@ export function MelodyExercise({
         />
 
         {/* Start overlay */}
-        {!hasStarted && <ExerciseStartOverlay onStart={handleExerciseStart} />}
+        {!hasStarted && <ExerciseStartButton onStart={handleExerciseStart} />}
       </div>
 
       {/* ── Bottom panel ──────────────────────────────────────────────────── */}

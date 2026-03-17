@@ -34,6 +34,7 @@ export type {
   LearnNotesConfig,
   PitchDetectionConfig,
   PitchDetectionSlideConfig,
+  PitchDetectionHillConfig,
   FarinelliBreathworkConfig,
   ToneFollowConfig,
   ToneFollowShape,

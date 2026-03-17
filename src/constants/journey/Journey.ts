@@ -174,6 +174,26 @@ export class Journey {
       };
     }
 
+    // Hill pitch exercises (Low Uu, Hoo Hoo)
+    if (exercise.exerciseTypeId === "pitch-detection-hill") {
+      for (const line of exercise.instruction.split("\n")) {
+        if (line.trim()) {
+          elements.push({
+            type: "paragraph",
+            text: line,
+            variant: elements.length === 0 ? undefined : "secondary",
+          });
+        }
+      }
+      const reps = exercise.notes.length;
+      const secs = exercise.notes[0]?.seconds ?? 0;
+      return {
+        title: exercise.title,
+        subtitle: `${secs}s × ${reps} reps`,
+        elements,
+      };
+    }
+
     // Pitch exercises — instruction paragraphs
     for (const line of exercise.instruction.split("\n")) {
       if (line.trim()) {
