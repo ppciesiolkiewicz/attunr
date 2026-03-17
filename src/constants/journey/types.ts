@@ -317,6 +317,7 @@ export interface Chapter {
   /** 1-indexed chapter number. */
   chapter: number;
   title: string;
+  description: string;
   /** Warmup stage — prompted if >4h since last warmup. Chapter 1 has none. */
   warmup?: StageConfig;
   stages: StageConfig[];
@@ -331,6 +332,7 @@ export interface StageConfigInput {
 export interface ChapterInput {
   chapter: number;
   title: string;
+  description: string;
   warmup?: StageConfigInput;
   stages: StageConfigInput[];
 }
