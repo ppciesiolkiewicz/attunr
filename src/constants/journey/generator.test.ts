@@ -3,7 +3,7 @@ import { ExerciseGenerator } from "./generator";
 import { BandTargetKind, NoteDuration } from "./types";
 
 const gen = new ExerciseGenerator();
-const base = { part: 1, title: "Test", instruction: "Test instruction" };
+const base = { title: "Test", instruction: "Test instruction" };
 
 // ── interval() ───────────────────────────────────────────────────────────────
 
@@ -327,19 +327,18 @@ describe("farinelli()", () => {
 // ── Common params ─────────────────────────────────────────────────────────────
 
 describe("common params", () => {
-  it("passes through part, title, subtitle, cardCue, instruction", () => {
+  it("passes through title, subtitle, cardCue, instruction", () => {
     const params = {
-      part: 3,
       title: "My Title",
       subtitle: "My Subtitle",
       cardCue: "Card cue text",
       instruction: "Do the thing",
     };
     const result = gen.farinelli({ ...params, maxCount: 7 });
-    expect(result.part).toBe(3);
     expect(result.title).toBe("My Title");
     expect(result.subtitle).toBe("My Subtitle");
     expect(result.cardCue).toBe("Card cue text");
+    if (result.exerciseTypeId !== "breathwork-farinelli") throw new Error("wrong type");
     expect(result.instruction).toBe("Do the thing");
   });
 

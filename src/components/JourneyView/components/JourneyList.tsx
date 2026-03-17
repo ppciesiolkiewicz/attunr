@@ -1,14 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import {
-  JOURNEY_CONFIG,
-} from "@/constants/journey";
+import { JOURNEY_CONFIG } from "@/constants/journey";
 import { Text } from "@/components/ui";
 import type { Settings } from "@/hooks/useSettings";
 import { ExerciseCard } from "./ExerciseCard";
 import { BadgeIcon } from "./BadgeIcon";
-import { toRoman } from "../utils";
 
 interface JourneyListProps {
   settings: Settings;
@@ -37,21 +34,26 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
           </Text>
         </div>
 
-        {JOURNEY_CONFIG.map((part) => {
-          if (part.exercises.length === 0) return null;
-          const lastExerciseId = part.exercises[part.exercises.length - 1].id;
-          const partComplete = highestCompleted >= lastExerciseId;
+        {JOURNEY_CONFIG.map((chapter) => {
+          const allStages = chapter.warmup
+            ? [chapter.warmup, ...chapter.stages]
+            : chapter.stages;
+          const allExercises = allStages.flatMap((s) => s.exercises);
+          if (allExercises.length === 0) return null;
+          const lastExerciseId = allExercises[allExercises.length - 1].id;
+          const chapterComplete = highestCompleted >= lastExerciseId;
+
           return (
-            <section key={part.part} className="flex flex-col gap-2">
+            <section key={chapter.chapter} className="flex flex-col gap-2">
               <header className="flex items-center gap-3 mb-0.5">
                 <div className="flex items-center gap-2 shrink-0">
                   <Text variant="label" as="span" color="muted-1">
-                    Part {toRoman(part.part)}
+                    Chapter {chapter.chapter}
                   </Text>
                   <Text variant="caption" as="span" color="text-2" className="font-medium">
-                    {part.title}
+                    {chapter.title}
                   </Text>
-                  {partComplete && (
+                  {chapterComplete && (
                     <BadgeIcon
                       className="text-violet-400/90"
                       style={{ width: 12, height: 12 }}
@@ -60,13 +62,21 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
                 </div>
                 <div className="flex-1 h-px bg-white/[0.05]" />
               </header>
-              {part.exercises.map((exercise) => (
-                <ExerciseCard
-                  key={exercise.id}
-                  exercise={exercise}
-                  highestCompleted={highestCompleted}
-                  onSelect={onSelect}
-                />
+
+              {allStages.map((stage) => (
+                <div key={stage.id} className="flex flex-col gap-1.5">
+                  <Text variant="caption" as="span" color="muted-2" className="pl-1 pt-1">
+                    {stage.title}
+                  </Text>
+                  {stage.exercises.map((exercise) => (
+                    <ExerciseCard
+                      key={exercise.id}
+                      exercise={exercise}
+                      highestCompleted={highestCompleted}
+                      onSelect={onSelect}
+                    />
+                  ))}
+                </div>
               ))}
             </section>
           );

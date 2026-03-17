@@ -11,6 +11,7 @@ export interface Settings {
   vocalRangeHighHz: number; // detected high comfortable Hz (0 = not set)
   notificationsEnabled: boolean;
   practiceFrequency: PracticeFrequency;
+  lastWarmupCompletedAt: number; // epoch ms, 0 = never
 }
 
 const DEFAULTS: Settings = {
@@ -20,6 +21,7 @@ const DEFAULTS: Settings = {
   vocalRangeHighHz: 0,
   notificationsEnabled: false,
   practiceFrequency: "daily",
+  lastWarmupCompletedAt: 0,
 };
 
 const KEYS: Record<keyof Settings, string> = {
@@ -29,6 +31,7 @@ const KEYS: Record<keyof Settings, string> = {
   vocalRangeHighHz:         "attunr.vocalRangeHighHz",
   notificationsEnabled:     "attunr.notificationsEnabled",
   practiceFrequency:        "attunr.practiceFrequency",
+  lastWarmupCompletedAt:    "attunr.lastWarmupCompletedAt",
 };
 
 function readStorage(): Partial<Settings> {
@@ -38,7 +41,8 @@ function readStorage(): Partial<Settings> {
     const lowRaw    = localStorage.getItem(KEYS.vocalRangeLowHz);
     const highRaw   = localStorage.getItem(KEYS.vocalRangeHighHz);
     const notifEnabled = localStorage.getItem(KEYS.notificationsEnabled);
-    const frequency = localStorage.getItem(KEYS.practiceFrequency) as PracticeFrequency | null;
+    const frequency  = localStorage.getItem(KEYS.practiceFrequency) as PracticeFrequency | null;
+    const warmupRaw  = localStorage.getItem(KEYS.lastWarmupCompletedAt);
     return {
       ...(tuning       && { tuning }),
       ...(stageRaw     && { journeyStage: parseInt(stageRaw, 10) }),
@@ -46,6 +50,7 @@ function readStorage(): Partial<Settings> {
       ...(highRaw      && { vocalRangeHighHz: parseFloat(highRaw) }),
       ...(notifEnabled && { notificationsEnabled: notifEnabled === "true" }),
       ...(frequency    && { practiceFrequency: frequency }),
+      ...(warmupRaw && { lastWarmupCompletedAt: parseInt(warmupRaw, 10) }),
     };
   } catch {
     return {};

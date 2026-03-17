@@ -8,8 +8,7 @@ import { JOURNEY_EXERCISES } from "@/constants/journey";
 import {
   addSkippedInfoExerciseId,
   getExerciseDisplayColors,
-  getStepInPart,
-  toRoman,
+  getStepInStage,
 } from "../utils";
 import { BookIcon } from "./BookIcon";
 
@@ -76,13 +75,12 @@ export function ExerciseInfoModal({
             <Text variant="caption" className="mb-1 flex items-center gap-1.5">
               {isLearnExercise && <BookIcon className="opacity-70" />}
               <Text as="span" variant="label" color="muted-1">
-                Part{" "}
-                {toRoman(exercise.part)}
+                Ch {exercise.chapter}
               </Text>
               <Text as="span" variant="caption" color="muted-1">·</Text>
               <Text as="span" variant="caption">
-                {getStepInPart(exerciseId).stepIndex} of{" "}
-                {getStepInPart(exerciseId).stepsInPart}
+                {getStepInStage(exerciseId).stepIndex} of{" "}
+                {getStepInStage(exerciseId).stepsInStage}
               </Text>
             </Text>
             <Text variant="heading">

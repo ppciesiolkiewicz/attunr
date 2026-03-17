@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { InfoButton } from "../../TabInfoModal";
 import { Button, Text } from "@/components/ui";
-import { getSkippedInfoExerciseIds, getStepInPart, toRoman } from "../utils";
+import { getSkippedInfoExerciseIds, getStepInStage } from "../utils";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { BaseExercise } from "@/components/Exercise";
 import { PartCompleteModal } from "./PartCompleteModal";
@@ -48,7 +48,9 @@ export function JourneyExercise({
   const highestCompleted = settings.journeyStage;
   const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId)!;
   const isCompleted = exerciseId <= highestCompleted;
-  const partTitle = JOURNEY_CONFIG.find((p) => p.part === exercise.part)?.title ?? "";
+  const chapter = JOURNEY_CONFIG.find((ch) => ch.chapter === exercise.chapter);
+  const allStages = chapter ? (chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages) : [];
+  const stageTitle = allStages.find((s) => s.id === exercise.stageId)?.title ?? "";
 
   const vocalRange: VocalRange = useMemo(() => {
     const lowHz = settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131;
@@ -89,8 +91,8 @@ export function JourneyExercise({
   }, [partCompleteData, exerciseId, router]);
 
   useEffect(() => {
-    analytics.journeyExerciseStarted(exerciseId, exercise.part, partTitle);
-  }, [exerciseId, exercise.part, partTitle]);
+    analytics.journeyExerciseStarted(exerciseId, exercise.chapter, stageTitle);
+  }, [exerciseId, exercise.chapter, stageTitle]);
 
   // ── Navigation ─────────────────────────────────────────────────────────
 
@@ -102,13 +104,13 @@ export function JourneyExercise({
   function goToNextExercise(markComplete: boolean) {
     if (markComplete) {
       onSettingsUpdate("journeyStage", Math.max(highestCompleted, exerciseId));
-      analytics.journeyExerciseCompleted(exerciseId, exercise.part);
+      analytics.journeyExerciseCompleted(exerciseId, exercise.chapter);
     }
     if (exercise.completionModal) {
-      analytics.journeyPartCompleted(exercise.part, partTitle);
+      analytics.journeyPartCompleted(exercise.chapter, stageTitle);
       setPartCompleteData({
-        part: exercise.part,
-        partName: partTitle,
+        part: exercise.chapter,
+        partName: stageTitle,
         modalConfig: exercise.completionModal,
       });
     } else {
@@ -140,15 +142,15 @@ export function JourneyExercise({
         </Button>
         <Text variant="caption" as="span" color="muted-2">|</Text>
         <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
-          Part {toRoman(exercise.part)}
+          Ch {exercise.chapter}
         </Text>
         <Text variant="caption" as="span" color="text-2" className="hidden md:inline font-medium shrink-0">
-          — {partTitle}
+          — {stageTitle}
         </Text>
         <Text variant="caption" as="span" color="muted-2">·</Text>
         <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
-          {getStepInPart(exerciseId).stepIndex} of{" "}
-          {getStepInPart(exerciseId).stepsInPart}
+          {getStepInStage(exerciseId).stepIndex} of{" "}
+          {getStepInStage(exerciseId).stepsInStage}
         </Text>
         <Text variant="caption" as="span" color="muted-2">—</Text>
         <Text variant="caption" as="span" color="text-2" className="sm:text-sm font-medium truncate min-w-0">
@@ -175,10 +177,10 @@ export function JourneyExercise({
       <BaseExercise
         exercise={exercise}
         exerciseId={exerciseId}
-        partTitle={partTitle}
-        partRoman={toRoman(exercise.part)}
-        stepIndex={getStepInPart(exerciseId).stepIndex}
-        stepsInPart={getStepInPart(exerciseId).stepsInPart}
+        partTitle={stageTitle}
+        partRoman={String(exercise.chapter)}
+        stepIndex={getStepInStage(exerciseId).stepIndex}
+        stepsInPart={getStepInStage(exerciseId).stepsInStage}
         isLast={exerciseId === JOURNEY_EXERCISES[JOURNEY_EXERCISES.length - 1]?.id}
         vocalRange={vocalRange}
         pitchHz={pitchHz}

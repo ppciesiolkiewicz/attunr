@@ -71,6 +71,14 @@ export default function LandingPageV5() {
     <div className="h-full overflow-y-auto landing-scroll" style={{ background: "#080810", color: "#ebe8f5", fontFamily: `"Outfit", sans-serif` }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Outfit:wght@300;400;500&display=swap');
+        .v5-btn {
+          transition: all 0.6s ease !important;
+        }
+        .v5-btn:hover {
+          box-shadow: 0 0 40px rgba(139,92,246,0.35), 0 0 80px rgba(139,92,246,0.15), inset 0 1px 0 rgba(255,255,255,0.15) !important;
+          border-color: rgba(139,92,246,0.7) !important;
+          background: linear-gradient(135deg, rgba(139,92,246,0.35), rgba(99,102,241,0.2)) !important;
+        }
         .v5-grain::after {
           content: '';
           position: fixed;
@@ -131,7 +139,7 @@ export default function LandingPageV5() {
             <Link href="/journey">
               <Button
                 size="lg"
-                className="px-14 text-lg cursor-pointer"
+                className="v5-btn px-14 text-lg cursor-pointer"
                 style={{
                   fontFamily: fraunces,
                   letterSpacing: "0.08em",
@@ -243,18 +251,19 @@ export default function LandingPageV5() {
 
             <div className="relative flex flex-col gap-16 pl-12 sm:pl-16">
               <div
-                className="absolute left-[15px] sm:left-[19px] top-3 bottom-3 w-px"
+                className="absolute left-[19px] sm:left-[35px] top-6 bottom-6 w-px"
                 style={{ background: "linear-gradient(to bottom, rgba(139,92,246,0.3), rgba(139,92,246,0.08))" }}
               />
               {STEPS.map((step, i) => (
                 <div key={step.title} className="relative flex gap-6 sm:gap-8 items-start">
-                  <div className="absolute left-[-48px] sm:left-[-64px] top-1 flex items-center justify-center">
+                  <div className="absolute left-[-48px] sm:left-[-64px] -top-0.5 flex items-center justify-center">
                     <div
-                      className="w-[30px] h-[30px] sm:w-[38px] sm:h-[38px] rounded-full flex items-center justify-center text-xs sm:text-sm"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm sm:text-base"
                       style={{
-                        background: "rgba(139,92,246,0.12)",
-                        border: "1px solid rgba(139,92,246,0.25)",
-                        color: "rgba(167,139,250,0.8)",
+                        background: "#0c0c18",
+                        border: "1px solid rgba(139,92,246,0.3)",
+                        boxShadow: "0 0 12px rgba(139,92,246,0.15)",
+                        color: "rgba(167,139,250,0.9)",
                         fontFamily: fraunces,
                         fontWeight: 700,
                       }}
@@ -294,7 +303,7 @@ export default function LandingPageV5() {
             <Link href="/journey">
               <Button
                 size="lg"
-                className="px-14 text-lg cursor-pointer"
+                className="v5-btn px-14 text-lg cursor-pointer"
                 style={{
                   fontFamily: fraunces,
                   letterSpacing: "0.08em",

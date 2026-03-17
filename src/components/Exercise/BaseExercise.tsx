@@ -8,6 +8,7 @@ import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneF
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
+import { VolumeDetectionExerciseContent } from "./VolumeDetectionExercise";
 import { PitchExercise } from "./PitchExercise";
 import { ToneFollowExercise } from "./ToneFollowExercise";
 import { MelodyExercise } from "./MelodyExercise";
@@ -60,7 +61,8 @@ export function BaseExercise({
     if (
       exercise.exerciseTypeId === "learn" ||
       exercise.exerciseTypeId === "learn-notes-1" ||
-      exercise.exerciseTypeId === "breathwork-farinelli"
+      exercise.exerciseTypeId === "breathwork-farinelli" ||
+      exercise.exerciseTypeId === "volume-detection"
     ) {
       return null;
     }
@@ -131,6 +133,19 @@ export function BaseExercise({
           isLast={isLast}
           resolved={resolved as ResolvedMelody}
           pitchHzRef={pitchHzRef}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
+        />
+      );
+
+    case "volume-detection":
+      return (
+        <VolumeDetectionExerciseContent
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}

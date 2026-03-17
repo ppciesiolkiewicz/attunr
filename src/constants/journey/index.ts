@@ -1,32 +1,15 @@
-import type { JourneyExercise, JourneyPart, JourneyPartInput, ModalConfig, ContentElement } from "./types";
+import type { JourneyExercise, Chapter, ChapterInput, StageConfigInput, ModalConfig, ContentElement } from "./types";
 import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
-import { PART_1_EXERCISES } from "./part1";
-import { PART_2_EXERCISES } from "./part2";
-import { PART_3_EXERCISES } from "./part3";
-import { PART_4_EXERCISES } from "./part4";
-import { PART_5_EXERCISES } from "./part5";
-// Parts 6–20 temporarily commented out during scale-based targeting migration
-// import { PART_6_EXERCISES } from "./part6";
-// import { PART_7_EXERCISES } from "./part7";
-// import { PART_8_EXERCISES } from "./part8";
-// import { PART_9_EXERCISES } from "./part9";
-// import { PART_10_EXERCISES } from "./part10";
-// import { PART_11_EXERCISES } from "./part11";
-// import { PART_12_EXERCISES } from "./part12";
-// import { PART_13_EXERCISES } from "./part13";
-// import { PART_14_EXERCISES } from "./part14";
-// import { PART_15_EXERCISES } from "./part15";
-// import { PART_16_EXERCISES } from "./part16";
-// import { PART_17_EXERCISES } from "./part17";
-// import { PART_18_EXERCISES } from "./part18";
-// import { PART_19_EXERCISES } from "./part19";
-// import { PART_20_EXERCISES } from "./part20";
+import { CHAPTER_1_STAGES } from "./chapter1";
+import { CHAPTER_2_WARMUP, CHAPTER_2_STAGES } from "./chapter2";
 
 export type {
   JourneyExercise,
   JourneyExerciseInput,
-  JourneyPart,
-  JourneyPartInput,
+  Chapter,
+  ChapterInput,
+  StageConfig,
+  StageConfigInput,
   ExerciseTypeId,
   ModalConfig,
   ContentElement,
@@ -54,6 +37,7 @@ export type {
   MelodyEvent,
   DisplayNote,
   DisplayScale,
+  VolumeDetectionExercise,
 } from "./types";
 
 export { NoteDuration, BandTargetKind } from "./types";
@@ -126,6 +110,24 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
     };
   }
 
+  // Volume detection exercises — accumulate sound
+  if (exercise.exerciseTypeId === "volume-detection") {
+    for (const line of exercise.instruction.split("\n")) {
+      if (line.trim()) {
+        elements.push({
+          type: "paragraph",
+          text: line,
+          variant: elements.length === 0 ? undefined : "secondary",
+        });
+      }
+    }
+    return {
+      title: exercise.title,
+      subtitle: `Make sound for ${exercise.targetSeconds} seconds`,
+      elements,
+    };
+  }
+
   // Pitch exercises — instruction paragraphs
   for (const line of exercise.instruction.split("\n")) {
     if (line.trim()) {
@@ -152,55 +154,60 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
   return { title: exercise.title, subtitle, elements };
 }
 
-/** Assign sequential IDs (1-based) to all exercises across all parts. */
-function assignIds(parts: JourneyPartInput[]): JourneyPart[] {
+/** Assign sequential IDs (1-based), chapter, and stageId to all exercises across all chapters. */
+function assignIds(chapters: ChapterInput[]): Chapter[] {
   let nextId = 1;
-  return parts.map((part) => ({
-    ...part,
-    exercises: part.exercises.map((ex) => ({ ...ex, id: nextId++ }) as JourneyExercise),
-  }));
+  return chapters.map((ch) => {
+    function processStage(stage: StageConfigInput) {
+      return {
+        ...stage,
+        exercises: stage.exercises.map((ex) => ({
+          ...ex,
+          id: nextId++,
+          chapter: ch.chapter,
+          stageId: stage.id,
+        }) as JourneyExercise),
+      };
+    }
+    return {
+      ...ch,
+      warmup: ch.warmup ? processStage(ch.warmup) : undefined,
+      stages: ch.stages.map(processStage),
+    };
+  });
 }
 
 /** Walk all exercises and generate introModal for non-learn exercises. */
-function withIntroModals(config: JourneyPart[]): JourneyPart[] {
-  return config.map((part) => ({
-    ...part,
-    exercises: part.exercises.map((ex) => {
-      const introModal = buildIntroModal(ex);
-      return introModal ? { ...ex, introModal } : ex;
-    }),
+function withIntroModals(config: Chapter[]): Chapter[] {
+  function processStage(stage: Chapter["stages"][number]) {
+    return {
+      ...stage,
+      exercises: stage.exercises.map((ex) => {
+        const introModal = buildIntroModal(ex);
+        return introModal ? { ...ex, introModal } : ex;
+      }),
+    };
+  }
+  return config.map((ch) => ({
+    ...ch,
+    warmup: ch.warmup ? processStage(ch.warmup) : undefined,
+    stages: ch.stages.map(processStage),
   }));
 }
 
-export const JOURNEY_CONFIG: JourneyPart[] = withIntroModals(assignIds([
-  { part: 1, title: "Introduction", exercises: PART_1_EXERCISES },
-  { part: 2, title: "First Sounds", exercises: PART_2_EXERCISES },
-  { part: 3, title: "Lip Rolls & Breath", exercises: PART_3_EXERCISES },
-  { part: 4, title: "Low Resonance", exercises: PART_4_EXERCISES },
-  { part: 5, title: "Building Range", exercises: PART_5_EXERCISES },
-  // Parts 6–20 temporarily commented out during scale-based targeting migration
-  // { part: 6, title: "Rounded Vowels", exercises: PART_6_EXERCISES },
-  // { part: 7, title: "Vowel Warmth", exercises: PART_7_EXERCISES },
-  // { part: 8, title: "The Open AH", exercises: PART_8_EXERCISES },
-  // { part: 9, title: "Breath & Body", exercises: PART_9_EXERCISES },
-  // { part: 10, title: "Sequences & Range", exercises: PART_10_EXERCISES },
-  // { part: 11, title: "Chakras — Earth", exercises: PART_11_EXERCISES },
-  // { part: 12, title: "Chakras — Sky", exercises: PART_12_EXERCISES },
-  // { part: 13, title: "Forward EH", exercises: PART_13_EXERCISES },
-  // { part: 14, title: "EH Mastery", exercises: PART_14_EXERCISES },
-  // { part: 15, title: "Warmup III", exercises: PART_15_EXERCISES },
-  // { part: 16, title: "Vowel EE", exercises: PART_16_EXERCISES },
-  // { part: 17, title: "EE & Brightness", exercises: PART_17_EXERCISES },
-  // { part: 18, title: "Vowel Flow", exercises: PART_18_EXERCISES },
-  // { part: 19, title: "Vowel Mastery", exercises: PART_19_EXERCISES },
-  // { part: 20, title: "Vocal Control", exercises: PART_20_EXERCISES },
+export const JOURNEY_CONFIG: Chapter[] = withIntroModals(assignIds([
+  { chapter: 1, title: "Introduction", stages: CHAPTER_1_STAGES },
+  { chapter: 2, title: "Building Foundation", warmup: CHAPTER_2_WARMUP, stages: CHAPTER_2_STAGES },
 ]));
 
-/** Flat list of all exercises across all parts. */
+/** Flat list of all exercises across all chapters. */
 export const JOURNEY_EXERCISES: JourneyExercise[] =
-  JOURNEY_CONFIG.flatMap((p) => p.exercises);
+  JOURNEY_CONFIG.flatMap((ch) => {
+    const stages = ch.warmup ? [ch.warmup, ...ch.stages] : ch.stages;
+    return stages.flatMap((s) => s.exercises);
+  });
 
-/** Find the next available exercise after the given ID (handles gaps from removed parts). */
+/** Find the next available exercise after the given ID (handles gaps from removed stages). */
 export function getNextExerciseId(currentId: number): number | null {
   const idx = JOURNEY_EXERCISES.findIndex((e) => e.id === currentId);
   if (idx < 0 || idx >= JOURNEY_EXERCISES.length - 1) return null;

@@ -13,7 +13,8 @@ export type ExerciseTypeId =
   | "pitch-detection-slide"       // glide between two pitches
   | "breathwork-farinelli"        // Farinelli breathing cycles, no pitch detection
   | "tone-follow"                 // play tone and follow along (no mic detection)
-  | "melody";                     // sing along to scrolling melody with scoring
+  | "melody"                      // sing along to scrolling melody with scoring
+  | "volume-detection";           // accumulate sound for targetSeconds to complete
 
 /** 1-indexed chromatic degree from user's lowest note (1 = lowest). Negative values count from top (-1 = highest). */
 export type ChromaticDegree = number;
@@ -108,8 +109,10 @@ export interface BaseExerciseConfig {
   /** Unique exercise ID — assigned automatically by index.ts from array position. */
   id: number;
   exerciseTypeId: ExerciseTypeId;
-  /** Part number (1–20). Shown in headers and completion modals. */
-  part: number;
+  /** 1-indexed chapter number — assigned automatically by index.ts. */
+  chapter: number;
+  /** Stage ID slug (e.g. "ch1-wake-up") — assigned automatically by index.ts. */
+  stageId: string;
   title: string;
   /** Secondary text shown in exercise header. */
   subtitle?: string;
@@ -238,6 +241,15 @@ export interface MelodyExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
+export interface VolumeDetectionExercise extends BaseExerciseConfig {
+  exerciseTypeId: "volume-detection";
+  /** Seconds of accumulated sound needed to complete. */
+  targetSeconds: number;
+  /** Cue labels that cycle on screen (e.g. ["sss", "zzz", "sss"]). */
+  cues: string[];
+  instruction: string;
+}
+
 export type JourneyExercise =
   | LearnExercise
   | LearnNotesExercise
@@ -245,23 +257,40 @@ export type JourneyExercise =
   | PitchDetectionSlideExercise
   | FarinelliBreathworkExercise
   | ToneFollowExercise
-  | MelodyExercise;
+  | MelodyExercise
+  | VolumeDetectionExercise;
 
-/** Input type for part files — `id` is assigned automatically in index.ts. */
+/** Input type for part files — `id`, `chapter`, and `stageId` are assigned automatically in index.ts. */
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
-export type JourneyExerciseInput = DistributiveOmit<JourneyExercise, "id">;
+export type JourneyExerciseInput = DistributiveOmit<JourneyExercise, "id" | "chapter" | "stageId">;
 
-// ── Journey part ─────────────────────────────────────────────────────────────
+// ── Journey structure ─────────────────────────────────────────────────────────
 
-export interface JourneyPart {
-  part: number;
+export interface StageConfig {
+  /** Stable slug for progress tracking (e.g. "ch1-wake-up", "ch2-warmup"). */
+  id: string;
   title: string;
   exercises: JourneyExercise[];
 }
 
-/** Journey part before IDs are assigned. */
-export interface JourneyPartInput {
-  part: number;
+export interface Chapter {
+  /** 1-indexed chapter number. */
+  chapter: number;
+  title: string;
+  /** Warmup stage — prompted if >4h since last warmup. Chapter 1 has none. */
+  warmup?: StageConfig;
+  stages: StageConfig[];
+}
+
+export interface StageConfigInput {
+  id: string;
   title: string;
   exercises: JourneyExerciseInput[];
+}
+
+export interface ChapterInput {
+  chapter: number;
+  title: string;
+  warmup?: StageConfigInput;
+  stages: StageConfigInput[];
 }

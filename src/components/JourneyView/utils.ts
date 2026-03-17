@@ -40,27 +40,13 @@ export function addSkippedInfoExerciseId(exerciseId: number) {
   }
 }
 
-export function getStepInPart(exerciseId: number): {
+export function getStepInStage(exerciseId: number): {
   stepIndex: number;
-  stepsInPart: number;
+  stepsInStage: number;
 } {
   const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId);
-  if (!exercise) return { stepIndex: 1, stepsInPart: 1 };
-  const partExercises = JOURNEY_EXERCISES.filter((e) => e.part === exercise.part);
-  const stepIndex = partExercises.findIndex((e) => e.id === exerciseId) + 1;
-  return { stepIndex, stepsInPart: partExercises.length };
-}
-
-/** Convert an integer (1–20+) to a Roman numeral string. */
-export function toRoman(n: number): string {
-  const vals = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-  const syms = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
-  let result = "";
-  for (let i = 0; i < vals.length; i++) {
-    while (n >= vals[i]) {
-      result += syms[i];
-      n -= vals[i];
-    }
-  }
-  return result;
+  if (!exercise) return { stepIndex: 1, stepsInStage: 1 };
+  const stageExercises = JOURNEY_EXERCISES.filter((e) => e.stageId === exercise.stageId);
+  const stepIndex = stageExercises.findIndex((e) => e.id === exerciseId) + 1;
+  return { stepIndex, stepsInStage: stageExercises.length };
 }

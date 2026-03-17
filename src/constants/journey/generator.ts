@@ -12,7 +12,6 @@ import { BandTargetKind, NoteDuration } from "./types";
 // ── Param interfaces ──────────────────────────────────────────────────────────
 
 export interface CommonParams {
-  part: number;
   title: string;
   subtitle?: string;
   cardCue?: string;
@@ -120,7 +119,7 @@ export class ExerciseGenerator {
    */
   interval(params: IntervalParams): JourneyExerciseInput {
     const {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       startNote, endNote, chromaticDegree,
       tempo = 80,
       noteDuration = NoteDuration.Half,
@@ -150,7 +149,7 @@ export class ExerciseGenerator {
     }
 
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "melody",
       tempo,
       melody,
@@ -165,7 +164,7 @@ export class ExerciseGenerator {
    */
   scale(params: ScaleParams): JourneyExerciseInput {
     const {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       startNote, endNote, scaleType,
       tempo = 80,
       noteDuration = NoteDuration.Half,
@@ -186,7 +185,7 @@ export class ExerciseGenerator {
     const melody: MelodyScale[] = [{ type: scaleType, root: lo, events }];
 
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "melody",
       tempo,
       melody,
@@ -202,7 +201,7 @@ export class ExerciseGenerator {
    */
   scaleDegrees(params: ScaleDegreeParams): JourneyExerciseInput {
     const {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       startNote, endNote,
       scaleType = "major",
       tempo = 80,
@@ -224,7 +223,7 @@ export class ExerciseGenerator {
     const melody: MelodyScale[] = [{ type: scaleType, root: lo, events }];
 
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "melody",
       tempo,
       melody,
@@ -288,9 +287,9 @@ export class ExerciseGenerator {
    * Single Range target from: 1, to: boundaryNote, accept: "below".
    */
   zoneBelow(params: ZoneBelowParams): JourneyExerciseInput {
-    const { part, title, subtitle, cardCue, instruction, introModal, completionModal, boundaryNote, seconds } = params;
+    const { title, subtitle, cardCue, instruction, introModal, completionModal, boundaryNote, seconds } = params;
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       notes: [
@@ -307,9 +306,9 @@ export class ExerciseGenerator {
    * Range from: boundaryNote, to: -1, accept: "above".
    */
   zoneAbove(params: ZoneAboveParams): JourneyExerciseInput {
-    const { part, title, subtitle, cardCue, instruction, introModal, completionModal, boundaryNote, seconds } = params;
+    const { title, subtitle, cardCue, instruction, introModal, completionModal, boundaryNote, seconds } = params;
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       notes: [
@@ -326,9 +325,9 @@ export class ExerciseGenerator {
    * Range from: lowNote, to: highNote, accept: "within".
    */
   zoneBetween(params: ZoneBetweenParams): JourneyExerciseInput {
-    const { part, title, subtitle, cardCue, instruction, introModal, completionModal, lowNote, highNote, seconds } = params;
+    const { title, subtitle, cardCue, instruction, introModal, completionModal, lowNote, highNote, seconds } = params;
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       notes: [
@@ -345,9 +344,9 @@ export class ExerciseGenerator {
    * Chromatic scale, major display notes (notes: []), slide toneShape from startNote to endNote.
    */
   lipRoll(params: LipRollParams): JourneyExerciseInput {
-    const { part, title, subtitle, cardCue, instruction, introModal, completionModal, startNote, endNote, requiredPlays } = params;
+    const { title, subtitle, cardCue, instruction, introModal, completionModal, startNote, endNote, requiredPlays } = params;
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: 1 },
       displayNotes: [{ type: "major", root: 1, notes: [] }],
@@ -362,9 +361,9 @@ export class ExerciseGenerator {
 
   /** Farinelli breathwork exercise. */
   farinelli(params: FarinelliParams): JourneyExerciseInput {
-    const { part, title, subtitle, cardCue, instruction, introModal, completionModal, maxCount } = params;
+    const { title, subtitle, cardCue, instruction, introModal, completionModal, maxCount } = params;
     return {
-      part, title, subtitle, cardCue, instruction, introModal, completionModal,
+      title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "breathwork-farinelli",
       maxCount,
     };

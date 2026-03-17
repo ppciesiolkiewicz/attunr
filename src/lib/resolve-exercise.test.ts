@@ -18,7 +18,7 @@ import type { VocalRange } from "@/constants/tone-slots";
 
 // ── Test vocal range (C3–C5) ────────────────────────────────────────────────
 
-const allNotes = getScaleNotesForRange(131, 523, 440);
+const allNotes = getScaleNotesForRange(131, 523, "A440");
 const testVocalRange: VocalRange = {
   lowNote: "C3",
   highNote: "C5",
@@ -27,7 +27,8 @@ const testVocalRange: VocalRange = {
 
 const base = {
   id: 1,
-  part: 1,
+  chapter: 1,
+  stageId: "test",
   title: "Test",
   subtitle: "test",
   instruction: "Test instruction",
