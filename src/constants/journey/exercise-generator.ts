@@ -182,7 +182,7 @@ export class ExerciseGenerator {
         { type: "pause", duration: NoteDuration.Eighth },
         { type: "note", target: toTarget(1), duration: noteDuration },
         { type: "note", target: toTarget(chromaticDegree), duration: noteDuration },
-        { type: "note", target: toTarget(chromaticDegree), duration: noteDuration },
+        { type: "note", target: toTarget(1), duration: noteDuration },
       ];
       return { type: "chromatic" as const, root, events };
     });
