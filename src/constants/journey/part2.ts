@@ -18,7 +18,8 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     subtitle: "Chest voice · 5 seconds",
     scale: { type: "chromatic", root: 1 },
     showEnableNotificationsPrompt: true,
-    notes: [{ target: { kind: BandTargetKind.Range, from: 1, to: 3, accept: "below" }, seconds: 5 }],
+    toneShape: { kind: "wobble" },
+    notes: [{ target: { kind: BandTargetKind.Range, from: 3, to: 5, accept: "below" }, seconds: 5 }],
     instruction:
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
@@ -27,7 +28,8 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     title: "Hoo hoo",
     subtitle: "Head voice · 5 seconds",
     scale: { type: "chromatic", root: 1 },
-    notes: [{ target: { kind: BandTargetKind.Range, from: -3, to: -1, accept: "above" }, seconds: 5 }],
+    toneShape: { kind: "owl-hoot" },
+    notes: [{ target: { kind: BandTargetKind.Range, from: -5, to: -3, accept: "above" }, seconds: 5 }],
     instruction:
       "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
   },

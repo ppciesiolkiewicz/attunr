@@ -1,12 +1,14 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import BalanceBallCanvas from "@/components/BalanceBallCanvas";
 import HillBallCanvas from "@/components/HillBallCanvas";
 import { Button, CircularProgress, Text } from "@/components/ui";
 import { usePitchProgress } from "./usePitchProgress";
+import { useTonePlayer } from "@/hooks/useTonePlayer";
+import { ExerciseStartOverlay } from "../ExerciseStartOverlay";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
@@ -24,7 +26,7 @@ interface PitchExerciseProps {
   onComplete: () => void;
   onSkip: () => void;
   onPrev?: () => void;
-  onPlayTone: (note: ColoredNote) => void;
+  onPlayTone?: (note: ColoredNote) => void;
   onPlaySlide?: (from: ColoredNote, to: ColoredNote) => void;
 }
 
@@ -39,9 +41,12 @@ export function PitchExercise({
   onComplete,
   onSkip,
   onPrev,
-  onPlayTone,
-  onPlaySlide,
 }: PitchExerciseProps) {
+  // ── Start / detection gating ────────────────────────────────────────────────
+  const [hasStarted, setHasStarted] = useState(false);
+  const [detectionActive, setDetectionActive] = useState(false);
+  const { playTone: playRawTone, playWobble, playOwlHoot } = useTonePlayer();
+
   // ── Derived from resolved data ──────────────────────────────────────────────
   const { displayNotes, highlightIds } = resolved;
 
@@ -65,8 +70,8 @@ export function PitchExercise({
   }, [resolved]);
 
   // ── Progress (RAF loop in hook) ──────────────────────────────────────────
-  const { progress, seqIndex, slideCount, stageComplete: exerciseComplete, showStepCheck } =
-    usePitchProgress({ exercise, exerciseId, resolved, pitchHzRef });
+  const { progress, seqIndex, slideCount, stageComplete: exerciseComplete, showStepCheck, resetProgress } =
+    usePitchProgress({ exercise, exerciseId, resolved, pitchHzRef, enabled: detectionActive });
 
   const [showCongrats, setShowCongrats] = useState(false);
 
@@ -79,35 +84,42 @@ export function PitchExercise({
   }, [exerciseComplete]);
 
   // ── Tone playback ────────────────────────────────────────────────────────
-  const TONE_DURATION_MS = 1800;
-  const TONE_GAP_MS = 2000;
+  const toneShape = resolved.exerciseTypeId === "pitch-detection" ? resolved.toneShape : { kind: "sustain" as const };
 
-  const [isTonePlaying, setIsTonePlaying] = useState(false);
-  const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Reset tone state on exercise change
-  useEffect(() => {
-    if (toneTimeoutRef.current) {
-      clearTimeout(toneTimeoutRef.current);
-      toneTimeoutRef.current = null;
+  const playReferenceTone = useCallback(() => {
+    const freq = toneNotes[0]?.frequencyHz;
+    if (!freq) return;
+    switch (toneShape.kind) {
+      case "wobble":
+        playWobble(freq, { binaural: true });
+        break;
+      case "owl-hoot":
+        playOwlHoot(freq, { binaural: true });
+        break;
+      default:
+        playRawTone(freq, { binaural: true });
+        break;
     }
-    setIsTonePlaying(false);
+  }, [toneShape, toneNotes, playWobble, playOwlHoot, playRawTone]);
+
+  const handleExerciseStart = useCallback(() => {
+    setHasStarted(true);
+    setTimeout(() => {
+      playReferenceTone();
+      setDetectionActive(true);
+    }, 500);
+  }, [playReferenceTone]);
+
+  const handleRestart = useCallback(() => {
+    resetProgress();
+    playReferenceTone();
+  }, [resetProgress, playReferenceTone]);
+
+  // Reset start state on exercise change
+  useEffect(() => {
+    setHasStarted(false);
+    setDetectionActive(false);
   }, [exerciseId]);
-
-  function handleHearTone() {
-    if (isTonePlaying) return;
-    setIsTonePlaying(true);
-
-    toneNotes.forEach((note, i) => {
-      setTimeout(() => onPlayTone(note), i * TONE_GAP_MS);
-    });
-    const totalMs = (toneNotes.length - 1) * TONE_GAP_MS + TONE_DURATION_MS;
-    if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
-    toneTimeoutRef.current = setTimeout(() => {
-      toneTimeoutRef.current = null;
-      setIsTonePlaying(false);
-    }, totalMs);
-  }
 
   // ── Derived values for pitch overlay ─────────────────────────────────────
   const closestNote =
@@ -175,6 +187,9 @@ export function PitchExercise({
             }
           />
         )}
+
+        {/* Start overlay */}
+        {!hasStarted && <ExerciseStartOverlay onStart={handleExerciseStart} />}
 
         {/* Per-step checkmark (sequences only) */}
         {showStepCheck && (
@@ -331,31 +346,16 @@ export function PitchExercise({
         </div>
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
-          <Button
-            variant="outline"
-            onClick={handleHearTone}
-            disabled={isTonePlaying}
-            className={`shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm flex items-center gap-2 ${
-              isTonePlaying
-                ? "border-violet-500/50 bg-violet-600/30 text-white cursor-default"
-                : ""
-            }`}
-            title={isTonePlaying ? "Playing…" : "Play the target tone"}
-          >
-            {isTonePlaying ? (
-              <>
-                <span className="inline-flex gap-0.5">
-                  <span className="w-0.5 h-3 bg-current rounded-full animate-pulse" style={{ animationDelay: "0ms" }} />
-                  <span className="w-0.5 h-4 bg-current rounded-full animate-pulse" style={{ animationDelay: "150ms" }} />
-                  <span className="w-0.5 h-3 bg-current rounded-full animate-pulse" style={{ animationDelay: "300ms" }} />
-                  <span className="w-0.5 h-2 bg-current rounded-full animate-pulse" style={{ animationDelay: "75ms" }} />
-                </span>
-                Playing…
-              </>
-            ) : (
-              <>▶ Play {toneNotes.length > 1 ? "tones" : "tone"}</>
-            )}
-          </Button>
+          {hasStarted && (
+            <Button
+              variant="outline"
+              onClick={handleRestart}
+              className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
+              title="Restart exercise"
+            >
+              ↺ Restart
+            </Button>
+          )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
             {exerciseId > 1 && onPrev && (
               <Button variant="outline" onClick={onPrev} title="Previous exercise" className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">

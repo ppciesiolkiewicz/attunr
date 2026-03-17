@@ -292,6 +292,7 @@ export class ExerciseGenerator {
       title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
+      toneShape: { kind: "wobble" },
       notes: [
         {
           target: { kind: BandTargetKind.Range, from: 1, to: boundaryNote, accept: "below" },
@@ -311,6 +312,7 @@ export class ExerciseGenerator {
       title, subtitle, cardCue, instruction, introModal, completionModal,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
+      toneShape: { kind: "owl-hoot" },
       notes: [
         {
           target: { kind: BandTargetKind.Range, from: boundaryNote, to: -1, accept: "above" },

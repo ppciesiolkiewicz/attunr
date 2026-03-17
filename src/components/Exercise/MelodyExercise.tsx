@@ -5,6 +5,7 @@ import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import type { MelodyRectNote } from "@/components/PitchCanvas";
 import { Button, Text, Modal } from "@/components/ui";
+import { ExerciseStartOverlay } from "./ExerciseStartOverlay";
 import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyExercise as MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
@@ -52,6 +53,9 @@ export function MelodyExercise({
     [melodyTimeline],
   );
 
+  // ── Start gating ──────────────────────────────────────────────────────
+  const [hasStarted, setHasStarted] = useState(false);
+
   // ── Playback state ─────────────────────────────────────────────────────
   const [isPlaying, setIsPlaying] = useState(false);
   const [melodyStartTime, setMelodyStartTime] = useState<number | undefined>();
@@ -70,6 +74,7 @@ export function MelodyExercise({
 
   // Reset on exercise change
   useEffect(() => {
+    setHasStarted(false);
     setIsPlaying(false);
     setMelodyStartTime(undefined);
     setShowScoreModal(false);
@@ -124,6 +129,11 @@ export function MelodyExercise({
     setMelodyStartTime(startTime);
     setIsPlaying(true);
   }, [isLoaded, isPlaying, singableNotes, melodyTimeline, scheduleMelody, buildRectNotes]);
+
+  const handleExerciseStart = useCallback(() => {
+    setHasStarted(true);
+    setTimeout(() => handleStart(), 500);
+  }, [handleStart]);
 
   // ── RAF scoring loop ───────────────────────────────────────────────────
   useEffect(() => {
@@ -261,6 +271,9 @@ export function MelodyExercise({
           melodyNotes={isPlaying || showScoreModal ? melodyRectNotes : undefined}
           melodyStartTime={melodyStartTime}
         />
+
+        {/* Start overlay */}
+        {!hasStarted && <ExerciseStartOverlay onStart={handleExerciseStart} />}
       </div>
 
       {/* ── Bottom panel ──────────────────────────────────────────────────── */}
@@ -270,14 +283,14 @@ export function MelodyExercise({
         </div>
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
-          {!isPlaying && !showScoreModal && (
+          {hasStarted && !isPlaying && !showScoreModal && (
             <Button
               variant="outline"
-              onClick={handleStart}
-              disabled={!isLoaded}
-              className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm flex items-center gap-2"
+              onClick={handleRetry}
+              className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
+              title="Restart exercise"
             >
-              {isLoaded ? "▶ Start" : "Loading…"}
+              ↺ Restart
             </Button>
           )}
           {isPlaying && (

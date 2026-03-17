@@ -139,9 +139,17 @@ export interface LearnNotesExercise extends BaseExerciseConfig {
   exerciseTypeId: "learn-notes-1";
 }
 
+/** Shape of the reference tone played before a pitch-detection exercise. */
+export type ToneShape =
+  | { kind: "sustain" }
+  | { kind: "wobble" }
+  | { kind: "owl-hoot" };
+
 export interface PitchDetectionExercise extends BaseExerciseConfig {
   exerciseTypeId: "pitch-detection";
   scale: BaseScale;
+  /** Shape of the reference tone. Defaults to sustain (flat sine). */
+  toneShape?: ToneShape;
   /** One note = single-tone hold; multiple = sing in sequence. */
   notes: SustainNoteConfig[];
   instruction: string;

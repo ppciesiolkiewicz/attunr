@@ -8,6 +8,7 @@ import type {
   MelodyExercise,
   RhythmExercise,
   DisplayNote,
+  ToneShape,
 } from "@/constants/journey/types";
 
 // ── Resolved types ────────────────────────────────────────────────────────────
@@ -28,6 +29,7 @@ export interface ResolvedPitchTarget {
 export interface ResolvedPitchDetection extends ResolvedExerciseBase {
   exerciseTypeId: "pitch-detection";
   targets: ResolvedPitchTarget[];
+  toneShape: ToneShape;
 }
 
 export interface ResolvedPitchDetectionSlide extends ResolvedExerciseBase {
@@ -145,7 +147,7 @@ function resolvePitchDetection(
   const displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
   const highlightIds = exerciseColoredNotes.map((n) => n.id);
 
-  return { exerciseTypeId: "pitch-detection", targets, displayNotes, highlightIds };
+  return { exerciseTypeId: "pitch-detection", targets, displayNotes, highlightIds, toneShape: exercise.toneShape ?? { kind: "sustain" } };
 }
 
 function resolvePitchDetectionSlide(

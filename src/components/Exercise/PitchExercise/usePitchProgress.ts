@@ -8,6 +8,7 @@ interface UsePitchProgressOptions {
   exerciseId: number;
   resolved: ResolvedPitchDetection | ResolvedPitchDetectionSlide;
   pitchHzRef: React.RefObject<number | null>;
+  enabled?: boolean;
 }
 
 export function usePitchProgress({
@@ -15,6 +16,7 @@ export function usePitchProgress({
   exerciseId,
   resolved,
   pitchHzRef,
+  enabled = true,
 }: UsePitchProgressOptions) {
   const holdRef = useRef(0);
   const seqIndexRef = useRef(0);
@@ -53,6 +55,12 @@ export function usePitchProgress({
     if (stageComplete) return;
 
     function tick() {
+      if (!enabled) {
+        lastTickRef.current = 0; // reset so dt doesn't accumulate
+        rafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
       const now = performance.now();
       const dt = lastTickRef.current ? (now - lastTickRef.current) / 1000 : 0;
       lastTickRef.current = now;
@@ -144,7 +152,7 @@ export function usePitchProgress({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stageComplete, exerciseId]);
+  }, [stageComplete, exerciseId, enabled]);
 
   return { progress, seqIndex, slideCount, stageComplete, showStepCheck, resetProgress };
 }
