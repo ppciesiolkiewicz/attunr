@@ -8,12 +8,11 @@ import { getSkippedInfoExerciseIds, getStepInStage } from "../utils";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { BaseExercise } from "@/components/Exercise";
 import { PartCompleteModal } from "./PartCompleteModal";
-import { JOURNEY_EXERCISES, JOURNEY_CONFIG, getNextExerciseId } from "@/constants/journey";
+import { journey } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
-import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { useApp } from "@/context/AppContext";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
-import { hzToNoteName } from "@/lib/pitch";
+import type { ColoredNote } from "@/lib/VocalRange";
+import { VocalRange } from "@/lib/VocalRange";
 import type { ModalConfig } from "@/constants/journey/types";
 import type { Settings } from "@/hooks/useSettings";
 
@@ -46,20 +45,16 @@ export function JourneyExercise({
   const router = useRouter();
   const { triggerNotificationPrompt } = useApp();
   const highestCompleted = settings.journeyStage;
-  const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId)!;
+  const exercise = journey.exercises.find((e) => e.id === exerciseId)!;
   const isCompleted = exerciseId <= highestCompleted;
-  const chapter = JOURNEY_CONFIG.find((ch) => ch.chapter === exercise.chapter);
+  const chapter = journey.chapters.find((ch) => ch.chapter === exercise.chapter);
   const allStages = chapter ? (chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages) : [];
   const stageTitle = allStages.find((s) => s.id === exercise.stageId)?.title ?? "";
 
-  const vocalRange: VocalRange = useMemo(() => {
+  const vocalRange = useMemo(() => {
     const lowHz = settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131;
     const highHz = settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523;
-    return {
-      lowNote: hzToNoteName(lowHz),
-      highNote: hzToNoteName(highHz),
-      allNotes: getScaleNotesForRange(lowHz, highHz, settings.tuning),
-    };
+    return new VocalRange(lowHz, highHz, settings.tuning);
   }, [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning]);
 
   const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1";
@@ -84,7 +79,7 @@ export function JourneyExercise({
   // Prefetch next page when part-complete modal is showing
   useEffect(() => {
     if (partCompleteData !== null) {
-      const nextId = getNextExerciseId(exerciseId);
+      const nextId = journey.getNextExerciseId(exerciseId);
       if (nextId !== null) router.prefetch(`/journey/${nextId}`);
       else router.prefetch("/");
     }
@@ -114,7 +109,7 @@ export function JourneyExercise({
         modalConfig: exercise.completionModal,
       });
     } else {
-      const nextId = getNextExerciseId(exerciseId);
+      const nextId = journey.getNextExerciseId(exerciseId);
       if (nextId !== null) navigateTo(nextId);
       else onBack();
     }
@@ -128,7 +123,7 @@ export function JourneyExercise({
 
   function handlePartCompleteContinue() {
     setPartCompleteData(null);
-    const nextId = getNextExerciseId(exerciseId);
+    const nextId = journey.getNextExerciseId(exerciseId);
     if (nextId !== null) navigateTo(nextId);
     else onBack();
   }
@@ -181,7 +176,7 @@ export function JourneyExercise({
         partRoman={String(exercise.chapter)}
         stepIndex={getStepInStage(exerciseId).stepIndex}
         stepsInPart={getStepInStage(exerciseId).stepsInStage}
-        isLast={exerciseId === JOURNEY_EXERCISES[JOURNEY_EXERCISES.length - 1]?.id}
+        isLast={exerciseId === journey.exercises[journey.exercises.length - 1]?.id}
         vocalRange={vocalRange}
         pitchHz={pitchHz}
         pitchHzRef={pitchHzRef}

@@ -2,10 +2,10 @@
 
 import { Button, Text } from "@/components/ui";
 import { ContentElements } from "./components/ContentElements";
-import type { LearnExercise as LearnExerciseConfig } from "@/constants/journey";
+import type { LearnConfig } from "@/constants/journey";
 
 interface LearnExerciseProps {
-  exercise: LearnExerciseConfig;
+  exercise: LearnConfig;
   exerciseId: number;
   partTitle: string;
   partRoman: string;

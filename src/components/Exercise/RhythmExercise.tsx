@@ -6,8 +6,8 @@ import { Button, Text, Modal } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
 import { RhythmCanvas } from "./RhythmCanvas";
 import type { RhythmBeatState, BeatStatus } from "./RhythmCanvas";
-import type { RhythmExercise as RhythmConfig } from "@/constants/journey";
-import type { ResolvedRhythm } from "@/lib/resolve-exercise";
+import type { RhythmConfig } from "@/constants/journey";
+import type { RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
 
 /** Pre-roll time (ms) — visual lead-in before first beat */
 const PRE_ROLL_MS = 2000;
@@ -30,7 +30,7 @@ interface RhythmExerciseProps {
   exercise: RhythmConfig;
   exerciseId: number;
   isLast: boolean;
-  resolved: ResolvedRhythm;
+  resolved: RhythmExerciseType;
   isAlreadyCompleted: boolean;
   onComplete: () => void;
   onSkip: () => void;

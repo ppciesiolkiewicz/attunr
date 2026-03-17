@@ -10,16 +10,16 @@ import { usePitchProgress } from "./usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { ExerciseStartOverlay } from "../ExerciseStartOverlay";
 import { ProgressArc } from "../components/ProgressArc";
-import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
+import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
-import type { ColoredNote } from "@/constants/tone-slots";
-import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide } from "@/lib/resolve-exercise";
+import type { ColoredNote } from "@/lib/VocalRange";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/lib/resolve-exercise";
 
 interface PitchExerciseProps {
-  exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
+  exercise: PitchDetectionConfig | PitchDetectionSlideConfig;
   exerciseId: number;
   isLast: boolean;
-  resolved: ResolvedPitchDetection | ResolvedPitchDetectionSlide;
+  resolved: PitchDetectionExercise | PitchDetectionSlideExercise;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;

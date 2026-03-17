@@ -1,13 +1,13 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import type { ResolvedBeat } from "@/lib/resolve-exercise";
+import type { Beat } from "@/lib/resolve-exercise";
 
 /** Beat status for rendering */
 export type BeatStatus = "upcoming" | "active" | "hit" | "close" | "missed";
 
 export interface RhythmBeatState {
-  beat: ResolvedBeat;
+  beat: Beat;
   status: BeatStatus;
 }
 

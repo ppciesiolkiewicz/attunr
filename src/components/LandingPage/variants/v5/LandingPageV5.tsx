@@ -39,13 +39,41 @@ const body = `"Outfit", sans-serif`;
 
 function Divider() {
   return (
-    <div className="flex justify-center py-2">
+    <div className="flex justify-center py-4">
       <div
-        className="w-48 h-px"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.2), transparent)" }}
+        className="w-80 h-0.5 rounded-full"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.35), transparent)" }}
       />
     </div>
   );
+}
+
+
+function handleMagnetic(e: React.MouseEvent<HTMLButtonElement>) {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const x = e.clientX - rect.left - rect.width / 2;
+  const y = e.clientY - rect.top - rect.height / 2;
+  btn.style.transition = "transform 0.15s cubic-bezier(0.33, 1, 0.68, 1)";
+  btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+}
+
+function handleMagneticLeave(e: React.MouseEvent<HTMLButtonElement>) {
+  e.currentTarget.style.transition = "transform 0.4s cubic-bezier(0.22, 1, 0.36, 1)";
+  e.currentTarget.style.transform = "translate(0, 0)";
+}
+
+function handleRipple(e: React.MouseEvent<HTMLButtonElement>) {
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const ripple = document.createElement("span");
+  ripple.className = "v5-ripple";
+  ripple.style.width = ripple.style.height = `${size}px`;
+  ripple.style.left = `${e.clientX - rect.left - size / 2}px`;
+  ripple.style.top = `${e.clientY - rect.top - size / 2}px`;
+  btn.appendChild(ripple);
+  ripple.addEventListener("animationend", () => ripple.remove());
 }
 
 export default function LandingPageV5() {
@@ -85,22 +113,122 @@ export default function LandingPageV5() {
           inset: 0;
           pointer-events: none;
           z-index: 11;
-          opacity: 0.045;
+          opacity: 0.08;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
           background-repeat: repeat;
           background-size: 256px 256px;
         }
+        .v5-chromatic {
+          text-shadow: -1.5px 0.5px 0 rgba(255, 50, 80, 0.3), 1.5px -0.5px 0 rgba(80, 180, 255, 0.3);
+        }
+        .v5-mesh {
+          position: fixed;
+          inset: 0;
+          pointer-events: none;
+          z-index: 0;
+        }
+        .v5-mesh-blob {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          will-change: transform;
+        }
+        @keyframes v5-mesh-drift-1 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(60px, -40px) scale(1.1); }
+          66% { transform: translate(-30px, 50px) scale(0.95); }
+        }
+        @keyframes v5-mesh-drift-2 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(-50px, 30px) scale(1.05); }
+          66% { transform: translate(40px, -60px) scale(0.9); }
+        }
+        @keyframes v5-mesh-drift-3 {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          50% { transform: translate(30px, 40px) scale(1.08); }
+        }
+        @keyframes v5-particle-drift-1 {
+          0% { transform: translate(0, 0); opacity: 0; }
+          5% { opacity: 1; }
+          50% { transform: translate(40px, -45vh); opacity: 0.8; }
+          90% { opacity: 0.9; }
+          100% { transform: translate(-20px, -95vh); opacity: 0; }
+        }
+        @keyframes v5-particle-drift-2 {
+          0% { transform: translate(0, 0); opacity: 0; }
+          5% { opacity: 1; }
+          40% { transform: translate(-35px, -35vh); opacity: 0.7; }
+          70% { transform: translate(25px, -65vh); opacity: 0.9; }
+          100% { transform: translate(-10px, -100vh); opacity: 0; }
+        }
+        @keyframes v5-particle-drift-3 {
+          0% { transform: translate(0, 0); opacity: 0; }
+          5% { opacity: 1; }
+          60% { transform: translate(55px, -50vh); opacity: 0.7; }
+          100% { transform: translate(30px, -90vh); opacity: 0; }
+        }
+        .v5-particle {
+          position: fixed;
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: 10;
+        }
+        .v5-ripple {
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(139, 92, 246, 0.3);
+          transform: scale(0);
+          animation: v5-ripple-expand 0.6s ease-out forwards;
+          pointer-events: none;
+        }
+        @keyframes v5-ripple-expand {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
       `}</style>
+
+      {/* Mesh gradient background */}
+      <div className="v5-mesh">
+        <div className="v5-mesh-blob" style={{ width: 600, height: 600, top: "5%", left: "-10%", background: "radial-gradient(circle, rgba(139,92,246,0.08), transparent 70%)", animation: "v5-mesh-drift-1 20s ease-in-out infinite" }} />
+        <div className="v5-mesh-blob" style={{ width: 500, height: 500, top: "40%", right: "-5%", background: "radial-gradient(circle, rgba(99,102,241,0.06), transparent 70%)", animation: "v5-mesh-drift-2 25s ease-in-out infinite" }} />
+        <div className="v5-mesh-blob" style={{ width: 450, height: 450, bottom: "10%", left: "20%", background: "radial-gradient(circle, rgba(59,130,246,0.05), transparent 70%)", animation: "v5-mesh-drift-3 18s ease-in-out infinite" }} />
+      </div>
+
+      {/* Floating particles */}
+      {Array.from({ length: 60 }).map((_, i) => {
+        const animations = ["v5-particle-drift-1", "v5-particle-drift-2", "v5-particle-drift-3"];
+        const colors = ["rgba(167,139,250,0.9)", "rgba(139,92,246,0.85)", "rgba(129,140,248,0.8)", "rgba(99,102,241,0.75)", "rgba(192,180,255,0.85)"];
+        const size = 1.5 + (i % 5) * 0.5;
+        return (
+          <div
+            key={`particle-${i}`}
+            className="v5-particle"
+            style={{
+              left: `${1 + ((i * 1.67) % 98)}%`,
+              bottom: "0px",
+              width: `${size}px`,
+              height: `${size}px`,
+              background: colors[i % colors.length],
+              animation: `${animations[i % 3]} ${10 + (i * 1.9) % 14}s ease-in-out ${(i * 0.8) % 8}s infinite`,
+            }}
+          />
+        );
+      })}
 
       <LandingHeader />
       <div className="relative">
         {/* -- Hero -- */}
         <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 overflow-hidden">
-          {/* Background glow */}
+          {/* Background glow — purple / crown */}
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full pointer-events-none"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none"
             style={{
-              background: "radial-gradient(circle, rgba(139,92,246,0.20) 0%, rgba(99,102,241,0.10) 35%, transparent 65%)",
+              width: 1000,
+              height: 700,
+              background: "radial-gradient(ellipse, rgba(168,85,247,0.7) 0%, rgba(139,92,246,0.4) 25%, rgba(99,102,241,0.2) 45%, transparent 65%)",
+              filter: "blur(60px)",
               animation: "landing-breathe 4s ease-in-out infinite",
             }}
           />
@@ -139,7 +267,10 @@ export default function LandingPageV5() {
             <Link href="/journey">
               <Button
                 size="lg"
-                className="v5-btn px-14 text-lg cursor-pointer"
+                className="v5-btn relative overflow-hidden px-14 text-lg cursor-pointer"
+                onClick={handleRipple}
+                onMouseMove={handleMagnetic}
+                onMouseLeave={handleMagneticLeave}
                 style={{
                   fontFamily: fraunces,
                   letterSpacing: "0.08em",
@@ -148,7 +279,7 @@ export default function LandingPageV5() {
                   border: "1px solid rgba(139,92,246,0.5)",
                   color: "#e0d4ff",
                   boxShadow: "0 0 30px rgba(139,92,246,0.2), 0 0 60px rgba(139,92,246,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
-                  transition: "all 0.4s ease",
+                  transition: "transform 0.3s ease, box-shadow 0.4s ease, background 0.4s ease, border-color 0.4s ease",
                 }}
               >
                 Try it now
@@ -168,13 +299,17 @@ export default function LandingPageV5() {
         <Divider />
 
         {/* -- Features -- */}
-        <section className="landing-section px-6 py-16 sm:py-20">
-          <div className="max-w-4xl mx-auto">
+        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+          <div
+            className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 40%, transparent 70%)", filter: "blur(60px)" }}
+          />
+          <div className="relative max-w-4xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3" style={{ fontFamily: fraunces }}>
               You already know this
             </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl text-white text-center mb-14" style={{ fontFamily: fraunces, fontWeight: 700 }}>
-              The reset your body already knows
+              The <span className="v5-chromatic" data-text="reset">reset</span> your body already knows
             </h2>
 
             <div className="grid sm:grid-cols-2 gap-6">
@@ -183,8 +318,10 @@ export default function LandingPageV5() {
                   key={f.title}
                   className="group relative rounded-2xl border border-white/[0.08] p-8 sm:p-10 transition-all duration-300 hover:border-white/[0.16] hover:translate-y-[-3px]"
                   style={{
-                    background: "rgba(255,255,255,0.025)",
-                    boxShadow: `0 0 20px ${f.color}10, 0 0 40px ${f.color}06`,
+                    background: "rgba(255,255,255,0.03)",
+                    backdropFilter: "blur(12px) saturate(1.3)",
+                    WebkitBackdropFilter: "blur(12px) saturate(1.3)",
+                    boxShadow: `0 0 20px ${f.color}10, 0 0 40px ${f.color}06, inset 0 1px 0 rgba(255,255,255,0.04)`,
                   }}
                 >
                   <div
@@ -202,11 +339,12 @@ export default function LandingPageV5() {
           </div>
         </section>
 
-        <Divider />
-
         {/* -- What You Do -- */}
         <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(99,102,241,0.04), transparent)" }} />
+          <div
+            className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(34,197,94,0.15) 0%, rgba(34,197,94,0.05) 40%, transparent 70%)", filter: "blur(60px)" }}
+          />
           <div className="relative max-w-2xl mx-auto text-center">
             <div className="flex justify-center gap-1 mb-12">
               {TONE_COLORS.map((color) => (
@@ -214,10 +352,10 @@ export default function LandingPageV5() {
               ))}
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl text-white mb-4 leading-tight" style={{ fontFamily: fraunces, fontWeight: 700 }}>
-              Not singing lessons.
+              Not <span className="v5-chromatic" data-text="singing">singing</span> lessons.
             </h2>
             <p className="text-xl sm:text-2xl text-white/40 mb-8" style={{ fontFamily: body }}>
-              A body practice that uses sound.
+              A body practice that uses <span className="v5-chromatic" data-text="sound">sound</span>.
             </p>
             <p className="text-white/55 leading-relaxed max-w-md mx-auto mb-14" style={{ fontFamily: body }}>
               The pitch visualizer isn&apos;t a score &mdash; it&apos;s a mirror. You watch your voice move in real time so you can feel where it lands in your body.
@@ -240,13 +378,17 @@ export default function LandingPageV5() {
         <Divider />
 
         {/* -- How It Works -- */}
-        <section className="landing-section px-6 py-16 sm:py-20">
-          <div className="max-w-3xl mx-auto">
+        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+          <div
+            className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(234,179,8,0.25) 0%, rgba(234,179,8,0.1) 40%, transparent 70%)", filter: "blur(60px)" }}
+          />
+          <div className="relative max-w-3xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3" style={{ fontFamily: fraunces }}>
               Start in two minutes
             </p>
             <h2 className="text-3xl sm:text-4xl md:text-5xl text-white text-center mb-14" style={{ fontFamily: fraunces, fontWeight: 700 }}>
-              As easy as taking a deep breath
+              As easy as taking a <span className="v5-chromatic" data-text="deep breath">deep breath</span>
             </h2>
 
             <div className="relative flex flex-col gap-16 pl-12 sm:pl-16">
@@ -290,12 +432,12 @@ export default function LandingPageV5() {
         {/* -- Call to Action -- */}
         <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
           <div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full pointer-events-none"
-            style={{ background: "radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 60%)" }}
+            className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(239,68,68,0.22) 0%, rgba(239,68,68,0.08) 40%, transparent 70%)", filter: "blur(60px)" }}
           />
           <div className="relative max-w-xl mx-auto text-center">
             <p className="text-2xl sm:text-3xl md:text-4xl text-white leading-snug mb-3" style={{ fontFamily: fraunces, fontWeight: 600 }}>
-              Your voice is already the instrument.
+              Your voice is already the <span className="v5-chromatic" data-text="instrument">instrument</span>.
             </p>
             <p className="text-xl sm:text-2xl md:text-3xl text-white/45 leading-snug mb-12" style={{ fontFamily: body }}>
               attunr shows you how to play it.
@@ -303,7 +445,10 @@ export default function LandingPageV5() {
             <Link href="/journey">
               <Button
                 size="lg"
-                className="v5-btn px-14 text-lg cursor-pointer"
+                className="v5-btn relative overflow-hidden px-14 text-lg cursor-pointer"
+                onClick={handleRipple}
+                onMouseMove={handleMagnetic}
+                onMouseLeave={handleMagneticLeave}
                 style={{
                   fontFamily: fraunces,
                   letterSpacing: "0.08em",
@@ -312,7 +457,7 @@ export default function LandingPageV5() {
                   border: "1px solid rgba(139,92,246,0.5)",
                   color: "#e0d4ff",
                   boxShadow: "0 0 30px rgba(139,92,246,0.2), 0 0 60px rgba(139,92,246,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
-                  transition: "all 0.4s ease",
+                  transition: "transform 0.3s ease, box-shadow 0.4s ease, background 0.4s ease, border-color 0.4s ease",
                 }}
               >
                 Start your practice

@@ -1,44 +1,44 @@
 import { Scale } from "./scale";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import type {
-  JourneyExercise,
-  PitchDetectionExercise,
-  PitchDetectionSlideExercise,
-  ToneFollowExercise,
-  MelodyExercise,
-  RhythmExercise,
+  ExerciseConfig,
+  PitchDetectionConfig,
+  PitchDetectionSlideConfig,
+  ToneFollowConfig,
+  MelodyConfig,
+  RhythmConfig,
   DisplayNote,
   ToneShape,
 } from "@/constants/journey/types";
 
 // ── Resolved types ────────────────────────────────────────────────────────────
 
-interface ResolvedExerciseBase {
+interface ExerciseBase {
   exerciseTypeId: string;
   displayNotes: ColoredNote[];
   highlightIds: string[];
 }
 
-export interface ResolvedPitchTarget {
+export interface PitchTarget {
   note: ColoredNote;
   seconds: number;
   accept?: "within" | "below" | "above";
   rangeNotes?: ColoredNote[];
 }
 
-export interface ResolvedPitchDetection extends ResolvedExerciseBase {
+export interface PitchDetectionExercise extends ExerciseBase {
   exerciseTypeId: "pitch-detection";
-  targets: ResolvedPitchTarget[];
+  targets: PitchTarget[];
   toneShape: ToneShape;
 }
 
-export interface ResolvedPitchDetectionSlide extends ResolvedExerciseBase {
+export interface PitchDetectionSlideExercise extends ExerciseBase {
   exerciseTypeId: "pitch-detection-slide";
   from: ColoredNote;
   to: ColoredNote;
 }
 
-export interface ResolvedToneFollow extends ResolvedExerciseBase {
+export interface ToneFollowExercise extends ExerciseBase {
   exerciseTypeId: "tone-follow";
   toneShape:
     | { kind: "slide"; from: ColoredNote; to: ColoredNote }
@@ -46,7 +46,7 @@ export interface ResolvedToneFollow extends ResolvedExerciseBase {
   requiredPlays: number;
 }
 
-export interface ResolvedTimelineEntry {
+export interface TimelineEntry {
   note: ColoredNote;
   startMs: number;
   durationMs: number;
@@ -54,52 +54,36 @@ export interface ResolvedTimelineEntry {
   audioOnly?: boolean;
 }
 
-export interface ResolvedMelody extends ResolvedExerciseBase {
+export interface MelodyExercise extends ExerciseBase {
   exerciseTypeId: "melody";
   tempo: number;
   minScore: number;
-  timeline: ResolvedTimelineEntry[];
+  timeline: TimelineEntry[];
   totalDurationMs: number;
 }
 
-export interface ResolvedBeat {
+export interface Beat {
   startMs: number;
   durationMs: number;
 }
 
-export interface ResolvedRhythm extends ResolvedExerciseBase {
+export interface RhythmExercise extends ExerciseBase {
   exerciseTypeId: "rhythm";
   tempo: number;
   metronome: boolean;
   minScore: number;
-  beats: ResolvedBeat[];
+  beats: Beat[];
   totalDurationMs: number;
 }
 
-export type ResolvedExercise =
-  | ResolvedPitchDetection
-  | ResolvedPitchDetectionSlide
-  | ResolvedToneFollow
-  | ResolvedMelody
-  | ResolvedRhythm;
+export type Exercise =
+  | PitchDetectionExercise
+  | PitchDetectionSlideExercise
+  | ToneFollowExercise
+  | MelodyExercise
+  | RhythmExercise;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-
-function lookupColoredNote(midi: number, allNotes: ColoredNote[]): ColoredNote | null {
-  const exact = allNotes.find((n) => n.midi === midi);
-  if (exact) return exact;
-  if (allNotes.length === 0) return null;
-  let closest = allNotes[0];
-  let minDist = Math.abs(midi - closest.midi);
-  for (let i = 1; i < allNotes.length; i++) {
-    const dist = Math.abs(midi - allNotes[i].midi);
-    if (dist < minDist) {
-      closest = allNotes[i];
-      minDist = dist;
-    }
-  }
-  return closest;
-}
 
 function computeDisplayRange(
   exerciseColoredNotes: ColoredNote[],
@@ -122,22 +106,22 @@ function durationToMs(duration: number, tempo: number): number {
 // ── Resolvers ─────────────────────────────────────────────────────────────────
 
 function resolvePitchDetection(
-  exercise: PitchDetectionExercise,
+  exercise: PitchDetectionConfig,
   vocalRange: VocalRange,
-): ResolvedPitchDetection {
+): PitchDetectionExercise {
   const scale = new Scale(exercise.scale, vocalRange);
   const allNotes = vocalRange.allNotes;
 
-  const targets: ResolvedPitchTarget[] = [];
+  const targets: PitchTarget[] = [];
   for (const n of exercise.notes) {
     const resolved = scale.resolve(n.target);
-    const colored = resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null;
+    const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
     if (!colored) continue;
-    const target: ResolvedPitchTarget = { note: colored, seconds: n.seconds };
+    const target: PitchTarget = { note: colored, seconds: n.seconds };
     if (n.target.kind === "range") {
       target.accept = n.target.accept ?? "within";
       target.rangeNotes = resolved
-        .map((r) => lookupColoredNote(r.midi, allNotes))
+        .map((r) => vocalRange.findNote(r.midi))
         .filter((c): c is ColoredNote => c !== null);
     }
     targets.push(target);
@@ -151,16 +135,16 @@ function resolvePitchDetection(
 }
 
 function resolvePitchDetectionSlide(
-  exercise: PitchDetectionSlideExercise,
+  exercise: PitchDetectionSlideConfig,
   vocalRange: VocalRange,
-): ResolvedPitchDetectionSlide {
+): PitchDetectionSlideExercise {
   const scale = new Scale(exercise.scale, vocalRange);
   const allNotes = vocalRange.allNotes;
 
   const fromResolved = scale.resolve(exercise.notes[0].from);
   const toResolved = scale.resolve(exercise.notes[0].to);
-  const from = fromResolved[0] ? lookupColoredNote(fromResolved[0].midi, allNotes) : null;
-  const to = toResolved[0] ? lookupColoredNote(toResolved[0].midi, allNotes) : null;
+  const from = fromResolved[0] ? vocalRange.findNote(fromResolved[0].midi) : null;
+  const to = toResolved[0] ? vocalRange.findNote(toResolved[0].midi) : null;
 
   if (!from || !to) {
     return {
@@ -187,25 +171,25 @@ function resolvePitchDetectionSlide(
 }
 
 function resolveToneFollow(
-  exercise: ToneFollowExercise,
+  exercise: ToneFollowConfig,
   vocalRange: VocalRange,
-): ResolvedToneFollow {
+): ToneFollowExercise {
   const scale = new Scale(exercise.scale, vocalRange);
   const allNotes = vocalRange.allNotes;
 
-  let toneShape: ResolvedToneFollow["toneShape"];
+  let toneShape: ToneFollowExercise["toneShape"];
   let exerciseColoredNotes: ColoredNote[];
 
   if (exercise.toneShape.kind === "sustain") {
     const resolved = scale.resolve(exercise.toneShape.target);
-    const note = (resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null) ?? allNotes[0];
+    const note = (resolved[0] ? vocalRange.findNote(resolved[0].midi) : null) ?? allNotes[0];
     toneShape = { kind: "sustain", note, seconds: exercise.toneShape.seconds };
     exerciseColoredNotes = [note];
   } else {
     const fromResolved = scale.resolve(exercise.toneShape.from);
     const toResolved = scale.resolve(exercise.toneShape.to);
-    const from = (fromResolved[0] ? lookupColoredNote(fromResolved[0].midi, allNotes) : null) ?? allNotes[0];
-    const to = (toResolved[0] ? lookupColoredNote(toResolved[0].midi, allNotes) : null) ?? allNotes[allNotes.length - 1];
+    const from = (fromResolved[0] ? vocalRange.findNote(fromResolved[0].midi) : null) ?? allNotes[0];
+    const to = (toResolved[0] ? vocalRange.findNote(toResolved[0].midi) : null) ?? allNotes[allNotes.length - 1];
 
     toneShape = { kind: "slide", from, to };
 
@@ -246,11 +230,11 @@ function resolveToneFollow(
 }
 
 function resolveMelody(
-  exercise: MelodyExercise,
+  exercise: MelodyConfig,
   vocalRange: VocalRange,
-): ResolvedMelody {
+): MelodyExercise {
   const allNotes = vocalRange.allNotes;
-  const timeline: ResolvedTimelineEntry[] = [];
+  const timeline: TimelineEntry[] = [];
   let cursor = 0;
 
   for (const segment of exercise.melody) {
@@ -262,14 +246,14 @@ function resolveMelody(
       } else if (event.type === "play") {
         for (const target of event.targets) {
           const resolved = localScale.resolve(target);
-          const colored = resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null;
+          const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
           if (colored) {
             timeline.push({ note: colored, startMs: cursor, durationMs: ms, audioOnly: true });
           }
         }
       } else {
         const resolved = localScale.resolve(event.target);
-        const colored = resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null;
+        const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
         if (colored) {
           timeline.push({
             note: colored,
@@ -306,10 +290,10 @@ function resolveMelody(
 }
 
 function resolveRhythm(
-  exercise: RhythmExercise,
+  exercise: RhythmConfig,
   _vocalRange: VocalRange,
-): ResolvedRhythm {
-  const beats: ResolvedBeat[] = [];
+): RhythmExercise {
+  const beats: Beat[] = [];
   let cursor = 0;
 
   for (const event of exercise.pattern) {
@@ -335,9 +319,9 @@ function resolveRhythm(
 // ── Main entry point ──────────────────────────────────────────────────────────
 
 export function resolveExercise(
-  exercise: JourneyExercise,
+  exercise: ExerciseConfig,
   vocalRange: VocalRange,
-): ResolvedExercise {
+): Exercise {
   switch (exercise.exerciseTypeId) {
     case "pitch-detection":
       return resolvePitchDetection(exercise, vocalRange);
@@ -350,6 +334,6 @@ export function resolveExercise(
     case "rhythm":
       return resolveRhythm(exercise, vocalRange);
     default:
-      throw new Error(`Cannot resolve exercise type: ${(exercise as JourneyExercise).exerciseTypeId}`);
+      throw new Error(`Cannot resolve exercise type: ${(exercise as ExerciseConfig).exerciseTypeId}`);
   }
 }

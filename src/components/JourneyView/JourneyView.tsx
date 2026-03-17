@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { JourneyList } from "./components/JourneyList";
 import type { Settings } from "@/hooks/useSettings";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 
 interface JourneyViewProps {
   settings: Settings;

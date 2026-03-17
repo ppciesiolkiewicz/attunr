@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { FarinelliExercise } from "@/components/FarinelliExercise";
 import { Button } from "@/components/ui";
-import type { FarinelliBreathworkExercise as FarinelliBreathworkConfig } from "@/constants/journey";
+import type { FarinelliBreathworkConfig } from "@/constants/journey";
 
 interface FarinelliBreathworkExerciseProps {
   exercise: FarinelliBreathworkConfig;

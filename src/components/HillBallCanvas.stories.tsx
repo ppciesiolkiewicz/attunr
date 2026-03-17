@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useRef, useEffect } from "react";
 import HillBallCanvas from "./HillBallCanvas";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 
 // ── Mock bands (simulating 3 low-range notes for Low U, 3 high-range for Hoo Hoo) ──
 

@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useCallback } from "react";
 import { findClosestNote as findClosestResolvedNote, matchesNoteTarget } from "@/lib/pitch";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 
 /** Typed wrapper — preserves ColoredNote return type when input is ColoredNote[]. */
 function findClosestNote(hz: number, notes: ColoredNote[]): ColoredNote {

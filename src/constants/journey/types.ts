@@ -129,13 +129,13 @@ export interface BaseExerciseConfig {
 
 // ── Layer 2: Specific exercise types ─────────────────────────────────────────
 
-export interface LearnExercise extends BaseExerciseConfig {
+export interface LearnConfig extends BaseExerciseConfig {
   exerciseTypeId: "learn";
   /** Body content rendered as ContentElement[]. */
   elements: ContentElement[];
 }
 
-export interface LearnNotesExercise extends BaseExerciseConfig {
+export interface LearnNotesConfig extends BaseExerciseConfig {
   exerciseTypeId: "learn-notes-1";
 }
 
@@ -145,7 +145,7 @@ export type ToneShape =
   | { kind: "wobble" }
   | { kind: "owl-hoot" };
 
-export interface PitchDetectionExercise extends BaseExerciseConfig {
+export interface PitchDetectionConfig extends BaseExerciseConfig {
   exerciseTypeId: "pitch-detection";
   scale: BaseScale;
   /** Shape of the reference tone. Defaults to sustain (flat sine). */
@@ -155,7 +155,7 @@ export interface PitchDetectionExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
-export interface PitchDetectionSlideExercise extends BaseExerciseConfig {
+export interface PitchDetectionSlideConfig extends BaseExerciseConfig {
   exerciseTypeId: "pitch-detection-slide";
   scale: BaseScale;
   /** Typically one slide config (from → to). */
@@ -164,7 +164,7 @@ export interface PitchDetectionSlideExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
-export interface FarinelliBreathworkExercise extends BaseExerciseConfig {
+export interface FarinelliBreathworkConfig extends BaseExerciseConfig {
   exerciseTypeId: "breathwork-farinelli";
   /** Number of breathing cycles to complete (typically 7). */
   maxCount: number;
@@ -184,7 +184,7 @@ export type ToneFollowShape =
   | { kind: "slide"; from: NoteTarget; to: NoteTarget }
   | { kind: "sustain"; target: NoteTarget; seconds: number };
 
-export interface ToneFollowExercise extends BaseExerciseConfig {
+export interface ToneFollowConfig extends BaseExerciseConfig {
   exerciseTypeId: "tone-follow";
   scale: BaseScale;
   /** Describes the tone to play (slide glide or sustained note). */
@@ -237,7 +237,7 @@ export interface DisplayScale {
   notes: DisplayNote[];
 }
 
-export interface MelodyExercise extends BaseExerciseConfig {
+export interface MelodyConfig extends BaseExerciseConfig {
   exerciseTypeId: "melody";
   /** BPM — quarter note = 1 beat. Duration formula: (NoteDuration / 4) * (60 / tempo) seconds. */
   tempo: number;
@@ -250,7 +250,7 @@ export interface MelodyExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
-export interface VolumeDetectionExercise extends BaseExerciseConfig {
+export interface VolumeDetectionConfig extends BaseExerciseConfig {
   exerciseTypeId: "volume-detection";
   /** Seconds of accumulated sound needed to complete. */
   targetSeconds: number;
@@ -264,7 +264,7 @@ export type RhythmEvent =
   | { type: "tap"; duration: NoteDuration }
   | { type: "pause"; duration: NoteDuration };
 
-export interface RhythmExercise extends BaseExerciseConfig {
+export interface RhythmConfig extends BaseExerciseConfig {
   exerciseTypeId: "rhythm";
   /** BPM — quarter note = 1 beat. Duration formula: (NoteDuration / 4) * (60 / tempo) seconds. */
   tempo: number;
@@ -277,20 +277,20 @@ export interface RhythmExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
-export type JourneyExercise =
-  | LearnExercise
-  | LearnNotesExercise
-  | PitchDetectionExercise
-  | PitchDetectionSlideExercise
-  | FarinelliBreathworkExercise
-  | ToneFollowExercise
-  | MelodyExercise
-  | VolumeDetectionExercise
-  | RhythmExercise;
+export type ExerciseConfig =
+  | LearnConfig
+  | LearnNotesConfig
+  | PitchDetectionConfig
+  | PitchDetectionSlideConfig
+  | FarinelliBreathworkConfig
+  | ToneFollowConfig
+  | MelodyConfig
+  | VolumeDetectionConfig
+  | RhythmConfig;
 
 /** Input type for part files — `id`, `chapter`, and `stageId` are assigned automatically in index.ts. */
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
-export type JourneyExerciseInput = DistributiveOmit<JourneyExercise, "id" | "chapter" | "stageId">;
+export type ExerciseConfigInput = DistributiveOmit<ExerciseConfig, "id" | "chapter" | "stageId">;
 
 // ── Journey structure ─────────────────────────────────────────────────────────
 
@@ -298,7 +298,7 @@ export interface StageConfig {
   /** Stable slug for progress tracking (e.g. "ch1-wake-up", "ch2-warmup"). */
   id: string;
   title: string;
-  exercises: JourneyExercise[];
+  exercises: ExerciseConfig[];
 }
 
 export interface Chapter {
@@ -313,7 +313,7 @@ export interface Chapter {
 export interface StageConfigInput {
   id: string;
   title: string;
-  exercises: JourneyExerciseInput[];
+  exercises: ExerciseConfigInput[];
 }
 
 export interface ChapterInput {

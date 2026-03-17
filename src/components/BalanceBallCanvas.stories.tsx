@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useRef, useEffect } from "react";
 import BalanceBallCanvas from "./BalanceBallCanvas";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 
 // ── Mock bands ──────────────────────────────────────────────────────────────
 

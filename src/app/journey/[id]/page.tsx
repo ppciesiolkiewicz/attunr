@@ -4,7 +4,7 @@ import { useParams, usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { JourneyExercise } from "@/components/JourneyView";
 import { useApp } from "@/context/AppContext";
-import { JOURNEY_EXERCISES } from "@/constants/journey";
+import { journey } from "@/constants/journey";
 
 /**
  * Journey step page — URL-driven: /journey/[id]
@@ -27,8 +27,8 @@ export default function ExercisePage() {
   })();
   const id = !isNaN(idFromParams) ? idFromParams : idFromPath;
 
-  const isValid = !isNaN(id) && id >= 1 && id <= JOURNEY_EXERCISES.length;
-  const exerciseExists = isValid && JOURNEY_EXERCISES.some((e) => e.id === id);
+  const isValid = !isNaN(id) && id >= 1 && id <= journey.exercises.length;
+  const exerciseExists = isValid && journey.exercises.some((e) => e.id === id);
 
   useEffect(() => {
     if (!exerciseExists) router.replace("/");

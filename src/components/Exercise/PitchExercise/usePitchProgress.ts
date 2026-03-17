@@ -1,12 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { isInTune, matchesNoteTarget } from "@/lib/pitch";
-import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
-import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide } from "@/lib/resolve-exercise";
+import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/lib/resolve-exercise";
 
 interface UsePitchProgressOptions {
-  exercise: PitchDetectionExercise | PitchDetectionSlideExercise;
+  exercise: PitchDetectionConfig | PitchDetectionSlideConfig;
   exerciseId: number;
-  resolved: ResolvedPitchDetection | ResolvedPitchDetectionSlide;
+  resolved: PitchDetectionExercise | PitchDetectionSlideExercise;
   pitchHzRef: React.RefObject<number | null>;
   enabled?: boolean;
 }

@@ -5,9 +5,9 @@ import confetti from "canvas-confetti";
 import PitchCanvas from "@/components/PitchCanvas";
 import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
-import type { ToneFollowExercise as ToneFollowConfig } from "@/constants/journey";
-import type { ColoredNote } from "@/constants/tone-slots";
-import type { ResolvedToneFollow } from "@/lib/resolve-exercise";
+import type { ToneFollowConfig } from "@/constants/journey";
+import type { ColoredNote } from "@/lib/VocalRange";
+import type { ToneFollowExercise as ToneFollowExerciseType } from "@/lib/resolve-exercise";
 
 const SLIDE_HOLD_START_MS = 1000;
 const SLIDE_RAMP_MS = 2500;
@@ -19,7 +19,7 @@ interface ToneFollowExerciseProps {
   exercise: ToneFollowConfig;
   exerciseId: number;
   isLast: boolean;
-  resolved: ResolvedToneFollow;
+  resolved: ToneFollowExerciseType;
   isAlreadyCompleted: boolean;
   onComplete: () => void;
   onSkip: () => void;

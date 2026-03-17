@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 import { Button } from "@/components/ui";
 import { useVolumeDetection } from "@/hooks/useVolumeDetection";
-import type { VolumeDetectionExercise as VolumeDetectionConfig } from "@/constants/journey";
+import type { VolumeDetectionConfig } from "@/constants/journey";
 
 interface VolumeDetectionExerciseProps {
   exercise: VolumeDetectionConfig;

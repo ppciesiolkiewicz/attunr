@@ -1,4 +1,4 @@
-import type { ResolvedNote } from "@/constants/tone-slots";
+import type { ResolvedNote } from "@/lib/VocalRange";
 import { VOICE_TYPES } from "@/constants/voice-types";
 import type { VoiceTypeId } from "@/constants/voice-types";
 

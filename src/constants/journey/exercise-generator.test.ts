@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ExerciseGenerator } from "./generator";
+import { ExerciseGenerator } from "./exercise-generator";
 import { BandTargetKind, NoteDuration } from "./types";
 
 const gen = new ExerciseGenerator();

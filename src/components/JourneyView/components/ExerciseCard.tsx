@@ -5,10 +5,10 @@ import {
 } from "../utils";
 import { Text } from "@/components/ui";
 import { BookIcon } from "./BookIcon";
-import type { JourneyExercise } from "@/constants/journey";
+import type { ExerciseConfig } from "@/constants/journey";
 
 interface ExerciseCardProps {
-  exercise: JourneyExercise;
+  exercise: ExerciseConfig;
   highestCompleted: number;
   onSelect: (id: number) => void;
 }
