@@ -1,9 +1,8 @@
 import { hzToMidi, midiToHz, hzToNoteName, NOTE_NAMES } from "@/lib/pitch";
+import { Note, Scale as TonalScale } from "tonal";
 import { parseRgb, lerpColor, toHex } from "@/lib/color";
 import type { TuningStandard } from "@/constants/tuning";
 
-/** Major scale intervals (semitones from root): W-W-H-W-W-W-H */
-const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11] as const;
 
 // ── Note types ──────────────────────────────────────────────────────────────
 
@@ -69,11 +68,17 @@ export class VocalRange {
     return closest;
   }
 
-  /** Notes filtered to the major scale rooted at the lowest note. */
-  get majorScaleNotes(): ColoredNote[] {
+  /**
+   * Filter allNotes to a given scale type.
+   * @param scaleType — tonal.js scale name (e.g. "major", "minor", "major pentatonic")
+   * @param rootDegree — 1-indexed chromatic degree from lowest note (default 1)
+   */
+  scaleNotes(scaleType: string, rootDegree: number = 1): ColoredNote[] {
     if (this.allNotes.length === 0) return [];
-    const rootChroma = ((this.allNotes[0].midi % 12) + 12) % 12;
-    const pcs = new Set(MAJOR_SCALE_INTERVALS.map((i) => (rootChroma + i) % 12));
+    const rootMidi = this.allNotes[0].midi + (rootDegree - 1);
+    const rootName = NOTE_NAMES[((rootMidi % 12) + 12) % 12];
+    const scaleInfo = TonalScale.get(`${rootName} ${scaleType}`);
+    const pcs = new Set(scaleInfo.notes.map((n) => Note.chroma(n) ?? -1));
     return this.allNotes.filter((n) => pcs.has(((n.midi % 12) + 12) % 12));
   }
 

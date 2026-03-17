@@ -93,6 +93,7 @@ export function BaseExercise({
           exerciseId={exerciseId}
           isLast={isLast}
           vocalRange={vocalRange}
+          scale={exercise.scale}
           onComplete={onComplete}
           onPrev={onPrev}
         />

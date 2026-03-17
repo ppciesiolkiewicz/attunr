@@ -15,7 +15,8 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       {
         exerciseTypeId: "learn",
         title: "Vocal placement",
-        cardCue: "Discover vocal placement and how it connects voice to body awareness",
+        cardCue:
+          "Discover vocal placement and how it connects voice to body awareness",
         elements: [
           {
             type: "paragraph",
@@ -34,31 +35,35 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Understanding notes",
         cardCue: "Learn how musical notes work and see your vocal range",
       },
-      {
-        exerciseTypeId: "volume-detection",
-        title: "Sss",
-        subtitle: "Make sound · 15 seconds",
-        cardCue: "Wake up your breath with a sustained sss",
-        targetSeconds: 15,
-        cues: ["sss", "ssss"],
-        instruction: "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nIt's okay to take breaths between sounds.",
-      },
-      gen.sustain({
-        note: 1,
+      // {
+      //   exerciseTypeId: "volume-detection",
+      //   title: "Sss",
+      //   subtitle: "Make sound · 15 seconds",
+      //   cardCue: "Wake up your breath with a sustained sss",
+      //   targetSeconds: 15,
+      //   cues: ["sss", "ssss"],
+      //   instruction:
+      //     "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nIt's okay to take breaths between sounds.",
+      // },
+      gen.hillSustain({
+        note: 4,
         seconds: 5,
+        direction: "down",
         title: "Gentle hum",
         subtitle: "Hum · 5 seconds × 3",
         cardCue: "Your first pitched sound — a low, steady hum",
-        instruction: "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nKeep it gentle and relaxed.",
+        instruction:
+          "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nKeep it gentle and relaxed.",
       }),
       gen.hillSustain({
-        note: 1,
+        note: 4,
         seconds: 6,
         direction: "down",
         title: "Low Uu",
         subtitle: "Chest voice · 6 seconds × 3",
         cardCue: "Warm up your chest voice with a low Uu vowel",
-        instruction: "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
+        instruction:
+          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
       }),
       gen.zoneAbove({
         boundaryNote: -6,
@@ -67,13 +72,15 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Hoo hoo",
         subtitle: "Head voice · 5 seconds × 3",
         cardCue: "Find your head voice with a light, owl-like sound",
-        instruction: "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
+        instruction:
+          "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
       }),
       gen.farinelli({
         maxCount: 7,
         title: "Farinelli breathwork",
         cardCue: "Calm your nervous system and build steady diaphragm control",
-        instruction: "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
+        instruction:
+          "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
       }),
     ],
   },
@@ -90,7 +97,8 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardCue: "Get your lips buzzing without pitch pressure",
         targetSeconds: 15,
         cues: ["lip roll"],
-        instruction: "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
+        instruction:
+          "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
       },
       gen.lipRoll({
         startNote: 1,
@@ -99,7 +107,8 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Lip roll slide",
         subtitle: "Glide low to high · play 3 times",
         cardCue: "Slide your voice from low to high with a lip roll",
-        instruction: "Play the tone and lip roll alongside it.\nSlide smoothly from low to high — feel the glide in your lips.",
+        instruction:
+          "Play the tone and lip roll alongside it.\nSlide smoothly from low to high — feel the glide in your lips.",
       }),
     ],
   },
@@ -114,21 +123,24 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         seconds: 5,
         title: "Hum — mid-low",
         subtitle: "Hum · 5 seconds × 3",
-        instruction: "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
+        instruction:
+          "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
       }),
       gen.majorSecond({
         title: "Major Second",
         subtitle: "Sing two notes · intervals",
         cardCue: "Your first melody — just two adjacent notes",
         tempo: 50,
-        instruction: "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match.",
+        instruction:
+          "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match.",
       }),
       gen.sustain({
         note: 4,
         seconds: 6,
         title: "U — mid-low",
         subtitle: "Vowel U · 6 seconds × 3",
-        instruction: "Sing uuu on the mid-low tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
+        instruction:
+          "Sing uuu on the mid-low tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
       }),
     ],
   },
@@ -142,7 +154,8 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         maxCount: 5,
         title: "Farinelli breathwork",
         cardCue: "Calm your nervous system and build steady diaphragm control",
-        instruction: "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
+        instruction:
+          "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
       }),
       gen.lipRollSustain({
         note: 5,
@@ -150,14 +163,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         requiredPlays: 3,
         title: "Lip roll sustain",
         subtitle: "Hold the buzz · play 3 times",
-        instruction: "Play the tone and lip roll alongside it.\nKeep the buzz steady — lips vibrating without force.",
+        instruction:
+          "Play the tone and lip roll alongside it.\nKeep the buzz steady — lips vibrating without force.",
       }),
       gen.sustain({
         note: 7,
         seconds: 6,
         title: "Hum — mid",
         subtitle: "Hum · 6 seconds × 3",
-        instruction: "Hum on a mid tone.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
+        instruction:
+          "Hum on a mid tone.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
         completionModal: {
           title: "Chapter 1 Complete",
           subtitle: "Introduction",

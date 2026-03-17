@@ -138,6 +138,8 @@ export interface LearnConfig extends BaseExerciseConfig {
 
 export interface LearnNotesConfig extends BaseExerciseConfig {
   exerciseTypeId: "learn-notes-1";
+  /** Scale to display on the range canvas. Defaults to major scale from root. */
+  scale?: BaseScale;
 }
 
 /** Shape of the reference tone played before a pitch-detection exercise. */

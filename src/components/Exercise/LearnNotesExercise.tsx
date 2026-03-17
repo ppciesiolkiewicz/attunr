@@ -3,11 +3,13 @@
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import { Button, Text } from "@/components/ui";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
+import type { BaseScale } from "@/constants/journey/types";
 
 interface LearnNotesExerciseProps {
   exerciseId: number;
   isLast: boolean;
   vocalRange: VocalRange;
+  scale?: BaseScale;
   onComplete: () => void;
   onPrev?: () => void;
 }
@@ -134,10 +136,14 @@ export function LearnNotesExercise({
   exerciseId,
   isLast,
   vocalRange,
+  scale,
   onComplete,
   onPrev,
 }: LearnNotesExerciseProps) {
-  const allNotes = useMemo(() => vocalRange.majorScaleNotes, [vocalRange]);
+  const allNotes = useMemo(
+    () => vocalRange.scaleNotes(scale?.type ?? "major", scale?.root ?? 1),
+    [vocalRange, scale],
+  );
   const lowest = allNotes[0];
   const highest = allNotes[allNotes.length - 1];
 
