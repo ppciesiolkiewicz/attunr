@@ -3,6 +3,7 @@
 import { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { JourneyList } from "./components/JourneyList";
+import { journey } from "@/constants/journey";
 import type { Settings } from "@/hooks/useSettings";
 import type { ColoredNote } from "@/lib/VocalRange";
 
@@ -31,7 +32,7 @@ export default function JourneyView({
       <Suspense>
         <JourneyList
           settings={settings}
-          onSelect={(exerciseId) => router.push(`/journey/${exerciseId}`)}
+          onSelect={(exerciseId) => router.push(journey.exerciseHref(exerciseId))}
         />
       </Suspense>
     </div>
