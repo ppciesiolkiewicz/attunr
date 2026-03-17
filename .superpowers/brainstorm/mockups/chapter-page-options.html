@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attunr — Chapter Detail Page Options</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #06060e;
+    color: #ebe8f5;
+    font-family: 'DM Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .page-header {
+    text-align: center;
+    padding: 48px 24px 16px;
+  }
+  .page-header h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 28px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 8px;
+  }
+  .page-header p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: 420px;
+    margin: 32px auto 64px;
+    padding: 0 20px;
+  }
+
+  .option-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(168,133,246,0.7);
+    margin-bottom: 12px;
+  }
+
+  .option-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  /* ── Phone frame ─────────────────────────────── */
+  .phone {
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    background: #0c0c18;
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
+  }
+  .phone-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 20px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+  }
+  .phone-content {
+    padding: 0 16px 24px;
+  }
+
+  /* ── Back nav ─────────────────────────────── */
+  .back-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(168,133,246,0.6);
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .back-nav svg { width: 14px; height: 14px; }
+
+  /* ── Chapter header ──────────────────────── */
+  .ch-header {
+    margin-bottom: 20px;
+  }
+  .ch-roman {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(168,133,246,0.5);
+    margin-bottom: 4px;
+  }
+  .ch-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .ch-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.38);
+    line-height: 1.55;
+  }
+
+  /* ── Progress bar ────────────────────────── */
+  .progress-bar {
+    height: 3px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    margin: 16px 0;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #a855f7, #6366f1);
+    transition: width 0.5s ease;
+  }
+  .progress-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 16px;
+  }
+
+  /* ── Action buttons ──────────────────────── */
+  .actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .btn-primary {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: linear-gradient(135deg, #7c3aed, #6366f1);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(124,58,237,0.25);
+  }
+  .btn-secondary {
+    flex: 1;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    background: rgba(255,255,255,0.04);
+    color: rgba(255,255,255,0.7);
+  }
+  .btn-ghost {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ── Stage section ───────────────────────── */
+  .stage-section {
+    margin-bottom: 16px;
+  }
+  .stage-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 8px;
+    padding-left: 2px;
+  }
+
+  /* ── Exercise row ────────────────────────── */
+  .ex-row {
+    display: flex;
+    align-items: stretch;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
+    margin-bottom: 6px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .ex-row.current {
+    border-color: rgba(168,133,246,0.25);
+    background: rgba(168,133,246,0.06);
+  }
+  .ex-row.locked {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .ex-row.complete .ex-strip { opacity: 0.6; }
+  .ex-strip {
+    width: 3px;
+    flex-shrink: 0;
+  }
+  .ex-body {
+    flex: 1;
+    padding: 10px 12px;
+    min-width: 0;
+  }
+  .ex-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 2px;
+  }
+  .ex-cue {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+  }
+  .ex-status {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 14px;
+    color: rgba(255,255,255,0.2);
+  }
+  .ex-status.done { color: #a855f7; }
+
+  /* ── Continue card ───────────────────────── */
+  .continue-card {
+    border-radius: 14px;
+    border: 1px solid rgba(168,133,246,0.2);
+    background: linear-gradient(135deg, rgba(168,133,246,0.08), rgba(99,102,241,0.06));
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+  }
+  .continue-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(168,133,246,0.55);
+    margin-bottom: 6px;
+  }
+  .continue-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 3px;
+  }
+  .continue-meta {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+  }
+
+  /* ── Info grid ───────────────────────────── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .info-cell {
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.02);
+    padding: 12px;
+  }
+  .info-cell .val {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 2px;
+  }
+  .info-cell .lbl {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+  }
+
+  /* ── Tag pills ───────────────────────────── */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .tag {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* ── Divider ─────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.05);
+    margin: 20px 0;
+  }
+
+  /* ── Selection indicator ─────────────────── */
+  .option-wrapper {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  .option-wrapper:hover { transform: translateY(-2px); }
+  .option-wrapper.selected .phone {
+    border-color: rgba(168,133,246,0.4);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(168,133,246,0.3), 0 0 40px rgba(168,133,246,0.08);
+  }
+  .option-wrapper.selected .option-label {
+    color: #a855f7;
+  }
+  .select-badge {
+    display: none;
+    position: absolute;
+    top: 28px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #7c3aed;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+  .option-wrapper.selected .select-badge { display: flex; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Chapter Detail Page — /chapter/$ch</h1>
+  <p>Click a mockup to select your preferred approach. What should users see when they tap into a chapter?</p>
+</div>
+
+<div class="options-grid">
+
+  <!-- ── OPTION A ───────────────────────────────────────── -->
+  <div class="option-wrapper" onclick="selectOption(this, 'A')">
+    <div class="select-badge">A</div>
+    <div class="option-label">Option A — Exercise List</div>
+    <div class="option-desc">Full exercise list scoped to the chapter. Continue card at top for quick resume. Each exercise tappable. Feels like a zoomed-in view of the journey.</div>
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>attunr</span></div>
+      <div class="phone-content">
+        <div class="back-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          Journey
+        </div>
+        <div class="ch-header">
+          <div class="ch-roman">Chapter I</div>
+          <div class="ch-title">Introduction</div>
+          <div class="ch-desc">Your first steps — discover your voice, feel vibrations, and learn to match tones.</div>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill" style="width: 38%"></div></div>
+        <div class="progress-label">5 of 13 exercises complete</div>
+
+        <div class="continue-card">
+          <div class="continue-label">Continue</div>
+          <div class="continue-title">Hold Your First Note</div>
+          <div class="continue-meta">Stage 2: First Sounds &middot; Exercise 6 of 13</div>
+        </div>
+
+        <div class="actions" style="margin-bottom: 16px;">
+          <button class="btn-ghost" style="flex: none;">Start from beginning</button>
+        </div>
+
+        <div class="stage-section">
+          <div class="stage-label">Wake Up</div>
+          <div class="ex-row complete">
+            <div class="ex-strip" style="background: #22c55e"></div>
+            <div class="ex-body">
+              <div class="ex-title">Welcome to Attunr</div>
+              <div class="ex-cue">What you'll learn</div>
+            </div>
+            <div class="ex-status done">&#10003;</div>
+          </div>
+          <div class="ex-row complete">
+            <div class="ex-strip" style="background: #3b82f6"></div>
+            <div class="ex-body">
+              <div class="ex-title">Meet the Notes</div>
+              <div class="ex-cue">Your vocal range on screen</div>
+            </div>
+            <div class="ex-status done">&#10003;</div>
+          </div>
+          <div class="ex-row complete">
+            <div class="ex-strip" style="background: linear-gradient(to bottom, #eab308, #22c55e)"></div>
+            <div class="ex-body">
+              <div class="ex-title">Make a Sound</div>
+              <div class="ex-cue">Any sound for 5 seconds</div>
+            </div>
+            <div class="ex-status done">&#10003;</div>
+          </div>
+          <div class="ex-row complete">
+            <div class="ex-strip" style="background: linear-gradient(to bottom, #f97316, #eab308)"></div>
+            <div class="ex-body">
+              <div class="ex-title">Fill the Air</div>
+              <div class="ex-cue">Sustained humming</div>
+            </div>
+            <div class="ex-status done">&#10003;</div>
+          </div>
+        </div>
+
+        <div class="stage-section">
+          <div class="stage-label">First Sounds</div>
+          <div class="ex-row complete">
+            <div class="ex-strip" style="background: #6366f1"></div>
+            <div class="ex-body">
+              <div class="ex-title">Sustain a Tone</div>
+              <div class="ex-cue">Hold a single note steady</div>
+            </div>
+            <div class="ex-status done">&#10003;</div>
+          </div>
+          <div class="ex-row current">
+            <div class="ex-strip" style="background: #a855f7"></div>
+            <div class="ex-body">
+              <div class="ex-title">Hold Your First Note</div>
+              <div class="ex-cue">Roll the ball uphill</div>
+            </div>
+            <div class="ex-status" style="color: rgba(168,133,246,0.6)">&#8250;</div>
+          </div>
+          <div class="ex-row locked">
+            <div class="ex-strip" style="background: #a855f7"></div>
+            <div class="ex-body">
+              <div class="ex-title">Hill Sustain</div>
+              <div class="ex-cue">Control your pitch direction</div>
+            </div>
+            <div class="ex-status">&middot;&middot;&middot;</div>
+          </div>
+          <div class="ex-row locked">
+            <div class="ex-strip" style="background: linear-gradient(to bottom, #ef4444, #6366f1)"></div>
+            <div class="ex-body">
+              <div class="ex-title">Lip Roll Glide</div>
+              <div class="ex-cue">Glide between two notes</div>
+            </div>
+            <div class="ex-status">&middot;&middot;&middot;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── OPTION B ───────────────────────────────────────── -->
+  <div class="option-wrapper" onclick="selectOption(this, 'B')">
+    <div class="select-badge">B</div>
+    <div class="option-label">Option B — Overview + Actions</div>
+    <div class="option-desc">Focus on what the chapter is about, what you'll practice, and stats. Two prominent action buttons. Exercises are summarized, not listed individually. Cleaner, less overwhelming.</div>
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>attunr</span></div>
+      <div class="phone-content">
+        <div class="back-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          Journey
+        </div>
+        <div class="ch-header">
+          <div class="ch-roman">Chapter I</div>
+          <div class="ch-title">Introduction</div>
+          <div class="ch-desc">Your first steps — discover your voice, feel vibrations, and learn to match tones. You'll start with simple sounds and gradually build toward sustaining notes.</div>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill" style="width: 38%"></div></div>
+        <div class="progress-label">5 of 13 exercises complete</div>
+
+        <div class="actions">
+          <button class="btn-primary">Continue &rarr;</button>
+          <button class="btn-secondary">Start over</button>
+        </div>
+
+        <div class="continue-card">
+          <div class="continue-label">Up next</div>
+          <div class="continue-title">Hold Your First Note</div>
+          <div class="continue-meta">Roll the ball uphill by matching the target pitch</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="info-grid">
+          <div class="info-cell">
+            <div class="val">13</div>
+            <div class="lbl">Exercises</div>
+          </div>
+          <div class="info-cell">
+            <div class="val">4</div>
+            <div class="lbl">Stages</div>
+          </div>
+          <div class="info-cell">
+            <div class="val">~12m</div>
+            <div class="lbl">Est. time</div>
+          </div>
+          <div class="info-cell">
+            <div class="val">38%</div>
+            <div class="lbl">Progress</div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 12px;">
+          <div class="stage-label">What you'll practice</div>
+          <div class="tags">
+            <span class="tag">Humming</span>
+            <span class="tag">Pitch matching</span>
+            <span class="tag">Sustained tones</span>
+            <span class="tag">Lip rolls</span>
+            <span class="tag">Breathing</span>
+            <span class="tag">Note reading</span>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="stage-section">
+          <div class="stage-label">Stages</div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
+              <div>
+                <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.8);">Wake Up</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.3);">4 exercises</div>
+              </div>
+              <div style="font-size: 12px; color: #a855f7;">&#10003; Done</div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: rgba(168,133,246,0.05); border: 1px solid rgba(168,133,246,0.15);">
+              <div>
+                <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.9);">First Sounds</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.3);">1 of 4 done</div>
+              </div>
+              <div style="font-size: 12px; color: rgba(168,133,246,0.6);">In progress</div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); opacity: 0.5;">
+              <div>
+                <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6);">First Melody</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.25);">3 exercises</div>
+              </div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.2);">Locked</div>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); opacity: 0.5;">
+              <div>
+                <div style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.6);">Breath</div>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.25);">3 exercises</div>
+              </div>
+              <div style="font-size: 12px; color: rgba(255,255,255,0.2);">Locked</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── OPTION C ───────────────────────────────────────── -->
+  <div class="option-wrapper" onclick="selectOption(this, 'C')">
+    <div class="select-badge">C</div>
+    <div class="option-label">Option C — Hybrid (Recommended)</div>
+    <div class="option-desc">Best of both: prominent continue + start actions up top, then collapsible stages with exercise list below. Users get the quick-action convenience of B with the detail of A.</div>
+    <div class="phone">
+      <div class="phone-status"><span>9:41</span><span>attunr</span></div>
+      <div class="phone-content">
+        <div class="back-nav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+          Journey
+        </div>
+        <div class="ch-header">
+          <div class="ch-roman">Chapter I</div>
+          <div class="ch-title">Introduction</div>
+          <div class="ch-desc">Discover your voice, feel vibrations, and learn to match tones.</div>
+        </div>
+
+        <div class="progress-bar"><div class="progress-fill" style="width: 38%"></div></div>
+        <div class="progress-label">5 of 13 &middot; Stage 2: First Sounds</div>
+
+        <div class="actions">
+          <button class="btn-primary">Continue &rarr;</button>
+          <button class="btn-secondary">Start over</button>
+        </div>
+
+        <div class="continue-card">
+          <div class="continue-label">Up next</div>
+          <div class="continue-title">Hold Your First Note</div>
+          <div class="continue-meta">Roll the ball uphill by matching the target pitch</div>
+        </div>
+
+        <!-- Collapsible stage: completed -->
+        <div class="stage-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; cursor: pointer;">
+            <div class="stage-label" style="margin: 0;">Wake Up</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 11px; color: #a855f7;">4/4</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+          <!-- collapsed — just showing the summary row -->
+          <div style="padding: 8px 12px; border-radius: 10px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); font-size: 12px; color: rgba(255,255,255,0.3);">
+            Welcome to Attunr, Meet the Notes, Make a Sound, Fill the Air
+          </div>
+        </div>
+
+        <!-- Collapsible stage: in progress — expanded -->
+        <div class="stage-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; cursor: pointer;">
+            <div class="stage-label" style="margin: 0; color: rgba(255,255,255,0.45);">First Sounds</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 11px; color: rgba(168,133,246,0.6);">1/4</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2"><path d="M18 15l-6-6-6 6"/></svg>
+            </div>
+          </div>
+          <div class="ex-row complete">
+            <div class="ex-strip" style="background: #6366f1"></div>
+            <div class="ex-body">
+              <div class="ex-title">Sustain a Tone</div>
+              <div class="ex-cue">Hold a single note steady</div>
+            </div>
+            <div class="ex-status done">&#10003;</div>
+          </div>
+          <div class="ex-row current">
+            <div class="ex-strip" style="background: #a855f7"></div>
+            <div class="ex-body">
+              <div class="ex-title">Hold Your First Note</div>
+              <div class="ex-cue">Roll the ball uphill</div>
+            </div>
+            <div class="ex-status" style="color: rgba(168,133,246,0.6)">&#8250;</div>
+          </div>
+          <div class="ex-row locked">
+            <div class="ex-strip" style="background: #a855f7"></div>
+            <div class="ex-body">
+              <div class="ex-title">Hill Sustain</div>
+              <div class="ex-cue">Control your pitch direction</div>
+            </div>
+            <div class="ex-status">&middot;&middot;&middot;</div>
+          </div>
+          <div class="ex-row locked">
+            <div class="ex-strip" style="background: linear-gradient(to bottom, #ef4444, #6366f1)"></div>
+            <div class="ex-body">
+              <div class="ex-title">Lip Roll Glide</div>
+              <div class="ex-cue">Glide between two notes</div>
+            </div>
+            <div class="ex-status">&middot;&middot;&middot;</div>
+          </div>
+        </div>
+
+        <!-- Collapsible stage: locked -->
+        <div class="stage-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; opacity: 0.45;">
+            <div class="stage-label" style="margin: 0;">First Melody</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 11px; color: rgba(255,255,255,0.2);">0/3</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="stage-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; opacity: 0.45;">
+            <div class="stage-label" style="margin: 0;">Breath</div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="font-size: 11px; color: rgba(255,255,255,0.2);">0/3</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let selected = null;
+  function selectOption(el, label) {
+    document.querySelectorAll('.option-wrapper').forEach(w => w.classList.remove('selected'));
+    el.classList.add('selected');
+    selected = label;
+  }
+</script>
+
+</body>
+</html>
