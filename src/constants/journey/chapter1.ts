@@ -111,8 +111,9 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
       },
       gen.lipRoll({
-        startNote: -4,
+        startNote: -5,
         endNote: 4,
+        scale: { type: "major", root: 1 },
         requiredPlays: 3,
         title: "Lip roll slide",
         subtitle: "Glide high to low · play 3 times",

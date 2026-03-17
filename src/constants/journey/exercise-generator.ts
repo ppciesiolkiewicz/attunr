@@ -3,6 +3,7 @@ import type {
   ModalConfig,
   NoteTarget,
   SustainNoteConfig,
+  BaseScale,
   MelodyScale,
   MelodyEvent,
   DisplayScale,
@@ -79,6 +80,7 @@ export interface LipRollParams extends CommonParams {
   startNote: number;
   endNote: number;
   requiredPlays: number;
+  scale?: BaseScale;
 }
 
 export interface FarinelliParams extends CommonParams {
@@ -141,9 +143,9 @@ function buildDisplayNotes(
 
 export class ExerciseGenerator {
   /**
-   * Interval exercise. For each root stepping from lo to hi-chromaticDegree+1:
-   * play chord (root+interval, Quarter), pause (Eighth), sing root (noteDuration), sing interval (noteDuration).
-   * Each step is a separate MelodyScale with type "chromatic" and root at lo.
+   * Interval exercise with shifting roots.
+   * Roots arc from startNote → endNote → startNote. Each step is a separate
+   * MelodyScale with its own root; events use relative positions 1 and chromaticDegree.
    */
   interval(params: IntervalParams): ExerciseConfigInput {
     const {
@@ -164,27 +166,33 @@ export class ExerciseGenerator {
     const lo = Math.min(startNote, endNote);
     const hi = Math.max(startNote, endNote);
 
-    const melody: MelodyScale[] = [];
-    const activeNotes: number[] = [];
-    for (let root = lo; root <= hi - chromaticDegree + 1; root++) {
-      const intervalNote = root + chromaticDegree - 1;
-      if (!activeNotes.includes(root)) activeNotes.push(root);
-      if (!activeNotes.includes(intervalNote)) activeNotes.push(intervalNote);
+    // Build root arc: lo → hi → lo
+    const roots: number[] = [];
+    for (let r = lo; r <= hi; r++) roots.push(r);
+    for (let r = hi - 1; r > lo; r--) roots.push(r);
+    roots.push(lo);
+
+    const melody: MelodyScale[] = roots.map((root) => {
       const events: MelodyEvent[] = [
         {
           type: "play",
-          targets: [toTarget(root), toTarget(intervalNote)],
+          targets: [toTarget(1), toTarget(chromaticDegree)],
           duration: NoteDuration.Quarter,
         },
         { type: "pause", duration: NoteDuration.Eighth },
-        { type: "note", target: toTarget(root), duration: noteDuration },
-        {
-          type: "note",
-          target: toTarget(intervalNote),
-          duration: noteDuration,
-        },
+        { type: "note", target: toTarget(1), duration: noteDuration },
+        { type: "note", target: toTarget(chromaticDegree), duration: noteDuration },
+        { type: "note", target: toTarget(chromaticDegree), duration: noteDuration },
       ];
-      melody.push({ type: "chromatic", root: lo, events });
+      return { type: "chromatic" as const, root, events };
+    });
+
+    // Active notes span the full range: every root and its interval note
+    const activeNotes: number[] = [];
+    for (let r = lo; r <= hi; r++) {
+      if (!activeNotes.includes(r)) activeNotes.push(r);
+      const intervalNote = r + chromaticDegree - 1;
+      if (!activeNotes.includes(intervalNote)) activeNotes.push(intervalNote);
     }
 
     return {
@@ -197,7 +205,7 @@ export class ExerciseGenerator {
       exerciseTypeId: "melody",
       tempo,
       melody,
-      displayNotes: buildDisplayNotes(lo, hi, activeNotes),
+      displayNotes: buildDisplayNotes(lo, hi + chromaticDegree - 1, activeNotes),
       minScore,
     };
   }
@@ -520,7 +528,9 @@ export class ExerciseGenerator {
       startNote,
       endNote,
       requiredPlays,
+      scale = { type: "chromatic", root: 1 },
     } = params;
+    const isMajor = scale.type === "major";
     return {
       title,
       subtitle,
@@ -529,8 +539,8 @@ export class ExerciseGenerator {
       introModal,
       completionModal,
       exerciseTypeId: "tone-follow",
-      scale: { type: "chromatic", root: 1 },
-      displayNotes: [{ type: "major", root: 1, notes: [] }],
+      scale,
+      displayNotes: isMajor ? undefined : [{ type: "major", root: 1, notes: [] }],
       toneShape: {
         kind: "slide",
         from: toTarget(startNote),
