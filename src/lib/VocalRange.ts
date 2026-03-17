@@ -2,6 +2,9 @@ import { hzToMidi, midiToHz, hzToNoteName, NOTE_NAMES } from "@/lib/pitch";
 import { parseRgb, lerpColor, toHex } from "@/lib/color";
 import type { TuningStandard } from "@/constants/tuning";
 
+/** Major scale intervals (semitones from root): W-W-H-W-W-W-H */
+const MAJOR_SCALE_INTERVALS = [0, 2, 4, 5, 7, 9, 11] as const;
+
 // ── Note types ──────────────────────────────────────────────────────────────
 
 /** A resolved note from a scale — physical properties without visual styling. */
@@ -64,6 +67,14 @@ export class VocalRange {
       }
     }
     return closest;
+  }
+
+  /** Notes filtered to the major scale rooted at the lowest note. */
+  get majorScaleNotes(): ColoredNote[] {
+    if (this.allNotes.length === 0) return [];
+    const rootChroma = ((this.allNotes[0].midi % 12) + 12) % 12;
+    const pcs = new Set(MAJOR_SCALE_INTERVALS.map((i) => (rootChroma + i) % 12));
+    return this.allNotes.filter((n) => pcs.has(((n.midi % 12) + 12) % 12));
   }
 
   // ── Private ─────────────────────────────────────────────────────────────

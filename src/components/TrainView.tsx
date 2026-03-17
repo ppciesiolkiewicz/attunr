@@ -58,7 +58,7 @@ export default function TrainView({
         settings.vocalRangeLowHz,
         settings.vocalRangeHighHz,
         settings.tuning,
-      ).allNotes,
+      ).majorScaleNotes,
     [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
 

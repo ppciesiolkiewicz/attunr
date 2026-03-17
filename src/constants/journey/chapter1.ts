@@ -36,30 +36,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       },
       {
         exerciseTypeId: "volume-detection",
-        title: "Sss-Zzz-Sss",
+        title: "Sss",
         subtitle: "Make sound · 15 seconds",
-        cardCue: "Wake up your breath with simple sounds",
+        cardCue: "Wake up your breath with a sustained sss",
         targetSeconds: 15,
-        cues: ["sss", "zzz", "sss"],
-        instruction: "Alternate between sss and zzz sounds. No pitch needed — just feel the vibration shift from voiceless to voiced.\nIt's okay to take breaths between sounds.",
+        cues: ["sss", "ssss"],
+        instruction: "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nIt's okay to take breaths between sounds.",
       },
-      {
-        exerciseTypeId: "volume-detection",
-        title: "Voiceless lip roll",
-        subtitle: "Lip buzz · 15 seconds",
-        cardCue: "Get your lips buzzing without pitch pressure",
-        targetSeconds: 15,
-        cues: ["lip roll"],
-        instruction: "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
-      },
-    ],
-  },
-
-  // ── Stage 2: First Sounds ───────────────────────────────────────────────
-  {
-    id: "ch1-first-sounds",
-    title: "First Sounds",
-    exercises: [
       gen.sustain({
         note: 1,
         seconds: 5,
@@ -67,15 +50,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         subtitle: "Hum · 5 seconds × 3",
         cardCue: "Your first pitched sound — a low, steady hum",
         instruction: "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nKeep it gentle and relaxed.",
-      }),
-      gen.zoneAbove({
-        boundaryNote: -6,
-        seconds: 5,
-        repeats: 3,
-        title: "Hoo hoo",
-        subtitle: "Head voice · 5 seconds × 3",
-        cardCue: "Find your head voice with a light, owl-like sound",
-        instruction: "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
       }),
       gen.hillSustain({
         note: 1,
@@ -86,6 +60,38 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardCue: "Warm up your chest voice with a low Uu vowel",
         instruction: "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
       }),
+      gen.zoneAbove({
+        boundaryNote: -6,
+        seconds: 5,
+        repeats: 3,
+        title: "Hoo hoo",
+        subtitle: "Head voice · 5 seconds × 3",
+        cardCue: "Find your head voice with a light, owl-like sound",
+        instruction: "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
+      }),
+      gen.farinelli({
+        maxCount: 7,
+        title: "Farinelli breathwork",
+        cardCue: "Calm your nervous system and build steady diaphragm control",
+        instruction: "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
+      }),
+    ],
+  },
+
+  // ── Stage 2: First Sounds ───────────────────────────────────────────────
+  {
+    id: "ch1-first-sounds",
+    title: "First Sounds",
+    exercises: [
+      {
+        exerciseTypeId: "volume-detection",
+        title: "Voiceless lip roll",
+        subtitle: "Lip buzz · 15 seconds",
+        cardCue: "Get your lips buzzing without pitch pressure",
+        targetSeconds: 15,
+        cues: ["lip roll"],
+        instruction: "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
+      },
       gen.lipRoll({
         startNote: 1,
         endNote: -1,

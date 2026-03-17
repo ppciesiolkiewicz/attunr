@@ -123,7 +123,7 @@ function NoteRangeCanvas({ bands }: { bands: ColoredNote[] }) {
     <canvas
       ref={canvasRef}
       className="block w-full h-full"
-      aria-label="Your vocal range — 7 reference notes from low to high"
+      aria-label="Your vocal range — major scale notes from low to high"
     />
   );
 }
@@ -137,7 +137,7 @@ export function LearnNotesExercise({
   onComplete,
   onPrev,
 }: LearnNotesExerciseProps) {
-  const allNotes = useMemo(() => vocalRange.allNotes, [vocalRange.allNotes]);
+  const allNotes = useMemo(() => vocalRange.majorScaleNotes, [vocalRange]);
   const lowest = allNotes[0];
   const highest = allNotes[allNotes.length - 1];
 

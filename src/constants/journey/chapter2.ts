@@ -13,11 +13,19 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
   exercises: [
     {
       exerciseTypeId: "volume-detection",
-      title: "Sss-Zzz-Sss",
+      title: "Sss",
       subtitle: "Wake up breath · 15 seconds",
       targetSeconds: 15,
-      cues: ["sss", "zzz", "sss"],
-      instruction: "Alternate between sss and zzz sounds to wake up your breath.",
+      cues: ["sss", "ssss"],
+      instruction: "Make a steady sss sound to wake up your breath.",
+    },
+    {
+      exerciseTypeId: "volume-detection",
+      title: "Sss-Zzz",
+      subtitle: "Wake up breath · 15 seconds",
+      targetSeconds: 15,
+      cues: ["sss", "zzz"],
+      instruction: "Alternate between sss and zzz sounds — feel the vibration shift from voiceless to voiced.",
     },
     gen.lipRoll({
       startNote: 1,
