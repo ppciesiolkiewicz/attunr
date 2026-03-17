@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { ExerciseConfig } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import { resolveExercise } from "@/lib/resolve-exercise";
-import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneFollow, ResolvedMelody, ResolvedRhythm } from "@/lib/resolve-exercise";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise, ToneFollowExercise as ToneFollowExerciseType, MelodyExercise as MelodyExerciseType, RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
@@ -116,7 +116,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          resolved={resolved as ResolvedToneFollow}
+          resolved={resolved as ToneFollowExerciseType}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}
@@ -132,7 +132,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          resolved={resolved as ResolvedMelody}
+          resolved={resolved as MelodyExerciseType}
           pitchHzRef={pitchHzRef}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
@@ -160,7 +160,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          resolved={resolved as ResolvedRhythm}
+          resolved={resolved as RhythmExerciseType}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}
@@ -175,7 +175,7 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
-          resolved={resolved as ResolvedPitchDetection | ResolvedPitchDetectionSlide}
+          resolved={resolved as PitchDetectionExercise | PitchDetectionSlideExercise}
           pitchHz={pitchHz}
           pitchHzRef={pitchHzRef}
           isAlreadyCompleted={isAlreadyCompleted}

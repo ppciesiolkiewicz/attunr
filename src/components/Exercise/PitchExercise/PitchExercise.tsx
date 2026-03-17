@@ -13,13 +13,13 @@ import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
-import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide } from "@/lib/resolve-exercise";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/lib/resolve-exercise";
 
 interface PitchExerciseProps {
   exercise: PitchDetectionConfig | PitchDetectionSlideConfig;
   exerciseId: number;
   isLast: boolean;
-  resolved: ResolvedPitchDetection | ResolvedPitchDetectionSlide;
+  resolved: PitchDetectionExercise | PitchDetectionSlideExercise;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;

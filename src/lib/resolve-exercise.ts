@@ -13,32 +13,32 @@ import type {
 
 // ── Resolved types ────────────────────────────────────────────────────────────
 
-interface ResolvedExerciseBase {
+interface ExerciseBase {
   exerciseTypeId: string;
   displayNotes: ColoredNote[];
   highlightIds: string[];
 }
 
-export interface ResolvedPitchTarget {
+export interface PitchTarget {
   note: ColoredNote;
   seconds: number;
   accept?: "within" | "below" | "above";
   rangeNotes?: ColoredNote[];
 }
 
-export interface ResolvedPitchDetection extends ResolvedExerciseBase {
+export interface PitchDetectionExercise extends ExerciseBase {
   exerciseTypeId: "pitch-detection";
-  targets: ResolvedPitchTarget[];
+  targets: PitchTarget[];
   toneShape: ToneShape;
 }
 
-export interface ResolvedPitchDetectionSlide extends ResolvedExerciseBase {
+export interface PitchDetectionSlideExercise extends ExerciseBase {
   exerciseTypeId: "pitch-detection-slide";
   from: ColoredNote;
   to: ColoredNote;
 }
 
-export interface ResolvedToneFollow extends ResolvedExerciseBase {
+export interface ToneFollowExercise extends ExerciseBase {
   exerciseTypeId: "tone-follow";
   toneShape:
     | { kind: "slide"; from: ColoredNote; to: ColoredNote }
@@ -46,7 +46,7 @@ export interface ResolvedToneFollow extends ResolvedExerciseBase {
   requiredPlays: number;
 }
 
-export interface ResolvedTimelineEntry {
+export interface TimelineEntry {
   note: ColoredNote;
   startMs: number;
   durationMs: number;
@@ -54,34 +54,34 @@ export interface ResolvedTimelineEntry {
   audioOnly?: boolean;
 }
 
-export interface ResolvedMelody extends ResolvedExerciseBase {
+export interface MelodyExercise extends ExerciseBase {
   exerciseTypeId: "melody";
   tempo: number;
   minScore: number;
-  timeline: ResolvedTimelineEntry[];
+  timeline: TimelineEntry[];
   totalDurationMs: number;
 }
 
-export interface ResolvedBeat {
+export interface Beat {
   startMs: number;
   durationMs: number;
 }
 
-export interface ResolvedRhythm extends ResolvedExerciseBase {
+export interface RhythmExercise extends ExerciseBase {
   exerciseTypeId: "rhythm";
   tempo: number;
   metronome: boolean;
   minScore: number;
-  beats: ResolvedBeat[];
+  beats: Beat[];
   totalDurationMs: number;
 }
 
-export type ResolvedExercise =
-  | ResolvedPitchDetection
-  | ResolvedPitchDetectionSlide
-  | ResolvedToneFollow
-  | ResolvedMelody
-  | ResolvedRhythm;
+export type Exercise =
+  | PitchDetectionExercise
+  | PitchDetectionSlideExercise
+  | ToneFollowExercise
+  | MelodyExercise
+  | RhythmExercise;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -108,16 +108,16 @@ function durationToMs(duration: number, tempo: number): number {
 function resolvePitchDetection(
   exercise: PitchDetectionConfig,
   vocalRange: VocalRange,
-): ResolvedPitchDetection {
+): PitchDetectionExercise {
   const scale = new Scale(exercise.scale, vocalRange);
   const allNotes = vocalRange.allNotes;
 
-  const targets: ResolvedPitchTarget[] = [];
+  const targets: PitchTarget[] = [];
   for (const n of exercise.notes) {
     const resolved = scale.resolve(n.target);
     const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
     if (!colored) continue;
-    const target: ResolvedPitchTarget = { note: colored, seconds: n.seconds };
+    const target: PitchTarget = { note: colored, seconds: n.seconds };
     if (n.target.kind === "range") {
       target.accept = n.target.accept ?? "within";
       target.rangeNotes = resolved
@@ -137,7 +137,7 @@ function resolvePitchDetection(
 function resolvePitchDetectionSlide(
   exercise: PitchDetectionSlideConfig,
   vocalRange: VocalRange,
-): ResolvedPitchDetectionSlide {
+): PitchDetectionSlideExercise {
   const scale = new Scale(exercise.scale, vocalRange);
   const allNotes = vocalRange.allNotes;
 
@@ -173,11 +173,11 @@ function resolvePitchDetectionSlide(
 function resolveToneFollow(
   exercise: ToneFollowConfig,
   vocalRange: VocalRange,
-): ResolvedToneFollow {
+): ToneFollowExercise {
   const scale = new Scale(exercise.scale, vocalRange);
   const allNotes = vocalRange.allNotes;
 
-  let toneShape: ResolvedToneFollow["toneShape"];
+  let toneShape: ToneFollowExercise["toneShape"];
   let exerciseColoredNotes: ColoredNote[];
 
   if (exercise.toneShape.kind === "sustain") {
@@ -232,9 +232,9 @@ function resolveToneFollow(
 function resolveMelody(
   exercise: MelodyConfig,
   vocalRange: VocalRange,
-): ResolvedMelody {
+): MelodyExercise {
   const allNotes = vocalRange.allNotes;
-  const timeline: ResolvedTimelineEntry[] = [];
+  const timeline: TimelineEntry[] = [];
   let cursor = 0;
 
   for (const segment of exercise.melody) {
@@ -292,8 +292,8 @@ function resolveMelody(
 function resolveRhythm(
   exercise: RhythmConfig,
   _vocalRange: VocalRange,
-): ResolvedRhythm {
-  const beats: ResolvedBeat[] = [];
+): RhythmExercise {
+  const beats: Beat[] = [];
   let cursor = 0;
 
   for (const event of exercise.pattern) {
@@ -321,7 +321,7 @@ function resolveRhythm(
 export function resolveExercise(
   exercise: ExerciseConfig,
   vocalRange: VocalRange,
-): ResolvedExercise {
+): Exercise {
   switch (exercise.exerciseTypeId) {
     case "pitch-detection":
       return resolvePitchDetection(exercise, vocalRange);

@@ -10,7 +10,7 @@ import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
-import type { ResolvedMelody, ResolvedTimelineEntry } from "@/lib/resolve-exercise";
+import type { MelodyExercise as MelodyExerciseType } from "@/lib/resolve-exercise";
 import { usePianoSampler } from "@/hooks/usePianoSampler";
 
 /** Pre-roll time (ms) — visual lead-in before first note */
@@ -24,7 +24,7 @@ interface MelodyExerciseProps {
   exercise: MelodyConfig;
   exerciseId: number;
   isLast: boolean;
-  resolved: ResolvedMelody;
+  resolved: MelodyExerciseType;
   pitchHzRef: React.RefObject<number | null>;
   isAlreadyCompleted: boolean;
   onComplete: () => void;

@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
 import { resolveExercise } from "./resolve-exercise";
 import type {
-  ResolvedPitchDetection,
-  ResolvedPitchDetectionSlide,
-  ResolvedToneFollow,
-  ResolvedMelody,
-  ResolvedRhythm,
+  PitchDetectionExercise,
+  PitchDetectionSlideExercise,
+  ToneFollowExercise,
+  MelodyExercise,
+  RhythmExercise,
 } from "./resolve-exercise";
 import { VocalRange } from "@/lib/VocalRange";
 import { BandTargetKind, NoteDuration } from "@/constants/journey/types";
@@ -41,27 +41,27 @@ describe("resolveExercise — pitch-detection", () => {
     notes: [{ target: { kind: BandTargetKind.Index, i: 3 }, seconds: 4 }],
   };
 
-  it("returns ResolvedPitchDetection with correct type", () => {
+  it("returns PitchDetectionExercise with correct type", () => {
     const result = resolveExercise(exercise, testVocalRange);
     expect(result.exerciseTypeId).toBe("pitch-detection");
   });
 
   it("resolves targets with note, seconds", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetection;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionExercise;
     expect(result.targets).toHaveLength(1);
     expect(result.targets[0].seconds).toBe(4);
     expect(result.targets[0].note.midi).toBeTypeOf("number");
   });
 
   it("returns ColoredNote references from vocalRange.allNotes", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetection;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionExercise;
     for (const t of result.targets) {
       expect(allNotes).toContain(t.note);
     }
   });
 
   it("displayNotes are sorted low→high", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetection;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionExercise;
     for (let i = 1; i < result.displayNotes.length; i++) {
       expect(result.displayNotes[i].frequencyHz).toBeGreaterThanOrEqual(
         result.displayNotes[i - 1].frequencyHz,
@@ -70,7 +70,7 @@ describe("resolveExercise — pitch-detection", () => {
   });
 
   it("highlightIds are target note IDs", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetection;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionExercise;
     expect(result.highlightIds).toEqual(result.targets.map((t) => t.note.id));
   });
 
@@ -84,7 +84,7 @@ describe("resolveExercise — pitch-detection", () => {
         seconds: 3,
       }],
     };
-    const result = resolveExercise(rangeExercise, testVocalRange) as ResolvedPitchDetection;
+    const result = resolveExercise(rangeExercise, testVocalRange) as PitchDetectionExercise;
     expect(result.targets[0].accept).toBe("below");
     expect(result.targets[0].rangeNotes).toBeDefined();
     expect(result.targets[0].rangeNotes!.length).toBeGreaterThan(0);
@@ -104,7 +104,7 @@ describe("resolveExercise — pitch-detection", () => {
         { target: { kind: BandTargetKind.Index, i: 10 }, seconds: 3 },
       ],
     };
-    const result = resolveExercise(seqExercise, testVocalRange) as ResolvedPitchDetection;
+    const result = resolveExercise(seqExercise, testVocalRange) as PitchDetectionExercise;
     expect(result.targets).toHaveLength(3);
     expect(result.targets[0].note.id).not.toBe(result.targets[1].note.id);
   });
@@ -124,19 +124,19 @@ describe("resolveExercise — pitch-detection-slide", () => {
   };
 
   it("returns from/to ColoredNotes", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetectionSlide;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionSlideExercise;
     expect(result.exerciseTypeId).toBe("pitch-detection-slide");
     expect(result.from.midi).toBeLessThan(result.to.midi);
   });
 
   it("from/to are references from allNotes", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetectionSlide;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionSlideExercise;
     expect(allNotes).toContain(result.from);
     expect(allNotes).toContain(result.to);
   });
 
   it("displayNotes include from and to", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedPitchDetectionSlide;
+    const result = resolveExercise(exercise, testVocalRange) as PitchDetectionSlideExercise;
     const displayIds = result.displayNotes.map((n) => n.id);
     expect(displayIds).toContain(result.from.id);
     expect(displayIds).toContain(result.to.id);
@@ -158,7 +158,7 @@ describe("resolveExercise — tone-follow", () => {
       },
       requiredPlays: 3,
     };
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedToneFollow;
+    const result = resolveExercise(exercise, testVocalRange) as ToneFollowExercise;
     expect(result.exerciseTypeId).toBe("tone-follow");
     expect(result.toneShape.kind).toBe("slide");
     if (result.toneShape.kind === "slide") {
@@ -180,7 +180,7 @@ describe("resolveExercise — tone-follow", () => {
       },
       requiredPlays: 2,
     };
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedToneFollow;
+    const result = resolveExercise(exercise, testVocalRange) as ToneFollowExercise;
     expect(result.toneShape.kind).toBe("sustain");
     if (result.toneShape.kind === "sustain") {
       expect(result.toneShape.seconds).toBe(4);
@@ -201,7 +201,7 @@ describe("resolveExercise — tone-follow", () => {
       displayNotes: [{ type: "major", root: 1, notes: [] }],
       requiredPlays: 1,
     };
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedToneFollow;
+    const result = resolveExercise(exercise, testVocalRange) as ToneFollowExercise;
     // With displayNotes, highlights come from the display scale
     expect(result.highlightIds.length).toBeGreaterThan(0);
   });
@@ -231,20 +231,20 @@ describe("resolveExercise — melody", () => {
   };
 
   it("returns correct type and metadata", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     expect(result.exerciseTypeId).toBe("melody");
     expect(result.tempo).toBe(120);
     expect(result.minScore).toBe(70);
   });
 
   it("builds timeline with correct entries", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     // 2 note entries + 2 play entries (one per target) = 4, pause emits nothing
     expect(result.timeline).toHaveLength(4);
   });
 
   it("pause advances cursor but emits no entry", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     // First note at 0ms, second note after quarter + quarter pause
     const quarterMs = durationToMs(NoteDuration.Quarter, 120);
     expect(result.timeline[0].startMs).toBe(0);
@@ -252,7 +252,7 @@ describe("resolveExercise — melody", () => {
   });
 
   it("play events have audioOnly: true", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     const playEntries = result.timeline.filter((e) => e.audioOnly);
     expect(playEntries).toHaveLength(2);
     for (const p of playEntries) {
@@ -261,7 +261,7 @@ describe("resolveExercise — melody", () => {
   });
 
   it("note entries do not have audioOnly", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     const noteEntries = result.timeline.filter((e) => !e.audioOnly);
     expect(noteEntries).toHaveLength(2);
     for (const n of noteEntries) {
@@ -270,7 +270,7 @@ describe("resolveExercise — melody", () => {
   });
 
   it("computes correct totalDurationMs", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     // Q + Q(pause) + H + Q = 4+4+8+4 = 20 sixteenths = 5 quarter notes
     const totalQuarters = 5;
     const expectedMs = totalQuarters * (60 / 120) * 1000;
@@ -278,7 +278,7 @@ describe("resolveExercise — melody", () => {
   });
 
   it("displayNotes are sorted low→high and deduplicated", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     const ids = result.displayNotes.map((n) => n.id);
     expect(new Set(ids).size).toBe(ids.length);
     for (let i = 1; i < result.displayNotes.length; i++) {
@@ -289,7 +289,7 @@ describe("resolveExercise — melody", () => {
   });
 
   it("all ColoredNote references are from vocalRange.allNotes", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(exercise, testVocalRange) as MelodyExercise;
     for (const entry of result.timeline) {
       expect(allNotes).toContain(entry.note);
     }
@@ -312,7 +312,7 @@ describe("resolveExercise — melody", () => {
         ],
       }],
     };
-    const result = resolveExercise(silentExercise, testVocalRange) as ResolvedMelody;
+    const result = resolveExercise(silentExercise, testVocalRange) as MelodyExercise;
     expect(result.timeline[0].silent).toBe(true);
   });
 });
@@ -334,7 +334,7 @@ describe("resolveExercise — rhythm", () => {
   };
 
   it("returns correct type and metadata", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(exercise, testVocalRange) as RhythmExercise;
     expect(result.exerciseTypeId).toBe("rhythm");
     expect(result.tempo).toBe(120);
     expect(result.minScore).toBe(60);
@@ -342,19 +342,19 @@ describe("resolveExercise — rhythm", () => {
   });
 
   it("produces beats only for tap events", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(exercise, testVocalRange) as RhythmExercise;
     expect(result.beats).toHaveLength(2);
   });
 
   it("computes correct startMs with pause gap", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(exercise, testVocalRange) as RhythmExercise;
     const quarterMs = durationToMs(NoteDuration.Quarter, 120);
     expect(result.beats[0].startMs).toBe(0);
     expect(result.beats[1].startMs).toBe(quarterMs * 2);
   });
 
   it("computes correct durationMs per beat", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(exercise, testVocalRange) as RhythmExercise;
     const quarterMs = durationToMs(NoteDuration.Quarter, 120);
     const halfMs = durationToMs(NoteDuration.Half, 120);
     expect(result.beats[0].durationMs).toBe(quarterMs);
@@ -362,13 +362,13 @@ describe("resolveExercise — rhythm", () => {
   });
 
   it("computes correct totalDurationMs", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(exercise, testVocalRange) as RhythmExercise;
     const expectedMs = 4 * (60 / 120) * 1000;
     expect(result.totalDurationMs).toBe(expectedMs);
   });
 
   it("sets displayNotes and highlightIds to empty arrays", () => {
-    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(exercise, testVocalRange) as RhythmExercise;
     expect(result.displayNotes).toEqual([]);
     expect(result.highlightIds).toEqual([]);
   });
@@ -381,7 +381,7 @@ describe("resolveExercise — rhythm", () => {
       minScore: 50,
       pattern: [{ type: "tap", duration: NoteDuration.Quarter }],
     };
-    const result = resolveExercise(noMetronome, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(noMetronome, testVocalRange) as RhythmExercise;
     expect(result.metronome).toBe(false);
   });
 
@@ -396,7 +396,7 @@ describe("resolveExercise — rhythm", () => {
         { type: "pause", duration: NoteDuration.Quarter },
       ],
     };
-    const result = resolveExercise(allPause, testVocalRange) as ResolvedRhythm;
+    const result = resolveExercise(allPause, testVocalRange) as RhythmExercise;
     expect(result.beats).toHaveLength(0);
     const expectedMs = 2 * durationToMs(NoteDuration.Quarter, 120);
     expect(result.totalDurationMs).toBe(expectedMs);
