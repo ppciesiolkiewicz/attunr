@@ -1,18 +1,15 @@
 "use client";
 
-import JourneyView from "@/components/JourneyView";
+import { Suspense } from "react";
+import { ChapterList } from "@/components/ChapterList";
 import { useApp } from "@/context/AppContext";
 
 export default function JourneyPage() {
-  const { settings, pitchHz, pitchHzRef, playTone, updateSettings } = useApp();
+  const { settings } = useApp();
 
   return (
-    <JourneyView
-      settings={settings}
-      pitchHz={pitchHz}
-      pitchHzRef={pitchHzRef}
-      onPlayTone={playTone}
-      onSettingsUpdate={updateSettings}
-    />
+    <Suspense>
+      <ChapterList settings={settings} />
+    </Suspense>
   );
 }
