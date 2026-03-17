@@ -6,9 +6,10 @@ import HillBallCanvas from "@/components/HillBallCanvas";
 import BalanceBallCanvas from "@/components/BalanceBallCanvas";
 import type { InTuneOverride } from "@/components/PitchCanvas";
 import { Button, CircularProgress, Text } from "@/components/ui";
+import { findClosestNote, matchesNoteTarget } from "@/lib/pitch";
+import type { ColoredNote } from "@/lib/VocalRange";
 import { usePitchProgress } from "./PitchExercise/usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
-import { ExerciseStartButton } from "./ExerciseStartButton";
 import { ProgressArc } from "./components/ProgressArc";
 import type { PitchDetectionHillConfig } from "@/constants/journey";
 import type { PitchDetectionHillExercise as ResolvedHillExercise } from "@/lib/resolve-exercise";
@@ -38,7 +39,6 @@ export function HillExercise({
   onSkip,
   onPrev,
 }: HillExerciseProps) {
-  const [hasStarted, setHasStarted] = useState(false);
   const [detectionActive, setDetectionActive] = useState(false);
   const { playTone: playRawTone, playWobble, playOwlHoot } = useTonePlayer();
 
@@ -80,7 +80,7 @@ export function HillExercise({
     [resolved],
   );
 
-  const { progress, stageComplete: exerciseComplete } =
+  const { progress, stageComplete: exerciseComplete, resetProgress } =
     usePitchProgress({
       exercise: progressExercise,
       exerciseId,
@@ -118,18 +118,14 @@ export function HillExercise({
     }
   }, [toneShape, exerciseColoredNotes, playWobble, playOwlHoot, playRawTone]);
 
-  const handleExerciseStart = useCallback(() => {
-    setHasStarted(true);
-    setTimeout(() => {
+  useEffect(() => {
+    setDetectionActive(false);
+    const id = setTimeout(() => {
       playReferenceTone();
       setDetectionActive(true);
     }, 500);
-  }, [playReferenceTone]);
-
-  useEffect(() => {
-    setHasStarted(false);
-    setDetectionActive(false);
-  }, [exerciseId]);
+    return () => clearTimeout(id);
+  }, [exerciseId, playReferenceTone]);
 
   return (
     <>
@@ -158,9 +154,6 @@ export function HillExercise({
           />
         )}
 
-        {/* Start button */}
-        {!hasStarted && <ExerciseStartButton onStart={handleExerciseStart} />}
-
         {/* Progress ring */}
         {!exerciseComplete && !showCongrats && pitchHz !== null && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-5 transition-opacity duration-300">
@@ -186,21 +179,38 @@ export function HillExercise({
         )}
 
         {/* Pitch info overlay */}
-        {pitchHz !== null && (
-          <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
-            <div className="shrink-0">
-              <Text
-                as="div"
-                variant="heading-lg"
-                className="font-light"
-                style={{ color: exerciseColoredNotes[0]?.color ?? "#fff" }}
-              >
-                {exerciseComplete ? "✓ " : ""}
-                {exercise.direction === "up" ? "Go higher" : exercise.direction === "down" ? "Go lower" : "Hold steady"}
-              </Text>
+        {pitchHz !== null && (() => {
+          const closest = exerciseColoredNotes.length > 0
+            ? findClosestNote(pitchHz, exerciseColoredNotes) as ColoredNote
+            : null;
+          const target = resolved.targets[0];
+          const targetNotes = target?.rangeNotes ?? (target ? [target.note] : []);
+          const locked = target
+            ? matchesNoteTarget(pitchHz, targetNotes, target.accept ?? "within")
+            : false;
+          return (
+            <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
+              <div className="shrink-0">
+                <Text
+                  as="div"
+                  variant="heading-lg"
+                  className="text-3xl font-light"
+                  style={{ color: closest?.color ?? "#fff" }}
+                >
+                  {locked ? "Just right" : pitchHz < (closest?.frequencyHz ?? 0) ? "Too low" : "Too high"}
+                </Text>
+                <Text
+                  as="div"
+                  variant="body-sm"
+                  className="mt-0.5"
+                  style={{ color: `${closest?.color ?? "#fff"}cc` }}
+                >
+                  {locked ? "Keep it up" : pitchHz < (closest?.frequencyHz ?? 0) ? "Go higher" : "Go lower"}
+                </Text>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
 
       {/* Bottom panel */}
@@ -210,14 +220,23 @@ export function HillExercise({
         </div>
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
-          {exerciseComplete && (
+          {exerciseComplete ? (
+            <Button
+              variant="outline"
+              onClick={() => { resetProgress(); playReferenceTone(); }}
+              className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
+              title="Restart exercise"
+            >
+              ↺  Restart
+            </Button>
+          ) : (
             <Button
               variant="outline"
               onClick={playReferenceTone}
               className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
               title="Play reference tone"
             >
-              ♪ Play tone
+              ♪  Play tone
             </Button>
           )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">

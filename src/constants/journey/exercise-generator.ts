@@ -631,7 +631,11 @@ export class ExerciseGenerator {
       };
       notes = Array.from({ length: repeats }, () => ({ target: rangeTarget, seconds }));
     } else {
-      const target = { kind: BandTargetKind.Index as const, i: 1 };
+      // Directional target: accept below for "down", above for "up"
+      const accept = direction === "down" ? "below" as const : direction === "up" ? "above" as const : undefined;
+      const target: NoteTarget = accept
+        ? { kind: BandTargetKind.Range, from: 1, to: 1, accept }
+        : { kind: BandTargetKind.Index, i: 1 };
       notes = Array.from({ length: repeats }, () => ({ target, seconds }));
     }
 
