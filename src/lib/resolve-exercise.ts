@@ -6,6 +6,7 @@ import type {
   PitchDetectionSlideExercise,
   ToneFollowExercise,
   MelodyExercise,
+  RhythmExercise,
   DisplayNote,
 } from "@/constants/journey/types";
 
@@ -59,11 +60,26 @@ export interface ResolvedMelody extends ResolvedExerciseBase {
   totalDurationMs: number;
 }
 
+export interface ResolvedBeat {
+  startMs: number;
+  durationMs: number;
+}
+
+export interface ResolvedRhythm extends ResolvedExerciseBase {
+  exerciseTypeId: "rhythm";
+  tempo: number;
+  metronome: boolean;
+  minScore: number;
+  beats: ResolvedBeat[];
+  totalDurationMs: number;
+}
+
 export type ResolvedExercise =
   | ResolvedPitchDetection
   | ResolvedPitchDetectionSlide
   | ResolvedToneFollow
-  | ResolvedMelody;
+  | ResolvedMelody
+  | ResolvedRhythm;
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -287,6 +303,33 @@ function resolveMelody(
   };
 }
 
+function resolveRhythm(
+  exercise: RhythmExercise,
+  _vocalRange: VocalRange,
+): ResolvedRhythm {
+  const beats: ResolvedBeat[] = [];
+  let cursor = 0;
+
+  for (const event of exercise.pattern) {
+    const ms = durationToMs(event.duration, exercise.tempo);
+    if (event.type === "tap") {
+      beats.push({ startMs: cursor, durationMs: ms });
+    }
+    cursor += ms;
+  }
+
+  return {
+    exerciseTypeId: "rhythm",
+    tempo: exercise.tempo,
+    metronome: exercise.metronome ?? false,
+    minScore: exercise.minScore,
+    beats,
+    totalDurationMs: cursor,
+    displayNotes: [],
+    highlightIds: [],
+  };
+}
+
 // ── Main entry point ──────────────────────────────────────────────────────────
 
 export function resolveExercise(
@@ -302,6 +345,8 @@ export function resolveExercise(
       return resolveToneFollow(exercise, vocalRange);
     case "melody":
       return resolveMelody(exercise, vocalRange);
+    case "rhythm":
+      return resolveRhythm(exercise, vocalRange);
     default:
       throw new Error(`Cannot resolve exercise type: ${(exercise as JourneyExercise).exerciseTypeId}`);
   }

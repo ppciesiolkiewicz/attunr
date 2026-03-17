@@ -5,6 +5,7 @@ import type {
   ResolvedPitchDetectionSlide,
   ResolvedToneFollow,
   ResolvedMelody,
+  ResolvedRhythm,
 } from "./resolve-exercise";
 import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { BandTargetKind, NoteDuration } from "@/constants/journey/types";
@@ -13,6 +14,7 @@ import type {
   PitchDetectionSlideExercise,
   ToneFollowExercise,
   MelodyExercise,
+  RhythmExercise,
 } from "@/constants/journey/types";
 import type { VocalRange } from "@/constants/tone-slots";
 
@@ -317,6 +319,92 @@ describe("resolveExercise — melody", () => {
     };
     const result = resolveExercise(silentExercise, testVocalRange) as ResolvedMelody;
     expect(result.timeline[0].silent).toBe(true);
+  });
+});
+
+// ── rhythm ─────────────────────────────────────────────────────────────────
+
+describe("resolveExercise — rhythm", () => {
+  const exercise: RhythmExercise = {
+    ...base,
+    exerciseTypeId: "rhythm",
+    tempo: 120,
+    minScore: 60,
+    pattern: [
+      { type: "tap", duration: NoteDuration.Quarter },
+      { type: "pause", duration: NoteDuration.Quarter },
+      { type: "tap", duration: NoteDuration.Half },
+    ],
+    metronome: true,
+  };
+
+  it("returns correct type and metadata", () => {
+    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    expect(result.exerciseTypeId).toBe("rhythm");
+    expect(result.tempo).toBe(120);
+    expect(result.minScore).toBe(60);
+    expect(result.metronome).toBe(true);
+  });
+
+  it("produces beats only for tap events", () => {
+    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    expect(result.beats).toHaveLength(2);
+  });
+
+  it("computes correct startMs with pause gap", () => {
+    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const quarterMs = durationToMs(NoteDuration.Quarter, 120);
+    expect(result.beats[0].startMs).toBe(0);
+    expect(result.beats[1].startMs).toBe(quarterMs * 2);
+  });
+
+  it("computes correct durationMs per beat", () => {
+    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const quarterMs = durationToMs(NoteDuration.Quarter, 120);
+    const halfMs = durationToMs(NoteDuration.Half, 120);
+    expect(result.beats[0].durationMs).toBe(quarterMs);
+    expect(result.beats[1].durationMs).toBe(halfMs);
+  });
+
+  it("computes correct totalDurationMs", () => {
+    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    const expectedMs = 4 * (60 / 120) * 1000;
+    expect(result.totalDurationMs).toBe(expectedMs);
+  });
+
+  it("sets displayNotes and highlightIds to empty arrays", () => {
+    const result = resolveExercise(exercise, testVocalRange) as ResolvedRhythm;
+    expect(result.displayNotes).toEqual([]);
+    expect(result.highlightIds).toEqual([]);
+  });
+
+  it("defaults metronome to false when omitted", () => {
+    const noMetronome: RhythmExercise = {
+      ...base,
+      exerciseTypeId: "rhythm",
+      tempo: 80,
+      minScore: 50,
+      pattern: [{ type: "tap", duration: NoteDuration.Quarter }],
+    };
+    const result = resolveExercise(noMetronome, testVocalRange) as ResolvedRhythm;
+    expect(result.metronome).toBe(false);
+  });
+
+  it("handles all-pause pattern with no beats", () => {
+    const allPause: RhythmExercise = {
+      ...base,
+      exerciseTypeId: "rhythm",
+      tempo: 120,
+      minScore: 0,
+      pattern: [
+        { type: "pause", duration: NoteDuration.Quarter },
+        { type: "pause", duration: NoteDuration.Quarter },
+      ],
+    };
+    const result = resolveExercise(allPause, testVocalRange) as ResolvedRhythm;
+    expect(result.beats).toHaveLength(0);
+    const expectedMs = 2 * durationToMs(NoteDuration.Quarter, 120);
+    expect(result.totalDurationMs).toBe(expectedMs);
   });
 });
 

@@ -38,6 +38,8 @@ export type {
   DisplayNote,
   DisplayScale,
   VolumeDetectionExercise,
+  RhythmExercise,
+  RhythmEvent,
 } from "./types";
 
 export { NoteDuration, BandTargetKind } from "./types";
@@ -124,6 +126,24 @@ function buildIntroModal(exercise: JourneyExercise): ModalConfig | undefined {
     return {
       title: exercise.title,
       subtitle: `Make sound for ${exercise.targetSeconds} seconds`,
+      elements,
+    };
+  }
+
+  // Rhythm exercises — tap along with scoring
+  if (exercise.exerciseTypeId === "rhythm") {
+    for (const line of exercise.instruction.split("\n")) {
+      if (line.trim()) {
+        elements.push({
+          type: "paragraph",
+          text: line,
+          variant: elements.length === 0 ? undefined : "secondary",
+        });
+      }
+    }
+    return {
+      title: exercise.title,
+      subtitle: `Tap along — score ${exercise.minScore}% to pass`,
       elements,
     };
   }

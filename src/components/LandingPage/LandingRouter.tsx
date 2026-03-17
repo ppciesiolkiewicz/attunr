@@ -9,6 +9,7 @@ const LandingPageV2 = lazy(() => import("./variants/v2/LandingPageV2"));
 const LandingPageV3 = lazy(() => import("./variants/v3/LandingPageV3"));
 const LandingPageV4 = lazy(() => import("./variants/v4/LandingPageV4"));
 const LandingPageV5 = lazy(() => import("./variants/v5/LandingPageV5"));
+const LandingPageV6 = lazy(() => import("./variants/v6/LandingPageV6"));
 
 function LandingContent() {
   const params = useSearchParams();
@@ -25,6 +26,8 @@ function LandingContent() {
       return <LandingPageV4 />;
     case "5":
       return <LandingPageV5 />;
+    case "6":
+      return <LandingPageV6 />;
     case "0":
       return <LandingPageV0 />;
     default:

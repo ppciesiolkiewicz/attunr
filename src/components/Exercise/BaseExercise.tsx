@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { JourneyExercise } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
 import { resolveExercise } from "@/lib/resolve-exercise";
-import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneFollow, ResolvedMelody } from "@/lib/resolve-exercise";
+import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneFollow, ResolvedMelody, ResolvedRhythm } from "@/lib/resolve-exercise";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
@@ -12,6 +12,7 @@ import { VolumeDetectionExerciseContent } from "./VolumeDetectionExercise";
 import { PitchExercise } from "./PitchExercise";
 import { ToneFollowExercise } from "./ToneFollowExercise";
 import { MelodyExercise } from "./MelodyExercise";
+import { RhythmExercise } from "./RhythmExercise";
 
 interface BaseExerciseProps {
   exercise: JourneyExercise;
@@ -146,6 +147,20 @@ export function BaseExercise({
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
+        />
+      );
+
+    case "rhythm":
+      return (
+        <RhythmExercise
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
+          resolved={resolved as ResolvedRhythm}
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}

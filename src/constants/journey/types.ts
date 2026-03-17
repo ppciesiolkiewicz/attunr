@@ -14,7 +14,8 @@ export type ExerciseTypeId =
   | "breathwork-farinelli"        // Farinelli breathing cycles, no pitch detection
   | "tone-follow"                 // play tone and follow along (no mic detection)
   | "melody"                      // sing along to scrolling melody with scoring
-  | "volume-detection";           // accumulate sound for targetSeconds to complete
+  | "volume-detection"            // accumulate sound for targetSeconds to complete
+  | "rhythm";                     // tap along to a rhythm pattern
 
 /** 1-indexed chromatic degree from user's lowest note (1 = lowest). Negative values count from top (-1 = highest). */
 export type ChromaticDegree = number;
@@ -250,6 +251,24 @@ export interface VolumeDetectionExercise extends BaseExerciseConfig {
   instruction: string;
 }
 
+/** A rhythm timeline event — tap (user must hit) or pause (gap). */
+export type RhythmEvent =
+  | { type: "tap"; duration: NoteDuration }
+  | { type: "pause"; duration: NoteDuration };
+
+export interface RhythmExercise extends BaseExerciseConfig {
+  exerciseTypeId: "rhythm";
+  /** BPM — quarter note = 1 beat. Duration formula: (NoteDuration / 4) * (60 / tempo) seconds. */
+  tempo: number;
+  /** Tap/pause sequence defining the rhythm pattern. */
+  pattern: RhythmEvent[];
+  /** Play an audible click on each beat marker (default false). */
+  metronome?: boolean;
+  /** Score threshold (0–100) to complete. 0 = any score passes. */
+  minScore: number;
+  instruction: string;
+}
+
 export type JourneyExercise =
   | LearnExercise
   | LearnNotesExercise
@@ -258,7 +277,8 @@ export type JourneyExercise =
   | FarinelliBreathworkExercise
   | ToneFollowExercise
   | MelodyExercise
-  | VolumeDetectionExercise;
+  | VolumeDetectionExercise
+  | RhythmExercise;
 
 /** Input type for part files — `id`, `chapter`, and `stageId` are assigned automatically in index.ts. */
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
