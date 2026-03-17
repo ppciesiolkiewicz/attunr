@@ -6,6 +6,7 @@ import type {
   MelodyEvent,
   DisplayScale,
   DisplayNote,
+  ToneShape,
 } from "./types";
 import { BandTargetKind, NoteDuration } from "./types";
 
@@ -78,6 +79,19 @@ export interface LipRollParams extends CommonParams {
 
 export interface FarinelliParams extends CommonParams {
   maxCount: number;
+}
+
+export interface SustainParams extends CommonParams {
+  note: number;
+  seconds: number;
+  repeats?: number;
+  toneShape?: ToneShape;
+}
+
+export interface LipRollSustainParams extends CommonParams {
+  note: number;
+  seconds: number;
+  requiredPlays: number;
 }
 
 // ── Helper functions ──────────────────────────────────────────────────────────
@@ -521,6 +535,75 @@ export class ExerciseGenerator {
       completionModal,
       exerciseTypeId: "breathwork-farinelli",
       maxCount,
+    };
+  }
+
+  /**
+   * Sustain exercise. Pitch-detection with repeated holds on a single note.
+   * Chromatic scale rooted at `note`.
+   */
+  sustain(params: SustainParams): ExerciseConfigInput {
+    const {
+      title,
+      subtitle,
+      cardCue,
+      instruction,
+      introModal,
+      completionModal,
+      note,
+      seconds,
+      repeats = 3,
+      toneShape,
+    } = params;
+
+    const notes = Array.from({ length: repeats }, () => ({
+      target: toTarget(1),
+      seconds,
+    }));
+
+    return {
+      title,
+      subtitle,
+      cardCue,
+      instruction,
+      introModal,
+      completionModal,
+      exerciseTypeId: "pitch-detection",
+      scale: { type: "chromatic", root: note },
+      ...(toneShape && { toneShape }),
+      notes,
+    };
+  }
+
+  /**
+   * Lip-roll sustain exercise. Tone-follow with a sustained note shape.
+   * Chromatic scale rooted at `note`.
+   */
+  lipRollSustain(params: LipRollSustainParams): ExerciseConfigInput {
+    const {
+      title,
+      subtitle,
+      cardCue,
+      instruction,
+      introModal,
+      completionModal,
+      note,
+      seconds,
+      requiredPlays,
+    } = params;
+
+    return {
+      title,
+      subtitle,
+      cardCue,
+      instruction,
+      introModal,
+      completionModal,
+      exerciseTypeId: "tone-follow",
+      scale: { type: "chromatic", root: note },
+      toneShape: { kind: "sustain", target: toTarget(1), seconds },
+      displayNotes: [],
+      requiredPlays,
     };
   }
 }
