@@ -68,7 +68,7 @@ export default function LandingPageV5() {
   }, []);
 
   return (
-    <div className="h-full overflow-y-auto landing-scroll" style={{ background: "#080810", color: "#ebe8f5", fontFamily: `"Outfit", sans-serif` }}>
+    <div className="h-full overflow-y-auto landing-scroll v5-grain" style={{ background: "#080810", color: "#ebe8f5", fontFamily: `"Outfit", sans-serif` }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Outfit:wght@300;400;500&display=swap');
         .v5-btn {
@@ -93,7 +93,7 @@ export default function LandingPageV5() {
       `}</style>
 
       <LandingHeader />
-      <div className="v5-grain relative">
+      <div className="relative">
         {/* -- Hero -- */}
         <section className="relative min-h-[100dvh] flex flex-col items-center justify-center px-6 overflow-hidden">
           {/* Background glow */}
