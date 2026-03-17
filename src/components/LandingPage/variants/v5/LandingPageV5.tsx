@@ -264,7 +264,7 @@ export default function LandingPageV5() {
               We just gave it a path.
             </p>
 
-            <Link href="/journey">
+            <Link href="/journey" tabIndex={-1}>
               <Button
                 size="lg"
                 className="v5-btn relative overflow-hidden px-14 text-lg cursor-pointer"
@@ -299,10 +299,10 @@ export default function LandingPageV5() {
         <Divider />
 
         {/* -- Features -- */}
-        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+        <section className="landing-section relative px-6 py-16 sm:py-20">
           <div
             className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
-            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(99,102,241,0.15) 0%, rgba(99,102,241,0.05) 40%, transparent 70%)", filter: "blur(60px)" }}
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(99,102,241,0.18) 0%, rgba(99,102,241,0.06) 40%, transparent 70%)", filter: "blur(60px)" }}
           />
           <div className="relative max-w-4xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3" style={{ fontFamily: fraunces }}>
@@ -340,10 +340,10 @@ export default function LandingPageV5() {
         </section>
 
         {/* -- What You Do -- */}
-        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+        <section className="landing-section relative px-6 py-16 sm:py-20">
           <div
             className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
-            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(34,197,94,0.15) 0%, rgba(34,197,94,0.05) 40%, transparent 70%)", filter: "blur(60px)" }}
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(34,197,94,0.18) 0%, rgba(34,197,94,0.06) 40%, transparent 70%)", filter: "blur(60px)" }}
           />
           <div className="relative max-w-2xl mx-auto text-center">
             <div className="flex justify-center gap-1 mb-12">
@@ -358,7 +358,9 @@ export default function LandingPageV5() {
               A body practice that uses <span className="v5-chromatic" data-text="sound">sound</span>.
             </p>
             <p className="text-white/55 leading-relaxed max-w-md mx-auto mb-14" style={{ fontFamily: body }}>
-              The pitch visualizer isn&apos;t a score &mdash; it&apos;s a mirror. You watch your voice move in real time so you can feel where it lands in your body.
+              The pitch visualizer isn&apos;t a score &mdash; it&apos;s a mirror.
+              <br />
+              You watch your voice move in real time so you can feel where it lands in your body.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               {TAGS.map((p) => (
@@ -378,10 +380,10 @@ export default function LandingPageV5() {
         <Divider />
 
         {/* -- How It Works -- */}
-        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+        <section className="landing-section relative px-6 py-16 sm:py-20">
           <div
             className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
-            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(234,179,8,0.25) 0%, rgba(234,179,8,0.1) 40%, transparent 70%)", filter: "blur(60px)" }}
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(234,179,8,0.1) 0%, rgba(234,179,8,0.03) 40%, transparent 70%)", filter: "blur(60px)" }}
           />
           <div className="relative max-w-3xl mx-auto">
             <p className="text-xs uppercase tracking-[0.25em] text-violet-400/60 text-center mb-3" style={{ fontFamily: fraunces }}>
@@ -430,10 +432,10 @@ export default function LandingPageV5() {
         <Divider />
 
         {/* -- Call to Action -- */}
-        <section className="landing-section relative px-6 py-16 sm:py-20 overflow-hidden">
+        <section className="landing-section relative px-6 py-16 sm:py-20">
           <div
             className="absolute -top-8 left-1/2 -translate-x-1/2 z-0 pointer-events-none"
-            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(239,68,68,0.22) 0%, rgba(239,68,68,0.08) 40%, transparent 70%)", filter: "blur(60px)" }}
+            style={{ width: 900, height: 450, background: "radial-gradient(ellipse, rgba(239,68,68,0.1) 0%, rgba(239,68,68,0.03) 40%, transparent 70%)", filter: "blur(60px)" }}
           />
           <div className="relative max-w-xl mx-auto text-center">
             <p className="text-2xl sm:text-3xl md:text-4xl text-white leading-snug mb-3" style={{ fontFamily: fraunces, fontWeight: 600 }}>
@@ -442,7 +444,7 @@ export default function LandingPageV5() {
             <p className="text-xl sm:text-2xl md:text-3xl text-white/45 leading-snug mb-12" style={{ fontFamily: body }}>
               attunr shows you how to play it.
             </p>
-            <Link href="/journey">
+            <Link href="/journey" tabIndex={-1}>
               <Button
                 size="lg"
                 className="v5-btn relative overflow-hidden px-14 text-lg cursor-pointer"
