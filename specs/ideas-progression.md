@@ -65,6 +65,64 @@ The main journey is always the spine. Secret stages are optional branches that r
 
 ---
 
+## Streak tracking
+
+Track consecutive days of practice to encourage daily habits. Streaks are a core engagement loop that ties into badges and notifications.
+
+### How it works
+
+- A **streak** increments each calendar day the user completes at least one exercise.
+- Missing a day resets the streak to zero.
+- The current streak and longest streak are persisted.
+
+### Notifications
+
+Push notifications nudge users to maintain their streak:
+
+- **Evening reminder** — "Don't lose your 5-day streak! A quick warm-up keeps it alive."
+- **Streak milestone** — "7 days in a row — you're building a real habit!"
+- **Streak at risk** — late-day nudge if the user hasn't practiced yet: "Still time to keep your streak going."
+
+Notification tone should be encouraging, never guilt-tripping. Users can disable or adjust notification timing.
+
+### Connection to badges
+
+Streak milestones feed directly into the badge system (e.g. "3 days in a row", "7-day streak", "30-day streak"). Some streak badges could unlock secret stages.
+
+### Open questions
+
+- What counts as "a day"? Calendar day in local timezone?
+- Minimum exercise duration/completion to count toward streak?
+- Freeze / grace mechanic (e.g. one free miss per week)?
+- Where does the streak display in the UI? Journey screen, home, profile?
+
+---
+
+## Social: Invite friends & multiplayer
+
+Invite-based growth and social practice to make vocal training less solitary.
+
+### Friend invites
+
+- Users can share a **registration link** to invite friends.
+- Track who invited whom (referral attribution).
+- Possible rewards for inviter and invitee (badge, streak freeze, unlock a secret stage).
+
+### Multiplayer games
+
+- Real-time or turn-based vocal games between friends (e.g. pitch-matching duels, call-and-response rounds).
+- Leaderboards among friends for accuracy, streak length, or exercises completed.
+- Collaborative challenges — friends work toward a shared goal together.
+
+### Open questions
+
+- What multiplayer formats fit vocal exercises? Synchronous vs asynchronous?
+- How does matchmaking work — friends only, or open lobbies?
+- What's the minimum viable social feature to ship first?
+- Privacy considerations — how much practice data is visible to friends?
+
+---
+
 ## Refactor: Journey owns resolution
 
 Currently exercise configs go through a `resolveExercise` step that produces `ResolvedExercise` types. The idea: **unresolved configs are an internal detail of Journey** — consumers outside Journey should never see them.

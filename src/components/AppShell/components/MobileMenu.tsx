@@ -32,7 +32,7 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
       >
         <div className="flex items-center justify-between px-5 pt-6 pb-4 border-b border-white/[0.06]">
           <Text as="div" variant="heading-sm" className="font-normal">
-            <Logo layout="horizontal" size="sm" />
+            <Logo layout="horizontal" size="sm" animate={2} />
           </Text>
           <Button
             variant="icon"

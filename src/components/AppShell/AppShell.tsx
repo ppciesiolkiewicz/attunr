@@ -148,7 +148,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
       {/* Header */}
       <header className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 border-b border-white/[0.06] shrink-0">
         <Link href="/" className="text-lg sm:text-2xl">
-          <Logo layout="horizontal" size="default" />
+          <Logo layout="horizontal" size="sm" animate={4} />
         </Link>
 
         {/* Desktop nav */}

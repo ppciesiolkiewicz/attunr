@@ -37,7 +37,7 @@ export function LandingHeader() {
         className="transition-opacity duration-700 ease-out"
         style={{ opacity: scrolled ? 1 : 0 }}
       >
-        <Logo layout="horizontal" size="sm" />
+        <Logo layout="horizontal" size="sm" animate={4} />
       </div>
 
       <Link href="/journey">

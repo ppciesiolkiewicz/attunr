@@ -15,7 +15,7 @@ const meta: Meta<typeof Logo> = {
     },
     animate: {
       control: "select",
-      options: [undefined, 1, 2, 3],
+      options: [undefined, 1, 2, 3, 4],
     },
   },
   parameters: {
@@ -55,6 +55,10 @@ export const Combined: Story = {
   args: { animate: 3 },
 };
 
+export const UnifiedWave: Story = {
+  args: { animate: 4 },
+};
+
 export const AllVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-10">
@@ -91,6 +95,10 @@ export const AllVariants: Story = {
             <Logo animate={3} />
             <span className="text-zinc-600 text-xs">combined</span>
           </div>
+          <div className="flex flex-col items-center gap-1">
+            <Logo animate={4} />
+            <span className="text-zinc-600 text-xs">unified wave</span>
+          </div>
         </div>
       </div>
 
@@ -108,6 +116,10 @@ export const AllVariants: Story = {
           <div className="flex flex-col items-center gap-1">
             <Logo layout="vertical" size="lg" animate={3} />
             <span className="text-zinc-600 text-xs">combined</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Logo layout="vertical" size="lg" animate={4} />
+            <span className="text-zinc-600 text-xs">unified wave</span>
           </div>
         </div>
       </div>

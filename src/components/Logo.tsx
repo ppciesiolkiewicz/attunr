@@ -17,8 +17,8 @@ type LogoProps = {
   layout?: LogoLayout;
   /** Size variant: sm for compact, default for header, lg for hero/marketing */
   size?: LogoSize;
-  /** Dot animation: 1 = bounce wave (up only), 2 = sine wave (up & down), 3 = both combined */
-  animate?: 1 | 2 | 3;
+  /** Dot animation: 1 = bounce wave (up only), 2 = sine wave (up & down), 3 = both combined, 4 = unified wave (letters + dots) */
+  animate?: 1 | 2 | 3 | 4;
   className?: string;
 };
 
@@ -48,7 +48,11 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
       {LOGO_LETTERS.map((letter, i) => (
         <span
           key={i}
-          style={animate ? {
+          style={animate === 4 ? {
+            display: "inline-block",
+            animation: `logo-wave 5s ease-in-out infinite`,
+            animationDelay: `${i * 0.3}s`,
+          } : animate ? {
             display: "inline-block",
             animation: `logo-bend 5s ease-in-out infinite`,
             animationDelay: `${i * 0.4}s`,
@@ -75,9 +79,9 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
           className={`block ${dotSizes[size]} rounded-full opacity-80`}
           style={{
             backgroundColor: color,
-            ...((animate === 2 || animate === 3) && {
+            ...((animate === 2 || animate === 3 || animate === 4) && {
               animation: `logo-wave 5s ease-in-out infinite`,
-              animationDelay: `${i * 0.4}s`,
+              animationDelay: animate === 4 ? `${(LOGO_LETTERS.length + i) * 0.3}s` : `${i * 0.4}s`,
             }),
           }}
         />
@@ -91,7 +95,7 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
 
   if (layout === "vertical") {
     return (
-      <div className={`flex flex-col items-center ${size === "lg" ? "gap-3" : "gap-1.5"} ${className}`} style={bounceStyle}>
+      <div className={`flex flex-col items-center select-none ${size === "lg" ? "gap-3" : "gap-1.5"} ${className}`} style={bounceStyle}>
         {text}
         {dots}
       </div>
@@ -99,7 +103,7 @@ export default function Logo({ layout = "horizontal", size = "default", animate,
   }
 
   return (
-    <div className={`flex items-center gap-2 sm:gap-3 ${className}`} style={bounceStyle}>
+    <div className={`flex items-center select-none gap-2 sm:gap-3 ${className}`} style={bounceStyle}>
       {text}
       {dots}
     </div>

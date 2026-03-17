@@ -104,6 +104,9 @@ body {
 .step-check-appear { animation: step-check-appear 0.7s ease-out forwards; }
 .spin             { animation: spin 0.9s linear infinite; }
 
+/* ── Display font ──────────────────────────────────────────────────────── */
+.font-display { font-family: var(--font-display), Georgia, serif; }
+
 /* ── Landing page ───────────────────────────────────────────────────────── */
 .landing-scroll { scroll-behavior: smooth; }
 
@@ -128,15 +131,15 @@ body {
 }
 
 @keyframes logo-wave {
-  0%       { transform: translateY(-1.5px); }
-  50%      { transform: translateY(1.5px); }
-  100%     { transform: translateY(-1.5px); }
+  0%, 100% { transform: translateY(0); }
+  25%      { transform: translateY(-1.5px); }
+  75%      { transform: translateY(1.5px); }
 }
 
 @keyframes logo-bend {
-  0%       { transform: rotate(-3deg) translateY(-1px); }
-  50%      { transform: rotate(3deg) translateY(1px); }
-  100%     { transform: rotate(-3deg) translateY(-1px); }
+  0%, 100% { transform: rotate(0) translateY(0); }
+  25%      { transform: rotate(-3deg) translateY(-1px); }
+  75%      { transform: rotate(3deg) translateY(1px); }
 }
 
 @keyframes landing-ring-pulse {
