@@ -115,7 +115,13 @@ export function usePitchProgress({
         const target = resolved.targets[idx];
         if (!target) return;
         const noteSeconds = target.seconds;
-        if (hz !== null && isInTune(hz, target.note.frequencyHz)) {
+        const hasAccept = target.accept !== undefined;
+        const noteInTune =
+          hz !== null &&
+          (hasAccept
+            ? matchesNoteTarget(hz, target.rangeNotes ?? [target.note], target.accept ?? "within")
+            : isInTune(hz, target.note.frequencyHz));
+        if (noteInTune) {
           noteHoldRef.current += dt;
           if (noteHoldRef.current >= noteSeconds) {
             noteHoldRef.current = 0;

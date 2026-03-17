@@ -53,7 +53,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         subtitle: "Hum · 5 seconds × 3",
         cardCue: "Your first pitched sound — a low, steady hum",
         instruction:
-          "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nKeep it gentle and relaxed.",
+          "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nBreathe whenever you need to — there's no rush.",
       }),
       gen.hillSustain({
         note: 4,
@@ -63,7 +63,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         subtitle: "Chest voice · 6 seconds × 3",
         cardCue: "Warm up your chest voice with a low Uu vowel",
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
+          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
       }),
       gen.hillSustain({
         note: [5, 10],
@@ -73,7 +73,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         subtitle: "Chest voice · 6 seconds × 3",
         cardCue: "Warm up your chest voice with a uu vowel",
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
+          "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
       }),
       gen.zoneAbove({
         boundaryNote: -6,
