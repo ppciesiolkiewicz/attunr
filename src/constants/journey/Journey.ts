@@ -29,6 +29,37 @@ export class Journey {
       : null;
   }
 
+  /** Get all exercises in a chapter as a flat array (warmup + stages). */
+  getChapterExercises(chapterNum: number): ExerciseConfig[] {
+    const chapter = this.chapters.find((ch) => ch.chapter === chapterNum);
+    if (!chapter) return [];
+    const stages = chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages;
+    return stages.flatMap((s) => s.exercises);
+  }
+
+  /** Resolve a global exercise ID to { ch, ex } route params. */
+  exerciseRoute(globalId: number): { ch: number; ex: number } | null {
+    for (const chapter of this.chapters) {
+      const exercises = this.getChapterExercises(chapter.chapter);
+      const idx = exercises.findIndex((e) => e.id === globalId);
+      if (idx !== -1) return { ch: chapter.chapter, ex: idx + 1 };
+    }
+    return null;
+  }
+
+  /** Resolve { ch, ex } route params to a global exercise ID. */
+  exerciseByRoute(ch: number, ex: number): ExerciseConfig | null {
+    const exercises = this.getChapterExercises(ch);
+    return exercises[ex - 1] ?? null;
+  }
+
+  /** Build the URL path for an exercise given its global ID. */
+  exerciseHref(globalId: number): string {
+    const route = this.exerciseRoute(globalId);
+    if (!route) return "/journey";
+    return `/ch/${route.ch}/${route.ex}`;
+  }
+
   /** Assign sequential IDs (1-based), chapter, and stageId to all exercises across all chapters. */
   private assignIds(chapters: ChapterInput[]): Chapter[] {
     let nextId = 1;
