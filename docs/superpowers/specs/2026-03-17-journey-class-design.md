@@ -2,14 +2,15 @@
 
 ## Summary
 
-Introduce a `Journey` class that encapsulates exercise configs (relative/unresolved types) and provides a `getExercise()` method that returns resolved, component-ready data. Simplify the type naming convention and make `ExerciseGenerator` the primary way to define exercises in chapter configs.
+Introduce a `Journey` class that encapsulates exercise configs (relative/unresolved types) and provides a `getExercise()` method that returns resolved, component-ready data. Convert `VocalRange` from an interface to a class that owns its own construction (absorbing color interpolation and `NOTE_PALETTE`). Simplify the type naming convention and make `ExerciseGenerator` the primary way to define exercises in chapter configs.
 
 ## Goals
 
 1. Single entry point for all journey data access (`Journey` class)
-2. Clean type naming: internal `*Config` types, external `*Exercise` types
-3. Simplify chapter configs by using `ExerciseGenerator` more heavily
-4. Convert multi-note pitch-detection exercises to melody exercises
+2. `VocalRange` as a class that owns construction and note lookup
+3. Clean type naming: internal `*Config` types, external `*Exercise` types
+4. Simplify chapter configs by using `ExerciseGenerator` more heavily
+5. Convert multi-note pitch-detection exercises to melody exercises
 
 ## Type Naming
 
@@ -105,6 +106,63 @@ export const journey = new Journey([...chapters])
 ### Resolution
 
 `getExercise(id, vocalRange)` delegates to resolution logic in `lib/resolve-exercise.ts`. The resolution module becomes an internal implementation detail — consumers never import it directly.
+
+## VocalRange Class
+
+`VocalRange` becomes a class at `lib/VocalRange.ts`, absorbing `getScaleNotesForRange()` from `lib/vocal-scale.ts` and `NOTE_PALETTE` from `constants/tone-slots.ts`.
+
+```ts
+// lib/VocalRange.ts
+
+class VocalRange {
+  constructor(lowHz: number, highHz: number, tuning: TuningStandard)
+
+  readonly lowNote: string        // e.g. "C3"
+  readonly highNote: string       // e.g. "C5"
+  readonly allNotes: ColoredNote[]
+
+  /** Find the closest ColoredNote by MIDI number. */
+  findNote(midi: number): ColoredNote | null
+
+  /** Build colored chromatic notes from NOTE_PALETTE. Called in constructor. */
+  private colorize(): ColoredNote[]
+}
+```
+
+### What it absorbs
+
+| Current location | Absorbed into |
+|-----------------|---------------|
+| `NOTE_PALETTE` (`constants/tone-slots.ts`) | Private constant in `VocalRange.ts` |
+| `getScaleNotesForRange()` (`lib/vocal-scale.ts`) | Private `colorize()` method |
+| `lookupColoredNote()` (`lib/resolve-exercise.ts`) | Public `findNote()` method |
+
+### Types that move
+
+`ResolvedNote`, `ColoredNote` move from `constants/tone-slots.ts` to `lib/VocalRange.ts` and are exported from there.
+
+### Files deleted
+
+| File | Reason |
+|------|--------|
+| `lib/vocal-scale.ts` | Logic absorbed into `VocalRange.colorize()` |
+| `constants/tone-slots.ts` | Types move to `VocalRange.ts`, re-exports removed (consumers import directly) |
+
+### Migration mapping
+
+| Current | New |
+|---------|-----|
+| `getScaleNotesForRange(lowHz, highHz, tuning)` + manual object | `new VocalRange(lowHz, highHz, tuning)` |
+| `import { ColoredNote } from "@/constants/tone-slots"` | `import { ColoredNote } from "@/lib/VocalRange"` |
+| `import { VocalRange } from "@/constants/tone-slots"` | `import { VocalRange } from "@/lib/VocalRange"` |
+| `lookupColoredNote(midi, allNotes)` in `resolve-exercise.ts` | `vocalRange.findNote(midi)` |
+
+### Consumer sites
+
+- `components/JourneyView/components/JourneyExercise.tsx` — `new VocalRange(lowHz, highHz, tuning)`
+- `components/TrainView.tsx` — `new VocalRange(lowHz, highHz, tuning)`
+- `lib/resolve-exercise.test.ts` — `new VocalRange(131, 523, "A440")`
+- `lib/resolve-exercise.ts` — uses `vocalRange.findNote()` instead of local `lookupColoredNote()`
 
 ## ExerciseGenerator Changes
 
@@ -217,12 +275,15 @@ Volume-detection exercises stay inline — they're already minimal. Any exercise
 | File | Change |
 |------|--------|
 | `constants/journey/types.ts` | Rename types to `*Config` naming |
-| `constants/journey/generator.ts` | Rename to `exercise-generator.ts`, add `sustain()` |
+| `constants/journey/generator.ts` | Rename to `exercise-generator.ts`, add `sustain()`, `lipRollSustain()` |
 | `constants/journey/index.ts` | Re-export from `Journey.ts`, export singleton |
 | `constants/journey/Journey.ts` | New file — `Journey` class |
 | `constants/journey/chapter1.ts` | Use generator, convert multi-note to melody |
 | `constants/journey/chapter2.ts` | Same |
-| `lib/resolve-exercise.ts` | Rename exported types (drop `Resolved` prefix, add `Exercise` suffix) |
+| `lib/VocalRange.ts` | New file — `VocalRange` class, `ColoredNote`, `ResolvedNote` types |
+| `lib/resolve-exercise.ts` | Rename types, use `vocalRange.findNote()` instead of local helper |
+| `lib/vocal-scale.ts` | Delete — absorbed into `VocalRange.colorize()` |
+| `constants/tone-slots.ts` | Delete — types moved to `VocalRange.ts`, re-exports removed |
 | `components/Exercise/BaseExercise.tsx` | Use `journey.getExercise()` instead of `resolveExercise` |
 | `components/Exercise/PitchExercise/PitchExercise.tsx` | Update type imports |
 | `components/Exercise/PitchExercise/usePitchProgress.ts` | Update type imports |
@@ -230,7 +291,9 @@ Volume-detection exercises stay inline — they're already minimal. Any exercise
 | `components/Exercise/RhythmExercise.tsx` | Update type imports |
 | `components/Exercise/RhythmCanvas.tsx` | Update type imports |
 | `components/Exercise/ToneFollowExercise.tsx` | Update type imports |
-| `components/JourneyView/` (any files importing `JOURNEY_CONFIG` etc.) | Use `journey.*` |
+| `components/JourneyView/components/JourneyExercise.tsx` | Use `new VocalRange()`, `journey.*` |
+| `components/TrainView.tsx` | Use `new VocalRange()` |
+| All files importing from `@/constants/tone-slots` | Import from `@/lib/VocalRange` or direct sources |
 
 ## Architecture
 
@@ -243,7 +306,12 @@ journey.getExercise(id, vocalRange) → Exercise (PitchDetectionExercise | Melod
     ├── internally: looks up ExerciseConfig by id
     └── internally: delegates to lib/resolve-exercise.ts
                         │
-                        └── uses lib/scale.ts, constants/tone-slots.ts
+                        └── uses lib/scale.ts, lib/VocalRange.ts
+
+new VocalRange(lowHz, highHz, tuning)
+    │
+    ├── colorize() — builds ColoredNote[] from NOTE_PALETTE
+    └── findNote(midi) — lookup by MIDI number
 
 Chapter files (chapter1.ts, chapter2.ts)
     │
