@@ -43,7 +43,7 @@ export interface PitchDetectionHillExercise extends ExerciseBase {
   exerciseTypeId: "pitch-detection-hill";
   targets: PitchTarget[];
   toneShape: ToneShape;
-  direction: "up" | "down";
+  direction: "up" | "down" | "between";
 }
 
 export interface ToneFollowExercise extends ExerciseBase {
@@ -323,7 +323,24 @@ function resolvePitchDetectionHill(
   }
 
   const exerciseColoredNotes = targets.map((t) => t.note);
-  const displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
+
+  // Display notes: use config displayNotes if provided, else auto-derive
+  let displayNotes: ColoredNote[];
+  if (exercise.displayNotes && exercise.displayNotes.length > 0) {
+    const ds = exercise.displayNotes[0];
+    const dsScale = new Scale({ type: ds.type, root: ds.root }, vocalRange);
+    if (ds.notes.length === 0) {
+      displayNotes = dsScale.notes.map((n) => vocalRange.findNote(n.midi)).filter((c): c is ColoredNote => c !== null);
+    } else {
+      displayNotes = ds.notes.flatMap((dn) => dsScale.resolve(dn.target).map((n) => vocalRange.findNote(n.midi)).filter((c): c is ColoredNote => c !== null));
+    }
+  } else if (targets[0]?.rangeNotes) {
+    // Range target: show all notes in the range
+    displayNotes = targets[0].rangeNotes;
+  } else {
+    displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
+  }
+
   const highlightIds = exerciseColoredNotes.map((n) => n.id);
 
   return {

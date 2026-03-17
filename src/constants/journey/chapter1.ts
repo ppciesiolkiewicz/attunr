@@ -65,6 +65,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         instruction:
           "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
       }),
+      gen.hillSustain({
+        note: [5, 10],
+        seconds: 6,
+        direction: "between",
+        title: "Middle tone",
+        subtitle: "Chest voice · 6 seconds × 3",
+        cardCue: "Warm up your chest voice with a uu vowel",
+        instruction:
+          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
+      }),
       gen.zoneAbove({
         boundaryNote: -6,
         seconds: 5,

@@ -172,8 +172,10 @@ export interface PitchDetectionHillConfig extends BaseExerciseConfig {
   scale: BaseScale;
   toneShape?: ToneShape;
   notes: SustainNoteConfig[];
-  /** Ball rolls uphill or downhill based on pitch direction. */
-  direction: "up" | "down";
+  /** Ball rolls uphill, downhill, or balances on a symmetric hill. */
+  direction: "up" | "down" | "between";
+  /** Extra notes to display on the canvas (visual context only, not detection targets). */
+  displayNotes?: DisplayScale[];
   instruction: string;
 }
 

@@ -3,6 +3,8 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import confetti from "canvas-confetti";
 import HillBallCanvas from "@/components/HillBallCanvas";
+import BalanceBallCanvas from "@/components/BalanceBallCanvas";
+import type { InTuneOverride } from "@/components/PitchCanvas";
 import { Button, CircularProgress, Text } from "@/components/ui";
 import { usePitchProgress } from "./PitchExercise/usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
@@ -45,8 +47,20 @@ export function HillExercise({
     [resolved],
   );
 
+  const canvasBands = useMemo(
+    () => exercise.direction === "between" ? resolved.displayNotes : exerciseColoredNotes,
+    [exercise.direction, resolved.displayNotes, exerciseColoredNotes],
+  );
+
   const accept: "above" | "below" =
     exercise.direction === "up" ? "above" : "below";
+
+  const inTuneOverride: InTuneOverride | undefined = useMemo(() => {
+    if (exercise.direction !== "between") return undefined;
+    const rangeNotes = resolved.targets[0]?.rangeNotes;
+    if (!rangeNotes || rangeNotes.length < 2) return undefined;
+    return { bands: rangeNotes, accept: "within" as const };
+  }, [exercise.direction, resolved.targets]);
 
   // usePitchProgress expects PitchDetectionConfig | PitchDetectionSlideConfig.
   // We cast since PitchDetectionHillConfig has the same note/target structure.
@@ -133,12 +147,21 @@ export function HillExercise({
         </div>
 
         {/* Canvas */}
-        <HillBallCanvas
-          bands={exerciseColoredNotes}
-          currentHzRef={pitchHzRef}
-          direction={exercise.direction}
-          accept={accept}
-        />
+        {exercise.direction === "between" ? (
+          <BalanceBallCanvas
+            bands={canvasBands}
+            currentHzRef={pitchHzRef}
+            highlightIds={resolved.highlightIds}
+            inTuneOverride={inTuneOverride}
+          />
+        ) : (
+          <HillBallCanvas
+            bands={exerciseColoredNotes}
+            currentHzRef={pitchHzRef}
+            direction={exercise.direction}
+            accept={accept}
+          />
+        )}
 
         {/* Start button */}
         {!hasStarted && <ExerciseStartButton onStart={handleExerciseStart} />}
@@ -178,7 +201,7 @@ export function HillExercise({
                 style={{ color: exerciseColoredNotes[0]?.color ?? "#fff" }}
               >
                 {exerciseComplete ? "✓ " : ""}
-                {exercise.direction === "up" ? "Go higher" : "Go lower"}
+                {exercise.direction === "up" ? "Go higher" : exercise.direction === "down" ? "Go lower" : "Hold steady"}
               </Text>
             </div>
           </div>

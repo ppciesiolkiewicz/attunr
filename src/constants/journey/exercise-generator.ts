@@ -2,6 +2,7 @@ import type {
   ExerciseConfigInput,
   ModalConfig,
   NoteTarget,
+  SustainNoteConfig,
   MelodyScale,
   MelodyEvent,
   DisplayScale,
@@ -98,11 +99,13 @@ export interface LipRollSustainParams extends CommonParams {
 }
 
 export interface HillSustainParams extends CommonParams {
-  note: number;
+  /** Single note or [low, high] pair for "between" mode. */
+  note: number | [number, number];
   seconds: number;
   repeats?: number;
-  direction: "up" | "down";
+  direction: "up" | "down" | "between";
   toneShape?: ToneShape;
+  displayNotes?: DisplayScale[];
 }
 
 // ── Helper functions ──────────────────────────────────────────────────────────
@@ -597,7 +600,7 @@ export class ExerciseGenerator {
     };
   }
 
-  /** Hill sustain exercise. Pitch-detection-hill with sustained note. */
+  /** Hill sustain exercise. Pitch-detection-hill with sustained note or note pair. */
   hillSustain(params: HillSustainParams): ExerciseConfigInput {
     const {
       title,
@@ -611,10 +614,26 @@ export class ExerciseGenerator {
       repeats = 3,
       direction,
       toneShape,
+      displayNotes,
     } = params;
 
-    const target = { kind: BandTargetKind.Index as const, i: 1 };
-    const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
+    const isRange = Array.isArray(note);
+    const root = isRange ? note[0] : note;
+
+    let notes: SustainNoteConfig[];
+    if (isRange) {
+      // Range target: user must sing between the two notes
+      const rangeTarget: NoteTarget = {
+        kind: BandTargetKind.Range,
+        from: 1,
+        to: note[1] - note[0] + 1,
+        accept: "within",
+      };
+      notes = Array.from({ length: repeats }, () => ({ target: rangeTarget, seconds }));
+    } else {
+      const target = { kind: BandTargetKind.Index as const, i: 1 };
+      notes = Array.from({ length: repeats }, () => ({ target, seconds }));
+    }
 
     return {
       title,
@@ -624,9 +643,10 @@ export class ExerciseGenerator {
       introModal,
       completionModal,
       exerciseTypeId: "pitch-detection-hill",
-      scale: { type: "chromatic", root: note },
+      scale: { type: "chromatic", root },
       toneShape,
       direction,
+      displayNotes,
       notes,
     };
   }
