@@ -28,6 +28,7 @@ export function JourneyExercise({
   onBack,
   onNext,
   onPrev,
+  backLabel,
 }: {
   exerciseId: number;
   settings: Settings;
@@ -42,6 +43,8 @@ export function JourneyExercise({
   onBack: () => void;
   onNext: (nextExerciseId: number) => void;
   onPrev?: (prevExerciseId: number) => void;
+  /** Label for the back button. Default: "← Journey" */
+  backLabel?: string;
 }) {
   const router = useRouter();
   const { triggerNotificationPrompt } = useApp();
@@ -81,7 +84,7 @@ export function JourneyExercise({
   useEffect(() => {
     if (partCompleteData !== null) {
       const nextId = journey.getNextExerciseId(exerciseId);
-      if (nextId !== null) router.prefetch(`/journey/${nextId}`);
+      if (nextId !== null) router.prefetch(journey.exerciseHref(nextId));
       else router.prefetch("/");
     }
   }, [partCompleteData, exerciseId, router]);
@@ -134,7 +137,7 @@ export function JourneyExercise({
       {/* ── Sub-nav ───────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5 sm:gap-2 pl-3 pr-4 sm:pl-4 sm:pr-5 py-2 sm:py-2.5 border-b border-white/6 shrink-0 overflow-x-auto">
         <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90 pr-1!">
-          ← Journey
+          {backLabel ?? "← Journey"}
         </Button>
         <Text variant="caption" as="span" color="muted-2">|</Text>
         <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">

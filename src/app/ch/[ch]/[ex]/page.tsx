@@ -34,6 +34,7 @@ export default function ChapterExercisePage() {
   return (
     <JourneyExercise
       exerciseId={exercise.id}
+      backLabel="← Chapter"
       settings={settings}
       pitchHz={pitchHz}
       pitchHzRef={pitchHzRef}
