@@ -58,17 +58,20 @@ export interface NamedMelodyParams extends CommonParams {
 export interface ZoneBelowParams extends CommonParams {
   boundaryNote: number;
   seconds: number;
+  repeats?: number;
 }
 
 export interface ZoneAboveParams extends CommonParams {
   boundaryNote: number;
   seconds: number;
+  repeats?: number;
 }
 
 export interface ZoneBetweenParams extends CommonParams {
   lowNote: number;
   highNote: number;
   seconds: number;
+  repeats?: number;
 }
 
 export interface LipRollParams extends CommonParams {
@@ -377,7 +380,17 @@ export class ExerciseGenerator {
       completionModal,
       boundaryNote,
       seconds,
+      repeats = 1,
     } = params;
+
+    const target = {
+      kind: BandTargetKind.Range as const,
+      from: 1,
+      to: boundaryNote,
+      accept: "below" as const,
+    };
+    const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
+
     return {
       title,
       subtitle,
@@ -388,17 +401,7 @@ export class ExerciseGenerator {
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       toneShape: { kind: "wobble" },
-      notes: [
-        {
-          target: {
-            kind: BandTargetKind.Range,
-            from: 1,
-            to: boundaryNote,
-            accept: "below",
-          },
-          seconds,
-        },
-      ],
+      notes,
     };
   }
 
@@ -416,7 +419,17 @@ export class ExerciseGenerator {
       completionModal,
       boundaryNote,
       seconds,
+      repeats = 1,
     } = params;
+
+    const target = {
+      kind: BandTargetKind.Range as const,
+      from: boundaryNote,
+      to: -1,
+      accept: "above" as const,
+    };
+    const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
+
     return {
       title,
       subtitle,
@@ -427,17 +440,7 @@ export class ExerciseGenerator {
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       toneShape: { kind: "owl-hoot" },
-      notes: [
-        {
-          target: {
-            kind: BandTargetKind.Range,
-            from: boundaryNote,
-            to: -1,
-            accept: "above",
-          },
-          seconds,
-        },
-      ],
+      notes,
     };
   }
 
@@ -456,7 +459,17 @@ export class ExerciseGenerator {
       lowNote,
       highNote,
       seconds,
+      repeats = 1,
     } = params;
+
+    const target = {
+      kind: BandTargetKind.Range as const,
+      from: lowNote,
+      to: highNote,
+      accept: "within" as const,
+    };
+    const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
+
     return {
       title,
       subtitle,
@@ -466,17 +479,7 @@ export class ExerciseGenerator {
       completionModal,
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
-      notes: [
-        {
-          target: {
-            kind: BandTargetKind.Range,
-            from: lowNote,
-            to: highNote,
-            accept: "within",
-          },
-          seconds,
-        },
-      ],
+      notes,
     };
   }
 

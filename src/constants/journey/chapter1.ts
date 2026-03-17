@@ -1,5 +1,8 @@
 import { BandTargetKind } from "./types";
 import type { StageConfigInput } from "./types";
+import { ExerciseGenerator } from "./exercise-generator";
+
+const gen = new ExerciseGenerator();
 
 // ── Chapter 1: Introduction ─────────────────────────────────────────────────
 // No warmup — the user's very first experience.
@@ -58,61 +61,40 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-first-sounds",
     title: "First Sounds",
     exercises: [
-      {
-        exerciseTypeId: "pitch-detection",
+      gen.sustain({
+        note: 1,
+        seconds: 5,
         title: "Gentle hum",
         subtitle: "Hum · 5 seconds × 3",
         cardCue: "Your first pitched sound — a low, steady hum",
-        scale: { type: "chromatic", root: 1 },
-        notes: [
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 },
-        ],
         instruction: "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nKeep it gentle and relaxed.",
-      },
-      {
-        exerciseTypeId: "pitch-detection",
+      }),
+      gen.zoneAbove({
+        boundaryNote: -6,
+        seconds: 5,
+        repeats: 3,
         title: "Hoo hoo",
         subtitle: "Head voice · 5 seconds × 3",
         cardCue: "Find your head voice with a light, owl-like sound",
-        scale: { type: "chromatic", root: -1 },
-        toneShape: { kind: "owl-hoot" },
-        notes: [
-          { target: { kind: BandTargetKind.Range, from: -6, to: -3, accept: "above" }, seconds: 5 },
-          { target: { kind: BandTargetKind.Range, from: -6, to: -3, accept: "above" }, seconds: 5 },
-          { target: { kind: BandTargetKind.Range, from: -6, to: -3, accept: "above" }, seconds: 5 },
-        ],
         instruction: "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
-      },
-      {
-        exerciseTypeId: "pitch-detection",
+      }),
+      gen.sustain({
+        note: 1,
+        seconds: 6,
         title: "Simple U",
         subtitle: "Chest voice · 6 seconds × 3",
         cardCue: "Warm up your chest voice with a low U vowel",
-        scale: { type: "chromatic", root: 1 },
-        notes: [
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-        ],
         instruction: "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nThis warms up your lower register.",
-      },
-      {
-        exerciseTypeId: "tone-follow",
+      }),
+      gen.lipRoll({
+        startNote: 1,
+        endNote: -1,
+        requiredPlays: 3,
         title: "Lip roll slide",
         subtitle: "Glide low to high · play 3 times",
         cardCue: "Slide your voice from low to high with a lip roll",
-        scale: { type: "chromatic", root: 1 },
-        toneShape: {
-          kind: "slide",
-          from: { kind: BandTargetKind.Index, i: 1 },
-          to: { kind: BandTargetKind.Index, i: -1 },
-        },
-        displayNotes: [],
-        requiredPlays: 3,
         instruction: "Play the tone and lip roll alongside it.\nSlide smoothly from low to high — feel the glide in your lips.",
-      },
+      }),
     ],
   },
 
@@ -121,18 +103,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-first-melody",
     title: "First Melody",
     exercises: [
-      {
-        exerciseTypeId: "pitch-detection",
+      gen.sustain({
+        note: 4,
+        seconds: 5,
         title: "Hum — mid-low",
         subtitle: "Hum · 5 seconds × 3",
-        scale: { type: "chromatic", root: 4 },
-        notes: [
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 5 },
-        ],
         instruction: "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
-      },
+      }),
       {
         exerciseTypeId: "melody",
         title: "Major Second",
@@ -153,18 +130,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         minScore: 0,
         instruction: "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match.",
       },
-      {
-        exerciseTypeId: "pitch-detection",
+      gen.sustain({
+        note: 4,
+        seconds: 6,
         title: "U — mid-low",
         subtitle: "Vowel U · 6 seconds × 3",
-        scale: { type: "chromatic", root: 4 },
-        notes: [
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-        ],
         instruction: "Sing uuu on the mid-low tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
-      },
+      }),
     ],
   },
 
@@ -173,37 +145,25 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-breath",
     title: "Breath",
     exercises: [
-      {
-        exerciseTypeId: "breathwork-farinelli",
+      gen.farinelli({
+        maxCount: 5,
         title: "Farinelli breathwork",
         cardCue: "Calm your nervous system and build steady diaphragm control",
-        maxCount: 5,
         instruction: "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
-      },
-      {
-        exerciseTypeId: "tone-follow",
+      }),
+      gen.lipRollSustain({
+        note: 5,
+        seconds: 5,
+        requiredPlays: 3,
         title: "Lip roll sustain",
         subtitle: "Hold the buzz · play 3 times",
-        scale: { type: "chromatic", root: 5 },
-        toneShape: {
-          kind: "sustain",
-          target: { kind: BandTargetKind.Index, i: 1 },
-          seconds: 5,
-        },
-        displayNotes: [],
-        requiredPlays: 3,
         instruction: "Play the tone and lip roll alongside it.\nKeep the buzz steady — lips vibrating without force.",
-      },
-      {
-        exerciseTypeId: "pitch-detection",
+      }),
+      gen.sustain({
+        note: 7,
+        seconds: 6,
         title: "Hum — mid",
         subtitle: "Hum · 6 seconds × 3",
-        scale: { type: "chromatic", root: 7 },
-        notes: [
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-          { target: { kind: BandTargetKind.Index, i: 1 }, seconds: 6 },
-        ],
         instruction: "Hum on a mid tone.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
         completionModal: {
           title: "Chapter 1 Complete",
@@ -221,7 +181,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           ],
           confetti: true,
         },
-      },
+      }),
     ],
   },
 ];
