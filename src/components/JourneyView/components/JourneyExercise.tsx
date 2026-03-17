@@ -10,10 +10,9 @@ import { BaseExercise } from "@/components/Exercise";
 import { PartCompleteModal } from "./PartCompleteModal";
 import { JOURNEY_EXERCISES, JOURNEY_CONFIG, getNextExerciseId } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
-import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { useApp } from "@/context/AppContext";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
-import { hzToNoteName } from "@/lib/pitch";
+import type { ColoredNote } from "@/lib/VocalRange";
+import { VocalRange } from "@/lib/VocalRange";
 import type { ModalConfig } from "@/constants/journey/types";
 import type { Settings } from "@/hooks/useSettings";
 
@@ -52,14 +51,10 @@ export function JourneyExercise({
   const allStages = chapter ? (chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages) : [];
   const stageTitle = allStages.find((s) => s.id === exercise.stageId)?.title ?? "";
 
-  const vocalRange: VocalRange = useMemo(() => {
+  const vocalRange = useMemo(() => {
     const lowHz = settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131;
     const highHz = settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523;
-    return {
-      lowNote: hzToNoteName(lowHz),
-      highNote: hzToNoteName(highHz),
-      allNotes: getScaleNotesForRange(lowHz, highHz, settings.tuning),
-    };
+    return new VocalRange(lowHz, highHz, settings.tuning);
   }, [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning]);
 
   const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1";

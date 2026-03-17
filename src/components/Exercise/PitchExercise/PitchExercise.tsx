@@ -12,7 +12,7 @@ import { ExerciseStartOverlay } from "../ExerciseStartOverlay";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide } from "@/lib/resolve-exercise";
 
 interface PitchExerciseProps {

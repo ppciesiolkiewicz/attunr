@@ -1,5 +1,5 @@
 import { Note, Scale as TonalScale } from "tonal";
-import type { ResolvedNote, ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ResolvedNote, ColoredNote, VocalRange } from "@/lib/VocalRange";
 import type { NoteTarget, BaseScale } from "@/constants/journey/types";
 import { BandTargetKind } from "@/constants/journey/types";
 import { midiToHz, NOTE_NAMES } from "@/lib/pitch";

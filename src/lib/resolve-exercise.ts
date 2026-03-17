@@ -1,5 +1,5 @@
 import { Scale } from "./scale";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import type {
   JourneyExercise,
   PitchDetectionExercise,
@@ -85,22 +85,6 @@ export type ResolvedExercise =
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
-function lookupColoredNote(midi: number, allNotes: ColoredNote[]): ColoredNote | null {
-  const exact = allNotes.find((n) => n.midi === midi);
-  if (exact) return exact;
-  if (allNotes.length === 0) return null;
-  let closest = allNotes[0];
-  let minDist = Math.abs(midi - closest.midi);
-  for (let i = 1; i < allNotes.length; i++) {
-    const dist = Math.abs(midi - allNotes[i].midi);
-    if (dist < minDist) {
-      closest = allNotes[i];
-      minDist = dist;
-    }
-  }
-  return closest;
-}
-
 function computeDisplayRange(
   exerciseColoredNotes: ColoredNote[],
   allNotes: ColoredNote[],
@@ -131,13 +115,13 @@ function resolvePitchDetection(
   const targets: ResolvedPitchTarget[] = [];
   for (const n of exercise.notes) {
     const resolved = scale.resolve(n.target);
-    const colored = resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null;
+    const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
     if (!colored) continue;
     const target: ResolvedPitchTarget = { note: colored, seconds: n.seconds };
     if (n.target.kind === "range") {
       target.accept = n.target.accept ?? "within";
       target.rangeNotes = resolved
-        .map((r) => lookupColoredNote(r.midi, allNotes))
+        .map((r) => vocalRange.findNote(r.midi))
         .filter((c): c is ColoredNote => c !== null);
     }
     targets.push(target);
@@ -159,8 +143,8 @@ function resolvePitchDetectionSlide(
 
   const fromResolved = scale.resolve(exercise.notes[0].from);
   const toResolved = scale.resolve(exercise.notes[0].to);
-  const from = fromResolved[0] ? lookupColoredNote(fromResolved[0].midi, allNotes) : null;
-  const to = toResolved[0] ? lookupColoredNote(toResolved[0].midi, allNotes) : null;
+  const from = fromResolved[0] ? vocalRange.findNote(fromResolved[0].midi) : null;
+  const to = toResolved[0] ? vocalRange.findNote(toResolved[0].midi) : null;
 
   if (!from || !to) {
     return {
@@ -198,14 +182,14 @@ function resolveToneFollow(
 
   if (exercise.toneShape.kind === "sustain") {
     const resolved = scale.resolve(exercise.toneShape.target);
-    const note = (resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null) ?? allNotes[0];
+    const note = (resolved[0] ? vocalRange.findNote(resolved[0].midi) : null) ?? allNotes[0];
     toneShape = { kind: "sustain", note, seconds: exercise.toneShape.seconds };
     exerciseColoredNotes = [note];
   } else {
     const fromResolved = scale.resolve(exercise.toneShape.from);
     const toResolved = scale.resolve(exercise.toneShape.to);
-    const from = (fromResolved[0] ? lookupColoredNote(fromResolved[0].midi, allNotes) : null) ?? allNotes[0];
-    const to = (toResolved[0] ? lookupColoredNote(toResolved[0].midi, allNotes) : null) ?? allNotes[allNotes.length - 1];
+    const from = (fromResolved[0] ? vocalRange.findNote(fromResolved[0].midi) : null) ?? allNotes[0];
+    const to = (toResolved[0] ? vocalRange.findNote(toResolved[0].midi) : null) ?? allNotes[allNotes.length - 1];
 
     toneShape = { kind: "slide", from, to };
 
@@ -262,14 +246,14 @@ function resolveMelody(
       } else if (event.type === "play") {
         for (const target of event.targets) {
           const resolved = localScale.resolve(target);
-          const colored = resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null;
+          const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
           if (colored) {
             timeline.push({ note: colored, startMs: cursor, durationMs: ms, audioOnly: true });
           }
         }
       } else {
         const resolved = localScale.resolve(event.target);
-        const colored = resolved[0] ? lookupColoredNote(resolved[0].midi, allNotes) : null;
+        const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
         if (colored) {
           timeline.push({
             note: colored,

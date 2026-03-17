@@ -1,6 +1,6 @@
 "use client";
 
-import { NOTE_PALETTE } from "@/constants/tone-slots";
+import { NOTE_PALETTE } from "@/lib/VocalRange";
 
 export function ToneSpectrum() {
   return (

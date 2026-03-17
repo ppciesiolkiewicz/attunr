@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import type { JourneyExercise } from "@/constants/journey";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import { resolveExercise } from "@/lib/resolve-exercise";
 import type { ResolvedPitchDetection, ResolvedPitchDetectionSlide, ResolvedToneFollow, ResolvedMelody, ResolvedRhythm } from "@/lib/resolve-exercise";
 import { LearnExercise } from "./LearnExercise";

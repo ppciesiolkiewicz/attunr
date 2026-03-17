@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, useCallback, useMemo } from "react";
 import { Button, Text } from "@/components/ui";
-import type { ColoredNote, VocalRange } from "@/constants/tone-slots";
+import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 
 interface LearnNotesExerciseProps {
   exerciseId: number;

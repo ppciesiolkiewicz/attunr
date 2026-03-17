@@ -17,7 +17,7 @@ import { useNotificationPrompt } from "@/hooks/useNotificationPrompt";
 import { AppContext } from "@/context/AppContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { analytics } from "@/lib/analytics";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 import { Button, Text } from "@/components/ui";
 import Logo from "../Logo";
 import { SettingsIcon, HamburgerIcon } from "./components/icons";

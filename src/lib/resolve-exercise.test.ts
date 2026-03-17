@@ -7,7 +7,7 @@ import type {
   ResolvedMelody,
   ResolvedRhythm,
 } from "./resolve-exercise";
-import { getScaleNotesForRange } from "@/lib/vocal-scale";
+import { VocalRange } from "@/lib/VocalRange";
 import { BandTargetKind, NoteDuration } from "@/constants/journey/types";
 import type {
   PitchDetectionExercise,
@@ -16,16 +16,11 @@ import type {
   MelodyExercise,
   RhythmExercise,
 } from "@/constants/journey/types";
-import type { VocalRange } from "@/constants/tone-slots";
 
 // ── Test vocal range (C3–C5) ────────────────────────────────────────────────
 
-const allNotes = getScaleNotesForRange(131, 523, "A440");
-const testVocalRange: VocalRange = {
-  lowNote: "C3",
-  highNote: "C5",
-  allNotes,
-};
+const testVocalRange = new VocalRange(131, 523, "A440");
+const allNotes = testVocalRange.allNotes;
 
 const base = {
   id: 1,

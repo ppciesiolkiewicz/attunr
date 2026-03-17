@@ -3,9 +3,9 @@
 import { useState, useMemo, useEffect } from "react";
 import PitchCanvas from "./PitchCanvas";
 import TabInfoModal, { InfoButton, HeadphonesNotice } from "./TabInfoModal";
-import { getScaleNotesForRange } from "@/lib/vocal-scale";
 import { findClosestNote, isInTune } from "@/lib/pitch";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
+import { VocalRange } from "@/lib/VocalRange";
 import type { Settings } from "@/hooks/useSettings";
 import { Text } from "@/components/ui";
 
@@ -54,11 +54,11 @@ export default function TrainView({
 
   const allNotes = useMemo(
     () =>
-      getScaleNotesForRange(
+      new VocalRange(
         settings.vocalRangeLowHz,
         settings.vocalRangeHighHz,
         settings.tuning,
-      ),
+      ).allNotes,
     [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning],
   );
 

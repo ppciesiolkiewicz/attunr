@@ -9,7 +9,7 @@ import { ExerciseStartOverlay } from "./ExerciseStartOverlay";
 import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyExercise as MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
-import type { ColoredNote } from "@/constants/tone-slots";
+import type { ColoredNote } from "@/lib/VocalRange";
 import type { ResolvedMelody, ResolvedTimelineEntry } from "@/lib/resolve-exercise";
 import { usePianoSampler } from "@/hooks/usePianoSampler";
 
