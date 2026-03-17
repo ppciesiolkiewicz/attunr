@@ -33,7 +33,7 @@ These live in `constants/journey/types.ts` and represent unresolved exercise def
 
 ### External types (resolved, exported from Journey)
 
-These are what `getExercise()` returns. Components consume these types.
+Types returned by `getExercise()`. Components consume these.
 
 | Current | New |
 |---------|-----|
@@ -52,10 +52,23 @@ Sub-structures (no `Exercise` suffix):
 | `ResolvedTimelineEntry` | `TimelineEntry` |
 | `ResolvedBeat` | `Beat` |
 
+### Non-resolved exercise types
+
+Some exercise types (`learn`, `learn-notes-1`, `breathwork-farinelli`, `volume-detection`) don't go through resolution — components receive the config directly. These are re-exported from Journey with `Exercise` suffix names:
+
+| Config name | Re-exported as |
+|-------------|---------------|
+| `LearnConfig` | `LearnExercise` |
+| `LearnNotesConfig` | `LearnNotesExercise` |
+| `FarinelliBreathworkConfig` | `FarinelliBreathworkExercise` |
+| `VolumeDetectionConfig` | `VolumeDetectionExercise` |
+
+Note: The internal `*Config` name and the external `*Exercise` name currently refer to the same underlying type for these non-resolved exercises. Both renames happen atomically to avoid collision.
+
 ## Journey Class
 
 ```ts
-// constants/journey/index.ts (or Journey.ts)
+// constants/journey/Journey.ts (re-exported from index.ts)
 
 class Journey {
   constructor(chapters: ChapterInput[])
@@ -65,9 +78,10 @@ class Journey {
   readonly exercises: ExerciseConfig[]  // flat list with assigned IDs + intro modals
 
   getExercise(id: number, vocalRange: VocalRange): Exercise
+  getNextExerciseId(currentId: number): number | null
 }
 
-// Exported as singleton
+// Exported as singleton from index.ts
 export const journey = new Journey([...chapters])
 ```
 
@@ -75,12 +89,22 @@ export const journey = new Journey([...chapters])
 
 - ID assignment (`assignIds`)
 - Intro modal generation (`buildIntroModal`, `withIntroModals`)
-- Building the flat `JOURNEY_EXERCISES` list
-- Deriving `JOURNEY_CONFIG` (chapters with assigned exercises)
+- Building the flat exercises list (replaces `JOURNEY_EXERCISES`)
+- Deriving chapters with assigned exercises (replaces `JOURNEY_CONFIG`)
+- Next exercise lookup (replaces `getNextExerciseId`)
+
+### Migration mapping
+
+| Current import | New import |
+|---------------|------------|
+| `JOURNEY_CONFIG` | `journey.chapters` |
+| `JOURNEY_EXERCISES` | `journey.exercises` |
+| `getNextExerciseId(id)` | `journey.getNextExerciseId(id)` |
+| `resolveExercise(ex, range)` | `journey.getExercise(id, range)` |
 
 ### Resolution
 
-`getExercise(id, vocalRange)` delegates to resolution logic that stays in `lib/resolve-exercise.ts`. The resolution module becomes an internal implementation detail — consumers never import it directly.
+`getExercise(id, vocalRange)` delegates to resolution logic in `lib/resolve-exercise.ts`. The resolution module becomes an internal implementation detail — consumers never import it directly.
 
 ## ExerciseGenerator Changes
 
@@ -94,25 +118,53 @@ For single-note BalanceBall exercises (the most common pattern in chapters 1-2):
 
 ```ts
 interface SustainParams extends CommonParams {
-  note: number;        // ChromaticDegree
+  note: number;        // ChromaticDegree — used as scale root, target is always i: 1
   seconds: number;
   repeats?: number;    // default 3
   toneShape?: ToneShape;
 }
 
 sustain(params: SustainParams): ExerciseConfigInput
-// Produces a pitch-detection config with a single Index target repeated `repeats` times
+// Produces a pitch-detection config with:
+//   scale: { type: "chromatic", root: note }
+//   notes: [{ target: { kind: Index, i: 1 }, seconds }] repeated `repeats` times
 ```
 
 ## Chapter Config Simplification
 
 ### Multi-note pitch-detection -> melody
 
-Exercises like "Hum — low to mid" (3 rising notes at i:1, i:4, i:7) become melody exercises instead of pitch-detection, since they're sequential note targets.
+These exercises have sequential note targets held for N seconds each. Converting them to melody exercises changes the UX from time-based completion (hold each note for N seconds) to tempo-based scoring (sing along to scrolling notes). This is intentional — melody exercises provide a better experience for sequential pitch work.
+
+**Exercises to convert:**
+
+Chapter 1:
+- "Hum — mid-low" (3 × same note at root 4) — stays as `sustain()` since single note repeated
+
+Chapter 2:
+- "Hum — low to mid" (3 rising notes: i:1, i:4, i:7)
+- "U — low to mid" (3 rising notes: i:1, i:4, i:7)
+- "Hum sequence" (3 rising notes: i:1, i:3, i:5)
+- "U sequence" (3 rising notes: i:1, i:3, i:5)
 
 ### Single-note pitch-detection -> generator.sustain()
 
-Exercises like "Gentle hum" (hold note i:1 for 5s, 3 times) use the new `sustain()` method instead of inline config.
+**Exercises to convert:**
+
+Chapter 1:
+- "Gentle hum" — `sustain({ note: 1, seconds: 5 })`
+- "Hoo hoo" — stays as `zoneAbove()` (range target, HillBall)
+- "Simple U" — `sustain({ note: 1, seconds: 6 })`
+- "Hum — mid-low" — `sustain({ note: 4, seconds: 5 })`
+- "U — mid-low" — `sustain({ note: 4, seconds: 6 })`
+- "Hum — mid" — `sustain({ note: 7, seconds: 6 })`
+
+Chapter 2 warmup:
+- "Gentle hum" — `sustain({ note: 1, seconds: 5, repeats: 2 })`
+
+Chapter 2:
+- "Hum — mid" — `sustain({ note: 7, seconds: 8 })`
+- "U — mid" — `sustain({ note: 7, seconds: 8 })`
 
 ### What stays inline
 
@@ -124,12 +176,19 @@ Not every exercise must use the generator. Exercises with unique structure or on
 |------|--------|
 | `constants/journey/types.ts` | Rename types to `*Config` naming |
 | `constants/journey/generator.ts` | Rename to `exercise-generator.ts`, add `sustain()` |
-| `constants/journey/index.ts` | Replace exports with `Journey` class + singleton |
+| `constants/journey/index.ts` | Re-export from `Journey.ts`, export singleton |
+| `constants/journey/Journey.ts` | New file — `Journey` class |
 | `constants/journey/chapter1.ts` | Use generator, convert multi-note to melody |
 | `constants/journey/chapter2.ts` | Same |
 | `lib/resolve-exercise.ts` | Rename exported types (drop `Resolved` prefix, add `Exercise` suffix) |
-| Components + hooks importing resolved types | Update import names |
-| `BaseExercise.tsx` | Import from Journey instead of `resolveExercise` directly |
+| `components/Exercise/BaseExercise.tsx` | Use `journey.getExercise()` instead of `resolveExercise` |
+| `components/Exercise/PitchExercise/PitchExercise.tsx` | Update type imports |
+| `components/Exercise/PitchExercise/usePitchProgress.ts` | Update type imports |
+| `components/Exercise/MelodyExercise.tsx` | Update type imports |
+| `components/Exercise/RhythmExercise.tsx` | Update type imports |
+| `components/Exercise/RhythmCanvas.tsx` | Update type imports |
+| `components/Exercise/ToneFollowExercise.tsx` | Update type imports |
+| `components/JourneyView/` (any files importing `JOURNEY_CONFIG` etc.) | Use `journey.*` |
 
 ## Architecture
 
