@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui";
@@ -33,6 +33,8 @@ const RING_COLORS = [
   "rgba(99,102,241,0.48)",
   "rgba(59,130,246,0.32)",
 ];
+
+const PARTICLE_COLORS = ["rgba(167,139,250,0.7)", "rgba(139,92,246,0.6)", "rgba(129,140,248,0.55)", "rgba(99,102,241,0.5)", "rgba(192,180,255,0.65)"];
 
 const fraunces = `"Fraunces", serif`;
 const body = `"Outfit", sans-serif`;
@@ -76,6 +78,8 @@ function handleRipple(e: React.MouseEvent<HTMLButtonElement>) {
 }
 
 export default function LandingPageV7() {
+  const particlesRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const els = document.querySelectorAll(".landing-section");
     if (!els.length) return;
@@ -94,8 +98,132 @@ export default function LandingPageV7() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    const container = particlesRef.current;
+    if (!container) return;
+    const glow = container.querySelector(".v7-cursor-glow") as HTMLElement;
+    const PULL_RADIUS = 180;
+    const CAPTURE_RADIUS = 60;
+
+    // Live set of active particles
+    const alive = new Set<HTMLElement>();
+    const captured = new Set<HTMLElement>();
+    let capturedCount = 0;
+    let colorIdx = 0;
+
+    function spawnParticle(startX: number, startY: number, skipFadeIn?: boolean) {
+      const el = document.createElement("div");
+      const size = 1.5 + Math.random() * 2;
+      const opacity = 0.3 + Math.random() * 0.5;
+      const color = PARTICLE_COLORS[colorIdx++ % PARTICLE_COLORS.length];
+      const driftX = (Math.random() - 0.5) * 120;
+      const dur = 14 + Math.random() * 12;
+
+      el.className = "v7-particle";
+      el.style.cssText = `
+        left: ${startX}%;
+        top: ${startY}%;
+        width: ${size}px;
+        height: ${size}px;
+        background: ${color};
+        --drift-x: ${driftX}px;
+        --p-opacity: ${opacity};
+        ${skipFadeIn ? `opacity: ${opacity};` : ""}
+        animation: v7-rise ${dur}s ease-in-out forwards;
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+      `;
+      container!.appendChild(el);
+      alive.add(el);
+
+      el.addEventListener("animationend", () => {
+        alive.delete(el);
+        captured.delete(el);
+        el.remove();
+      });
+    }
+
+    // Initial batch — scattered across the viewport, already partially visible
+    for (let i = 0; i < 30; i++) {
+      spawnParticle(2 + Math.random() * 96, 20 + Math.random() * 80, true);
+    }
+
+    // Continuously spawn from bottom — no cap, replaces eaten + exited particles
+    const spawnTimer = setInterval(() => {
+      spawnParticle(Math.random() * 100, 102);
+    }, 300);
+
+    function onMouseMove(e: MouseEvent) {
+      for (const dot of alive) {
+        if (captured.has(dot)) {
+          dot.style.transform = `translate(${e.clientX - dot.offsetLeft}px, ${e.clientY - dot.offsetTop}px)`;
+          continue;
+        }
+
+        const rect = dot.getBoundingClientRect();
+        const dotX = rect.left + rect.width / 2;
+        const dotY = rect.top + rect.height / 2;
+        const dx = e.clientX - dotX;
+        const dy = e.clientY - dotY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < CAPTURE_RADIUS) {
+          captured.add(dot);
+          capturedCount++;
+          dot.style.transition = "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease";
+          dot.style.transform = `translate(${dx}px, ${dy}px)`;
+          dot.style.opacity = "0";
+          dot.style.animation = "none";
+        } else if (dist < PULL_RADIUS) {
+          const strength = (1 - dist / PULL_RADIUS) * 30;
+          const tx = (dx / dist) * strength;
+          const ty = (dy / dist) * strength;
+          dot.style.transition = "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1)";
+          dot.style.transform = `translate(${tx}px, ${ty}px)`;
+        } else {
+          dot.style.transition = "transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)";
+          dot.style.transform = "translate(0, 0)";
+        }
+      }
+
+      if (glow) {
+        const glowSize = capturedCount === 0 ? 0 : 6 + capturedCount * 5;
+        const glowOpacity = capturedCount === 0 ? 0 : Math.min(0.15 + capturedCount * 0.08, 0.85);
+        glow.style.left = `${e.clientX}px`;
+        glow.style.top = `${e.clientY}px`;
+        glow.style.width = `${glowSize}px`;
+        glow.style.height = `${glowSize}px`;
+        glow.style.opacity = String(glowOpacity);
+      }
+    }
+
+    function onMouseLeave() {
+      for (const dot of captured) {
+        dot.style.transition = "transform 1.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s ease";
+        dot.style.transform = "translate(0, 0)";
+        dot.style.opacity = String(dot.style.getPropertyValue("--p-opacity") || "0.5");
+        dot.style.animation = "";
+      }
+      captured.clear();
+      capturedCount = 0;
+      for (const dot of alive) {
+        dot.style.transition = "transform 1s cubic-bezier(0.22, 1, 0.36, 1)";
+        dot.style.transform = "translate(0, 0)";
+      }
+      if (glow) glow.style.opacity = "0";
+    }
+
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
+    document.addEventListener("mouseleave", onMouseLeave);
+    return () => {
+      clearInterval(spawnTimer);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      alive.forEach((d) => d.remove());
+    };
+  }, []);
+
   return (
-    <div className="h-full overflow-y-auto landing-scroll v7-grain" style={{ background: "#080810", color: "#ebe8f5", fontFamily: `"Outfit", sans-serif` }}>
+    <div className="h-full overflow-y-auto landing-scroll v7-grain" style={{ background: "#080810", color: "#ebe8f5", fontFamily: `"Outfit", sans-serif`, cursor: "default" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Outfit:wght@300;400;500&display=swap');
         .v7-btn {
@@ -146,32 +274,18 @@ export default function LandingPageV7() {
           0%, 100% { transform: translate(0, 0) scale(1); }
           50% { transform: translate(30px, 40px) scale(1.08); }
         }
-        @keyframes v7-particle-drift-1 {
-          0% { transform: translate(0, 0); opacity: 0; }
-          5% { opacity: 1; }
-          50% { transform: translate(40px, -45vh); opacity: 0.8; }
-          90% { opacity: 0.9; }
-          100% { transform: translate(-20px, -95vh); opacity: 0; }
-        }
-        @keyframes v7-particle-drift-2 {
-          0% { transform: translate(0, 0); opacity: 0; }
-          5% { opacity: 1; }
-          40% { transform: translate(-35px, -35vh); opacity: 0.7; }
-          70% { transform: translate(25px, -65vh); opacity: 0.9; }
-          100% { transform: translate(-10px, -100vh); opacity: 0; }
-        }
-        @keyframes v7-particle-drift-3 {
-          0% { transform: translate(0, 0); opacity: 0; }
-          5% { opacity: 1; }
-          60% { transform: translate(55px, -50vh); opacity: 0.7; }
-          100% { transform: translate(30px, -90vh); opacity: 0; }
-        }
         .v7-particle {
           position: fixed;
           border-radius: 50%;
           pointer-events: none;
           z-index: 10;
-          opacity: 0;
+        }
+        @keyframes v7-rise {
+          0% { translate: 0 0; opacity: 0; }
+          3% { opacity: var(--p-opacity, 0.5); }
+          50% { translate: var(--drift-x) -50vh; }
+          90% { opacity: calc(var(--p-opacity, 0.5) * 0.6); }
+          100% { translate: calc(var(--drift-x) * 0.7) -110vh; opacity: 0; }
         }
         .v7-ripple {
           position: absolute;
@@ -196,26 +310,19 @@ export default function LandingPageV7() {
         <div className="v7-mesh-blob" style={{ width: 450, height: 450, bottom: "10%", left: "20%", background: "radial-gradient(circle, rgba(59,130,246,0.05), transparent 70%)", animation: "v7-mesh-drift-3 18s ease-in-out infinite" }} />
       </div>
 
-      {/* Floating particles */}
-      {Array.from({ length: 35 }).map((_, i) => {
-        const animations = ["v7-particle-drift-1", "v7-particle-drift-2", "v7-particle-drift-3"];
-        const colors = ["rgba(167,139,250,0.9)", "rgba(139,92,246,0.85)", "rgba(129,140,248,0.8)", "rgba(99,102,241,0.75)", "rgba(192,180,255,0.85)"];
-        const size = 1.5 + (i % 5) * 0.5;
-        return (
-          <div
-            key={`particle-${i}`}
-            className="v7-particle"
-            style={{
-              left: `${(i / 35 * 96) + 2}%`,
-              bottom: "0px",
-              width: `${size}px`,
-              height: `${size}px`,
-              background: colors[i % colors.length],
-              animation: `${animations[i % 3]} ${10 + (i * 1.9) % 14}s ease-in-out ${(i * 0.8) % 8}s infinite`,
-            }}
-          />
-        );
-      })}
+      {/* Interactive magnetic particles */}
+      <div ref={particlesRef} className="fixed inset-0 pointer-events-none z-10">
+        <div
+          className="v7-cursor-glow fixed pointer-events-none rounded-full -translate-x-1/2 -translate-y-1/2"
+          style={{
+            background: "radial-gradient(circle, rgba(167,139,250,0.8) 0%, rgba(139,92,246,0.4) 40%, transparent 70%)",
+            filter: "blur(8px)",
+            opacity: 0,
+            transition: "width 0.3s ease, height 0.3s ease, opacity 0.3s ease",
+          }}
+        />
+        {/* Particles are dynamically spawned via useEffect */}
+      </div>
 
       <LandingHeader />
       <div className="relative">
