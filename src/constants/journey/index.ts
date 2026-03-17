@@ -7,13 +7,6 @@ export const journey = new Journey([
   { chapter: 2, title: "Building Foundation", warmup: CHAPTER_2_WARMUP, stages: CHAPTER_2_STAGES },
 ]);
 
-// Backwards-compatible exports — consumers will migrate to journey.* in Task 8
-export const JOURNEY_CONFIG = journey.chapters;
-export const JOURNEY_EXERCISES = journey.exercises;
-export function getNextExerciseId(currentId: number) {
-  return journey.getNextExerciseId(currentId);
-}
-
 // Re-export types
 export type {
   ExerciseConfig,

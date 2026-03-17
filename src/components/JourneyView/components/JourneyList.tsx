@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { JOURNEY_CONFIG } from "@/constants/journey";
+import { journey } from "@/constants/journey";
 import { Text } from "@/components/ui";
 import type { Settings } from "@/hooks/useSettings";
 import { ExerciseCard } from "./ExerciseCard";
@@ -34,7 +34,7 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
           </Text>
         </div>
 
-        {JOURNEY_CONFIG.map((chapter) => {
+        {journey.chapters.map((chapter) => {
           const allStages = chapter.warmup
             ? [chapter.warmup, ...chapter.stages]
             : chapter.stages;

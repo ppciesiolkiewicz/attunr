@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import type { ExerciseConfig } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
-import { resolveExercise } from "@/lib/resolve-exercise";
+import { journey } from "@/constants/journey";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise, ToneFollowExercise as ToneFollowExerciseType, MelodyExercise as MelodyExerciseType, RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
@@ -67,8 +67,8 @@ export function BaseExercise({
     ) {
       return null;
     }
-    return resolveExercise(exercise, vocalRange);
-  }, [exercise, vocalRange]);
+    return journey.getExercise(exerciseId, vocalRange);
+  }, [exercise.exerciseTypeId, exerciseId, vocalRange]);
 
   switch (exercise.exerciseTypeId) {
     case "learn":

@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { InfoIcon } from "@/components/TabInfoModal";
 import { Button, CloseButton, Modal, Text } from "@/components/ui";
 import { ContentElements } from "@/components/Exercise/components/ContentElements";
-import { JOURNEY_EXERCISES } from "@/constants/journey";
+import { journey } from "@/constants/journey";
 import {
   addSkippedInfoExerciseId,
   getExerciseDisplayColors,
@@ -29,7 +29,7 @@ export function ExerciseInfoModal({
 }: ExerciseInfoModalProps) {
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
-  const exercise = JOURNEY_EXERCISES.find((e) => e.id === exerciseId)!;
+  const exercise = journey.exercises.find((e) => e.id === exerciseId)!;
   const isLearnExercise = exercise.exerciseTypeId === "learn";
   const modal = exercise.introModal;
 
