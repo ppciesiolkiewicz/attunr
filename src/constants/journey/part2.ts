@@ -4,7 +4,6 @@ import { BandTargetKind, NoteDuration } from "./types";
 /** Part 2: First Sounds — discover chest and head voice, first lip rolls */
 export const PART_2_EXERCISES: JourneyExerciseInput[] = [
   {
-    part: 2,
     exerciseTypeId: "learn",
     title: "Chest and head voice",
     cardCue: "Find your chest and head voice",
@@ -14,7 +13,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     ],
   },
   {
-    part: 2,
     exerciseTypeId: "pitch-detection",
     title: "Low U",
     subtitle: "Chest voice · 5 seconds",
@@ -25,7 +23,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
       "Sing uuuu (as in 'moon') on a low tone. Slightly wobble your voice between lower and a touch higher to keep it loose and relaxed. This warms up your lower register and grounds the voice.",
   },
   {
-    part: 2,
     exerciseTypeId: "pitch-detection",
     title: "Hoo hoo",
     subtitle: "Head voice · 5 seconds",
@@ -35,7 +32,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
       "Sing 'hoo hoo' on a high tone, like an owl. This is head voice — a lighter, higher resonance. Feel the sound in your head and face. Keep it gentle.",
   },
   {
-    part: 2,
     exerciseTypeId: "breathwork-farinelli",
     title: "Farinelli breathwork",
     maxCount: 5,
@@ -44,7 +40,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
       "Build diaphragm control and calm your nervous system — a favourite of singers and performers for centuries. Inhale, hold, and exhale for the same count — each cycle adds one beat, flowing straight into the next with no pause.",
   },
   {
-    part: 2,
     exerciseTypeId: "melody",
     title: "Perfect Fifth",
     subtitle: "Sing two notes · intervals",
@@ -87,7 +82,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     instruction: "Sing the two notes as they appear — the piano plays each note for you",
   },
   {
-    part: 2,
     exerciseTypeId: "learn",
     title: "Lip rolls",
     cardCue: "Gentle warmup to relax your jaw and warm your voice",
@@ -97,7 +91,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
     ],
   },
   {
-    part: 2,
     exerciseTypeId: "tone-follow",
     title: "Lip rolls — high to low",
     subtitle: "Glide from high to low · play 3 times",
@@ -109,7 +102,6 @@ export const PART_2_EXERCISES: JourneyExerciseInput[] = [
       "Play the tone and lip roll alongside it. Slide smoothly from high to low — feel the glide in your lips.",
   },
   {
-    part: 2,
     exerciseTypeId: "rhythm",
     title: "Feel the Beat",
     cardCue: "Tap along to the beat",
