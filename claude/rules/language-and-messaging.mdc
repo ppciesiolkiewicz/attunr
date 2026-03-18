@@ -23,11 +23,11 @@ Apply these guidelines when writing or editing user-facing copy, labels, tooltip
 
 ### Words to use
 
-feel, notice, settle, land, resonate, warm, gentle, soft, steady, explore, return, allow, rest, body, chest, throat, breath, buzz, hum, shift, vibration, deep, slow, practice, place, arrive
+feel, notice, settle, land, resonate, warm, gentle, soft, steady, explore, return, allow, rest, body, chest, throat, breath, buzz, hum, shift, vibration, deep, slow, practice, place, arrive, distance
 
 ### Words to avoid
 
-singing, performance, correct, wrong, fail, pitch-perfect, training, lesson, science-backed, vagus nerve (in copy), score (reframe as "match"), perfect, fix, broken, healing
+singing, performance, correct, wrong, fail, pitch-perfect, training, lesson, science-backed, vagus nerve (in copy), score (reframe as "match"), perfect, fix, broken, healing, musical jargon - perfect fifth, major second, interval
 
 ### Key phrases
 
@@ -95,34 +95,51 @@ The intro modal is the last screen before the exercise starts. It sets expectati
 **Structure:**
 1. **Title** — mirrors the exercise title (auto-filled by the generator)
 2. **Subtitle** — summarises the goal or format (generated per exercise type)
-3. **Instruction paragraphs** — the exercise instruction text, split into primary/secondary paragraphs (auto-prepended by the generator)
-4. **Type-specific elements** — headphones notice, health warnings, video, tips (added by each modal method)
+3. **Video** — short demonstration video showing the technique
+4. **Instruction text** — 4-section pattern (see below)
+5. **Type-specific elements** — headphones notice, health warnings, tips (added by each modal method)
 
-**Writing the instruction text that appears in the modal:**
-- First line = what to do, stated clearly and warmly
-- Second line = where to focus the feeling or sensation ("Notice...", "Feel...")
-- Third line = permission or reassurance — always include this. It's core to the Attunr voice
+**The 4-section pattern for instruction text:**
 
-The three-line pattern: **do → feel → permission.**
+Each intro modal's instruction text follows a **do → feel → reason → reassurance** structure. These are sections, not single lines — each can be one or more sentences.
+
+1. **Do** — what to do. State the action clearly and warmly. Specify the vowel (a, o, u, ee), consonant (s, z), or technique (puffy cheeks, lip roll) for most exercises. Breathwork and learn sections are excluded from this requirement.
+2. **Feel** — where to focus sensation. Direct attention to a body part or a feeling: "Notice...", "Feel..."
+3. **Reason / benefit** — why this matters. A short explanation of what this exercise does for the practice — not clinical science, but felt purpose. "This builds the foundation for...", "Sustaining a tone trains your breath without you noticing."
+4. **Reassurance** — permission and safety. Always include. Core to the Attunr voice.
+
+Any information that appears in the on-screen instruction (see Instruction section below) should also be covered here, though wording can differ. The intro modal is the full version; the instruction is the compressed version.
 
 Examples from chapter 1:
 
 Gentle hum:
-> Close your lips and hum mmmm on a low tone.
-> Feel the buzz in your lips and teeth.
-> Breathe whenever you need to — there's no rush.
+> Close your lips and hum mmmm on a low tone. Keep the sound steady.
+>
+> Feel the buzz in your lips and teeth. Notice if it spreads into your chest.
+>
+> Humming is the simplest way to connect your voice to your body. It warms up your vocal cords and helps you find where sound lives.
+>
+> Breathe whenever you need to — there's no rush. There's no wrong way to hum.
 
 Sss-zzz-sss:
-> Make a steady sss sound — like air escaping. No pitch needed, just breath.
-> Notice how your body settles when you focus on the sound.
-> It's okay to take breaths between sounds.
+> Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss.
+>
+> Notice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).
+>
+> This exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.
+>
+> Keep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.
 
 Lip roll slide:
-> Play the tone and lip roll alongside it.
-> Slide smoothly from high to low — feel the glide in your lips.
-> Don't worry about getting it right. The goal is to feel the movement.
+> Play the tone and lip roll alongside it. Slide smoothly from high to low, following the pitch as it descends.
+>
+> Feel the glide in your lips. Notice how the resonance moves — from lighter and higher to deeper and lower.
+>
+> Lip rolls loosen tension in your face and throat while training your voice to move smoothly between pitches. It's preparation for everything that comes next.
+>
+> Don't worry about matching the pitch exactly. The goal is to feel the movement, not to be precise.
 
-**Permission line examples** (rotate these — don't repeat the same one):
+**Reassurance line examples** (rotate these — don't repeat the same one across consecutive exercises):
 - "There's no rush."
 - "Breathe whenever you need to."
 - "It's okay to pause."
@@ -141,36 +158,40 @@ Lip roll slide:
 - Farinelli: "Complete N cycles — each a bit longer than the last"
 
 **Type-specific elements:**
+- All exercises should include a video demonstrating the technique
 - Exercises requiring mic pitch detection include a headphones notice
-- Farinelli exercises include a health warning, video embed, and key tips list
+- Farinelli exercises include a health warning and key tips list
 - Volume detection exercises show instruction only (no headphones needed)
 
 ### Instruction
 
-The instruction is shown during the exercise itself. It should be the shortest, most actionable version of what to do — the user is already mid-exercise.
+The instruction is displayed on screen during the exercise. It is mandatory — every exercise must have one. It is the compressed version of the intro modal: it summarises the do and feel sections into the shortest actionable form.
 
 Guidelines:
-- 1–2 lines maximum
+- 1–3 lines maximum
 - Imperative mood: "Hum on a low tone", not "You should hum on a low tone"
-- Focus on what to do and where to feel it
+- Must specify the vowel (a, o, u, ee), consonant (s, z), or technique (puffy cheeks, lip roll) for most exercises. Breathwork and learn sections are excluded from this requirement
+- Can include technique details like "wobble your voice", "keep your lips loose", "slide smoothly"
+- Focus on what to do and where to feel it — the two core elements from the intro modal
 - Use sensory language: buzz, warmth, glide, settle, land, resonate
 - Use "notice" as a key verb — it invites awareness without demanding a result: "Notice where it lands", "Notice if something shifts"
-- Include reassurance where the exercise might feel uncertain: "No pitch needed", "It's okay to take breaths"
+- Include brief reassurance where the exercise might feel uncertain or physically demanding: "No pitch needed", "It's okay to take breaths", "Breathe whenever you need to". This is especially important for longer sustain exercises — users need to know they can pause and try again
 - Use "\n" to separate distinct instructions (renders as separate lines)
 
 Examples from chapter 1:
-- "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nBreathe whenever you need to — there's no rush."
+- "Hum mmmm on a low tone.\nFeel the buzz in your lips and chest.\nBreathe whenever you need to."
 - "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush."
-- "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nIt's okay to take breaths between sounds."
-- "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match."
+- "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds."
+- "Lip roll alongside the tone.\nSlide smoothly from high to low — feel the glide.\nTake a breath between each one."
+- "Sing the two notes as they appear.\nListen and match — this is the smallest melodic step."
 
 ### Completion Modal
 
 Shown after the final exercise of a chapter. Celebrates progress and previews what comes next.
 
 Guidelines:
-- Title: "Chapter N Complete"
-- Subtitle: the chapter name (e.g. "Introduction")
+- Title: "Chapter {n} Complete"
+- Subtitle: the chapter name
 - Lead with what the user might be feeling, then name what they've done. Feeling first, accomplishment second
 - Second paragraph (secondary variant): tease the next chapter in one sentence
 - Set `confetti: true` for the celebration effect
@@ -182,30 +203,18 @@ Example from chapter 1:
 >
 > Chapter 2 introduces a warmup routine and builds on everything you've started here.
 
-More examples:
-> **Chapter 3 Complete** / Sustain
+More examples (use {n} and {m} for chapter numbers):
+> **Chapter {n} Complete** / {chapter name}
 >
 > Seven tones. Seven places in your body. You've held each one and felt where it lives. That awareness stays with you.
 >
-> Chapter 4 brings those tones together — sequences that move through your body.
+> Chapter {m} brings those tones together — sequences that move through your body.
 
-> **Chapter 5 Complete** / Vowel U
+> **Chapter {n} Complete** / {chapter name}
 >
 > Uuu across every tone. You've felt how the same vowel changes colour as it rises. Something is deepening.
 >
-> Chapter 6 introduces a new vowel — EE. A different shape. A different feeling.
-
-## Onboarding
-
-The welcome screen and first moments set the tone for the entire experience. Use the brand's most distinctive language here.
-
-**Welcome screen suggestion:**
-> This practice is radically internal.
-> Tuned to your voice. Felt in your body. Only yours.
-
-**After vocal range detection:**
-> Your range is set. Every tone in this practice is now tuned to your voice.
-> No two journeys sound the same — because no two voices do.
+> Chapter {m} introduces a new vowel — EE. A different shape. A different feeling.
 
 ## General copy principles
 

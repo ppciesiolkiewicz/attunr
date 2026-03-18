@@ -59,7 +59,7 @@ export class IntroModalGenerator {
   melody(p: { noteCount: number; minScore: number }): ModalConfig {
     return {
       title: "",
-      subtitle: `Sing along to ${p.noteCount} notes — score ${p.minScore}% to pass`,
+      subtitle: `Sing along to ${p.noteCount} notes — match ${p.minScore}% to continue`,
       elements: [{ type: "headphones-notice" }],
     };
   }
@@ -83,7 +83,7 @@ export class IntroModalGenerator {
   rhythm(p: { minScore: number }): ModalConfig {
     return {
       title: "",
-      subtitle: `Tap along — score ${p.minScore}% to pass`,
+      subtitle: `Tap along — match ${p.minScore}% to continue`,
       elements: [],
     };
   }

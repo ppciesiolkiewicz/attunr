@@ -18,7 +18,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "vocal-placement",
         title: "Vocal placement",
         cardSubtitle:
-          "Discover vocal placement and how it connects voice to body awareness",
+          "Notice where sound lives in your body — chest, throat, head",
         elements: [
           {
             type: "paragraph",
@@ -26,7 +26,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           },
           {
             type: "paragraph",
-            text: "By singing across your range, you develop awareness of where sound lives in your body and build a deeper connection between voice, breath, and presence. The goal is not perfection, but feeling where the sound lands and how it shifts your state.",
+            text: "As you explore your range, you develop awareness of where sound lives in your body and build a deeper connection between voice, breath, and presence. The goal is not perfection, but feeling where the sound lands and how it shifts your state.",
             variant: "secondary",
           },
           { type: "video" },
@@ -36,7 +36,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         exerciseTypeId: "learn-notes-1",
         slug: "understanding-notes",
         title: "Understanding notes",
-        cardSubtitle: "Learn how musical notes work and see your vocal range",
+        cardSubtitle: "See where your voice sits — and what the notes mean",
       },
       gen.hillSustain({
         slug: "gentle-hum",
@@ -47,7 +47,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         headerSubtitle: "Hum · 5 seconds × 3",
         cardSubtitle: "Your first pitched sound — a low, steady hum",
         instruction:
-          "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nBreathe whenever you need to — there's no rush.",
+          "Hum mmmm on a low tone.\nFeel the buzz in your lips and chest.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({ seconds: 5 }),
       }),
       gen.hillSustain({
@@ -57,9 +57,9 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         direction: "down",
         title: "Low Uu",
         headerSubtitle: "Chest voice · 6 seconds × 3",
-        cardSubtitle: "Warm up your chest voice with a low Uu vowel",
+        cardSubtitle: "A low Uu that settles in your chest",
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
+          "Sing uuuu (as in 'moon') on a low tone.\nNotice where the sound lands — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({ seconds: 6 }),
       }),
       gen.hillSustain({
@@ -69,7 +69,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         direction: "between",
         title: "Middle tone",
         headerSubtitle: "Chest voice · 6 seconds × 3",
-        cardSubtitle: "Warm up your chest voice with a uu vowel",
+        cardSubtitle: "A steady Uu in the middle of your voice",
         instruction:
           "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({ seconds: 6 }),
@@ -81,25 +81,25 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         repeats: 3,
         title: "Hoo hoo",
         headerSubtitle: "Head voice · 5 seconds × 3",
-        cardSubtitle: "Find your head voice with a light, owl-like sound",
+        cardSubtitle: "Find your head voice — light, owl-like, floating",
         instruction:
-          "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
+          "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head and face.\nKeep it gentle. There's no wrong way.",
         introModal: modal.hill({ seconds: 5, reps: 3 }),
       }),
       gen.farinelli({
         slug: "farinelli-1",
         maxCount: 7,
         title: "Farinelli breathwork",
-        cardSubtitle: "Calm your nervous system and build steady diaphragm control",
+        cardSubtitle: "Slow down. Breathe deep. Feel your body settle",
         instruction:
-          "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
-        introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 7, instruction: "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat." }),
+          "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body settles as the rhythm deepens.",
+        introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 7, instruction: "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body settles as the rhythm deepens." }),
       }),
       gen.volumeDetection({
         slug: "sss-zzz-sss",
         title: "Sss-zzz-sss",
         headerSubtitle: "Make sound · 15 seconds",
-        cardSubtitle: "Wake up your breath with a sustained sss",
+        cardSubtitle: "All breath, no voice — feel what happens",
         targetSeconds: 15,
         cues: [
           { text: "sss", seconds: 5 },
@@ -107,7 +107,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           { text: "sss", seconds: 5 },
         ],
         instruction:
-          "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nKeep your mouth relaxed and avoid smiling — don't change the shape of your mouth.\nIt's okay to take breaths between sounds.",
+          "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
         introModal: modal.volumeDetection({ targetSeconds: 15 }),
       }),
     ],
@@ -122,11 +122,11 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "voiceless-lip-roll",
         title: "Voiceless lip roll",
         headerSubtitle: "Lip buzz · 15 seconds",
-        cardSubtitle: "Get your lips buzzing without pitch pressure",
+        cardSubtitle: "Just buzz. No pitch. No pressure.",
         targetSeconds: 15,
         cues: [{ text: "lip roll", seconds: 15 }],
         instruction:
-          "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
+          "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nNotice the vibration in your lips and face.\nIt's okay to take breaths between rolls.",
         introModal: modal.volumeDetection({ targetSeconds: 15 }),
       }),
       gen.lipRoll({
@@ -137,9 +137,9 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         requiredPlays: 3,
         title: "Lip roll slide",
         headerSubtitle: "Glide high to low · play 3 times",
-        cardSubtitle: "Slide your voice from high to low with a lip roll",
+        cardSubtitle: "Feel the glide — high to low, lips buzzing",
         instruction:
-          "Play the tone and lip roll alongside it.\nSlide smoothly from high to low — feel the glide in your lips.\nTry to follow with a tone — don't worry if you don't get it right, the goal is practice.",
+          "Lip roll alongside the tone.\nSlide smoothly from high to low — feel the glide.\nDon't worry about matching exactly. Just notice the movement.",
         introModal: modal.lipRoll({ requiredPlays: 3 }),
       }),
     ],
@@ -157,17 +157,17 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Hum — mid-low",
         headerSubtitle: "Hum · 5 seconds × 3",
         instruction:
-          "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
+          "Hum mmmm just above your lowest tone.\nNotice the warmth spreading through your chest.\nBreathe whenever you need to.",
         introModal: modal.sustain({ seconds: 5 }),
       }),
       gen.majorSecond({
-        slug: "major-second",
-        title: "Major Second",
-        headerSubtitle: "Sing two notes · intervals",
+        slug: "two-note-step",
+        title: "Two-note step",
+        headerSubtitle: "Sing two notes · listen and match",
         cardSubtitle: "Your first melody — just two adjacent notes",
         tempo: 50,
         instruction:
-          "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match.",
+          "Sing the two notes as they appear.\nListen and match — this is the smallest melodic step.\nThere's no rush. Just notice the distance between them.",
         introModal: modal.melody({ noteCount: 33, minScore: 0 }),
       }),
       gen.sustain({
@@ -177,7 +177,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "U — mid-low",
         headerSubtitle: "Vowel U · 6 seconds × 3",
         instruction:
-          "Sing uuu on the mid-low tone.\nKeep it warm and full.\nFeel the vowel open from the hum.",
+          "Sing uuuu (as in 'moon') on a mid-low tone.\nNotice how the vowel opens from the hum — warmer, fuller.\nLet it be easy.",
         introModal: modal.sustain({ seconds: 6 }),
       }),
     ],
@@ -192,10 +192,10 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "farinelli-2",
         maxCount: 5,
         title: "Farinelli breathwork",
-        cardSubtitle: "Calm your nervous system and build steady diaphragm control",
+        cardSubtitle: "Return to breath. Let everything slow down",
         instruction:
-          "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
-        introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 5, instruction: "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat." }),
+          "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body responds as the rhythm lengthens.",
+        introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 5, instruction: "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body responds as the rhythm lengthens." }),
       }),
       gen.lipRollSustain({
         slug: "lip-roll-sustain",
@@ -205,7 +205,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Lip roll sustain",
         headerSubtitle: "Hold the buzz · play 3 times",
         instruction:
-          "Play the tone and lip roll alongside it.\nKeep the buzz steady — lips vibrating without force.",
+          "Lip roll alongside the tone.\nKeep the buzz steady — lips vibrating without force.\nNotice where the resonance sits.",
         introModal: modal.lipRollSustain({ requiredPlays: 3 }),
       }),
       gen.sustain({
@@ -215,7 +215,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Hum — mid",
         headerSubtitle: "Hum · 6 seconds × 3",
         instruction:
-          "Hum on a mid tone.\nFeel the buzz in your chest and face.\nStay relaxed and present.",
+          "Hum mmmm on a mid tone.\nNotice the buzz in your chest and face.\nStay relaxed. Let the sound arrive.",
         introModal: modal.sustain({ seconds: 6 }),
         completionModal: {
           title: "Chapter 1 Complete",
@@ -223,11 +223,11 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           elements: [
             {
               type: "paragraph",
-              text: "You've learned vocal placement, made your first sounds, sung your first melody, and built breath control. A solid foundation.",
+              text: "Notice how you feel right now. That's the practice working. You've found your voice in your body — placed it, held it, moved it. A real foundation.",
             },
             {
               type: "paragraph",
-              text: "Chapter 2 introduces a warmup routine and builds on everything you've learned here.",
+              text: "Chapter 2 introduces a warmup routine and builds on everything you've started here.",
               variant: "secondary",
             },
           ],
