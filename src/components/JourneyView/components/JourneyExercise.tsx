@@ -96,7 +96,8 @@ export function JourneyExercise({
     if (markComplete) {
       jp.completeExercise(exercise);
       analytics.journeyExerciseCompleted(exerciseId, exercise.chapter);
-      if (exercise.completionModal) {
+      const step = getStepInStage(exerciseId);
+      if (step.stepIndex === step.stepsInStage) {
         streak.recordCompletion();
       }
     }
