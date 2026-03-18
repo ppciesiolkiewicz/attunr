@@ -30,7 +30,7 @@ Short, descriptive name for the exercise. Should be immediately recognisable and
 - Capitalise only the first word and proper nouns (sentence case)
 - Avoid jargon — if a music term is needed, pair it with a plain description elsewhere (subtitle or card cue)
 
-### Subtitle
+### Header Subtitle (`headerSubtitle`)
 
 Brief format/duration hint shown below the title. Uses a consistent pattern: **technique · duration/reps**.
 
@@ -44,11 +44,11 @@ Examples from chapter 1:
 
 Guidelines:
 - Keep under ~35 characters
-- Lead with what the user does (Hum, Lip buzz, Glide), follow with duration or rep count
+- Lead with what the user does (Hum, Lip buzz,  Glide), follow with duration or rep count
 - Use " · " (thin space + middot + thin space) as separator
 - Use "× N" for rep counts, "N seconds" for timed holds, "play N times" for tone-follow
 
-### Card Cue
+### Card Subtitle (`cardSubtitle`)
 
 Shown in the card subtitle position on the journey list instead of subtitle. Its job is to spark curiosity and give the user a reason to tap in.
 
@@ -90,11 +90,13 @@ Gentle hum:
 
 Sss-zzz-sss:
 > Make a steady sss sound — like air escaping. No pitch needed, just breath.
+> Keep your mouth relaxed and avoid smiling — don't change the shape of your mouth.
 > It's okay to take breaths between sounds.
 
 Lip roll slide:
 > Play the tone and lip roll alongside it.
 > Slide smoothly from high to low — feel the glide in your lips.
+> Try to follow with a tone — don't worry if you don't get it right, the goal is practice.
 
 **Subtitle patterns by exercise type:**
 - Sustain/hill: "Ns × N reps" — e.g. "5s × 3 reps"

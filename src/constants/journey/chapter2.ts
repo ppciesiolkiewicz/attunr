@@ -15,7 +15,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
     gen.volumeDetection({
       slug: "warmup-sss",
       title: "Sss",
-      subtitle: "Wake up breath · 15 seconds",
+      headerSubtitle: "Wake up breath · 15 seconds",
       targetSeconds: 15,
       cues: [
         { text: "sss", seconds: 5 },
@@ -27,7 +27,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
     gen.volumeDetection({
       slug: "warmup-sss-zzz",
       title: "Sss-Zzz",
-      subtitle: "Wake up breath · 15 seconds",
+      headerSubtitle: "Wake up breath · 15 seconds",
       targetSeconds: 15,
       cues: [
         { text: "sss", seconds: 5 },
@@ -42,7 +42,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       endNote: -1,
       requiredPlays: 2,
       title: "Lip rolls — low to high",
-      subtitle: "Glide low to high · play 2 times",
+      headerSubtitle: "Glide low to high · play 2 times",
       instruction: "Play the tone and lip roll alongside it.\nSlide smoothly from low to high — loosen your lips.",
       introModal: modal.lipRoll({ requiredPlays: 2 }),
     }),
@@ -52,7 +52,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       seconds: 5,
       repeats: 2,
       title: "Gentle hum",
-      subtitle: "Hum · 5 seconds × 2",
+      headerSubtitle: "Hum · 5 seconds × 2",
       instruction: "Close your lips and hum mmmm on a low tone.\nFirst pitched sound of the session.",
       introModal: modal.sustain({ seconds: 5 }),
     }),
@@ -76,7 +76,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "hum-low-to-mid",
         title: "Hum — low to mid",
-        subtitle: "Hum · 3 rising pitches",
+        headerSubtitle: "Hum · 3 rising pitches",
         tempo: 40,
         melody: [
           {
@@ -97,7 +97,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "u-low-to-mid",
         title: "U — low to mid",
-        subtitle: "Vowel U · 3 rising pitches",
+        headerSubtitle: "Vowel U · 3 rising pitches",
         tempo: 40,
         melody: [
           {
@@ -120,7 +120,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         endNote: 1,
         requiredPlays: 3,
         title: "Lip rolls — high to low",
-        subtitle: "Glide high to low · play 3 times",
+        headerSubtitle: "Glide high to low · play 3 times",
         instruction: "Play the tone and lip roll alongside it.\nSlide smoothly from high to low — keep it smooth and easy.",
         introModal: modal.lipRoll({ requiredPlays: 3 }),
       }),
@@ -128,7 +128,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "feel-the-beat",
         title: "Feel the Beat",
-        cardCue: "Tap along to the beat",
+        cardSubtitle: "Tap along to the beat",
         tempo: 80,
         pattern: [
           // 4-beat intro (metronome plays, not scored)
@@ -180,8 +180,8 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "5-tone-scale",
         title: "5-tone scale",
-        subtitle: "Sing 5 notes up and back down",
-        cardCue: "Your first scale — stepping up and back down",
+        headerSubtitle: "Sing 5 notes up and back down",
+        cardSubtitle: "Your first scale — stepping up and back down",
         tempo: 55,
         melody: [
           {
@@ -208,7 +208,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "hum-sequence",
         title: "Hum sequence",
-        subtitle: "3 tones rising",
+        headerSubtitle: "3 tones rising",
         tempo: 40,
         melody: [
           {
@@ -229,7 +229,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "u-sequence",
         title: "U sequence",
-        subtitle: "3 tones rising",
+        headerSubtitle: "3 tones rising",
         tempo: 40,
         melody: [
           {
@@ -259,7 +259,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         note: 7,
         seconds: 8,
         title: "Hum — mid",
-        subtitle: "Hum · 8 seconds × 3",
+        headerSubtitle: "Hum · 8 seconds × 3",
         instruction: "Hum on a mid tone — longer holds this time.\nFocus on keeping the tone steady.\nFeel the buzz settle.",
         introModal: modal.sustain({ seconds: 8 }),
       }),
@@ -268,7 +268,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         note: 7,
         seconds: 8,
         title: "U — mid",
-        subtitle: "Vowel U · 8 seconds × 3",
+        headerSubtitle: "Vowel U · 8 seconds × 3",
         instruction: "Sing uuu on the mid tone — longer holds.\nOpen and soft — keep it relaxed.\nFeel the resonance in your chest and face.",
         introModal: modal.sustain({ seconds: 8 }),
       }),
@@ -278,7 +278,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         seconds: 6,
         requiredPlays: 3,
         title: "Lip roll sustain",
-        subtitle: "Hold the buzz · play 3 times",
+        headerSubtitle: "Hold the buzz · play 3 times",
         instruction: "Play the tone and lip roll alongside it.\nKeep the buzz steady at mid pitch.",
         introModal: modal.lipRollSustain({ requiredPlays: 3 }),
       }),

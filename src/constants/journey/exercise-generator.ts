@@ -135,8 +135,8 @@ export class IntroModalGenerator {
 export interface CommonParams {
   slug: string;
   title: string;
-  subtitle?: string;
-  cardCue?: string;
+  headerSubtitle?: string;
+  cardSubtitle?: string;
   instruction: string;
   introModal?: ModalConfig;
   completionModal?: ModalConfig;
@@ -255,8 +255,8 @@ function pickCommon(params: CommonParams) {
   return {
     slug: params.slug,
     title: params.title,
-    subtitle: params.subtitle,
-    cardCue: params.cardCue,
+    headerSubtitle: params.headerSubtitle,
+    cardSubtitle: params.cardSubtitle,
     instruction: params.instruction,
     introModal: resolveIntroModal(params),
     completionModal: params.completionModal,

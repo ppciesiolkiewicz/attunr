@@ -327,18 +327,18 @@ describe("farinelli()", () => {
 // ── Common params ─────────────────────────────────────────────────────────────
 
 describe("common params", () => {
-  it("passes through title, subtitle, cardCue, instruction", () => {
+  it("passes through title, headerSubtitle, cardSubtitle, instruction", () => {
     const params = {
       slug: "my-test",
       title: "My Title",
-      subtitle: "My Subtitle",
-      cardCue: "Card cue text",
+      headerSubtitle: "My Subtitle",
+      cardSubtitle: "Card cue text",
       instruction: "Do the thing",
     };
     const result = gen.farinelli({ ...params, maxCount: 7 });
     expect(result.title).toBe("My Title");
-    expect(result.subtitle).toBe("My Subtitle");
-    expect(result.cardCue).toBe("Card cue text");
+    expect(result.headerSubtitle).toBe("My Subtitle");
+    expect(result.cardSubtitle).toBe("Card cue text");
     if (result.exerciseTypeId !== "breathwork-farinelli") throw new Error("wrong type");
     expect(result.instruction).toBe("Do the thing");
   });
@@ -361,8 +361,8 @@ describe("common params", () => {
 
   it("optional fields are absent when not provided", () => {
     const result = gen.farinelli({ ...base, maxCount: 7 });
-    expect(result.subtitle).toBeUndefined();
-    expect(result.cardCue).toBeUndefined();
+    expect(result.headerSubtitle).toBeUndefined();
+    expect(result.cardSubtitle).toBeUndefined();
     expect(result.introModal).toBeUndefined();
     expect(result.completionModal).toBeUndefined();
   });

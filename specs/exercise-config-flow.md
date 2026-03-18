@@ -14,8 +14,8 @@ interface BaseExerciseConfig {
   exerciseTypeId: ExerciseTypeId;
   part: number;
   title: string;
-  subtitle?: string;       // Shown in exercise header
-  cardCue?: string;        // Shown on journey list card (falls back to subtitle)
+  headerSubtitle?: string; // Shown in exercise header
+  cardSubtitle?: string;   // Shown on journey list card (falls back to headerSubtitle)
   technique?: TechniqueId; // Controls detection tolerance & playback style
 }
 
@@ -212,7 +212,7 @@ Breathwork always shows the modal. Others show unless previously dismissed.
 
 ```
 exercise.title          → primary text
-exercise.cardCue ?? exercise.subtitle → secondary text
+exercise.cardSubtitle ?? exercise.headerSubtitle → secondary text
 getExerciseDisplayColors(exercise)  → left accent bar (gradient from NOTE_PALETTE)
 ```
 

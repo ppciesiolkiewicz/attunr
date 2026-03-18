@@ -80,8 +80,8 @@ export function ExerciseCard({
           </Text>
         </div>
 
-        {(exercise.cardCue ?? exercise.subtitle) && (
-          <Text variant="caption" color="text-2">{exercise.cardCue ?? exercise.subtitle}</Text>
+        {(exercise.cardSubtitle ?? exercise.headerSubtitle) && (
+          <Text variant="caption" color="text-2">{exercise.cardSubtitle ?? exercise.headerSubtitle}</Text>
         )}
       </div>
 

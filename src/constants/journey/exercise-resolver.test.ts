@@ -29,7 +29,7 @@ const base = {
   chapterSlug: "test-chapter",
   stageId: "test",
   title: "Test",
-  subtitle: "test",
+  headerSubtitle: "test",
   instruction: "Test instruction",
 };
 
