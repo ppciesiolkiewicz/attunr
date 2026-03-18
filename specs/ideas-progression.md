@@ -4,7 +4,16 @@ Early ideas for deepening engagement and simplifying internals. Not a detailed s
 
 ---
 
+## Non-linear progress
+
+Current idea is:
+
+- once you completed enough from the main path you can swipe path to the left and right and be left with Chapter 1 from another section, e.g. breath, body, rythm, voice, music...
+
 ## Secret stages
+
+-- this mixes to - unlinear journey path and secret stages.
+-- Secret stages can be both linear and non-linear:
 
 The main journey stays linear, but at certain points **secret stages** branch off as side paths. These are visible in the UI but locked until their unlock condition is met.
 
@@ -12,8 +21,6 @@ The main journey stays linear, but at certain points **secret stages** branch of
 
 1. **Prerequisite-based** — complete a specific journey stage and the entire secret stage unlocks.
 2. **Achievement-based** — earn a badge (see below) to unlock. These require cumulative effort that goes beyond simple progression, e.g. "10 minutes of breathwork exercises combined."
-
-Secret stages are self-contained side quests. Completing them is optional — the main journey never requires them — but they offer deeper dives into specific techniques or themes.
 
 ### Open questions
 
@@ -65,36 +72,9 @@ The main journey is always the spine. Secret stages are optional branches that r
 
 ---
 
-## Streak tracking
+## Streak grace
 
-Track consecutive days of practice to encourage daily habits. Streaks are a core engagement loop that ties into badges and notifications.
-
-### How it works
-
-- A **streak** increments each calendar day the user completes at least one exercise.
-- Missing a day resets the streak to zero.
-- The current streak and longest streak are persisted.
-
-### Notifications
-
-Push notifications nudge users to maintain their streak:
-
-- **Evening reminder** — "Don't lose your 5-day streak! A quick warm-up keeps it alive."
-- **Streak milestone** — "7 days in a row — you're building a real habit!"
-- **Streak at risk** — late-day nudge if the user hasn't practiced yet: "Still time to keep your streak going."
-
-Notification tone should be encouraging, never guilt-tripping. Users can disable or adjust notification timing.
-
-### Connection to badges
-
-Streak milestones feed directly into the badge system (e.g. "3 days in a row", "7-day streak", "30-day streak"). Some streak badges could unlock secret stages.
-
-### Open questions
-
-- What counts as "a day"? Calendar day in local timezone?
-- Minimum exercise duration/completion to count toward streak?
 - Freeze / grace mechanic (e.g. one free miss per week)?
-- Where does the streak display in the UI? Journey screen, home, profile?
 
 ---
 
@@ -123,8 +103,6 @@ Invite-based growth and social practice to make vocal training less solitary.
 
 ---
 
-## Refactor: Journey owns resolution
+## Turn Journey into /feature
 
-Currently exercise configs go through a `resolveExercise` step that produces `ResolvedExercise` types. The idea: **unresolved configs are an internal detail of Journey** — consumers outside Journey should never see them.
-
-Journey would expose a helper function (or resolve internally) so that by the time an exercise config leaves the journey boundary, it's already resolved. This eliminates the `ResolvedExercise` types from the public surface and simplifies the component layer — components just receive ready-to-use exercise data without knowing about resolution.
+Encapsulate the code into single direcory containing components, hooks, context, data etc.
