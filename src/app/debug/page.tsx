@@ -31,13 +31,13 @@ export default function DebugPage() {
 
   useEffect(refresh, [refresh]);
 
-  if (process.env.NODE_ENV === "production") {
-    return (
-      <div className="p-8">
-        <Text variant="body">Not found</Text>
-      </div>
-    );
-  }
+  // if (process.env.NODE_ENV === "production") {
+  //   return (
+  //     <div className="p-8">
+  //       <Text variant="body">Not found</Text>
+  //     </div>
+  //   );
+  // }
 
   const keys = Object.keys(entries).sort();
 
@@ -54,7 +54,9 @@ export default function DebugPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
-        <Text variant="heading" as="h1">Debug</Text>
+        <Text variant="heading" as="h1">
+          Debug
+        </Text>
         <Button variant="ghost" size="sm" onClick={handleClearAll}>
           Clear all
         </Button>
