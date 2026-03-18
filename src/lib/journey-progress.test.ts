@@ -34,7 +34,7 @@ describe("JourneyProgress", () => {
     expect(raw).toEqual({
       introduction: {
         "wake-up": {
-          "gentle-hum": { completed: true },
+          "gentle-hum": { completed: true, completedAt: expect.any(Number) },
         },
       },
     });
