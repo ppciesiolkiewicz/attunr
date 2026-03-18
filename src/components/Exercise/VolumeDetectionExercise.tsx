@@ -70,12 +70,21 @@ export function VolumeDetectionExerciseContent({
     return () => clearTimeout(id);
   }, [exerciseComplete]);
 
-  // Cycle cues based on accumulated time (every 3 seconds)
-  const cueDuration = 3;
-  const currentCueIndex = exercise.cues.length > 0
-    ? Math.floor(accumulatedSeconds / cueDuration) % exercise.cues.length
-    : 0;
-  const currentCue = exercise.cues[currentCueIndex] ?? "";
+  // Cycle through timed cues based on accumulated time
+  const cues = exercise.cues;
+  const cycleDuration = cues.reduce((sum, c) => sum + c.seconds, 0);
+  let currentCue = cues[0]?.text ?? "";
+  if (cycleDuration > 0) {
+    const elapsed = accumulatedSeconds % cycleDuration;
+    let cumulative = 0;
+    for (const cue of cues) {
+      cumulative += cue.seconds;
+      if (elapsed < cumulative) {
+        currentCue = cue.text;
+        break;
+      }
+    }
+  }
 
   const progress = exercise.targetSeconds > 0
     ? Math.min(accumulatedSeconds / exercise.targetSeconds, 1)

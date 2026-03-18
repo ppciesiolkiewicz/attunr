@@ -56,6 +56,7 @@ export type {
   MelodyEvent,
   DisplayNote,
   DisplayScale,
+  TimedCue,
   VolumeDetectionConfig,
   RhythmConfig,
   RhythmEvent,

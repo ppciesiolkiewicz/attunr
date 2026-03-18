@@ -269,12 +269,19 @@ export interface MelodyConfig extends BaseExerciseConfig {
   instruction: string;
 }
 
+/** A cue label with its display duration. */
+export interface TimedCue {
+  text: string;
+  /** How long this cue stays on screen (seconds). Cues cycle until targetSeconds is reached. */
+  seconds: number;
+}
+
 export interface VolumeDetectionConfig extends BaseExerciseConfig {
   exerciseTypeId: "volume-detection";
   /** Seconds of accumulated sound needed to complete. */
   targetSeconds: number;
-  /** Cue labels that cycle on screen (e.g. ["sss", "zzz", "sss"]). */
-  cues: string[];
+  /** Timed cue labels that cycle on screen. */
+  cues: TimedCue[];
   instruction: string;
 }
 

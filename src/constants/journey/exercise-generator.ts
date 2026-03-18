@@ -1,6 +1,7 @@
 import type {
   ExerciseConfigInput,
   ModalConfig,
+  ContentElement,
   NoteTarget,
   SustainNoteConfig,
   BaseScale,
@@ -9,8 +10,125 @@ import type {
   DisplayScale,
   DisplayNote,
   ToneShape,
+  TimedCue,
 } from "./types";
 import { BandTargetKind, NoteDuration } from "./types";
+import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
+
+// ── IntroModalGenerator ───────────────────────────────────────────────────────
+
+/** Convert instruction text to paragraph elements. First is primary, rest secondary. */
+function instructionParagraphs(instruction: string): ContentElement[] {
+  const elements: ContentElement[] = [];
+  for (const line of instruction.split("\n")) {
+    if (line.trim()) {
+      elements.push({
+        type: "paragraph",
+        text: line,
+        variant: elements.length === 0 ? undefined : "secondary",
+      });
+    }
+  }
+  return elements;
+}
+
+/**
+ * Generates intro modal configs. Returns ModalConfig with empty title as placeholder.
+ * The exercise generator fills in title and prepends instruction paragraphs via resolveIntroModal.
+ */
+
+export class IntroModalGenerator {
+  farinelli(p: { title: string; maxCount: number; instruction: string }): ModalConfig {
+    const firstParagraph = p.instruction.split("\n\n")[0];
+    return {
+      title: p.title,
+      subtitle: `Complete ${p.maxCount} cycles — each a bit longer than the last`,
+      elements: [
+        {
+          type: "warning",
+          text: "If you have heart or respiratory conditions, or are pregnant, check with your doctor first. Stop immediately if you feel dizzy, lightheaded, or unwell at any time.",
+        },
+        { type: "separator" },
+        { type: "paragraph", text: firstParagraph },
+        { type: "video" },
+        { type: "tip-list", title: "Key tips", tips: [...FARINELLI_TIPS] },
+      ],
+    };
+  }
+
+  melody(p: { noteCount: number; minScore: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Sing along to ${p.noteCount} notes — score ${p.minScore}% to pass`,
+      elements: [{ type: "headphones-notice" }],
+    };
+  }
+
+  lipRoll(p: { requiredPlays: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Play the tone ${p.requiredPlays} times and lip roll along`,
+      elements: [{ type: "headphones-notice" }],
+    };
+  }
+
+  volumeDetection(p: { targetSeconds: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Make sound for ${p.targetSeconds} seconds`,
+      elements: [],
+    };
+  }
+
+  rhythm(p: { minScore: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Tap along — score ${p.minScore}% to pass`,
+      elements: [],
+    };
+  }
+
+  hill(p: { seconds: number; reps?: number }): ModalConfig {
+    const reps = p.reps ?? 3;
+    return {
+      title: "",
+      subtitle: `${p.seconds}s × ${reps} reps`,
+      elements: [],
+    };
+  }
+
+  sustain(p: { seconds: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Hold the tone in tune for ${p.seconds} seconds`,
+      elements: [{ type: "headphones-notice" }],
+    };
+  }
+
+  sustainSequence(p: { seconds: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Sing each tone in sequence, ${p.seconds} seconds each`,
+      elements: [{ type: "headphones-notice" }],
+    };
+  }
+
+  slide(): ModalConfig {
+    return {
+      title: "",
+      subtitle: "Slide smoothly through the range two or three times",
+      elements: [{ type: "headphones-notice" }],
+    };
+  }
+
+  lipRollSustain(p: { requiredPlays: number }): ModalConfig {
+    return {
+      title: "",
+      subtitle: `Play the tone ${p.requiredPlays} times and lip roll along`,
+      elements: [{ type: "headphones-notice" }],
+    };
+  }
+}
 
 // ── Param interfaces ──────────────────────────────────────────────────────────
 
@@ -88,6 +206,11 @@ export interface FarinelliParams extends CommonParams {
   maxCount: number;
 }
 
+export interface VolumeDetectionParams extends CommonParams {
+  targetSeconds: number;
+  cues: TimedCue[];
+}
+
 export interface SustainParams extends CommonParams {
   note: number;
   seconds: number;
@@ -113,6 +236,20 @@ export interface HillSustainParams extends CommonParams {
 
 // ── Helper functions ──────────────────────────────────────────────────────────
 
+/** Resolve intro modal — fill in empty title from exercise and prepend instruction paragraphs. */
+function resolveIntroModal(params: CommonParams): ModalConfig | undefined {
+  const modal = params.introModal;
+  if (!modal) return undefined;
+  // Title already set — use as-is (full override)
+  if (modal.title) return modal;
+  // Empty title placeholder — fill from exercise params and prepend instruction
+  return {
+    ...modal,
+    title: params.title,
+    elements: [...instructionParagraphs(params.instruction), ...modal.elements],
+  };
+}
+
 /** Extracts the common fields shared by all exercise types from params. */
 function pickCommon(params: CommonParams) {
   return {
@@ -121,7 +258,7 @@ function pickCommon(params: CommonParams) {
     subtitle: params.subtitle,
     cardCue: params.cardCue,
     instruction: params.instruction,
-    introModal: params.introModal,
+    introModal: resolveIntroModal(params),
     completionModal: params.completionModal,
   };
 }
@@ -471,6 +608,17 @@ export class ExerciseGenerator {
         to: toTarget(endNote),
       },
       requiredPlays,
+    };
+  }
+
+  /** Volume detection exercise with timed cues. */
+  volumeDetection(params: VolumeDetectionParams): ExerciseConfigInput {
+    const { targetSeconds, cues } = params;
+    return {
+      ...pickCommon(params),
+      exerciseTypeId: "volume-detection",
+      targetSeconds,
+      cues,
     };
   }
 
