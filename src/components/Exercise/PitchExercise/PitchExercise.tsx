@@ -13,7 +13,7 @@ import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
 import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
-import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/lib/resolve-exercise";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 
 interface PitchExerciseProps {
   exercise: PitchDetectionConfig | PitchDetectionSlideConfig;

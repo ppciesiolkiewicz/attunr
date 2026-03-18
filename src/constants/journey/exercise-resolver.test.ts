@@ -1,21 +1,21 @@
 import { describe, it, expect } from "vitest";
-import { resolveExercise } from "./resolve-exercise";
+import { resolveExercise } from "./exercise-resolver";
 import type {
   PitchDetectionExercise,
   PitchDetectionSlideExercise,
   ToneFollowExercise,
   MelodyExercise,
   RhythmExercise,
-} from "./resolve-exercise";
+} from "./exercise-resolver";
 import { VocalRange } from "@/lib/VocalRange";
-import { BandTargetKind, NoteDuration } from "@/constants/journey/types";
+import { BandTargetKind, NoteDuration } from "./types";
 import type {
   PitchDetectionConfig,
   PitchDetectionSlideConfig,
   ToneFollowConfig,
   MelodyConfig,
   RhythmConfig,
-} from "@/constants/journey/types";
+} from "./types";
 
 // ── Test vocal range (C3–C5) ────────────────────────────────────────────────
 

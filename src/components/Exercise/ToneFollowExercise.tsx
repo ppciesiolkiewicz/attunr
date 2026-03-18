@@ -7,7 +7,7 @@ import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
 import type { ToneFollowConfig } from "@/constants/journey";
 import type { ColoredNote } from "@/lib/VocalRange";
-import type { ToneFollowExercise as ToneFollowExerciseType } from "@/lib/resolve-exercise";
+import type { ToneFollowExercise as ToneFollowExerciseType } from "@/constants/journey";
 
 const SLIDE_HOLD_START_MS = 1000;
 const SLIDE_RAMP_MS = 2500;

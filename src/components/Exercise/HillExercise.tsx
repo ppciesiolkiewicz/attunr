@@ -12,7 +12,7 @@ import { usePitchProgress } from "./PitchExercise/usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { ProgressArc } from "./components/ProgressArc";
 import type { PitchDetectionHillConfig } from "@/constants/journey";
-import type { PitchDetectionHillExercise as ResolvedHillExercise } from "@/lib/resolve-exercise";
+import type { PitchDetectionHillExercise as ResolvedHillExercise } from "@/constants/journey";
 
 interface HillExerciseProps {
   exercise: PitchDetectionHillConfig;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import type { Beat } from "@/lib/resolve-exercise";
+import type { Beat } from "@/constants/journey";
 
 /** Beat status for rendering */
 export type BeatStatus = "upcoming" | "active" | "hit" | "close" | "missed";

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import type { ExerciseConfig } from "@/constants/journey";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import { journey } from "@/constants/journey";
-import type { PitchDetectionExercise, PitchDetectionSlideExercise, PitchDetectionHillExercise as ResolvedHillExercise, ToneFollowExercise as ToneFollowExerciseType, MelodyExercise as MelodyExerciseType, RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
+import type { PitchDetectionExercise, PitchDetectionSlideExercise, PitchDetectionHillExercise as ResolvedHillExercise, ToneFollowExercise as ToneFollowExerciseType, MelodyExercise as MelodyExerciseType, RhythmExercise as RhythmExerciseType } from "@/constants/journey";
 import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";

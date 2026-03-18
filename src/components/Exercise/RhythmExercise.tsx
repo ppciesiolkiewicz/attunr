@@ -7,7 +7,7 @@ import { ProgressArc } from "./components/ProgressArc";
 import { RhythmCanvas } from "./RhythmCanvas";
 import type { RhythmBeatState, BeatStatus } from "./RhythmCanvas";
 import type { RhythmConfig } from "@/constants/journey";
-import type { RhythmExercise as RhythmExerciseType } from "@/lib/resolve-exercise";
+import type { RhythmExercise as RhythmExerciseType } from "@/constants/journey";
 
 /** Scoring windows (ms) */
 const HIT_WINDOW_MS = 80;

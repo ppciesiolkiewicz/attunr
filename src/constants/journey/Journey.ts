@@ -1,5 +1,5 @@
-import { resolveExercise } from "@/lib/resolve-exercise";
-import type { Exercise } from "@/lib/resolve-exercise";
+import { resolveExercise } from "./exercise-resolver";
+import type { Exercise } from "./exercise-resolver";
 import type { VocalRange } from "@/lib/VocalRange";
 import type { ExerciseConfig, Chapter, ChapterInput, StageConfigInput, ModalConfig, ContentElement } from "./types";
 import { FARINELLI_TIPS } from "@/constants/farinelli-tips";

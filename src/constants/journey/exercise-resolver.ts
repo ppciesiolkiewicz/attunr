@@ -1,4 +1,4 @@
-import { Scale } from "./scale";
+import { Scale } from "@/lib/scale";
 import type { ColoredNote, VocalRange } from "@/lib/VocalRange";
 import type {
   ExerciseConfig,
@@ -10,7 +10,7 @@ import type {
   RhythmConfig,
   DisplayNote,
   ToneShape,
-} from "@/constants/journey/types";
+} from "./types";
 
 // ── Resolved types ────────────────────────────────────────────────────────────
 

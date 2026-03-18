@@ -62,3 +62,17 @@ export type {
 } from "./types";
 
 export { NoteDuration, BandTargetKind } from "./types";
+
+// Re-export resolved exercise types (used by Exercise components)
+export type {
+  Exercise,
+  PitchTarget,
+  PitchDetectionExercise,
+  PitchDetectionSlideExercise,
+  PitchDetectionHillExercise,
+  ToneFollowExercise,
+  TimelineEntry,
+  MelodyExercise,
+  Beat,
+  RhythmExercise,
+} from "./exercise-resolver";

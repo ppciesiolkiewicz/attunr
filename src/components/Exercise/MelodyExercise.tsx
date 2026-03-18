@@ -10,7 +10,7 @@ import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyConfig } from "@/constants/journey";
 import { isInTune } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
-import type { MelodyExercise as MelodyExerciseType } from "@/lib/resolve-exercise";
+import type { MelodyExercise as MelodyExerciseType } from "@/constants/journey";
 import { usePianoSampler } from "@/hooks/usePianoSampler";
 
 /** Pre-roll time (ms) — visual lead-in before first note */
