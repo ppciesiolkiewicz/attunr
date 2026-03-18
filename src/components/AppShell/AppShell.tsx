@@ -17,6 +17,7 @@ import { useNotificationScheduler } from "@/hooks/useNotificationScheduler";
 import { useNotificationPrompt } from "@/hooks/useNotificationPrompt";
 import { AppContext } from "@/context/AppContext";
 import { ToastProvider } from "@/context/ToastContext";
+import { StreakProvider, StreakBadge } from "@/features/streak";
 import { analytics } from "@/lib/analytics";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { Button, Text } from "@/components/ui";
@@ -34,7 +35,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <ToastProvider>
-      <AppShellInner pathname={pathname}>{children}</AppShellInner>
+      <StreakProvider>
+        <AppShellInner pathname={pathname}>{children}</AppShellInner>
+      </StreakProvider>
     </ToastProvider>
   );
 }
@@ -182,6 +185,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
           >
             Learn
           </Link>
+          <StreakBadge />
           <Button variant="icon" onClick={handleOpenSettings}>
             <SettingsIcon />
           </Button>
@@ -189,6 +193,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
 
         {/* Mobile: hamburger + settings */}
         <div className="flex sm:hidden items-center gap-1">
+          <StreakBadge />
           <Button variant="icon" onClick={() => setMenuOpen((o) => !o)} aria-label="Menu">
             <HamburgerIcon />
           </Button>

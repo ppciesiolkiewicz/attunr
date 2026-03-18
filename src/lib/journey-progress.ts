@@ -7,6 +7,7 @@ const STORAGE_KEY = "attunr.journeyProgress";
 /** Stored state for a single exercise. */
 export interface ExerciseProgress {
   completed: boolean;
+  completedAt?: number;  // epoch ms, set when marking complete
 }
 
 /** The full persisted progress structure. */
@@ -70,7 +71,7 @@ export class JourneyProgress {
 
   /** Mark an exercise as completed. */
   completeExercise(...path: ExercisePath): void {
-    this.set(path, { completed: true });
+    this.set(path, { completed: true, completedAt: Date.now() });
   }
 
   /** Reset an exercise back to incomplete. */

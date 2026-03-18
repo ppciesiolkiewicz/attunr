@@ -13,6 +13,7 @@ import type { ExerciseConfig } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
 import { toRoman } from "@/lib/format";
 import { useApp } from "@/context/AppContext";
+import { useStreak } from "@/features/streak";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { VocalRange } from "@/lib/VocalRange";
 import type { ModalConfig } from "@/constants/journey/types";
@@ -44,6 +45,7 @@ export function JourneyExercise({
 }) {
   const router = useRouter();
   const { triggerNotificationPrompt, journeyProgress: jp } = useApp();
+  const streak = useStreak();
   const exerciseId = exercise.id;
   const isCompleted = jp.isCompleted(exercise);
   const chapter = journey.chapters.find((ch) => ch.chapter === exercise.chapter);
@@ -94,6 +96,9 @@ export function JourneyExercise({
     if (markComplete) {
       jp.completeExercise(exercise);
       analytics.journeyExerciseCompleted(exerciseId, exercise.chapter);
+      if (exercise.completionModal) {
+        streak.recordCompletion();
+      }
     }
     if (exercise.completionModal) {
       analytics.journeyPartCompleted(exercise.chapter, stageTitle);
