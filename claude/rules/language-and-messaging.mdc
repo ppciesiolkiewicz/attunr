@@ -17,41 +17,131 @@ Apply these guidelines when writing or editing user-facing copy, labels, tooltip
 - **Choice-focused** — empower users to try both options and pick what resonates
 - **Direct and personal** — prefer "you" language over passive/system wording
 
-
 ## Exercise text
-Each exercise consists of multiple elements:
+
+Each exercise consists of multiple text elements. Together they guide the user from discovery (card) through preparation (intro modal) to action (instruction).
 
 ### Title
-We have titles like:
-Learn sections:
-  - Vocal placement
-  - Understanding notes
 
-Exercises:
-  - Gentle hum
-  - Low Uu
-  - Sss-zzz-sss
-  - Voiceless lip roll
-  - Lip roll slide
+Short, descriptive name for the exercise. Should be immediately recognisable and scannable in a list.
+
+- Learn sections use plain topic names: "Vocal placement", "Understanding notes"
+- Exercises name the sound or technique: "Gentle hum", "Low Uu", "Sss-zzz-sss", "Voiceless lip roll", "Lip roll slide"
+- Capitalise only the first word and proper nouns (sentence case)
+- Avoid jargon — if a music term is needed, pair it with a plain description elsewhere (subtitle or card cue)
+
 ### Subtitle
 
+Brief format/duration hint shown below the title. Uses a consistent pattern: **technique · duration/reps**.
+
+Examples from chapter 1:
+- "Hum · 5 seconds × 3"
+- "Chest voice · 6 seconds × 3"
+- "Make sound · 15 seconds"
+- "Lip buzz · 15 seconds"
+- "Glide high to low · play 3 times"
+- "Sing two notes · intervals"
+
+Guidelines:
+- Keep under ~35 characters
+- Lead with what the user does (Hum, Lip buzz, Glide), follow with duration or rep count
+- Use " · " (thin space + middot + thin space) as separator
+- Use "× N" for rep counts, "N seconds" for timed holds, "play N times" for tone-follow
+
 ### Card Cue
-If provided it is shown in a card subtitle position instead of subtitle.
 
+Shown in the card subtitle position on the journey list instead of subtitle. Its job is to spark curiosity and give the user a reason to tap in.
 
+Examples from chapter 1:
+- "Your first pitched sound — a low, steady hum"
+- "Warm up your chest voice with a low Uu vowel"
+- "Find your head voice with a light, owl-like sound"
+- "Wake up your breath with a sustained sss"
+- "Get your lips buzzing without pitch pressure"
+- "Your first melody — just two adjacent notes"
+
+Guidelines:
+- One sentence, conversational tone
+- Describe the experience or sensation, not the mechanics
+- Use em dash (—) to add a sensory detail after the main phrase
+- Avoid repeating the title verbatim — add context the title can't
 
 ### Intro Modal
-Includes:
-Repeats title and subtitle.
-Instructions in an intro modal should describe the purpose of exercise
-If health warnings are applicable
-Reccomendation for headphones and quiet environment.
+
+The intro modal is the last screen before the exercise starts. It sets expectations, builds confidence, and removes uncertainty. Generated via `IntroModalGenerator` methods in `exercise-generator.ts`.
+
+**Structure:**
+1. **Title** — mirrors the exercise title (auto-filled by the generator)
+2. **Subtitle** — summarises the goal or format (generated per exercise type)
+3. **Instruction paragraphs** — the exercise instruction text, split into primary/secondary paragraphs (auto-prepended by the generator)
+4. **Type-specific elements** — headphones notice, health warnings, video, tips (added by each modal method)
+
+**Writing the instruction text that appears in the modal:**
+- First line = what to do, stated clearly and warmly
+- Second line = where to focus the feeling or sensation
+- Third line (optional) = reassurance or permission ("It's okay to...", "Breathe whenever you need to")
+
+Examples from chapter 1:
+
+Gentle hum:
+> Close your lips and hum mmmm on a low tone.
+> Feel the buzz in your lips and teeth.
+> Breathe whenever you need to — there's no rush.
+
+Sss-zzz-sss:
+> Make a steady sss sound — like air escaping. No pitch needed, just breath.
+> It's okay to take breaths between sounds.
+
+Lip roll slide:
+> Play the tone and lip roll alongside it.
+> Slide smoothly from high to low — feel the glide in your lips.
+
+**Subtitle patterns by exercise type:**
+- Sustain/hill: "Ns × N reps" — e.g. "5s × 3 reps"
+- Pitch sustain: "Hold the tone in tune for N seconds"
+- Melody: "Sing along to N notes — score N% to pass"
+- Lip roll/tone-follow: "Play the tone N times and lip roll along"
+- Volume detection: "Make sound for N seconds"
+- Rhythm: "Tap along — score N% to pass"
+- Farinelli: "Complete N cycles — each a bit longer than the last"
+
+**Type-specific elements:**
+- Exercises requiring mic pitch detection include a headphones notice
+- Farinelli exercises include a health warning, video embed, and key tips list
+- Volume detection exercises show instruction only (no headphones needed)
 
 ### Instruction
-Should contain a concise instruction for the exercise.
-Should focus on what to do and where to focus the feeling.
 
-### Completion modal
+The instruction is shown during the exercise itself. It should be the shortest, most actionable version of what to do — the user is already mid-exercise.
 
+Guidelines:
+- 1-2 lines maximum
+- Imperative mood: "Hum on a low tone", not "You should hum on a low tone"
+- Focus on what to do and where to feel it
+- Use sensory language: buzz, warmth, glide, settle
+- Include reassurance where the exercise might feel uncertain: "No pitch needed", "It's okay to take breaths"
+- Use "\n" to separate distinct instructions (renders as separate lines)
 
+Examples from chapter 1:
+- "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nBreathe whenever you need to — there's no rush."
+- "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush."
+- "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nIt's okay to take breaths between sounds."
+- "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match."
 
+### Completion Modal
+
+Shown after the final exercise of a chapter. Celebrates progress and previews what comes next.
+
+Guidelines:
+- Title: "Chapter N Complete"
+- Subtitle: the chapter name (e.g. "Introduction")
+- First paragraph: summarise what the user accomplished — name the skills, not individual exercises
+- Second paragraph (secondary variant): tease the next chapter in one sentence
+- Set `confetti: true` for the celebration effect
+
+Example from chapter 1:
+> **Chapter 1 Complete** / Introduction
+>
+> You've learned vocal placement, made your first sounds, sung your first melody, and built breath control. A solid foundation.
+>
+> Chapter 2 introduces a warmup routine and builds on everything you've learned here.
