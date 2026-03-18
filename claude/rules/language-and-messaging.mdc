@@ -1,4 +1,4 @@
-x---
+---
 description: Language, copy, and messaging guidelines for Attunr
 alwaysApply: true
 ---
@@ -9,13 +9,34 @@ Apply these guidelines when writing or editing user-facing copy, labels, tooltip
 
 ## Brand voice principles
 
-- **User-friendly, engaging, and easy to understand** — copy should be inviting, clear, and accessible to all
-- **Warm and grounded** — supportive, calm, and encouraging
+- **Warm and grounded** — supportive, calm, encouraging. Like a warm voice guiding you, not an interface instructing you
+- **Felt before explained** — describe what the user will feel before describing what to do. Sensation leads, instruction follows
 - **Simple first** — plain language before music theory terms
-- **Spiritual, not extreme** — invite exploration without overpromising
+- **Mysterious but grounded** — invite exploration without explaining everything. Let the feeling do the talking
 - **Experience-led** — describe what users may feel, then what it means
-- **Choice-focused** — empower users to try both options and pick what resonates
+- **Permissive** — always make space for imperfection. "There's no wrong way" is core to the voice
 - **Direct and personal** — prefer "you" language over passive/system wording
+- **Choice-focused** — empower users to try both options and pick what resonates
+- **Radically internal** — the practice happens inside. The app points inward, never outward
+
+## Vocabulary
+
+### Words to use
+
+feel, notice, settle, land, resonate, warm, gentle, soft, steady, explore, return, allow, rest, body, chest, throat, breath, buzz, hum, shift, vibration, deep, slow, practice, place, arrive
+
+### Words to avoid
+
+singing, performance, correct, wrong, fail, pitch-perfect, training, lesson, science-backed, vagus nerve (in copy), score (reframe as "match"), perfect, fix, broken, healing
+
+### Key phrases
+
+- "Notice where it lands."
+- "Feel it in your body."
+- "There's no rush."
+- "No wrong way."
+- "Find what's truly you."
+- "Radically internal."
 
 ## Exercise text
 
@@ -44,27 +65,28 @@ Examples from chapter 1:
 
 Guidelines:
 - Keep under ~35 characters
-- Lead with what the user does (Hum, Lip buzz,  Glide), follow with duration or rep count
+- Lead with what the user does (Hum, Lip buzz, Glide), follow with duration or rep count
 - Use " · " (thin space + middot + thin space) as separator
 - Use "× N" for rep counts, "N seconds" for timed holds, "play N times" for tone-follow
 
 ### Card Subtitle (`cardSubtitle`)
 
-Shown in the card subtitle position on the journey list instead of subtitle. Its job is to spark curiosity and give the user a reason to tap in.
+Shown in the card subtitle position on the journey list instead of subtitle. Its job is to spark curiosity and give the user a reason to tap in. This is where the brand voice should be strongest — lead with sensation, not instruction.
 
 Examples from chapter 1:
 - "Your first pitched sound — a low, steady hum"
-- "Warm up your chest voice with a low Uu vowel"
-- "Find your head voice with a light, owl-like sound"
-- "Wake up your breath with a sustained sss"
-- "Get your lips buzzing without pitch pressure"
+- "A low Uu that settles in your chest"
+- "Find your head voice — light, owl-like, floating"
+- "All breath, no voice — feel what happens"
+- "Just buzz. No pitch. No pressure."
 - "Your first melody — just two adjacent notes"
 
 Guidelines:
 - One sentence, conversational tone
-- Describe the experience or sensation, not the mechanics
+- Describe the sensation or experience, not the mechanics
 - Use em dash (—) to add a sensory detail after the main phrase
 - Avoid repeating the title verbatim — add context the title can't
+- Prefer felt language over instructional language: "settles in your chest" over "warm up your chest voice"
 
 ### Intro Modal
 
@@ -78,8 +100,10 @@ The intro modal is the last screen before the exercise starts. It sets expectati
 
 **Writing the instruction text that appears in the modal:**
 - First line = what to do, stated clearly and warmly
-- Second line = where to focus the feeling or sensation
-- Third line (optional) = reassurance or permission ("It's okay to...", "Breathe whenever you need to")
+- Second line = where to focus the feeling or sensation ("Notice...", "Feel...")
+- Third line = permission or reassurance — always include this. It's core to the Attunr voice
+
+The three-line pattern: **do → feel → permission.**
 
 Examples from chapter 1:
 
@@ -90,21 +114,30 @@ Gentle hum:
 
 Sss-zzz-sss:
 > Make a steady sss sound — like air escaping. No pitch needed, just breath.
-> Keep your mouth relaxed and avoid smiling — don't change the shape of your mouth.
+> Notice how your body settles when you focus on the sound.
 > It's okay to take breaths between sounds.
 
 Lip roll slide:
 > Play the tone and lip roll alongside it.
 > Slide smoothly from high to low — feel the glide in your lips.
-> Try to follow with a tone — don't worry if you don't get it right, the goal is practice.
+> Don't worry about getting it right. The goal is to feel the movement.
+
+**Permission line examples** (rotate these — don't repeat the same one):
+- "There's no rush."
+- "Breathe whenever you need to."
+- "It's okay to pause."
+- "You don't need to get this right."
+- "Just notice what happens."
+- "There's no wrong way to do this."
+- "Let it be easy."
 
 **Subtitle patterns by exercise type:**
 - Sustain/hill: "Ns × N reps" — e.g. "5s × 3 reps"
 - Pitch sustain: "Hold the tone in tune for N seconds"
-- Melody: "Sing along to N notes — score N% to pass"
+- Melody: "Sing along to N notes — match N% to continue"
 - Lip roll/tone-follow: "Play the tone N times and lip roll along"
 - Volume detection: "Make sound for N seconds"
-- Rhythm: "Tap along — score N% to pass"
+- Rhythm: "Tap along — match N% to continue"
 - Farinelli: "Complete N cycles — each a bit longer than the last"
 
 **Type-specific elements:**
@@ -117,10 +150,11 @@ Lip roll slide:
 The instruction is shown during the exercise itself. It should be the shortest, most actionable version of what to do — the user is already mid-exercise.
 
 Guidelines:
-- 1-2 lines maximum
+- 1–2 lines maximum
 - Imperative mood: "Hum on a low tone", not "You should hum on a low tone"
 - Focus on what to do and where to feel it
-- Use sensory language: buzz, warmth, glide, settle
+- Use sensory language: buzz, warmth, glide, settle, land, resonate
+- Use "notice" as a key verb — it invites awareness without demanding a result: "Notice where it lands", "Notice if something shifts"
 - Include reassurance where the exercise might feel uncertain: "No pitch needed", "It's okay to take breaths"
 - Use "\n" to separate distinct instructions (renders as separate lines)
 
@@ -137,13 +171,46 @@ Shown after the final exercise of a chapter. Celebrates progress and previews wh
 Guidelines:
 - Title: "Chapter N Complete"
 - Subtitle: the chapter name (e.g. "Introduction")
-- First paragraph: summarise what the user accomplished — name the skills, not individual exercises
+- Lead with what the user might be feeling, then name what they've done. Feeling first, accomplishment second
 - Second paragraph (secondary variant): tease the next chapter in one sentence
 - Set `confetti: true` for the celebration effect
 
 Example from chapter 1:
 > **Chapter 1 Complete** / Introduction
 >
-> You've learned vocal placement, made your first sounds, sung your first melody, and built breath control. A solid foundation.
+> Notice how you feel right now. That's the practice working. You've found your voice in your body — placed it, held it, moved it. A real foundation.
 >
-> Chapter 2 introduces a warmup routine and builds on everything you've learned here.
+> Chapter 2 introduces a warmup routine and builds on everything you've started here.
+
+More examples:
+> **Chapter 3 Complete** / Sustain
+>
+> Seven tones. Seven places in your body. You've held each one and felt where it lives. That awareness stays with you.
+>
+> Chapter 4 brings those tones together — sequences that move through your body.
+
+> **Chapter 5 Complete** / Vowel U
+>
+> Uuu across every tone. You've felt how the same vowel changes colour as it rises. Something is deepening.
+>
+> Chapter 6 introduces a new vowel — EE. A different shape. A different feeling.
+
+## Onboarding
+
+The welcome screen and first moments set the tone for the entire experience. Use the brand's most distinctive language here.
+
+**Welcome screen suggestion:**
+> This practice is radically internal.
+> Tuned to your voice. Felt in your body. Only yours.
+
+**After vocal range detection:**
+> Your range is set. Every tone in this practice is now tuned to your voice.
+> No two journeys sound the same — because no two voices do.
+
+## General copy principles
+
+- Prefer "match" over "score" — "match 70% to continue" not "score 70% to pass"
+- Prefer "continue" over "pass" — the journey doesn't have gates, it has thresholds
+- Avoid "correct/incorrect" — use "in tune / finding the pitch" or similar
+- When describing the pitch visualiser: "a mirror, not a score" — it shows you where your voice is so you can feel where it lands
+- Error states and empty states should still feel warm: "Nothing here yet" over "No data", "Let's try that again" over "Failed"
