@@ -87,6 +87,7 @@ Guidelines:
 - Use em dash (—) to add a sensory detail after the main phrase
 - Avoid repeating the title verbatim — add context the title can't
 - Prefer felt language over instructional language: "settles in your chest" over "warm up your chest voice"
+- Not every exercise needs a `cardSubtitle`. Early in a chapter and when introducing new techniques, use it to spark curiosity. Later exercises (and more advanced chapters) can omit it — the `headerSubtitle` format hint is enough once the user has the feel of the practice
 
 ### Intro Modal
 

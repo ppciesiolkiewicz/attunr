@@ -60,7 +60,6 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       slug: "warmup-farinelli",
       maxCount: 5,
       title: "Farinelli breathwork",
-      instruction: "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Center your breathing.",
       introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 5, instruction: "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Center your breathing." }),
     }),
   ],
@@ -91,7 +90,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction: "Hum at three rising pitches — low, mid-low, mid.\nFeel the resonance shift as you rise.\nKeep each hum steady and relaxed.",
-        introModal: modal.melody({ noteCount: 3, minScore: 0 }),
+        introModal: modal.melody({ minScore: 0 }),
       },
       {
         exerciseTypeId: "melody",
@@ -112,7 +111,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction: "Sing uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
-        introModal: modal.melody({ noteCount: 3, minScore: 0 }),
+        introModal: modal.melody({ minScore: 0 }),
       },
       gen.lipRoll({
         slug: "lip-rolls-high-to-low",
@@ -202,7 +201,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction: "Sing each note as it scrolls past.\nThis is a 5-tone major scale — up five notes, then back down.\nListen to the piano and follow along.",
-        introModal: modal.melody({ noteCount: 9, minScore: 0 }),
+        introModal: modal.melody({ minScore: 0 }),
       },
       {
         exerciseTypeId: "melody",
@@ -223,7 +222,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction: "Hum three tones rising from low.\nMove smoothly between each tone.\nFeel the resonance shift as you rise.",
-        introModal: modal.melody({ noteCount: 3, minScore: 0 }),
+        introModal: modal.melody({ minScore: 0 }),
       },
       {
         exerciseTypeId: "melody",
@@ -244,7 +243,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction: "Sing uuu on three rising tones.\nKeep each tone warm and open.\nFeel the vowel resonate differently at each pitch.",
-        introModal: modal.melody({ noteCount: 3, minScore: 0 }),
+        introModal: modal.melody({ minScore: 0 }),
       },
     ],
   },
@@ -286,7 +285,6 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         slug: "farinelli-deep",
         maxCount: 7,
         title: "Farinelli breathwork",
-        instruction: "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Deeper breathing this time.",
         introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 7, instruction: "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Deeper breathing this time." }),
         completionModal: {
           title: "Chapter 2 Complete",

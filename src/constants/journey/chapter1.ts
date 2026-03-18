@@ -91,9 +91,12 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         maxCount: 7,
         title: "Farinelli breathwork",
         cardSubtitle: "Slow down. Breathe deep. Feel your body settle",
-        instruction:
-          "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body settles as the rhythm deepens.",
-        introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 7, instruction: "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body settles as the rhythm deepens." }),
+        introModal: modal.farinelli({
+          title: "Farinelli breathwork",
+          maxCount: 7,
+          instruction:
+            "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body settles as the rhythm deepens.",
+        }),
       }),
       gen.volumeDetection({
         slug: "sss-zzz-sss",
@@ -168,7 +171,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         tempo: 50,
         instruction:
           "Sing the two notes as they appear.\nListen and match — this is the smallest melodic step.\nThere's no rush. Just notice the distance between them.",
-        introModal: modal.melody({ noteCount: 33, minScore: 0 }),
+        introModal: modal.melody({ minScore: 0 }),
       }),
       gen.sustain({
         slug: "u-mid-low",
@@ -193,9 +196,12 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         maxCount: 5,
         title: "Farinelli breathwork",
         cardSubtitle: "Return to breath. Let everything slow down",
-        instruction:
-          "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body responds as the rhythm lengthens.",
-        introModal: modal.farinelli({ title: "Farinelli breathwork", maxCount: 5, instruction: "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body responds as the rhythm lengthens." }),
+        introModal: modal.farinelli({
+          title: "Farinelli breathwork",
+          maxCount: 5,
+          instruction:
+            "Inhale, hold, and exhale for the same count — each cycle adds one beat.\nNotice how your body responds as the rhythm lengthens.",
+        }),
       }),
       gen.lipRollSustain({
         slug: "lip-roll-sustain",

@@ -56,10 +56,12 @@ export class IntroModalGenerator {
     };
   }
 
-  melody(p: { noteCount: number; minScore: number }): ModalConfig {
+  melody(p: { minScore: number }): ModalConfig {
     return {
       title: "",
-      subtitle: `Sing along to ${p.noteCount} notes — match ${p.minScore}% to continue`,
+      subtitle: p.minScore > 0
+        ? `Sing along — match ${p.minScore}% to continue`
+        : "Sing along — just follow the notes",
       elements: [{ type: "headphones-notice" }],
     };
   }
@@ -202,7 +204,7 @@ export interface LipRollParams extends CommonParams {
   scale?: BaseScale;
 }
 
-export interface FarinelliParams extends CommonParams {
+export interface FarinelliParams extends Omit<CommonParams, "instruction"> {
   maxCount: number;
 }
 
@@ -622,11 +624,17 @@ export class ExerciseGenerator {
     };
   }
 
-  /** Farinelli breathwork exercise. */
+  /** Farinelli breathwork exercise. Instruction is hardcoded — the component has its own built-in guidance. */
   farinelli(params: FarinelliParams): ExerciseConfigInput {
-    const { maxCount } = params;
+    const { slug, title, headerSubtitle, cardSubtitle, introModal, completionModal, maxCount } = params;
     return {
-      ...pickCommon(params),
+      slug,
+      title,
+      headerSubtitle,
+      cardSubtitle,
+      instruction: "",
+      introModal: introModal?.title ? introModal : introModal ? { ...introModal, title } : undefined,
+      completionModal,
       exerciseTypeId: "breathwork-farinelli",
       maxCount,
     };

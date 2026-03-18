@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
-import { Button } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { useVolumeDetection } from "@/hooks/useVolumeDetection";
 import type { VolumeDetectionConfig } from "@/constants/journey";
 
@@ -93,6 +93,13 @@ export function VolumeDetectionExerciseContent({
   return (
     <>
       <div className="relative flex-1 min-h-0 flex flex-col items-center justify-center gap-6">
+        {/* Instruction */}
+        <div className="absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12">
+          <Text variant="caption" color="muted-1" className="text-center leading-snug max-w-[320px]">
+            {exercise.instruction.split("\n")[0]}
+          </Text>
+        </div>
+
         {/* Current cue */}
         <div className="text-4xl sm:text-5xl font-light text-white/90 tracking-wide">
           {currentCue}
