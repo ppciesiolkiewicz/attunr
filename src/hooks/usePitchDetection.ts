@@ -126,7 +126,7 @@ export function usePitchDetection(): PitchDetectionState {
         (err.name === "NotAllowedError" || err.name === "PermissionDeniedError");
       setError(
         isDenied
-          ? "Microphone access was denied. Please enable it in your browser settings and try again."
+          ? "mic-permission-denied"
           : err instanceof Error
             ? err.message
             : "Could not start pitch detection"

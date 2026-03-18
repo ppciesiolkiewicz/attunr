@@ -4,6 +4,25 @@ import { Button, Spinner, Text, Video } from "@/components/ui";
 import { MicrophoneIcon } from "./MicrophoneIcon";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
+function getMicDeniedMessage(): string {
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome/.test(ua);
+  const isAndroid = /Android/.test(ua);
+
+  if (isIOS && isSafari) {
+    return "Microphone blocked. Tap the aA button in the address bar → Website Settings → allow Microphone, then tap Retry.";
+  }
+  if (isIOS) {
+    // Chrome/Firefox/etc. on iOS
+    return "Microphone blocked. Go to Settings → find your browser → enable Microphone, then come back and tap Retry.";
+  }
+  if (isAndroid) {
+    return "Microphone blocked. Tap the lock/tune icon in the address bar → Permissions → allow Microphone, then tap Retry.";
+  }
+  return "Microphone access was denied. Please enable it in your browser settings and try again.";
+}
+
 interface WelcomePhaseProps {
   status: PitchDetectionStatus;
   micError: string | null;
@@ -13,6 +32,9 @@ interface WelcomePhaseProps {
 export function WelcomePhase({ status, micError, onStart }: WelcomePhaseProps) {
   const isLoading = status === "requesting-mic" || status === "loading-model";
   const isError = status === "error";
+  const isPermissionDenied = micError === "mic-permission-denied";
+
+  const errorMessage = isPermissionDenied ? getMicDeniedMessage() : micError;
 
   return (
     <div className="flex flex-col items-center gap-4 w-full">
@@ -33,9 +55,9 @@ export function WelcomePhase({ status, micError, onStart }: WelcomePhaseProps) {
         </div>
       </div>
 
-      {isError && micError && (
+      {isError && errorMessage && (
         <Text variant="caption" className="px-2" color="error">
-          {micError}
+          {errorMessage}
         </Text>
       )}
 
