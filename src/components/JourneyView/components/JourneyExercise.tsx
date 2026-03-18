@@ -92,14 +92,13 @@ export function JourneyExercise({
 
   // ── Navigation ─────────────────────────────────────────────────────────
 
+  const stepInfo = getStepInStage(exerciseId);
+  const isLastInStage = stepInfo.stepIndex === stepInfo.stepsInStage;
+
   function goToNextExercise(markComplete: boolean) {
     if (markComplete) {
       jp.completeExercise(exercise);
       analytics.journeyExerciseCompleted(exerciseId, exercise.chapter);
-      const step = getStepInStage(exerciseId);
-      if (step.stepIndex === step.stepsInStage) {
-        streak.recordCompletion();
-      }
     }
     if (exercise.completionModal) {
       analytics.journeyPartCompleted(exercise.chapter, stageTitle);
@@ -109,6 +108,8 @@ export function JourneyExercise({
         modalConfig: exercise.completionModal,
       });
     } else {
+      // No modal — record streak immediately if last in stage
+      if (isLastInStage) streak.recordCompletion();
       const next = journey.getNextExercise(exercise);
       if (next) onNext(next);
       else onBack();
@@ -122,6 +123,9 @@ export function JourneyExercise({
   }
 
   function handlePartCompleteContinue() {
+    if (isLastInStage) {
+      streak.recordCompletion();
+    }
     setPartCompleteData(null);
     const next = journey.getNextExercise(exercise);
     if (next) onNext(next);
@@ -144,8 +148,8 @@ export function JourneyExercise({
         </Text>
         <Text variant="caption" as="span" color="muted-2">·</Text>
         <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
-          {getStepInStage(exerciseId).stepIndex} of{" "}
-          {getStepInStage(exerciseId).stepsInStage}
+          {stepInfo.stepIndex} of{" "}
+          {stepInfo.stepsInStage}
         </Text>
         <Text variant="caption" as="span" color="muted-2">—</Text>
         <Text variant="caption" as="span" color="text-2" className="sm:text-sm font-medium truncate min-w-0">
@@ -174,8 +178,8 @@ export function JourneyExercise({
         exerciseId={exerciseId}
         partTitle={stageTitle}
         partRoman={toRoman(exercise.chapter)}
-        stepIndex={getStepInStage(exerciseId).stepIndex}
-        stepsInPart={getStepInStage(exerciseId).stepsInStage}
+        stepIndex={stepInfo.stepIndex}
+        stepsInPart={stepInfo.stepsInStage}
         isLast={exerciseId === journey.exercises[journey.exercises.length - 1]?.id}
         vocalRange={vocalRange}
         pitchHz={pitchHz}
