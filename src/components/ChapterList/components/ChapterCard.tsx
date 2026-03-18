@@ -46,6 +46,11 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
     if (nextHref) router.push(nextHref);
   }
 
+  function handleBrowse(e: React.MouseEvent) {
+    e.stopPropagation();
+    router.push(journey.chapterHref(chapter));
+  }
+
   function handleStartRestart(e: React.MouseEvent) {
     e.stopPropagation();
     router.push(journey.exerciseHref(firstExercise));
@@ -122,19 +127,19 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
               variant="ghost"
               onClick={handleStartRestart}
               className="flex-1 py-2.5 px-3 text-xs font-semibold rounded-none"
-              style={{ color: "#a78bfa" }}
+              style={{ color: "#a78bfa", borderRight: "1px solid rgba(255,255,255,0.05)" }}
             >
               Start →
             </Button>
           )}
-          {isInProgress && nextHref && (
+          {(isInProgress || !started) && (
             <Button
               variant="ghost"
-              onClick={handleContinueClick}
+              onClick={handleBrowse}
               className="flex-1 py-2.5 px-3 text-xs font-semibold rounded-none"
               style={{ color: "#a78bfa" }}
             >
-              Continue →
+              Browse ↗
             </Button>
           )}
           {isComplete && (
