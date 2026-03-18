@@ -3,7 +3,7 @@ import { ExerciseGenerator } from "./exercise-generator";
 import { BandTargetKind, NoteDuration } from "./types";
 
 const gen = new ExerciseGenerator();
-const base = { title: "Test", instruction: "Test instruction" };
+const base = { slug: "test", title: "Test", instruction: "Test instruction" };
 
 // ── interval() ───────────────────────────────────────────────────────────────
 
@@ -329,6 +329,7 @@ describe("farinelli()", () => {
 describe("common params", () => {
   it("passes through title, subtitle, cardCue, instruction", () => {
     const params = {
+      slug: "my-test",
       title: "My Title",
       subtitle: "My Subtitle",
       cardCue: "Card cue text",

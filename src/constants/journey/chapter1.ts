@@ -14,6 +14,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     exercises: [
       {
         exerciseTypeId: "learn",
+        slug: "vocal-placement",
         title: "Vocal placement",
         cardCue:
           "Discover vocal placement and how it connects voice to body awareness",
@@ -32,6 +33,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       },
       {
         exerciseTypeId: "learn-notes-1",
+        slug: "understanding-notes",
         title: "Understanding notes",
         cardCue: "Learn how musical notes work and see your vocal range",
       },
@@ -46,6 +48,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       //     "Make a steady sss sound — like air escaping. No pitch needed, just breath.\nIt's okay to take breaths between sounds.",
       // },
       gen.hillSustain({
+        slug: "gentle-hum",
         note: 4,
         seconds: 5,
         direction: "down",
@@ -56,6 +59,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Close your lips and hum mmmm on a low tone.\nFeel the buzz in your lips and teeth.\nBreathe whenever you need to — there's no rush.",
       }),
       gen.hillSustain({
+        slug: "low-uu",
         note: 4,
         seconds: 6,
         direction: "down",
@@ -66,6 +70,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
       }),
       gen.hillSustain({
+        slug: "middle-tone",
         note: [5, 10],
         seconds: 6,
         direction: "between",
@@ -76,6 +81,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
       }),
       gen.zoneAbove({
+        slug: "hoo-hoo",
         boundaryNote: -6,
         seconds: 5,
         repeats: 3,
@@ -86,6 +92,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Sing 'hoo hoo' on a high tone, like an owl.\nThis is head voice — a lighter, higher resonance.\nFeel the sound in your head and face. Keep it gentle.",
       }),
       gen.farinelli({
+        slug: "farinelli-1",
         maxCount: 7,
         title: "Farinelli breathwork",
         cardCue: "Calm your nervous system and build steady diaphragm control",
@@ -102,6 +109,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     exercises: [
       {
         exerciseTypeId: "volume-detection",
+        slug: "voiceless-lip-roll",
         title: "Voiceless lip roll",
         subtitle: "Lip buzz · 15 seconds",
         cardCue: "Get your lips buzzing without pitch pressure",
@@ -111,6 +119,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nFill the bar by lip rolling — it's okay to do several lip rolls and take breaths between them.",
       },
       gen.lipRoll({
+        slug: "lip-roll-slide",
         startNote: -5,
         endNote: 4,
         scale: { type: "major", root: 1 },
@@ -130,6 +139,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     title: "First Melody",
     exercises: [
       gen.sustain({
+        slug: "hum-mid-low",
         note: 4,
         seconds: 5,
         title: "Hum — mid-low",
@@ -138,6 +148,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Hum just above your lowest tone.\nFeel the warmth spread through your chest.\nKeep the buzz steady.",
       }),
       gen.majorSecond({
+        slug: "major-second",
         title: "Major Second",
         subtitle: "Sing two notes · intervals",
         cardCue: "Your first melody — just two adjacent notes",
@@ -146,6 +157,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Sing the two notes as they appear — the piano plays each note for you.\nThis is a major second — the smallest melodic step.\nListen and match.",
       }),
       gen.sustain({
+        slug: "u-mid-low",
         note: 4,
         seconds: 6,
         title: "U — mid-low",
@@ -162,6 +174,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     title: "Breath",
     exercises: [
       gen.farinelli({
+        slug: "farinelli-2",
         maxCount: 5,
         title: "Farinelli breathwork",
         cardCue: "Calm your nervous system and build steady diaphragm control",
@@ -169,6 +182,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Build diaphragm control and calm your nervous system. Inhale, hold, and exhale for the same count — each cycle adds one beat.",
       }),
       gen.lipRollSustain({
+        slug: "lip-roll-sustain",
         note: 5,
         seconds: 5,
         requiredPlays: 3,
@@ -178,6 +192,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Play the tone and lip roll alongside it.\nKeep the buzz steady — lips vibrating without force.",
       }),
       gen.sustain({
+        slug: "hum-mid",
         note: 7,
         seconds: 6,
         title: "Hum — mid",

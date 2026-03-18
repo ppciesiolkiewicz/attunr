@@ -1,21 +1,20 @@
 "use client";
 
 import type { StageConfig } from "@/constants/journey";
+import type { JourneyProgressHook } from "@/hooks/useJourneyProgress";
 
 interface StageDotsProps {
   stages: StageConfig[];
-  highestCompleted: number;
+  jp: JourneyProgressHook;
 }
 
-export function StageDots({ stages, highestCompleted }: StageDotsProps) {
+export function StageDots({ stages, jp }: StageDotsProps) {
   return (
     <div className="flex gap-[3px] px-4 pb-3">
       {stages.map((stage) => {
-        const exercises = stage.exercises;
-        const lastId = exercises[exercises.length - 1]?.id ?? 0;
-        const firstId = exercises[0]?.id ?? 0;
-        const isComplete = highestCompleted >= lastId;
-        const isActive = !isComplete && highestCompleted >= firstId - 1;
+        const isComplete = jp.isStageCompleted(stage);
+        const hasStarted = jp.isStarted(stage.exercises);
+        const isActive = !isComplete && hasStarted;
 
         return (
           <div

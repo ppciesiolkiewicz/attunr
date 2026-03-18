@@ -13,6 +13,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
   exercises: [
     {
       exerciseTypeId: "volume-detection",
+      slug: "warmup-sss",
       title: "Sss",
       subtitle: "Wake up breath · 15 seconds",
       targetSeconds: 15,
@@ -21,6 +22,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
     },
     {
       exerciseTypeId: "volume-detection",
+      slug: "warmup-sss-zzz",
       title: "Sss-Zzz",
       subtitle: "Wake up breath · 15 seconds",
       targetSeconds: 15,
@@ -28,6 +30,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       instruction: "Alternate between sss and zzz sounds — feel the vibration shift from voiceless to voiced.",
     },
     gen.lipRoll({
+      slug: "warmup-lip-rolls",
       startNote: 1,
       endNote: -1,
       requiredPlays: 2,
@@ -36,6 +39,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       instruction: "Play the tone and lip roll alongside it.\nSlide smoothly from low to high — loosen your lips.",
     }),
     gen.sustain({
+      slug: "warmup-gentle-hum",
       note: 1,
       seconds: 5,
       repeats: 2,
@@ -44,6 +48,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       instruction: "Close your lips and hum mmmm on a low tone.\nFirst pitched sound of the session.",
     }),
     gen.farinelli({
+      slug: "warmup-farinelli",
       maxCount: 5,
       title: "Farinelli breathwork",
       instruction: "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Center your breathing.",
@@ -59,6 +64,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     exercises: [
       {
         exerciseTypeId: "melody",
+        slug: "hum-low-to-mid",
         title: "Hum — low to mid",
         subtitle: "Hum · 3 rising pitches",
         tempo: 40,
@@ -78,6 +84,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       },
       {
         exerciseTypeId: "melody",
+        slug: "u-low-to-mid",
         title: "U — low to mid",
         subtitle: "Vowel U · 3 rising pitches",
         tempo: 40,
@@ -96,6 +103,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         instruction: "Sing uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
       },
       gen.lipRoll({
+        slug: "lip-rolls-high-to-low",
         startNote: -1,
         endNote: 1,
         requiredPlays: 3,
@@ -105,6 +113,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       }),
       {
         exerciseTypeId: "rhythm",
+        slug: "feel-the-beat",
         title: "Feel the Beat",
         cardCue: "Tap along to the beat",
         tempo: 80,
@@ -155,6 +164,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     exercises: [
       {
         exerciseTypeId: "melody",
+        slug: "5-tone-scale",
         title: "5-tone scale",
         subtitle: "Sing 5 notes up and back down",
         cardCue: "Your first scale — stepping up and back down",
@@ -181,6 +191,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       },
       {
         exerciseTypeId: "melody",
+        slug: "hum-sequence",
         title: "Hum sequence",
         subtitle: "3 tones rising",
         tempo: 40,
@@ -200,6 +211,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
       },
       {
         exerciseTypeId: "melody",
+        slug: "u-sequence",
         title: "U sequence",
         subtitle: "3 tones rising",
         tempo: 40,
@@ -226,6 +238,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     title: "Sustain & Control",
     exercises: [
       gen.sustain({
+        slug: "hum-mid-long",
         note: 7,
         seconds: 8,
         title: "Hum — mid",
@@ -233,6 +246,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         instruction: "Hum on a mid tone — longer holds this time.\nFocus on keeping the tone steady.\nFeel the buzz settle.",
       }),
       gen.sustain({
+        slug: "u-mid",
         note: 7,
         seconds: 8,
         title: "U — mid",
@@ -240,6 +254,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         instruction: "Sing uuu on the mid tone — longer holds.\nOpen and soft — keep it relaxed.\nFeel the resonance in your chest and face.",
       }),
       gen.lipRollSustain({
+        slug: "lip-roll-sustain-mid",
         note: 7,
         seconds: 6,
         requiredPlays: 3,
@@ -248,6 +263,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         instruction: "Play the tone and lip roll alongside it.\nKeep the buzz steady at mid pitch.",
       }),
       gen.farinelli({
+        slug: "farinelli-deep",
         maxCount: 7,
         title: "Farinelli breathwork",
         instruction: "Inhale, hold, and exhale for the same count. Each cycle adds one beat. Deeper breathing this time.",

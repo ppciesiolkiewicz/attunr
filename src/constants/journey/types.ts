@@ -111,9 +111,13 @@ export interface BaseExerciseConfig {
   /** Unique exercise ID — assigned automatically by index.ts from array position. */
   id: number;
   exerciseTypeId: ExerciseTypeId;
+  /** URL-safe slug for this exercise (e.g. "gentle-hum"). */
+  slug: string;
   /** 1-indexed chapter number — assigned automatically by index.ts. */
   chapter: number;
-  /** Stage ID slug (e.g. "ch1-wake-up") — assigned automatically by index.ts. */
+  /** Chapter slug (e.g. "introduction") — assigned automatically by index.ts. */
+  chapterSlug: string;
+  /** Stage ID slug (e.g. "wake-up") — assigned automatically by index.ts. */
   stageId: string;
   title: string;
   /** Secondary text shown in exercise header. */
@@ -304,9 +308,9 @@ export type ExerciseConfig =
   | VolumeDetectionConfig
   | RhythmConfig;
 
-/** Input type for part files — `id`, `chapter`, and `stageId` are assigned automatically in index.ts. */
+/** Input type for part files — `id`, `chapter`, `chapterSlug`, and `stageId` are assigned automatically in index.ts. */
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;
-export type ExerciseConfigInput = DistributiveOmit<ExerciseConfig, "id" | "chapter" | "stageId">;
+export type ExerciseConfigInput = DistributiveOmit<ExerciseConfig, "id" | "chapter" | "chapterSlug" | "stageId">;
 
 // ── Journey structure ─────────────────────────────────────────────────────────
 
@@ -320,6 +324,8 @@ export interface StageConfig {
 export interface Chapter {
   /** 1-indexed chapter number. */
   chapter: number;
+  /** URL-safe slug (e.g. "introduction"). */
+  slug: string;
   title: string;
   description: string;
   /** Warmup stage — prompted if >4h since last warmup. Chapter 1 has none. */
@@ -335,6 +341,7 @@ export interface StageConfigInput {
 
 export interface ChapterInput {
   chapter: number;
+  slug: string;
   title: string;
   description: string;
   warmup?: StageConfigInput;

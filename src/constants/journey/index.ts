@@ -5,12 +5,14 @@ import { CHAPTER_2_WARMUP, CHAPTER_2_STAGES } from "./chapter2";
 export const journey = new Journey([
   {
     chapter: 1,
+    slug: "introduction",
     title: "Introduction",
     description: "Discover your voice, feel vibrations, match tones, and find your breath.",
     stages: CHAPTER_1_STAGES,
   },
   {
     chapter: 2,
+    slug: "building-foundation",
     title: "Building Foundation",
     description: "Expand your range, build resonance, and develop vowel control.",
     warmup: CHAPTER_2_WARMUP,

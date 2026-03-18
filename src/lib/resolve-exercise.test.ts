@@ -24,7 +24,9 @@ const allNotes = testVocalRange.allNotes;
 
 const base = {
   id: 1,
+  slug: "test",
   chapter: 1,
+  chapterSlug: "test-chapter",
   stageId: "test",
   title: "Test",
   subtitle: "test",

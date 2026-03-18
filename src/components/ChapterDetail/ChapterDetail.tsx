@@ -1,36 +1,33 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { journey } from "@/constants/journey";
 import { Text, Button } from "@/components/ui";
 import { toRoman } from "@/lib/format";
 import { ExerciseCard } from "@/components/JourneyView";
-import type { Chapter } from "@/constants/journey";
-import type { Settings } from "@/hooks/useSettings";
+import type { Chapter, ExerciseConfig } from "@/constants/journey";
+import { useApp } from "@/context/AppContext";
 
 interface ChapterDetailProps {
   chapter: Chapter;
-  settings: Settings;
 }
 
-export function ChapterDetail({ chapter, settings }: ChapterDetailProps) {
+export function ChapterDetail({ chapter }: ChapterDetailProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const unlockAll = searchParams.has("unlock");
-  const highestCompleted = unlockAll ? Infinity : settings.journeyStage;
+  const { journeyProgress: jp } = useApp();
 
   const allStages = chapter.warmup
     ? [chapter.warmup, ...chapter.stages]
     : chapter.stages;
   const allExercises = allStages.flatMap((s) => s.exercises);
 
-  // Find next exercise
-  const nextExercise = allExercises.find((e) => e.id > highestCompleted);
-  const nextHref = nextExercise ? journey.exerciseHref(nextExercise.id) : null;
-  const isStarted = allExercises.some((e) => e.id <= highestCompleted);
+  const nextExercise = jp.findNextExercise(allExercises);
+  const nextHref = nextExercise ? journey.exerciseHref(nextExercise) : null;
+  const started = jp.isStarted(allExercises);
+  const firstExercise = allExercises[0];
 
-  function handleSelect(exerciseId: number) {
-    router.push(journey.exerciseHref(exerciseId));
+  function handleSelect(exercise: ExerciseConfig) {
+    router.push(journey.exerciseHref(exercise));
   }
 
   return (
@@ -63,11 +60,11 @@ export function ChapterDetail({ chapter, settings }: ChapterDetailProps) {
         <div className="flex gap-2">
           {nextHref && (
             <Button variant="primary" onClick={() => router.push(nextHref)}>
-              {isStarted ? `Continue — ${nextExercise!.title}` : "Start"}
+              {started ? `Continue — ${nextExercise!.title}` : "Start"}
             </Button>
           )}
-          {isStarted && (
-            <Button variant="ghost" onClick={() => router.push(`/ch/${chapter.chapter}/1`)}>
+          {started && firstExercise && (
+            <Button variant="ghost" onClick={() => router.push(journey.exerciseHref(firstExercise))}>
               Start from beginning
             </Button>
           )}
@@ -83,7 +80,7 @@ export function ChapterDetail({ chapter, settings }: ChapterDetailProps) {
               <ExerciseCard
                 key={exercise.id}
                 exercise={exercise}
-                highestCompleted={highestCompleted}
+                jp={jp}
                 onSelect={handleSelect}
               />
             ))}

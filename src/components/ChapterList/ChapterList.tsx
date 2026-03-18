@@ -1,19 +1,12 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { journey } from "@/constants/journey";
 import { Text } from "@/components/ui";
-import type { Settings } from "@/hooks/useSettings";
+import { useApp } from "@/context/AppContext";
 import { ChapterCard } from "./components/ChapterCard";
 
-interface ChapterListProps {
-  settings: Settings;
-}
-
-export function ChapterList({ settings }: ChapterListProps) {
-  const searchParams = useSearchParams();
-  const unlockAll = searchParams.has("unlock");
-  const highestCompleted = unlockAll ? Infinity : settings.journeyStage;
+export function ChapterList() {
+  const { journeyProgress: jp } = useApp();
 
   return (
     <div className="h-full overflow-y-auto">
@@ -36,7 +29,7 @@ export function ChapterList({ settings }: ChapterListProps) {
             <ChapterCard
               key={chapter.chapter}
               chapter={chapter}
-              highestCompleted={highestCompleted}
+              jp={jp}
             />
           ))}
         </div>

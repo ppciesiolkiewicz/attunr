@@ -22,12 +22,6 @@ export class Journey {
     return resolveExercise(config, vocalRange);
   }
 
-  getNextExerciseId(currentId: number): number | null {
-    const idx = this.exercises.findIndex((e) => e.id === currentId);
-    return idx >= 0 && idx < this.exercises.length - 1
-      ? this.exercises[idx + 1].id
-      : null;
-  }
 
   /** Get all exercises in a chapter as a flat array (warmup + stages). */
   getChapterExercises(chapterNum: number): ExerciseConfig[] {
@@ -37,30 +31,50 @@ export class Journey {
     return stages.flatMap((s) => s.exercises);
   }
 
-  /** Resolve a global exercise ID to { ch, ex } route params. */
-  exerciseRoute(globalId: number): { ch: number; ex: number } | null {
-    for (const chapter of this.chapters) {
-      const exercises = this.getChapterExercises(chapter.chapter);
-      const idx = exercises.findIndex((e) => e.id === globalId);
-      if (idx !== -1) return { ch: chapter.chapter, ex: idx + 1 };
-    }
-    return null;
+  // ── Slug-based lookups ─────────────────────────────────────────────────
+
+  /** Find a chapter by its slug. */
+  getChapterBySlug(slug: string): Chapter | undefined {
+    return this.chapters.find((ch) => ch.slug === slug);
   }
 
-  /** Resolve { ch, ex } route params to a global exercise ID. */
-  exerciseByRoute(ch: number, ex: number): ExerciseConfig | null {
-    const exercises = this.getChapterExercises(ch);
-    return exercises[ex - 1] ?? null;
+  /** Find an exercise by its slug (globally unique). */
+  getExerciseBySlug(slug: string): ExerciseConfig | undefined {
+    return this.exercises.find((e) => e.slug === slug);
   }
 
-  /** Build the URL path for an exercise given its global ID. */
-  exerciseHref(globalId: number): string {
-    const route = this.exerciseRoute(globalId);
-    if (!route) return "/journey";
-    return `/ch/${route.ch}/${route.ex}`;
+  /** Find an exercise by chapter slug + exercise slug. */
+  getExerciseByRoute(chapterSlug: string, exerciseSlug: string): ExerciseConfig | undefined {
+    return this.exercises.find(
+      (e) => e.chapterSlug === chapterSlug && e.slug === exerciseSlug,
+    );
   }
 
-  /** Assign sequential IDs (1-based), chapter, and stageId to all exercises across all chapters. */
+  /** Build the URL path for an exercise. */
+  exerciseHref(exercise: ExerciseConfig): string {
+    return `/journey/${exercise.chapterSlug}/${exercise.slug}`;
+  }
+
+  /** Build the URL path for a chapter. */
+  chapterHref(chapter: Chapter): string {
+    return `/journey/${chapter.slug}`;
+  }
+
+  /** Get the next exercise after the given one. */
+  getNextExercise(exercise: ExerciseConfig): ExerciseConfig | null {
+    const idx = this.exercises.findIndex((e) => e.id === exercise.id);
+    return idx >= 0 && idx < this.exercises.length - 1
+      ? this.exercises[idx + 1]
+      : null;
+  }
+
+  /** Get the previous exercise before the given one. */
+  getPrevExercise(exercise: ExerciseConfig): ExerciseConfig | null {
+    const idx = this.exercises.findIndex((e) => e.id === exercise.id);
+    return idx > 0 ? this.exercises[idx - 1] : null;
+  }
+
+  /** Assign sequential IDs, chapter, chapterSlug, and stageId to all exercises. */
   private assignIds(chapters: ChapterInput[]): Chapter[] {
     let nextId = 1;
     return chapters.map((ch) => {
@@ -71,6 +85,7 @@ export class Journey {
             ...ex,
             id: nextId++,
             chapter: ch.chapter,
+            chapterSlug: ch.slug,
             stageId: stage.id,
           }) as ExerciseConfig),
         };

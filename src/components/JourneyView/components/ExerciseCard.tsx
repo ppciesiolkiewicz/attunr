@@ -6,28 +6,29 @@ import {
 import { Text } from "@/components/ui";
 import { BookIcon } from "./BookIcon";
 import type { ExerciseConfig } from "@/constants/journey";
+import type { JourneyProgressHook } from "@/hooks/useJourneyProgress";
 
 interface ExerciseCardProps {
   exercise: ExerciseConfig;
-  highestCompleted: number;
-  onSelect: (id: number) => void;
+  jp: JourneyProgressHook;
+  onSelect: (exercise: ExerciseConfig) => void;
 }
 
 export function ExerciseCard({
   exercise,
-  highestCompleted,
+  jp,
   onSelect,
 }: ExerciseCardProps) {
-  const isComplete = exercise.id <= highestCompleted;
-  const isCurrent = exercise.id === highestCompleted + 1;
-  const isUnlocked = exercise.id <= highestCompleted + 1;
+  const isComplete = jp.isCompleted(exercise);
+  const isCurrent = jp.isUnlocked(exercise) && !isComplete;
+  const isUnlocked = jp.isUnlocked(exercise);
 
   const exerciseColors = getExerciseDisplayColors(exercise);
   const primaryColor = exerciseColors[0] ?? "#7c3aed";
 
   return (
     <button
-      onClick={() => isUnlocked && onSelect(exercise.id)}
+      onClick={() => isUnlocked && onSelect(exercise)}
       disabled={!isUnlocked}
       className="cursor-pointer disabled:cursor-not-allowed w-full flex items-stretch rounded-xl border overflow-hidden text-left transition-all group"
       style={{

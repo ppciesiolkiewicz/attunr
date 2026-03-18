@@ -9,6 +9,7 @@ import FrequencyModal from "../FrequencyModal";
 import Footer from "../Footer";
 import PostHogPageView from "../PostHogPageView";
 import { useSettings } from "@/hooks/useSettings";
+import { useJourneyProgress } from "@/hooks/useJourneyProgress";
 import { usePitchDetection } from "@/hooks/usePitchDetection";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { useServiceWorker } from "@/hooks/useServiceWorker";
@@ -45,6 +46,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [redetect, setRedetect] = useState(false);
   const { settings, update } = useSettings();
+  const journeyProgress = useJourneyProgress();
   const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
   const { playTone, playSlide } = useTonePlayer();
 
@@ -88,6 +90,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
   const contextValue = {
     settings,
     updateSettings: update,
+    journeyProgress,
     pitchHz,
     pitchHzRef,
     playTone: handlePlayTone,

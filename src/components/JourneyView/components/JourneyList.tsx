@@ -1,23 +1,19 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { journey } from "@/constants/journey";
+import type { ExerciseConfig } from "@/constants/journey";
 import { Text } from "@/components/ui";
-import type { Settings } from "@/hooks/useSettings";
 import { toRoman } from "@/lib/format";
 import { ExerciseCard } from "./ExerciseCard";
 import { BadgeIcon } from "./BadgeIcon";
+import { useApp } from "@/context/AppContext";
 
 interface JourneyListProps {
-  settings: Settings;
-  onSelect: (exerciseId: number) => void;
+  onSelect: (exercise: ExerciseConfig) => void;
 }
 
-export function JourneyList({ settings, onSelect }: JourneyListProps) {
-  const searchParams = useSearchParams();
-  const unlockAll = searchParams.has("unlock");
-  const { journeyStage } = settings;
-  const highestCompleted = unlockAll ? Infinity : journeyStage;
+export function JourneyList({ onSelect }: JourneyListProps) {
+  const { journeyProgress: jp } = useApp();
 
   return (
     <div className="h-full overflow-y-auto">
@@ -41,8 +37,7 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
             : chapter.stages;
           const allExercises = allStages.flatMap((s) => s.exercises);
           if (allExercises.length === 0) return null;
-          const lastExerciseId = allExercises[allExercises.length - 1].id;
-          const chapterComplete = highestCompleted >= lastExerciseId;
+          const chapterComplete = jp.isChapterCompleted(chapter.slug);
 
           return (
             <section key={chapter.chapter} className="flex flex-col gap-2">
@@ -73,7 +68,7 @@ export function JourneyList({ settings, onSelect }: JourneyListProps) {
                     <ExerciseCard
                       key={exercise.id}
                       exercise={exercise}
-                      highestCompleted={highestCompleted}
+                      jp={jp}
                       onSelect={onSelect}
                     />
                   ))}

@@ -15,6 +15,7 @@ import { BandTargetKind, NoteDuration } from "./types";
 // ── Param interfaces ──────────────────────────────────────────────────────────
 
 export interface CommonParams {
+  slug: string;
   title: string;
   subtitle?: string;
   cardCue?: string;
@@ -112,6 +113,19 @@ export interface HillSustainParams extends CommonParams {
 
 // ── Helper functions ──────────────────────────────────────────────────────────
 
+/** Extracts the common fields shared by all exercise types from params. */
+function pickCommon(params: CommonParams) {
+  return {
+    slug: params.slug,
+    title: params.title,
+    subtitle: params.subtitle,
+    cardCue: params.cardCue,
+    instruction: params.instruction,
+    introModal: params.introModal,
+    completionModal: params.completionModal,
+  };
+}
+
 /** Returns a NoteTarget for a 1-indexed ChromaticDegree. Passes straight through. */
 function toTarget(note: number): NoteTarget {
   return { kind: BandTargetKind.Index, i: note };
@@ -149,12 +163,6 @@ export class ExerciseGenerator {
    */
   interval(params: IntervalParams): ExerciseConfigInput {
     const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
       startNote,
       endNote,
       chromaticDegree,
@@ -196,12 +204,7 @@ export class ExerciseGenerator {
     }
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "melody",
       tempo,
       melody,
@@ -216,12 +219,6 @@ export class ExerciseGenerator {
    */
   scale(params: ScaleParams): ExerciseConfigInput {
     const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
       startNote,
       endNote,
       scaleType,
@@ -252,12 +249,7 @@ export class ExerciseGenerator {
     const melody: MelodyScale[] = [{ type: scaleType, root: lo, events }];
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "melody",
       tempo,
       melody,
@@ -277,12 +269,6 @@ export class ExerciseGenerator {
    */
   scaleDegrees(params: ScaleDegreeParams): ExerciseConfigInput {
     const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
       startNote,
       endNote,
       scaleType = "major",
@@ -317,12 +303,7 @@ export class ExerciseGenerator {
     const melody: MelodyScale[] = [{ type: scaleType, root: lo, events }];
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "melody",
       tempo,
       melody,
@@ -400,17 +381,7 @@ export class ExerciseGenerator {
    * Single Range target from: 1, to: boundaryNote, accept: "below".
    */
   zoneBelow(params: ZoneBelowParams): ExerciseConfigInput {
-    const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
-      boundaryNote,
-      seconds,
-      repeats = 1,
-    } = params;
+    const { boundaryNote, seconds, repeats = 1 } = params;
 
     const target = {
       kind: BandTargetKind.Range as const,
@@ -421,12 +392,7 @@ export class ExerciseGenerator {
     const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       toneShape: { kind: "wobble" },
@@ -439,17 +405,7 @@ export class ExerciseGenerator {
    * Range from: boundaryNote, to: -1, accept: "above".
    */
   zoneAbove(params: ZoneAboveParams): ExerciseConfigInput {
-    const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
-      boundaryNote,
-      seconds,
-      repeats = 1,
-    } = params;
+    const { boundaryNote, seconds, repeats = 1 } = params;
 
     const target = {
       kind: BandTargetKind.Range as const,
@@ -460,12 +416,7 @@ export class ExerciseGenerator {
     const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "pitch-detection-hill",
       scale: { type: "chromatic", root: 1 },
       toneShape: { kind: "owl-hoot" },
@@ -479,18 +430,7 @@ export class ExerciseGenerator {
    * Range from: lowNote, to: highNote, accept: "within".
    */
   zoneBetween(params: ZoneBetweenParams): ExerciseConfigInput {
-    const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
-      lowNote,
-      highNote,
-      seconds,
-      repeats = 1,
-    } = params;
+    const { lowNote, highNote, seconds, repeats = 1 } = params;
 
     const target = {
       kind: BandTargetKind.Range as const,
@@ -501,12 +441,7 @@ export class ExerciseGenerator {
     const notes = Array.from({ length: repeats }, () => ({ target, seconds }));
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: 1 },
       notes,
@@ -519,12 +454,6 @@ export class ExerciseGenerator {
    */
   lipRoll(params: LipRollParams): ExerciseConfigInput {
     const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
       startNote,
       endNote,
       requiredPlays,
@@ -532,12 +461,7 @@ export class ExerciseGenerator {
     } = params;
     const isMajor = scale.type === "major";
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "tone-follow",
       scale,
       displayNotes: isMajor ? undefined : [{ type: "major", root: 1, notes: [] }],
@@ -552,22 +476,9 @@ export class ExerciseGenerator {
 
   /** Farinelli breathwork exercise. */
   farinelli(params: FarinelliParams): ExerciseConfigInput {
-    const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
-      maxCount,
-    } = params;
+    const { maxCount } = params;
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "breathwork-farinelli",
       maxCount,
     };
@@ -578,18 +489,7 @@ export class ExerciseGenerator {
    * Chromatic scale rooted at `note`.
    */
   sustain(params: SustainParams): ExerciseConfigInput {
-    const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
-      note,
-      seconds,
-      repeats = 3,
-      toneShape,
-    } = params;
+    const { note, seconds, repeats = 3, toneShape } = params;
 
     const notes = Array.from({ length: repeats }, () => ({
       target: toTarget(1),
@@ -597,12 +497,7 @@ export class ExerciseGenerator {
     }));
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "pitch-detection",
       scale: { type: "chromatic", root: note },
       ...(toneShape && { toneShape }),
@@ -613,12 +508,6 @@ export class ExerciseGenerator {
   /** Hill sustain exercise. Pitch-detection-hill with sustained note or note pair. */
   hillSustain(params: HillSustainParams): ExerciseConfigInput {
     const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
       note,
       seconds,
       repeats = 3,
@@ -650,12 +539,7 @@ export class ExerciseGenerator {
     }
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "pitch-detection-hill",
       scale: { type: "chromatic", root },
       toneShape,
@@ -670,25 +554,10 @@ export class ExerciseGenerator {
    * Chromatic scale rooted at `note`.
    */
   lipRollSustain(params: LipRollSustainParams): ExerciseConfigInput {
-    const {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
-      note,
-      seconds,
-      requiredPlays,
-    } = params;
+    const { note, seconds, requiredPlays } = params;
 
     return {
-      title,
-      subtitle,
-      cardCue,
-      instruction,
-      introModal,
-      completionModal,
+      ...pickCommon(params),
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: note },
       toneShape: { kind: "sustain", target: toTarget(1), seconds },

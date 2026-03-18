@@ -9,6 +9,7 @@ import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { BaseExercise } from "@/components/Exercise";
 import { PartCompleteModal } from "./PartCompleteModal";
 import { journey } from "@/constants/journey";
+import type { ExerciseConfig } from "@/constants/journey";
 import { analytics } from "@/lib/analytics";
 import { toRoman } from "@/lib/format";
 import { useApp } from "@/context/AppContext";
@@ -18,39 +19,33 @@ import type { ModalConfig } from "@/constants/journey/types";
 import type { Settings } from "@/hooks/useSettings";
 
 export function JourneyExercise({
-  exerciseId,
+  exercise,
   settings,
   pitchHz,
   pitchHzRef,
   onPlayTone,
   onPlaySlide,
-  onSettingsUpdate,
   onBack,
   onNext,
   onPrev,
   backLabel,
 }: {
-  exerciseId: number;
+  exercise: ExerciseConfig;
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   onPlayTone: (band: ColoredNote) => void;
   onPlaySlide?: (fromBand: ColoredNote, toBand: ColoredNote) => void;
-  onSettingsUpdate: <K extends keyof Settings>(
-    key: K,
-    value: Settings[K],
-  ) => void;
   onBack: () => void;
-  onNext: (nextExerciseId: number) => void;
-  onPrev?: (prevExerciseId: number) => void;
+  onNext: (next: ExerciseConfig) => void;
+  onPrev?: (prev: ExerciseConfig) => void;
   /** Label for the back button. Default: "← Journey" */
   backLabel?: string;
 }) {
   const router = useRouter();
-  const { triggerNotificationPrompt } = useApp();
-  const highestCompleted = settings.journeyStage;
-  const exercise = journey.exercises.find((e) => e.id === exerciseId)!;
-  const isCompleted = exerciseId <= highestCompleted;
+  const { triggerNotificationPrompt, journeyProgress: jp } = useApp();
+  const exerciseId = exercise.id;
+  const isCompleted = jp.isCompleted(exercise);
   const chapter = journey.chapters.find((ch) => ch.chapter === exercise.chapter);
   const allStages = chapter ? (chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages) : [];
   const stageTitle = allStages.find((s) => s.id === exercise.stageId)?.title ?? "";
@@ -83,11 +78,11 @@ export function JourneyExercise({
   // Prefetch next page when part-complete modal is showing
   useEffect(() => {
     if (partCompleteData !== null) {
-      const nextId = journey.getNextExerciseId(exerciseId);
-      if (nextId !== null) router.prefetch(journey.exerciseHref(nextId));
+      const next = journey.getNextExercise(exercise);
+      if (next) router.prefetch(journey.exerciseHref(next));
       else router.prefetch("/");
     }
-  }, [partCompleteData, exerciseId, router]);
+  }, [partCompleteData, exercise, router]);
 
   useEffect(() => {
     analytics.journeyExerciseStarted(exerciseId, exercise.chapter, stageTitle);
@@ -95,14 +90,9 @@ export function JourneyExercise({
 
   // ── Navigation ─────────────────────────────────────────────────────────
 
-  function navigateTo(targetId: number) {
-    if (targetId < 1) return;
-    onNext(targetId);
-  }
-
   function goToNextExercise(markComplete: boolean) {
     if (markComplete) {
-      onSettingsUpdate("journeyStage", Math.max(highestCompleted, exerciseId));
+      jp.completeExercise(exercise);
       analytics.journeyExerciseCompleted(exerciseId, exercise.chapter);
     }
     if (exercise.completionModal) {
@@ -113,22 +103,22 @@ export function JourneyExercise({
         modalConfig: exercise.completionModal,
       });
     } else {
-      const nextId = journey.getNextExerciseId(exerciseId);
-      if (nextId !== null) navigateTo(nextId);
+      const next = journey.getNextExercise(exercise);
+      if (next) onNext(next);
       else onBack();
     }
   }
 
   function goToPrevExercise() {
-    const prevId = exerciseId - 1;
-    if (prevId < 1 || !onPrev) return;
-    onPrev(prevId);
+    const prev = journey.getPrevExercise(exercise);
+    if (!prev || !onPrev) return;
+    onPrev(prev);
   }
 
   function handlePartCompleteContinue() {
     setPartCompleteData(null);
-    const nextId = journey.getNextExerciseId(exerciseId);
-    if (nextId !== null) navigateTo(nextId);
+    const next = journey.getNextExercise(exercise);
+    if (next) onNext(next);
     else onBack();
   }
 

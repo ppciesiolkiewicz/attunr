@@ -5,15 +5,16 @@ import { Text, Button } from "@/components/ui";
 import { toRoman } from "@/lib/format";
 import { journey } from "@/constants/journey";
 import type { Chapter } from "@/constants/journey";
+import type { JourneyProgressHook } from "@/hooks/useJourneyProgress";
 import { StageDots } from "./StageDots";
 import { ContinueStrip } from "./ContinueStrip";
 
 interface ChapterCardProps {
   chapter: Chapter;
-  highestCompleted: number;
+  jp: JourneyProgressHook;
 }
 
-export function ChapterCard({ chapter, highestCompleted }: ChapterCardProps) {
+export function ChapterCard({ chapter, jp }: ChapterCardProps) {
   const router = useRouter();
   const allStages = chapter.warmup
     ? [chapter.warmup, ...chapter.stages]
@@ -22,25 +23,22 @@ export function ChapterCard({ chapter, highestCompleted }: ChapterCardProps) {
   const totalExercises = allExercises.length;
   if (totalExercises === 0) return null;
 
-  const firstId = allExercises[0].id;
-  const lastId = allExercises[totalExercises - 1].id;
-  const completedCount = allExercises.filter((e) => e.id <= highestCompleted).length;
+  const completed = jp.completedCount(allExercises);
+  const isComplete = jp.isChapterCompleted(chapter.slug);
+  const started = jp.isStarted(allExercises);
+  const isLocked = jp.isChapterLocked(chapter.chapter);
+  const isInProgress = started && !isComplete;
 
-  const isComplete = highestCompleted >= lastId;
-  const isStarted = highestCompleted >= firstId;
-  const isLocked = firstId > highestCompleted + 1;
-  const isInProgress = isStarted && !isComplete;
-
-  // Find next exercise (first uncompleted)
-  const nextExercise = allExercises.find((e) => e.id > highestCompleted);
+  const nextExercise = jp.findNextExercise(allExercises);
   const nextStage = nextExercise
     ? allStages.find((s) => s.exercises.some((e) => e.id === nextExercise.id))
     : null;
-  const nextHref = nextExercise ? journey.exerciseHref(nextExercise.id) : null;
+  const nextHref = nextExercise ? journey.exerciseHref(nextExercise) : null;
+  const firstExercise = allExercises[0];
 
   function handleCardClick() {
     if (isLocked) return;
-    router.push(`/ch/${chapter.chapter}`);
+    router.push(journey.chapterHref(chapter));
   }
 
   function handleContinueClick(e: React.MouseEvent) {
@@ -50,7 +48,7 @@ export function ChapterCard({ chapter, highestCompleted }: ChapterCardProps) {
 
   function handleStartRestart(e: React.MouseEvent) {
     e.stopPropagation();
-    router.push(`/ch/${chapter.chapter}/1`);
+    router.push(journey.exerciseHref(firstExercise));
   }
 
   return (
@@ -83,7 +81,7 @@ export function ChapterCard({ chapter, highestCompleted }: ChapterCardProps) {
           </div>
           {!isLocked && (
             <Text variant="caption" as="span" style={{ color: "rgba(255,255,255,0.3)" }} className="pt-0.5">
-              {completedCount}/{totalExercises}
+              {completed}/{totalExercises}
             </Text>
           )}
         </div>
@@ -94,7 +92,7 @@ export function ChapterCard({ chapter, highestCompleted }: ChapterCardProps) {
 
       {/* Stage dots */}
       {allStages.length > 0 && (
-        <StageDots stages={allStages} highestCompleted={highestCompleted} />
+        <StageDots stages={allStages} jp={jp} />
       )}
 
       {/* Continue strip — shown when in-progress */}
@@ -119,7 +117,7 @@ export function ChapterCard({ chapter, highestCompleted }: ChapterCardProps) {
               Start over
             </Button>
           )}
-          {!isStarted && nextHref && (
+          {!started && nextHref && (
             <Button
               variant="ghost"
               onClick={handleStartRestart}
