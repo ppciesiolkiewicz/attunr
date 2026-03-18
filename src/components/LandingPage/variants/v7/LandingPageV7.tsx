@@ -282,7 +282,7 @@ export default function LandingPageV7() {
 
   return (
     <div
-      className="h-full overflow-y-auto landing-scroll v7-grain"
+      className="h-full overflow-y-auto overflow-x-hidden landing-scroll v7-grain"
       style={{
         background: "#080810",
         color: "#ebe8f5",
