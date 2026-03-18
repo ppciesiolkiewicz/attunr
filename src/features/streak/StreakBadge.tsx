@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import confetti from "canvas-confetti";
 import { Button } from "@/components/ui";
 import { useStreak } from "./useStreak";
 import { getStreakMessage } from "./messages";
@@ -10,15 +11,35 @@ export function StreakBadge() {
   const [showPanel, setShowPanel] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
-  // Auto-show panel on celebration
+  // Auto-show panel on celebration + fire confetti
   useEffect(() => {
     if (celebration !== null) {
       setShowPanel(true);
+
+      // Fire confetti from panel after it renders
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const el = panelRef.current;
+          if (el) {
+            const rect = el.getBoundingClientRect();
+            const x = (rect.left + rect.width / 2) / window.innerWidth;
+            const y = (rect.top + rect.height / 2) / window.innerHeight;
+            confetti({
+              particleCount: 60,
+              spread: 80,
+              origin: { x, y },
+              colors: ["#f97316", "#ef4444", "#eab308", "#fb923c"],
+            });
+          }
+        });
+      });
+
       timeoutRef.current = setTimeout(() => {
         setShowPanel(false);
         clearCelebration();
-      }, 3000);
+      }, 8000);
     }
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -39,7 +60,7 @@ export function StreakBadge() {
   }, [showPanel, celebration, clearCelebration]);
 
   const handleMouseEnter = useCallback(() => {
-    if (celebration !== null) return; // don't interfere with celebration
+    if (celebration !== null) return;
     setShowPanel(true);
   }, [celebration]);
 
@@ -72,6 +93,7 @@ export function StreakBadge() {
       {/* Floating panel */}
       {showPanel && (
         <div
+          ref={panelRef}
           className="absolute right-0 top-full mt-2 z-50 w-64 rounded-xl
                      bg-white/[0.08] backdrop-blur-xl border border-white/[0.1]
                      p-4 shadow-xl"
