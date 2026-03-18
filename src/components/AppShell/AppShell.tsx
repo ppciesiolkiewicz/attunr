@@ -50,7 +50,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
   const [redetect, setRedetect] = useState(false);
   const { settings, update } = useSettings();
   const journeyProgress = useJourneyProgress();
-  const { pitchHz, pitchHzRef, status, startListening } = usePitchDetection();
+  const { pitchHz, pitchHzRef, status, error: micError, startListening } = usePitchDetection();
   const { playTone, playSlide } = useTonePlayer();
 
   // Notifications: service worker, scheduler, and prompt flow
@@ -127,6 +127,7 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
         <OnboardingModal
           pitchHz={pitchHz}
           status={status}
+          micError={micError}
           onBegin={handleOnboardingBegin}
           onRetryMic={startListening}
         />

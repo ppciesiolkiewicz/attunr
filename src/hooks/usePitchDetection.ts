@@ -121,8 +121,15 @@ export function usePitchDetection(): PitchDetectionState {
       );
     } catch (err) {
       activeRef.current = false;
+      const isDenied =
+        err instanceof DOMException &&
+        (err.name === "NotAllowedError" || err.name === "PermissionDeniedError");
       setError(
-        err instanceof Error ? err.message : "Could not start pitch detection"
+        isDenied
+          ? "Microphone access was denied. Please enable it in your browser settings and try again."
+          : err instanceof Error
+            ? err.message
+            : "Could not start pitch detection"
       );
       setStatus("error");
     }

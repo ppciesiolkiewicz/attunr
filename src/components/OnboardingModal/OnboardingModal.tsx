@@ -17,6 +17,7 @@ type Phase = "welcome" | "detect-low" | "detect-high" | "result";
 export interface OnboardingModalProps {
   pitchHz: number | null;
   status: PitchDetectionStatus;
+  micError: string | null;
   onBegin: (result: {
     lowHz: number;
     highHz: number;
@@ -28,6 +29,7 @@ export interface OnboardingModalProps {
 export default function OnboardingModal({
   pitchHz,
   status,
+  micError,
   onBegin,
   onRetryMic,
 }: OnboardingModalProps) {
@@ -176,7 +178,7 @@ export default function OnboardingModal({
         />
 
         {phase === "welcome" && (
-          <WelcomePhase status={status} onStart={handleStart} />
+          <WelcomePhase status={status} micError={micError} onStart={handleStart} />
         )}
 
         {isInFlow && (

@@ -6,10 +6,11 @@ import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
 interface WelcomePhaseProps {
   status: PitchDetectionStatus;
+  micError: string | null;
   onStart: () => void;
 }
 
-export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
+export function WelcomePhase({ status, micError, onStart }: WelcomePhaseProps) {
   const isLoading = status === "requesting-mic" || status === "loading-model";
   const isError = status === "error";
 
@@ -31,6 +32,12 @@ export function WelcomePhase({ status, onStart }: WelcomePhaseProps) {
           <Video variant="inline" />
         </div>
       </div>
+
+      {isError && micError && (
+        <Text variant="caption" className="px-2" color="error">
+          {micError}
+        </Text>
+      )}
 
       <Button
         size="lg"
