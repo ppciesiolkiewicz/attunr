@@ -117,3 +117,5 @@ Later it can fall down quicker forcing users to make sound for longer.
 ## Visual Feedback
 
 We could have more visual feedback to drive engagement
+
+## SEO
