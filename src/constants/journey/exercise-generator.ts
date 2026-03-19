@@ -17,24 +17,30 @@ import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
 
 // ── IntroModalGenerator ───────────────────────────────────────────────────────
 
-/** Convert instruction text to paragraph elements. First is primary, rest secondary. */
-function instructionParagraphs(instruction: string): ContentElement[] {
-  const elements: ContentElement[] = [];
-  for (const line of instruction.split("\n")) {
-    if (line.trim()) {
-      elements.push({
-        type: "paragraph",
-        text: line,
-        variant: elements.length === 0 ? undefined : "secondary",
-      });
-    }
-  }
-  return elements;
+/** Split instruction text (separated by \n\n) into paragraph elements. First is primary, rest secondary. */
+function instructionParagraphs(instruction?: string): ContentElement[] {
+  if (!instruction) return [];
+  return instruction
+    .split("\n\n")
+    .filter((s) => s.trim())
+    .map((text, i) => ({
+      type: "paragraph" as const,
+      text,
+      variant: i === 0 ? undefined : ("secondary" as const),
+    }));
+}
+
+interface ModalInstruction {
+  /** 4-section intro text (do → feel → reason → reassurance), separated by \n\n. */
+  instruction?: string;
 }
 
 /**
- * Generates intro modal configs. Returns ModalConfig with empty title as placeholder.
- * The exercise generator fills in title and prepends instruction paragraphs via resolveIntroModal.
+ * Generates intro modal configs. Returns ModalConfig with empty title —
+ * resolveIntroModal copies the exercise title in automatically.
+ *
+ * Each method accepts an `instruction` string containing the 4-section
+ * intro text (do → feel → reason → reassurance), separated by \n\n.
  */
 
 export class IntroModalGenerator {
@@ -56,78 +62,111 @@ export class IntroModalGenerator {
     };
   }
 
-  melody(p: { minScore: number }): ModalConfig {
+  melody(p: ModalInstruction & { minScore: number }): ModalConfig {
     return {
       title: "",
       subtitle: p.minScore > 0
         ? `Sing along — match ${p.minScore}% to continue`
         : "Sing along — just follow the notes",
-      elements: [{ type: "headphones-notice" }],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+        { type: "headphones-notice" },
+      ],
     };
   }
 
-  lipRoll(p: { requiredPlays: number }): ModalConfig {
+  lipRoll(p: ModalInstruction & { requiredPlays: number }): ModalConfig {
     return {
       title: "",
       subtitle: `Play the tone ${p.requiredPlays} times and lip roll along`,
-      elements: [{ type: "headphones-notice" }],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+        { type: "headphones-notice" },
+      ],
     };
   }
 
-  volumeDetection(p: { targetSeconds: number }): ModalConfig {
+  volumeDetection(p: ModalInstruction & { targetSeconds: number }): ModalConfig {
     return {
       title: "",
       subtitle: `Make sound for ${p.targetSeconds} seconds`,
-      elements: [],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+      ],
     };
   }
 
-  rhythm(p: { minScore: number }): ModalConfig {
+  rhythm(p: ModalInstruction & { minScore: number }): ModalConfig {
     return {
       title: "",
       subtitle: `Tap along — match ${p.minScore}% to continue`,
-      elements: [],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+      ],
     };
   }
 
-  hill(p: { seconds: number; reps?: number }): ModalConfig {
+  hill(p: ModalInstruction & { seconds: number; reps?: number }): ModalConfig {
     const reps = p.reps ?? 3;
     return {
       title: "",
       subtitle: `${p.seconds}s × ${reps} reps`,
-      elements: [],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+      ],
     };
   }
 
-  sustain(p: { seconds: number }): ModalConfig {
+  sustain(p: ModalInstruction & { seconds: number }): ModalConfig {
     return {
       title: "",
       subtitle: `Hold the tone in tune for ${p.seconds} seconds`,
-      elements: [{ type: "headphones-notice" }],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+        { type: "headphones-notice" },
+      ],
     };
   }
 
-  sustainSequence(p: { seconds: number }): ModalConfig {
+  sustainSequence(p: ModalInstruction & { seconds: number }): ModalConfig {
     return {
       title: "",
       subtitle: `Sing each tone in sequence, ${p.seconds} seconds each`,
-      elements: [{ type: "headphones-notice" }],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+        { type: "headphones-notice" },
+      ],
     };
   }
 
-  slide(): ModalConfig {
+  slide(p: ModalInstruction): ModalConfig {
     return {
       title: "",
       subtitle: "Slide smoothly through the range two or three times",
-      elements: [{ type: "headphones-notice" }],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+        { type: "headphones-notice" },
+      ],
     };
   }
 
-  lipRollSustain(p: { requiredPlays: number }): ModalConfig {
+  lipRollSustain(p: ModalInstruction & { requiredPlays: number }): ModalConfig {
     return {
       title: "",
       subtitle: `Play the tone ${p.requiredPlays} times and lip roll along`,
-      elements: [{ type: "headphones-notice" }],
+      elements: [
+        { type: "video" },
+        ...instructionParagraphs(p.instruction),
+        { type: "headphones-notice" },
+      ],
     };
   }
 }
@@ -238,18 +277,12 @@ export interface HillSustainParams extends CommonParams {
 
 // ── Helper functions ──────────────────────────────────────────────────────────
 
-/** Resolve intro modal — fill in empty title from exercise and prepend instruction paragraphs. */
+/** Resolve intro modal — copy exercise title when the modal has an empty placeholder. */
 function resolveIntroModal(params: CommonParams): ModalConfig | undefined {
   const modal = params.introModal;
   if (!modal) return undefined;
-  // Title already set — use as-is (full override)
   if (modal.title) return modal;
-  // Empty title placeholder — fill from exercise params and prepend instruction
-  return {
-    ...modal,
-    title: params.title,
-    elements: [...instructionParagraphs(params.instruction), ...modal.elements],
-  };
+  return { ...modal, title: params.title };
 }
 
 /** Extracts the common fields shared by all exercise types from params. */

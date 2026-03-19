@@ -1,10 +1,389 @@
-THis document describes how to generate new exercises.
+---
+description: How to build exercises for new journey chapters
+alwaysApply: false
+globs:
+  - src/constants/journey/**
+---
 
+# Building Journey Exercises
 
-Earlier chapters contain exercises like 
-- Low vowel - keep vowel below certain level
-- high vowel - keep vowel above certain level
-- between vowels - keep vowel between 2 pitches.
+This document describes how to create exercises for new chapters. Each chapter builds on previous ones — techniques become longer, ranges expand, and new concepts layer on top of what the user already knows.
 
-As the exercise progress: 
-How low/high is the vowel we expect to push is getting lover and hihger
+Always follow [language-and-messaging.mdc](language-and-messaging.mdc) for all user-facing text.
+
+## File structure
+
+Each chapter lives in its own file: `src/constants/journey/chapter{n}.ts`. Import the generator and modal builder at the top:
+
+```typescript
+import type { StageConfigInput } from "./types";
+import { ExerciseGenerator, IntroModalGenerator } from "./exercise-😁generator";
+
+const gen = new ExerciseGenerator();
+const modal = new IntroModalGenerator();
+```
+
+Export two things:
+
+- `CHAPTER_{N}_WARMUP: StageConfigInput` — warmup stage (chapter 1 has none)
+- `CHAPTER_{N}_STAGES: StageConfigInput[]` — the main stages
+
+Register them in `index.ts` as a `ChapterInput`.
+
+## Chapter anatomy
+
+### Warmup (chapter 2+)
+
+Every chapter after chapter 1 starts with a warmup — prompted if >4h since last session. Warmups revisit familiar techniques at shorter durations. They should include:
+
+- A breath exercise (sss-sss-zzz) — volume detection, ~15s
+- A lip roll — tone-follow, ~4 plays
+- A hum — hill sustain (~15s, increases in later chapters)
+- Low Uu — hill sustain (~15s, increases in later chapters)
+- Hoo hoo — zone above (~8s, increases in later chapters)
+- Farinelli breathwork — ~5 cycles
+
+### Stages
+
+Group exercises into 4-6 stages per chapter. Each stage has a theme (e.g. "Wake Up", "First Sounds", "First Melody", "Breath"). The last exercise of the last stage carries the chapter's `completionModal`.
+
+### Exercise order within a stage
+
+1. Start gentle — hums, breath, or familiar territory
+2. Introduce the new technique or concept mid-stage
+3. Close with something grounding — breathwork, a sustain, or a return to a familiar sound
+
+## Exercise types and generators
+
+### Volume detection — `gen.volumeDetection()`
+
+Mic detects any sound (no pitch). User makes sound for `targetSeconds`. Cues rotate on screen with per-cue timing.
+
+```typescript
+gen.volumeDetection({
+  slug: "sss-zzz-sss",
+  title: "Sss-zzz-sss",
+  headerSubtitle: "Make sound · 18 seconds",
+  cardSubtitle: "All breath, no voice — feel what happens",
+  targetSeconds: 18,
+  cues: [
+    { text: "sss", seconds: 2 },
+    { text: "zzz", seconds: 2 },
+    { text: "sss", seconds: 2 },
+  ],
+  instruction:
+    "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
+  introModal: modal.volumeDetection({
+    targetSeconds: 18,
+    instruction:
+      "Make a steady sss sound — like air escaping. ...\n\nNotice how your body settles ...\n\nThis exercise wakes up your breath control ...\n\nKeep your mouth relaxed ...",
+  }),
+});
+```
+
+**Progression:** Used in early chapters for breath awareness (unpitched). In later chapters, pitched exercises (melody, sustain) largely replace volume detection — consonants like sss/zzz and vowels move into melody or sustain exercises where they follow specific pitches.
+
+### Hill sustain — `gen.hillSustain()`
+
+Ball rolls up/down a hill based on pitch direction. User sings in a zone (above, below, or between notes). The user decides how many tries they want — don't show rep counts like "5s × 3" in the `headerSubtitle` for hill exercises.
+
+```typescript
+gen.hillSustain({
+  slug: "gentle-hum",
+  note: 4, // chromatic degree from user's lowest note
+  seconds: 5,
+  direction: "down", // "up" | "down" | "between"
+  title: "Gentle hum",
+  headerSubtitle: "Hum · 5 seconds",
+  cardSubtitle: "Your first pitched sound — a low, steady hum",
+  instruction:
+    "Hum mmmm on a low tone.\nFeel the buzz in your lips and chest.\nBreathe whenever you need to.",
+  introModal: modal.hill({ seconds: 5, instruction: "..." }),
+});
+```
+
+- `note: 4` = 4th chromatic degree from bottom (low register)
+- `note: [5, 10]` with `direction: "between"` = range mode (sing between two notes)
+- `direction: "down"` = ball rolls downhill (user sings below the note)
+- `direction: "up"` = ball rolls uphill (user sings above the note)
+
+**Low sounds should wobble:** For hill exercises targeting low notes (direction "down"), instruct the user to wobble/wave their voice slightly rather than holding a flat pitch. This keeps the voice loose and prevents tension. Add guidance like "Slightly wobble your voice" or "Let the sound wave gently" in the instruction.
+
+**Progression:** Any chapter can use "down"/"up"/"between" directions. As chapters progress, "down" targets lower pitches and "up" targets higher pitches (expanding the user's range). "Between" exercises narrow the acceptable zone over time, building pitch precision.
+
+### Zone above — `gen.zoneAbove()`
+
+Like hill sustain but specifically for singing above a boundary note. Used for head voice exercises ("Hoo hoo"). This is not about holding a tone — it's about feeling head voice. Users are expected to "hoo hoo" many times in short bursts. Use shorter `seconds` than low-register hill exercises (e.g. 3–5s vs 5–8s for hums/Uu).
+
+```typescript
+gen.zoneAbove({
+  slug: "hoo-hoo",
+  boundaryNote: -6, // 6th from top
+  seconds: 3,
+  repeats: 3,
+  title: "Hoo hoo",
+  instruction:
+    "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness.\nKeep it gentle.",
+  introModal: modal.hill({ seconds: 3, reps: 3, instruction: "..." }),
+});
+```
+
+### Sustain — `gen.sustain()`
+
+Pitch-detection hold on a single note. User must match the pitch and hold it steady.
+
+```typescript
+gen.sustain({
+  slug: "hum-mid-low",
+  note: 4,
+  seconds: 5,
+  repeats: 3, // default 3
+  title: "Hum — mid-low",
+  headerSubtitle: "Hum · 5 seconds × 3",
+  instruction:
+    "Hum mmmm just above your lowest tone.\nNotice the warmth spreading through your chest.\nBreathe whenever you need to.",
+  introModal: modal.sustain({ seconds: 5, instruction: "..." }),
+});
+```
+
+**Progression:** Seconds increase (5 → 6 → 8 → 10). Notes move from low registers to mid and high. Later chapters add `toneShape` variations.
+
+### Lip roll — `gen.lipRoll()`
+
+Tone-follow: a reference tone plays and the user lip-rolls alongside it, sliding between two notes.
+
+```typescript
+gen.lipRoll({
+  slug: "lip-roll-slide",
+  startNote: -5,
+  endNote: 4,
+  requiredPlays: 3,
+  scale: { type: "major", root: 1 }, // optional, default chromatic
+  title: "Lip roll slide",
+  headerSubtitle: "Glide high to low · play 3 times",
+  instruction:
+    "Lip roll alongside the tone.\nSlide smoothly from high to low — feel the glide.",
+  introModal: modal.lipRoll({ requiredPlays: 3, instruction: "..." }),
+});
+```
+
+**Progression:** Wider range (more notes between start and end). More required plays. Direction varies (high→low, low→high).
+
+### Lip roll sustain — `gen.lipRollSustain()`
+
+Tone-follow: hold the lip roll at a single steady pitch.
+
+```typescript
+gen.lipRollSustain({
+  slug: "lip-roll-sustain",
+  note: 5,
+  seconds: 5,
+  requiredPlays: 3,
+  title: "Lip roll sustain",
+  headerSubtitle: "Hold the buzz · play 3 times",
+  instruction:
+    "Lip roll alongside the tone.\nKeep the buzz steady.\nNotice where the resonance sits.",
+  introModal: modal.lipRollSustain({ requiredPlays: 3, instruction: "..." }),
+});
+```
+
+### Farinelli breathwork — `gen.farinelli()`
+
+Breathing cycles (inhale-hold-exhale). No pitch detection. The component has built-in instruction — the exercise config does NOT need an `instruction` field.
+
+```typescript
+gen.farinelli({
+  slug: "farinelli-1",
+  maxCount: 7,
+  title: "Farinelli breathwork",
+  cardSubtitle: "Slow down. Breathe deep. Feel your body settle",
+  introModal: modal.farinelli({
+    title: "Farinelli breathwork",
+    maxCount: 7,
+    instruction:
+      "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
+  }),
+});
+```
+
+**Progression:** `maxCount` increases (5 → 7 → 9). Often placed at end of a stage as a grounding exercise.
+
+### Melody — inline config
+
+Melody exercises are typically written inline (not via generator) because each melody is unique. Use `IntroModalGenerator.melody()` for the intro modal.
+
+```typescript
+{
+  exerciseTypeId: "melody",
+  slug: "two-note-step",
+  title: "Two-note step",
+  headerSubtitle: "Sing two notes · listen and match",
+  cardSubtitle: "Your first melody — just two adjacent notes",
+  tempo: 50,
+  melody: [
+    {
+      type: "chromatic",
+      root: 1,
+      events: [
+        { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
+        { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
+        { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
+      ],
+    },
+  ],
+  minScore: 0,
+  instruction: "Sing the two notes as they appear.\nListen and match.\nThere's no rush.",
+  introModal: modal.melody({ minScore: 0, instruction: "..." }),
+}
+```
+
+Named melody generators are also available: `gen.majorSecond()`, `gen.fifth()`, `gen.octave()`, `gen.majorScale()`, `gen.minorScale()`, `gen.pentatonic()`, `gen.scaleDegrees()`.
+
+**Progression:** More notes, wider intervals, faster tempos, higher `minScore` thresholds. Early chapters use `minScore: 0` (just follow along). Later chapters require 40–70%.
+
+### Rhythm — inline config
+
+Rhythm exercises use tap/pause patterns. Written inline.
+
+```typescript
+{
+  exerciseTypeId: "rhythm",
+  slug: "feel-the-beat",
+  title: "Feel the Beat",
+  cardSubtitle: "Tap along to the beat",
+  tempo: 80,
+  pattern: [
+    { type: "pause", duration: NoteDuration.Quarter },  // intro beats
+    { type: "tap", duration: NoteDuration.Quarter },
+    { type: "tap", duration: NoteDuration.Quarter },
+    { type: "pause", duration: NoteDuration.Half },
+  ],
+  metronome: true,
+  minScore: 60,
+  instruction: "Tap the spacebar or touch the screen on each beat",
+  introModal: modal.rhythm({ minScore: 60, instruction: "..." }),
+}
+```
+
+**Progression:** Faster tempos, more complex patterns (syncopation, dotted rhythms), higher `minScore`.
+
+### Learn — inline config
+
+Static content screens with text and video. No exercise mechanics.
+
+```typescript
+{
+  exerciseTypeId: "learn",
+  slug: "vocal-placement",
+  title: "Vocal placement",
+  cardSubtitle: "Notice where sound lives in your body — chest, throat, head",
+  elements: [
+    { type: "paragraph", text: "..." },
+    { type: "paragraph", text: "...", variant: "secondary" },
+    { type: "video" },
+  ],
+}
+```
+
+## Progression rules
+
+### General
+
+- **Vocal range expands**: early exercises stay near notes 1–7 (low register). Later chapters use the full range including negative indices (from top)
+- **Durations increase**: sustain seconds grow from 5 → 6 → 8 → 10+
+- **Accuracy thresholds rise**: `minScore` starts at 0, increases to 40, 60, 70+ in later chapters
+- **New techniques layer on**: each chapter introduces at most 1–2 new exercise types or concepts
+
+### Note numbering
+
+Notes use 1-indexed chromatic degrees from the user's calibrated range:
+
+- Positive: counted up from lowest note (1 = lowest, 4 = fourth from bottom)
+- Negative: counted down from highest note (-1 = highest, -6 = sixth from top)
+- This means the actual pitches adapt to each user's voice
+
+### Vowels
+
+Vowels progress from closed/warm to open/projecting:
+
+1. **Uu** (as in "moon") — warmest, most grounding. Used first. Opens chest voice
+2. **Oo** (as in "go") — slightly more open. Introduces rounded resonance
+3. **Ah** (as in "father") — fully open. Stronger projection
+4. **Ee** (as in "see") — forward, bright. Teaches projection and placement
+
+Vowel modification exercises combine vowels in sequences:
+
+- A-o-u-o-a — opening and closing
+- ee-eh-ee — forward placement shifts
+- ee-uu-ee — brightness to warmth contrast
+
+### Intervals (melody exercises)
+
+Progress from small to large:
+
+1. Major second (2 semitones) — `gen.majorSecond()`, `chromaticDegree: 3`
+2. Perfect fifth (7 semitones) — `gen.fifth()`, `chromaticDegree: 8`
+3. Octave (12 semitones) — `gen.octave()`, `chromaticDegree: 13`
+
+### Hill / balance exercises
+
+Progress from loose to precise:
+
+1. Direction-based: "sing anywhere below/above this note" (wide zone)
+2. Range-based: "sing between these two notes" (narrowing zone)
+3. Exact pitch: sustain exercises with tight tolerance
+
+## Intro modal content
+
+Every exercise (except learn) should have an `introModal`. Use `IntroModalGenerator` methods — they handle structure (video, headphones notice, subtitle patterns). You supply the `instruction` string containing the 4-section text.
+
+The 4-section pattern (**do → feel → reason → reassurance**) is separated by `\n\n`:
+
+```typescript
+introModal: modal.sustain({
+  seconds: 5,
+  instruction:
+    "Hum mmmm just above your lowest comfortable tone. Keep it steady and warm.\n\n" +
+    "Notice the warmth spreading through your chest. Feel where the buzz sits.\n\n" +
+    "Humming at this pitch grounds your voice in your body. It's a return to the simplest sound — a foundation before melody.\n\n" +
+    "Breathe whenever you need to.",
+});
+```
+
+Farinelli is a special case — it requires `title` because it has custom element layout (warning, tips, video):
+
+```typescript
+introModal: modal.farinelli({
+  title: "Farinelli breathwork",
+  maxCount: 7,
+  instruction:
+    "Inhale, hold, and exhale for the same count...\n\nNotice how your body settles...",
+});
+```
+
+## `cardSubtitle` usage
+
+Not every exercise needs a `cardSubtitle`. Use it:
+
+- Early in a chapter when introducing new techniques
+- For the first exercise of a new type
+- When the sensation is worth describing
+
+Omit it for later exercises in a chapter and in more advanced chapters — the `headerSubtitle` format hint is enough once the user has the feel of the practice.
+
+## `minScore: 0` — special display case
+
+When `minScore` is 0, the exercise is exploratory — no scoring pressure. The intro modal subtitle reflects this:
+
+- `minScore > 0`: "Sing along — match 60% to continue"
+- `minScore: 0`: "Sing along — just follow the notes"
+
+## Completion modal
+
+Only the last exercise of the last stage in a chapter gets a `completionModal`. Follow the pattern from language-and-messaging.mdc:
+
+- Title: "Chapter {n} Complete"
+- Subtitle: chapter name
+- First paragraph: feeling first, accomplishment second
+- Second paragraph (secondary): tease next chapter
+- `confetti: true`
