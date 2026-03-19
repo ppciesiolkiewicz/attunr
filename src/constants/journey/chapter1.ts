@@ -260,7 +260,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body responds as the rhythm lengthens.",
         }),
       }),
-      gen.lipRollSug gstain({
+      gen.lipRollSustain({
         slug: "lip-roll-sustain",
         note: 5,
         seconds: 5,
