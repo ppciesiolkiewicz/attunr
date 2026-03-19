@@ -145,6 +145,30 @@ The intro modal is the full version; the on-screen instruction is the compressed
 - Rhythm: "Tap along — match N% to continue"
 - Farinelli: "Complete N cycles — each a bit longer than the last"
 
+**Tips** (shown as a tip-list element in the intro modal):
+
+Every modal method adds a `{ type: "tip-list", title: "Key tips", tips }` element using a default tip set for that exercise type. Override with `tips` param:
+
+```typescript
+introModal: modal.hill({
+  seconds: 15,
+  tips: VOWEL_TIPS, // override default HUMMING_TIPS
+  instruction: "...",
+})
+```
+
+Default tips per method (from `exercise-tips.ts`):
+- `hill` → `HUMMING_TIPS`
+- `sustain`, `sustainSequence` → `SUSTAIN_TIPS`
+- `melody` → `MELODY_TIPS`
+- `lipRoll`, `lipRollSustain` → `LIP_ROLL_TIPS`
+- `volumeDetection` → `BREATH_SOUND_TIPS`
+- `rhythm` → `RHYTHM_TIPS`
+- `slide` → `SLIDE_TIPS`
+- `farinelli` → `FARINELLI_TIPS` (built-in)
+
+**When to override:** When the exercise sound differs from the method's default — e.g. a hill exercise singing Uu should pass `tips: VOWEL_TIPS` instead of the default `HUMMING_TIPS`. Head voice exercises (hoo hoo) should pass `tips: HEAD_VOICE_TIPS`.
+
 **Type-specific elements** (added automatically by each modal method):
 - **All exercises**: video demonstrating the technique
 - **Pitch detection** (sustain, sustainSequence, slide, lipRoll, lipRollSustain): headphones notice

@@ -1,6 +1,7 @@
 import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator } from "./exercise-generator";
+import { VOWEL_TIPS, HEAD_VOICE_TIPS } from "./exercise-tips";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -70,6 +71,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
         "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 15,
+        tips: VOWEL_TIPS,
         instruction:
           "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
@@ -86,6 +88,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 8,
         reps: 3,
+        tips: HEAD_VOICE_TIPS,
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
@@ -158,6 +161,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Sing uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
         introModal: modal.melody({
           minScore: 0,
+          tips: VOWEL_TIPS,
           instruction:
             "Sing uuuu (as in 'moon') at three rising pitches. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
         }),
@@ -311,11 +315,12 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction:
-          "Sing uuu on three rising tones.\nKeep each tone warm and open.\nFeel the vowel resonate differently at each pitch.",
+          "Sing uuuu (as in 'moon') on three rising tones.\nKeep your mouth rounded like Uu — relaxed, not smiling.\nFeel the vowel resonate differently at each pitch.",
         introModal: modal.melody({
           minScore: 0,
+          tips: VOWEL_TIPS,
           instruction:
-            "Sing uuuu on three rising tones. Match the piano at each step.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSinging a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
+            "Sing uuuu (as in 'moon') on three rising tones. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSinging a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
         }),
       },
     ],
@@ -350,6 +355,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Sing uuuu on the mid tone — longer holds.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
         introModal: modal.sustain({
           seconds: 8,
+          tips: VOWEL_TIPS,
           instruction:
             "Sing uuuu (as in 'moon') on a mid tone. Hold for 8 seconds.\n\nNotice the resonance in your chest and face. Feel how the vowel opens up with a longer hold.\n\nLonger vowel holds carry your resonance further and build the breath support behind your voice.\n\nKeep your mouth rounded like Uu — relaxed, not smiling. Breathe whenever you need to.",
         }),

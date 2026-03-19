@@ -1,5 +1,6 @@
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator } from "./exercise-generator";
+import { VOWEL_TIPS, HEAD_VOICE_TIPS, LIP_ROLL_TIPS } from "./exercise-tips";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -66,6 +67,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 6,
+          tips: VOWEL_TIPS,
           instruction:
             "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let the sound settle deep.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel naturally opens your chest voice. It's the warmest, most grounding sound you can make.\n\nBreathe whenever you need to — there's no rush.",
         }),
@@ -82,6 +84,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 6,
+          tips: VOWEL_TIPS,
           instruction:
             "Sing uuuu (as in 'moon') on a comfortable tone in the middle of your range. Keep your mouth rounded like Uu — relaxed, not smiling.\n\nFeel where the sound sits — not too high, not too low. Just easy.\n\nSustaining a tone in your comfortable range trains your breath and steadies your voice without you noticing.\n\nKeep it relaxed. There's no wrong way to do this.",
         }),
@@ -99,6 +102,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
+          tips: HEAD_VOICE_TIPS,
           instruction:
             "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light and gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.",
         }),
@@ -153,6 +157,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
           "Let your lips buzz loosely — like a motorboat. No pitch, just the buzz.\nNotice the vibration in your lips and face.\nIt's okay to take breaths between rolls.",
         introModal: modal.volumeDetection({
           targetSeconds: 15,
+          tips: LIP_ROLL_TIPS,
           instruction:
             "Let your lips buzz loosely — like a motorboat. No pitch, no melody, just the buzz. Keep buzzing until the progress line is full.\n\nNotice the vibration spreading through your lips and face. Feel how your breath drives the sound.\n\nLip rolls loosen tension in your face and jaw. They wake up the connection between breath and voice — the foundation for everything that follows.\n\nIt's okay to take breaths between rolls. Just notice what happens.",
         }),

@@ -62,24 +62,13 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
             </Text>
             Journey
           </Link>
-          <Link
-            href="/train"
-            className={`flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all ${
-              pathname === "/train"
-                ? "bg-violet-600/90 text-white shadow-lg shadow-violet-600/20"
-                : "text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08]"
-            }`}
-            onClick={onClose}
-          >
-            <Text
-              as="span"
-              variant="body-sm"
-              color={pathname === "/train" ? "text-1" : "text-2"}
-            >
+          <span className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/35 cursor-not-allowed">
+            <Text as="span" variant="body-sm" color="text-2">
               <MenuTrainIcon />
             </Text>
             Train
-          </Link>
+            <span className="ml-auto text-sm text-white/30">Coming soon</span>
+          </span>
           <Link
             href="/articles"
             className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all"

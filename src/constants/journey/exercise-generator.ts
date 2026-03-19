@@ -14,6 +14,17 @@ import type {
 } from "./types";
 import { BandTargetKind, NoteDuration } from "./types";
 import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
+import {
+  HUMMING_TIPS,
+  VOWEL_TIPS,
+  HEAD_VOICE_TIPS,
+  LIP_ROLL_TIPS,
+  BREATH_SOUND_TIPS,
+  MELODY_TIPS,
+  RHYTHM_TIPS,
+  SUSTAIN_TIPS,
+  SLIDE_TIPS,
+} from "./exercise-tips";
 
 // ── IntroModalGenerator ───────────────────────────────────────────────────────
 
@@ -33,6 +44,8 @@ function instructionParagraphs(instruction?: string): ContentElement[] {
 interface ModalInstruction {
   /** 4-section intro text (do → feel → reason → reassurance), separated by \n\n. */
   instruction?: string;
+  /** Override default tips for this exercise type. */
+  tips?: string[];
 }
 
 /**
@@ -71,6 +84,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? MELODY_TIPS)] },
         { type: "headphones-notice" },
       ],
     };
@@ -83,6 +97,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? LIP_ROLL_TIPS)] },
         { type: "headphones-notice" },
       ],
     };
@@ -95,6 +110,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? BREATH_SOUND_TIPS)] },
       ],
     };
   }
@@ -106,6 +122,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? RHYTHM_TIPS)] },
       ],
     };
   }
@@ -118,6 +135,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? HUMMING_TIPS)] },
       ],
     };
   }
@@ -129,6 +147,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? SUSTAIN_TIPS)] },
         { type: "headphones-notice" },
       ],
     };
@@ -141,6 +160,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? SUSTAIN_TIPS)] },
         { type: "headphones-notice" },
       ],
     };
@@ -153,6 +173,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? SLIDE_TIPS)] },
         { type: "headphones-notice" },
       ],
     };
@@ -165,6 +186,7 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
+        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? LIP_ROLL_TIPS)] },
         { type: "headphones-notice" },
       ],
     };
