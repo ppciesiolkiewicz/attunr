@@ -653,12 +653,11 @@ export class ExerciseGenerator {
       requiredPlays,
       scale = { type: "chromatic", root: 1 },
     } = params;
-    const isMajor = scale.type === "major";
     return {
       ...pickCommon(params),
       exerciseTypeId: "tone-follow",
       scale,
-      displayNotes: isMajor ? undefined : [{ type: "major", root: 1, notes: [] }],
+      displayNotes: [{ type: "major", root: 1, notes: [] }],
       toneShape: {
         kind: "slide",
         from: toTarget(startNote),

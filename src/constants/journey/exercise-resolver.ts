@@ -212,11 +212,11 @@ function resolveToneFollow(
     exerciseColoredNotes = allNotes.slice(lo, hi + 1);
   }
 
-  const displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
-
-  // Highlight logic: if displayNotes config exists, use display scale
+  let displayNotes: ColoredNote[];
   let highlightIds: string[];
+
   if (exercise.displayNotes && exercise.displayNotes.length > 0) {
+    // Only show notes from the display scale (e.g. major scale notes only)
     const ds = exercise.displayNotes[0];
     const dsScale = new Scale({ type: ds.type, root: ds.root }, vocalRange);
     let displayScaleNotes;
@@ -225,9 +225,15 @@ function resolveToneFollow(
     } else {
       displayScaleNotes = ds.notes.flatMap((dn: DisplayNote) => dsScale.resolve(dn.target));
     }
-    const displayIds = new Set(displayScaleNotes.map((n) => n.id));
-    highlightIds = displayNotes.filter((n) => displayIds.has(n.id)).map((n) => n.id);
+    const displayScaleColoredNotes = displayScaleNotes
+      .map((n) => vocalRange.findNote(n.midi))
+      .filter((n): n is ColoredNote => n != null);
+    const range = computeDisplayRange(exerciseColoredNotes, allNotes);
+    const rangeIds = new Set(range.map((n) => n.id));
+    displayNotes = displayScaleColoredNotes.filter((n) => rangeIds.has(n.id));
+    highlightIds = displayNotes.map((n) => n.id);
   } else {
+    displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
     highlightIds = exerciseColoredNotes.map((n) => n.id);
   }
 
