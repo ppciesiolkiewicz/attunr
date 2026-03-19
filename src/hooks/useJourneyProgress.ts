@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import { JourneyProgress } from "@/lib/journey-progress";
 import { journey } from "@/constants/journey";
 import type { ExerciseConfig, StageConfig } from "@/constants/journey";
@@ -10,6 +11,8 @@ import type { ExerciseConfig, StageConfig } from "@/constants/journey";
  * Provides slug-based completion checks and mutations with re-rendering.
  */
 export function useJourneyProgress() {
+  const searchParams = useSearchParams();
+  const unlockAll = searchParams.has("unlock");
   const [progress] = useState(() => new JourneyProgress());
   const [, setTick] = useState(0);
   const rerender = useCallback(() => setTick((t) => t + 1), []);
@@ -31,12 +34,13 @@ export function useJourneyProgress() {
   /** An exercise is unlocked if it's the very first, or the previous exercise is completed. */
   const isUnlocked = useCallback(
     (exercise: ExerciseConfig) => {
+      if (unlockAll) return true;
       const idx = journey.exercises.findIndex((e) => e.id === exercise.id);
       if (idx <= 0) return true; // first exercise is always unlocked
       const prev = journey.exercises[idx - 1];
       return progress.isCompleted(prev.chapterSlug, prev.stageId, prev.slug);
     },
-    [progress],
+    [progress, unlockAll],
   );
 
   /** Check if all exercises in a stage are completed. */

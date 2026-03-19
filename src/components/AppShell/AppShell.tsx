@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import SettingsPanel from "../SettingsPanel";
@@ -36,7 +36,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <ToastProvider>
       <StreakProvider>
-        <AppShellInner pathname={pathname}>{children}</AppShellInner>
+        <Suspense>
+          <AppShellInner pathname={pathname}>{children}</AppShellInner>
+        </Suspense>
       </StreakProvider>
     </ToastProvider>
   );
