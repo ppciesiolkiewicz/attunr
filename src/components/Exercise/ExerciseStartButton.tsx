@@ -24,7 +24,6 @@ export function ExerciseStartButton({ onStart }: ExerciseStartButtonProps) {
       }`}
     >
       <Button
-        variant="primary"
         size="lg"
         className="pointer-events-auto"
         onClick={handleStart}

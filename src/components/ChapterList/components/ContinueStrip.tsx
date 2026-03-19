@@ -13,7 +13,7 @@ export function ContinueStrip({ exercise, stage, onClick }: ContinueStripProps) 
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-2 px-4 py-2.5 border-t cursor-pointer transition-colors hover:bg-white/2 text-left"
+      className="w-full flex items-center gap-2 px-4 py-2.5 border-t cursor-pointer transition-all duration-150 hover:brightness-150 active:brightness-90 text-left"
       style={{
         borderColor: "rgba(255,255,255,0.04)",
         background: "rgba(168,133,246,0.04)",
@@ -34,8 +34,8 @@ export function ContinueStrip({ exercise, stage, onClick }: ContinueStripProps) 
           {stage.title}
         </Text>
       </div>
-      <Text variant="body" as="span" style={{ color: "rgba(168,133,246,0.5)" }}>
-        ›
+      <Text variant="body-sm" as="span" style={{ color: "rgba(168,133,246,0.5)" }}>
+        Continue ›
       </Text>
     </button>
   );

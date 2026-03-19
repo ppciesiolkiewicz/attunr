@@ -93,7 +93,7 @@ export default function LoginPage() {
               />
             </label>
             {error && <Text variant="body-sm" color="error">{error}</Text>}
-            <Button variant="secondary" type="submit" disabled={loading} className="w-full py-3">
+            <Button variant="solid" color="secondary" type="submit" disabled={loading} className="w-full py-3">
               {loading ? "Sending…" : "Send code"}
             </Button>
           </form>
@@ -125,7 +125,7 @@ export default function LoginPage() {
               </Text>
             )}
             {error && <Text variant="body-sm" color="error">{error}</Text>}
-            <Button variant="secondary" type="submit" disabled={loading || code.length !== 6} className="w-full py-3">
+            <Button variant="solid" color="secondary" type="submit" disabled={loading || code.length !== 6} className="w-full py-3">
               {loading ? "Verifying…" : "Verify"}
             </Button>
             <Button variant="ghost" type="button" onClick={() => setStep("email")} className="w-full py-2 text-sm text-white/55 hover:text-white/78">

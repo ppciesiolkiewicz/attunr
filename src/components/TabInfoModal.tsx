@@ -45,6 +45,7 @@ export function InfoButton({ onClick }: { onClick: () => void }) {
   return (
     <Button
       variant="icon"
+      color="subtle"
       onClick={onClick}
       aria-label="Show info"
       className="w-8 h-8"

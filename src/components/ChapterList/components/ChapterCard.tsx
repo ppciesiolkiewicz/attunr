@@ -115,9 +115,11 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
           {isInProgress && (
             <Button
               variant="ghost"
+              size="compact"
+              color="muted"
               onClick={handleStartRestart}
-              className="flex-1 py-2.5 px-3 text-xs font-semibold rounded-none"
-              style={{ color: "rgba(255,255,255,0.4)", borderRight: "1px solid rgba(255,255,255,0.05)" }}
+              className="flex-1"
+              style={{ borderRight: "1px solid rgba(255,255,255,0.05)" }}
             >
               Start over
             </Button>
@@ -125,9 +127,11 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
           {!started && nextHref && (
             <Button
               variant="ghost"
+              size="compact"
+              color="accent"
               onClick={handleStartRestart}
-              className="flex-1 py-2.5 px-3 text-xs font-semibold rounded-none"
-              style={{ color: "#a78bfa", borderRight: "1px solid rgba(255,255,255,0.05)" }}
+              className="flex-1"
+              style={{ borderRight: "1px solid rgba(255,255,255,0.05)" }}
             >
               Start →
             </Button>
@@ -135,9 +139,10 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
           {(isInProgress || !started) && (
             <Button
               variant="ghost"
+              size="compact"
+              color="accent"
               onClick={handleBrowse}
-              className="flex-1 py-2.5 px-3 text-xs font-semibold rounded-none"
-              style={{ color: "#a78bfa" }}
+              className="flex-1"
             >
               Browse ↗
             </Button>
@@ -145,9 +150,10 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
           {isComplete && (
             <Button
               variant="ghost"
+              size="compact"
+              color="muted"
               onClick={handleStartRestart}
-              className="flex-1 py-2.5 px-3 text-xs font-semibold rounded-none"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              className="flex-1"
             >
               Replay
             </Button>

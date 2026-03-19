@@ -215,7 +215,7 @@ function AppShellInner({
               Learn
             </Link>
             <StreakBadge />
-            <Button variant="icon" onClick={handleOpenSettings}>
+            <Button variant="icon" color="subtle" onClick={handleOpenSettings}>
               <SettingsIcon />
             </Button>
           </div>
@@ -225,12 +225,13 @@ function AppShellInner({
             <StreakBadge />
             <Button
               variant="icon"
+              color="subtle"
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Menu"
             >
               <HamburgerIcon />
             </Button>
-            <Button variant="icon" onClick={handleOpenSettings}>
+            <Button variant="icon" color="subtle" onClick={handleOpenSettings}>
               <SettingsIcon />
             </Button>
           </div>

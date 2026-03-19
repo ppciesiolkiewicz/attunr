@@ -36,6 +36,7 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
           </Text>
           <Button
             variant="icon"
+            color="subtle"
             onClick={onClose}
             aria-label="Close menu"
             className="p-2"

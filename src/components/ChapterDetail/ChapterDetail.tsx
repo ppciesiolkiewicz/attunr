@@ -59,7 +59,7 @@ export function ChapterDetail({ chapter }: ChapterDetailProps) {
         {/* Action buttons */}
         <div className="flex gap-2">
           {nextHref && (
-            <Button variant="primary" onClick={() => router.push(nextHref)}>
+            <Button onClick={() => router.push(nextHref)}>
               {started ? `Continue — ${nextExercise!.title}` : "Start"}
             </Button>
           )}
