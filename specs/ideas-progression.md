@@ -22,13 +22,6 @@ The main journey stays linear, but at certain points **secret stages** branch of
 1. **Prerequisite-based** — complete a specific journey stage and the entire secret stage unlocks.
 2. **Achievement-based** — earn a badge (see below) to unlock. These require cumulative effort that goes beyond simple progression, e.g. "10 minutes of breathwork exercises combined."
 
-### Open questions
-
-- How many secret stages? Where do they branch from?
-- Do secret stages have their own part structure, or are they flat sequences?
-- Do they appear inline in the journey list or in a separate section?
-- Can secret stages themselves unlock further secret stages (chains)?
-
 ---
 
 ## Badge / achievement system
@@ -106,3 +99,21 @@ Invite-based growth and social practice to make vocal training less solitary.
 ## Turn Journey into /feature
 
 Encapsulate the code into single direcory containing components, hooks, context, data etc.
+
+## Share on social
+
+## Maillist vs signup
+
+## Feedback form via posthog
+
+## PWA
+
+## Decreasing progress in exercises
+
+When we don't make a sound in hill or volume-detection
+exercise the progress falls down.
+Later it can fall down quicker forcing users to make sound for longer.
+
+## Visual Feedback
+
+We could have more visual feedback to drive engagement
