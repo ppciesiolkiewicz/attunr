@@ -244,7 +244,7 @@ export function HillExercise({
         <div className="shrink-0 order-first sm:order-none flex items-center gap-2">
           <ProgressArc progress={exerciseComplete ? 1 : overallProgress} complete={exerciseComplete} />
           {totalTargets > 1 && (
-            <div className="flex items-center gap-1.5">
+            <div className="hidden sm:flex items-center gap-1.5">
               {resolved.targets.map((_, i) => (
                 <div
                   key={i}
@@ -281,7 +281,7 @@ export function HillExercise({
               className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
               title="Play reference tone"
             >
-              ♪  Play tone
+              ♪  Play<span className="hidden sm:inline">&nbsp;tone</span>
             </Button>
           )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
