@@ -87,7 +87,6 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
         "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
       introModal: modal.hill({
         seconds: 8,
-        reps: 3,
         tips: HEAD_VOICE_TIPS,
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
@@ -337,7 +336,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         seconds: 8,
         direction: "between",
         title: "Hum — mid",
-        headerSubtitle: "Hum · 8 seconds × 3",
+        headerSubtitle: "Hum · 8 seconds",
         instruction:
           "Hum mmmm on a mid tone — longer holds this time.\nFeel the buzz settle.\nBreathe whenever you need to.",
         introModal: modal.hill({
@@ -352,7 +351,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         seconds: 8,
         direction: "between",
         title: "U — mid",
-        headerSubtitle: "Vowel U · 8 seconds × 3",
+        headerSubtitle: "Vowel U · 8 seconds",
         instruction:
           "Sing uuuu on the mid tone — longer holds.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
         introModal: modal.hill({

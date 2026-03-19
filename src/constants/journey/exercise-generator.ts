@@ -57,7 +57,11 @@ interface ModalInstruction {
  */
 
 export class IntroModalGenerator {
-  farinelli(p: { title: string; maxCount: number; instruction: string }): ModalConfig {
+  farinelli(p: {
+    title: string;
+    maxCount: number;
+    instruction: string;
+  }): ModalConfig {
     const firstParagraph = p.instruction.split("\n\n")[0];
     return {
       title: p.title,
@@ -78,13 +82,18 @@ export class IntroModalGenerator {
   melody(p: ModalInstruction & { minScore: number }): ModalConfig {
     return {
       title: "",
-      subtitle: p.minScore > 0
-        ? `Sing along — match ${p.minScore}% to continue`
-        : "Sing along — just follow the notes",
+      subtitle:
+        p.minScore > 0
+          ? `Sing along — match ${p.minScore}% to continue`
+          : "Sing along — just follow the notes",
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? MELODY_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? MELODY_TIPS)],
+        },
         { type: "headphones-notice" },
       ],
     };
@@ -97,20 +106,30 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? LIP_ROLL_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? LIP_ROLL_TIPS)],
+        },
         { type: "headphones-notice" },
       ],
     };
   }
 
-  volumeDetection(p: ModalInstruction & { targetSeconds: number }): ModalConfig {
+  volumeDetection(
+    p: ModalInstruction & { targetSeconds: number },
+  ): ModalConfig {
     return {
       title: "",
       subtitle: `Make sound for ${p.targetSeconds} seconds`,
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? BREATH_SOUND_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? BREATH_SOUND_TIPS)],
+        },
       ],
     };
   }
@@ -122,20 +141,27 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? RHYTHM_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? RHYTHM_TIPS)],
+        },
       ],
     };
   }
 
-  hill(p: ModalInstruction & { seconds: number; reps?: number }): ModalConfig {
-    const reps = p.reps ?? 3;
+  hill(p: ModalInstruction & { seconds: number }): ModalConfig {
     return {
       title: "",
-      subtitle: `${p.seconds}s × ${reps} reps`,
+      subtitle: `Sing in the zone for ${p.seconds} seconds`,
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? HUMMING_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? HUMMING_TIPS)],
+        },
       ],
     };
   }
@@ -147,7 +173,11 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? SUSTAIN_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? SUSTAIN_TIPS)],
+        },
         { type: "headphones-notice" },
       ],
     };
@@ -160,7 +190,11 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? SUSTAIN_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? SUSTAIN_TIPS)],
+        },
         { type: "headphones-notice" },
       ],
     };
@@ -173,7 +207,11 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? SLIDE_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? SLIDE_TIPS)],
+        },
         { type: "headphones-notice" },
       ],
     };
@@ -186,7 +224,11 @@ export class IntroModalGenerator {
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
-        { type: "tip-list", title: "Key tips", tips: [...(p.tips ?? LIP_ROLL_TIPS)] },
+        {
+          type: "tip-list",
+          title: "Key tips",
+          tips: [...(p.tips ?? LIP_ROLL_TIPS)],
+        },
         { type: "headphones-notice" },
       ],
     };
@@ -272,13 +314,6 @@ export interface FarinelliParams extends Omit<CommonParams, "instruction"> {
 export interface VolumeDetectionParams extends CommonParams {
   targetSeconds: number;
   cues: TimedCue[];
-}
-
-export interface SustainParams extends CommonParams {
-  note: number;
-  seconds: number;
-  repeats?: number;
-  toneShape?: ToneShape;
 }
 
 export interface LipRollSustainParams extends CommonParams {
@@ -383,7 +418,11 @@ export class ExerciseGenerator {
         },
         { type: "pause", duration: NoteDuration.Eighth },
         { type: "note", target: toTarget(1), duration: noteDuration },
-        { type: "note", target: toTarget(chromaticDegree), duration: noteDuration },
+        {
+          type: "note",
+          target: toTarget(chromaticDegree),
+          duration: noteDuration,
+        },
         { type: "note", target: toTarget(1), duration: noteDuration },
       ];
       return { type: "chromatic" as const, root, events };
@@ -402,7 +441,11 @@ export class ExerciseGenerator {
       exerciseTypeId: "melody",
       tempo,
       melody,
-      displayNotes: buildDisplayNotes(lo, hi + chromaticDegree - 1, activeNotes),
+      displayNotes: buildDisplayNotes(
+        lo,
+        hi + chromaticDegree - 1,
+        activeNotes,
+      ),
       minScore,
     };
   }
@@ -680,39 +723,29 @@ export class ExerciseGenerator {
 
   /** Farinelli breathwork exercise. Instruction is hardcoded — the component has its own built-in guidance. */
   farinelli(params: FarinelliParams): ExerciseConfigInput {
-    const { slug, title, headerSubtitle, cardSubtitle, introModal, completionModal, maxCount } = params;
+    const {
+      slug,
+      title,
+      headerSubtitle,
+      cardSubtitle,
+      introModal,
+      completionModal,
+      maxCount,
+    } = params;
     return {
       slug,
       title,
       headerSubtitle,
       cardSubtitle,
       instruction: "",
-      introModal: introModal?.title ? introModal : introModal ? { ...introModal, title } : undefined,
+      introModal: introModal?.title
+        ? introModal
+        : introModal
+          ? { ...introModal, title }
+          : undefined,
       completionModal,
       exerciseTypeId: "breathwork-farinelli",
       maxCount,
-    };
-  }
-
-  /**
-   * @deprecated Use `hillSustain` with `direction: "between"` instead.
-   * Sustain exercise. Pitch-detection with repeated holds on a single note.
-   * Chromatic scale rooted at `note`.
-   */
-  sustain(params: SustainParams): ExerciseConfigInput {
-    const { note, seconds, repeats = 3, toneShape } = params;
-
-    const notes = Array.from({ length: repeats }, () => ({
-      target: toTarget(1),
-      seconds,
-    }));
-
-    return {
-      ...pickCommon(params),
-      exerciseTypeId: "pitch-detection",
-      scale: { type: "chromatic", root: note },
-      ...(toneShape && { toneShape }),
-      notes,
     };
   }
 
@@ -739,10 +772,18 @@ export class ExerciseGenerator {
         to: note[1] - note[0] + 1,
         accept: "within",
       };
-      notes = Array.from({ length: repeats }, () => ({ target: rangeTarget, seconds }));
+      notes = Array.from({ length: repeats }, () => ({
+        target: rangeTarget,
+        seconds,
+      }));
     } else {
       // Directional target: accept below for "down", above for "up"
-      const accept = direction === "down" ? "below" as const : direction === "up" ? "above" as const : undefined;
+      const accept =
+        direction === "down"
+          ? ("below" as const)
+          : direction === "up"
+            ? ("above" as const)
+            : undefined;
       const target: NoteTarget = accept
         ? { kind: BandTargetKind.Range, from: 1, to: 1, accept }
         : { kind: BandTargetKind.Index, i: 1 };
@@ -767,12 +808,25 @@ export class ExerciseGenerator {
   lipRollSustain(params: LipRollSustainParams): ExerciseConfigInput {
     const { note, seconds, requiredPlays } = params;
 
+    // Show a few chromatic notes around the target (degree 1 = root)
+    // with the target note "full" and surrounding notes "muted"
+    const contextRadius = 3;
+    const lo = 1 - contextRadius;
+    const hi = 1 + contextRadius;
+    const contextNotes: DisplayNote[] = [];
+    for (let i = lo; i <= hi; i++) {
+      contextNotes.push({
+        target: toTarget(i),
+        style: i === 1 ? "full" : "muted",
+      });
+    }
+
     return {
       ...pickCommon(params),
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: note },
       toneShape: { kind: "sustain", target: toTarget(1), seconds },
-      displayNotes: [],
+      displayNotes: [{ type: "major", root: note, notes: contextNotes }],
       requiredPlays,
     };
   }

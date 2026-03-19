@@ -120,7 +120,7 @@ export interface BaseExerciseConfig {
   /** Stage ID slug (e.g. "wake-up") — assigned automatically by index.ts. */
   stageId: string;
   title: string;
-  /** Secondary text shown in exercise header (e.g. "Hum · 5 seconds × 3"). */
+  /** Secondary text shown in exercise header (e.g. "Hum · 5 seconds"). */
   headerSubtitle?: string;
   /** Engagement hook shown on the journey list card (falls back to headerSubtitle). */
   cardSubtitle?: string;
