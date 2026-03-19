@@ -150,10 +150,11 @@ export class IntroModalGenerator {
     };
   }
 
-  hill(p: ModalInstruction & { seconds: number }): ModalConfig {
+  hill(p: ModalInstruction & { seconds: number; reps?: number }): ModalConfig {
+    const reps = p.reps ?? 3;
     return {
       title: "",
-      subtitle: `Sing in the zone for ${p.seconds} seconds`,
+      subtitle: `${p.seconds}s × ${reps} reps`,
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),
@@ -284,20 +285,20 @@ export interface NamedMelodyParams extends CommonParams {
 export interface ZoneBelowParams extends CommonParams {
   boundaryNote: number;
   seconds: number;
-  repeats?: number;
+  repeats: number;
 }
 
 export interface ZoneAboveParams extends CommonParams {
   boundaryNote: number;
   seconds: number;
-  repeats?: number;
+  repeats: number;
 }
 
 export interface ZoneBetweenParams extends CommonParams {
   lowNote: number;
   highNote: number;
   seconds: number;
-  repeats?: number;
+  repeats: number;
 }
 
 export interface LipRollParams extends CommonParams {
@@ -326,7 +327,7 @@ export interface HillSustainParams extends CommonParams {
   /** Single note or [low, high] pair for "between" mode. */
   note: number | [number, number];
   seconds: number;
-  repeats?: number;
+  repeats: number;
   direction: "up" | "down" | "between";
   toneShape?: ToneShape;
   displayNotes?: DisplayScale[];
@@ -618,7 +619,7 @@ export class ExerciseGenerator {
    * Single Range target from: 1, to: boundaryNote, accept: "below".
    */
   zoneBelow(params: ZoneBelowParams): ExerciseConfigInput {
-    const { boundaryNote, seconds, repeats = 1 } = params;
+    const { boundaryNote, seconds, repeats } = params;
 
     const target = {
       kind: BandTargetKind.Range as const,
@@ -642,7 +643,7 @@ export class ExerciseGenerator {
    * Range from: boundaryNote, to: -1, accept: "above".
    */
   zoneAbove(params: ZoneAboveParams): ExerciseConfigInput {
-    const { boundaryNote, seconds, repeats = 1 } = params;
+    const { boundaryNote, seconds, repeats } = params;
 
     const target = {
       kind: BandTargetKind.Range as const,
@@ -667,7 +668,7 @@ export class ExerciseGenerator {
    * Range from: lowNote, to: highNote, accept: "within".
    */
   zoneBetween(params: ZoneBetweenParams): ExerciseConfigInput {
-    const { lowNote, highNote, seconds, repeats = 1 } = params;
+    const { lowNote, highNote, seconds, repeats } = params;
 
     const target = {
       kind: BandTargetKind.Range as const,
@@ -754,7 +755,7 @@ export class ExerciseGenerator {
     const {
       note,
       seconds,
-      repeats = 3,
+      repeats,
       direction,
       toneShape,
       displayNotes,

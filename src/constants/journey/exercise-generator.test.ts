@@ -213,7 +213,7 @@ describe("scaleDegrees()", () => {
 
 describe("zoneBelow()", () => {
   it("returns pitch-detection with Range target, accept below, from 1", () => {
-    const result = gen.zoneBelow({ ...base, boundaryNote: 5, seconds: 3 });
+    const result = gen.zoneBelow({ ...base, boundaryNote: 5, seconds: 3, repeats: 1 });
     expect(result.exerciseTypeId).toBe("pitch-detection");
     if (result.exerciseTypeId !== "pitch-detection") throw new Error("wrong type");
     expect(result.notes).toHaveLength(1);
@@ -227,7 +227,7 @@ describe("zoneBelow()", () => {
   });
 
   it("uses chromatic scale with root 1", () => {
-    const result = gen.zoneBelow({ ...base, boundaryNote: 5, seconds: 3 });
+    const result = gen.zoneBelow({ ...base, boundaryNote: 5, seconds: 3, repeats: 1 });
     if (result.exerciseTypeId !== "pitch-detection") throw new Error("wrong type");
     expect(result.scale.type).toBe("chromatic");
     expect(result.scale.root).toBe(1);
@@ -238,7 +238,7 @@ describe("zoneBelow()", () => {
 
 describe("zoneAbove()", () => {
   it("returns pitch-detection with Range target, accept above, to -1", () => {
-    const result = gen.zoneAbove({ ...base, boundaryNote: 5, seconds: 3 });
+    const result = gen.zoneAbove({ ...base, boundaryNote: 5, seconds: 3, repeats: 1 });
     expect(result.exerciseTypeId).toBe("pitch-detection");
     if (result.exerciseTypeId !== "pitch-detection") throw new Error("wrong type");
     expect(result.notes).toHaveLength(1);
@@ -255,7 +255,7 @@ describe("zoneAbove()", () => {
 
 describe("zoneBetween()", () => {
   it("returns pitch-detection with Range target, accept within", () => {
-    const result = gen.zoneBetween({ ...base, lowNote: 3, highNote: 7, seconds: 5 });
+    const result = gen.zoneBetween({ ...base, lowNote: 3, highNote: 7, seconds: 5, repeats: 1 });
     expect(result.exerciseTypeId).toBe("pitch-detection");
     if (result.exerciseTypeId !== "pitch-detection") throw new Error("wrong type");
     expect(result.notes).toHaveLength(1);

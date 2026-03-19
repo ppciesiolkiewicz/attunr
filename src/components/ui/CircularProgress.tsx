@@ -70,7 +70,6 @@ export function CircularProgress({
         strokeDasharray={complete ? `${circ} ${circ}` : `${circ * Math.min(progress, 1)} ${circ}`}
         strokeLinecap="round"
         transform={`rotate(-90 ${center} ${center})`}
-        style={{ transition: "stroke-dasharray 0.15s linear" }}
       />
       {complete ? (
         <path

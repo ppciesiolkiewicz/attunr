@@ -42,15 +42,17 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.hillSustain({
         slug: "gentle-hum",
         note: 4,
-        seconds: 5,
+        seconds: 3,
+        repeats: 5,
         direction: "down",
         title: "Gentle hum",
-        headerSubtitle: "Hum · 5 seconds",
+        headerSubtitle: "Hum · 3 seconds × 5",
         cardSubtitle: "Your first pitched sound — a low, steady hum",
         instruction:
           "Hum mmmm on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
-          seconds: 5,
+          seconds: 3,
+          reps: 5,
           instruction:
             "Close your lips and hum mmmm on a low tone. Keep the sound steady.\n\nFeel the buzz in your lips and teeth. Notice if it spreads into your chest.\n\nHumming is the simplest way to connect your voice to your body. It warms up your vocal cords and helps you find where sound lives.\n\nBreathe whenever you need to — there's no rush. There's no wrong way to hum.",
         }),
@@ -58,15 +60,17 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.hillSustain({
         slug: "low-uu",
         note: 4,
-        seconds: 6,
+        seconds: 3,
+        repeats: 5,
         direction: "down",
         title: "Low Uu",
-        headerSubtitle: "Chest voice · 6 seconds",
+        headerSubtitle: "Chest voice · 3 seconds × 5",
         cardSubtitle: "A low Uu that settles in your chest",
         instruction:
           "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
-          seconds: 6,
+          seconds: 3,
+          reps: 5,
           tips: VOWEL_TIPS,
           instruction:
             "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let the sound settle deep.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel naturally opens your chest voice. It's the warmest, most grounding sound you can make.\n\nBreathe whenever you need to — there's no rush.",
@@ -75,15 +79,17 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.hillSustain({
         slug: "middle-tone",
         note: [5, 10],
-        seconds: 6,
+        seconds: 3,
+        repeats: 5,
         direction: "between",
         title: "Middle tone",
-        headerSubtitle: "Chest voice · 6 seconds",
+        headerSubtitle: "Chest voice · 3 seconds × 5",
         cardSubtitle: "A steady Uu in the middle of your voice",
         instruction:
           "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
-          seconds: 6,
+          seconds: 3,
+          reps: 5,
           tips: VOWEL_TIPS,
           instruction:
             "Sing uuuu (as in 'moon') on a comfortable tone in the middle of your range. Keep your mouth rounded like Uu — relaxed, not smiling.\n\nFeel where the sound sits — not too high, not too low. Just easy.\n\nSustaining a tone in your comfortable range trains your breath and steadies your voice without you noticing.\n\nKeep it relaxed. There's no wrong way to do this.",
@@ -92,15 +98,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.zoneAbove({
         slug: "hoo-hoo",
         boundaryNote: -6,
-        seconds: 5,
-        repeats: 3,
+        seconds: 2,
+        repeats: 5,
         title: "Hoo hoo",
-        headerSubtitle: "Head voice · 5 seconds",
+        headerSubtitle: "Head voice · 2 seconds × 5",
         cardSubtitle: "Find your head voice — light, owl-like, floating",
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head and face.\nKeep it gentle. There's no wrong way.",
         introModal: modal.hill({
-          seconds: 5,
+          seconds: 2,
+          reps: 5,
           tips: HEAD_VOICE_TIPS,
           instruction:
             "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light and gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.",
@@ -190,9 +197,10 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "hum-mid-low",
         note: [2, 6],
         seconds: 5,
+        repeats: 3,
         direction: "between",
         title: "Hum — mid-low",
-        headerSubtitle: "Hum · 5 seconds",
+        headerSubtitle: "Hum · 5 seconds × 3",
         instruction:
           "Hum mmmm just above your lowest tone.\nNotice the warmth spreading through your chest.\nBreathe whenever you need to.",
         introModal: modal.hill({
@@ -219,9 +227,10 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "u-mid-low",
         note: [2, 6],
         seconds: 6,
+        repeats: 3,
         direction: "between",
         title: "U — mid-low",
-        headerSubtitle: "Vowel U · 6 seconds",
+        headerSubtitle: "Vowel U · 6 seconds × 3",
         instruction:
           "Sing uuuu (as in 'moon') on a mid-low tone.\nNotice how the vowel opens from the hum — warmer, fuller.\nLet it be easy.",
         introModal: modal.hill({
@@ -269,9 +278,10 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "hum-mid",
         note: [5, 9],
         seconds: 6,
+        repeats: 3,
         direction: "between",
         title: "Hum — mid",
-        headerSubtitle: "Hum · 6 seconds",
+        headerSubtitle: "Hum · 6 seconds × 3",
         instruction:
           "Hum mmmm on a mid tone.\nNotice the buzz in your chest and face.\nStay relaxed. Let the sound arrive.",
         introModal: modal.hill({

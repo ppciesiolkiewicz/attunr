@@ -130,7 +130,7 @@ export function usePitchProgress({
             setSeqIndex(idx + 1);
             if (seqIndexRef.current < resolved.targets.length) {
               setShowStepCheck(true);
-              setTimeout(() => setShowStepCheck(false), 700);
+              setTimeout(() => setShowStepCheck(false), 1500);
             }
             if (seqIndexRef.current >= resolved.targets.length) {
               setStageComplete(true);
@@ -144,10 +144,8 @@ export function usePitchProgress({
             noteHoldRef.current = Math.max(0, noteHoldRef.current - dt * 0.3);
           }
         }
-        setProgress(
-          (seqIndexRef.current + noteHoldRef.current / noteSeconds) /
-            resolved.targets.length,
-        );
+        // Progress is per-repeat (0–1 for current target), not overall
+        setProgress(Math.min(1, noteHoldRef.current / noteSeconds));
       }
 
       rafRef.current = requestAnimationFrame(tick);

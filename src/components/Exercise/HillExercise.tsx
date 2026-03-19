@@ -80,7 +80,7 @@ export function HillExercise({
     [resolved],
   );
 
-  const { progress, stageComplete: exerciseComplete, resetProgress } =
+  const { progress, seqIndex, stageComplete: exerciseComplete, showStepCheck, resetProgress } =
     usePitchProgress({
       exercise: progressExercise,
       exerciseId,
@@ -88,6 +88,14 @@ export function HillExercise({
       pitchHzRef,
       enabled: detectionActive,
     });
+
+  const totalTargets = resolved.targets.length;
+  const overallProgress = totalTargets > 1
+    ? (seqIndex + progress) / totalTargets
+    : progress;
+
+  const REP_PHRASES = ["Nice!", "Good one!", "Keep going!"];
+  const repPhrase = REP_PHRASES[(seqIndex - 1) % REP_PHRASES.length];
 
   const [showCongrats, setShowCongrats] = useState(false);
 
@@ -154,8 +162,8 @@ export function HillExercise({
           />
         )}
 
-        {/* Progress ring */}
-        {!exerciseComplete && !showCongrats && pitchHz !== null && (
+        {/* Per-rep progress ring */}
+        {!exerciseComplete && !showCongrats && !showStepCheck && pitchHz !== null && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-5 transition-opacity duration-300">
             <CircularProgress
               progress={progress}
@@ -167,13 +175,31 @@ export function HillExercise({
           </div>
         )}
 
-        {/* Completion checkmark */}
+        {/* Rep completion checkmark + text */}
+        {showStepCheck && !exerciseComplete && (
+          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
+            <div className="step-check-appear flex flex-col items-center gap-2">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-violet-600/25 drop-shadow-lg">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <Text variant="body" className="text-violet-300 font-medium">{repPhrase}</Text>
+              <Text variant="caption" color="muted-1">Round {seqIndex + 1}</Text>
+            </div>
+          </div>
+        )}
+
+        {/* Exercise completion checkmark + text */}
         {showCongrats && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
-            <div className="congrats-appear flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+            <div className="congrats-appear flex flex-col items-center gap-2">
+              <div className="flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </div>
+              <Text variant="heading-sm" className="text-violet-300">Congratulations!</Text>
             </div>
           </div>
         )}
@@ -216,7 +242,26 @@ export function HillExercise({
       {/* Bottom panel */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">
         <div className="shrink-0 order-first sm:order-none flex items-center gap-2">
-          <ProgressArc progress={exerciseComplete ? 1 : progress} complete={exerciseComplete} />
+          <ProgressArc progress={exerciseComplete ? 1 : overallProgress} complete={exerciseComplete} />
+          {totalTargets > 1 && (
+            <div className="flex items-center gap-1.5">
+              {resolved.targets.map((_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    i < seqIndex
+                      ? "bg-violet-400"
+                      : i === seqIndex && !exerciseComplete
+                        ? "bg-violet-400/50"
+                        : "bg-white/15"
+                  }`}
+                />
+              ))}
+              <Text variant="caption" color="muted-1" className="ml-0.5 tabular-nums">
+                {Math.min(seqIndex + 1, totalTargets)}/{totalTargets}
+              </Text>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
