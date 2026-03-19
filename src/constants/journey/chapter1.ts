@@ -128,18 +128,20 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "sss-zzz-sss",
         title: "Sss-zzz-sss",
-        headerSubtitle: "Breath sound · 18 seconds",
+        headerSubtitle: "Breath sound · 14 seconds",
         cardSubtitle: "All breath, no voice — feel what happens",
-        cues: repeat([
+        cues: [
           { text: "sss", seconds: 2 },
-          { text: "zzz", seconds: 2 },
-          { text: "sss", seconds: 2 },
-        ], 3),
+          ...repeat([
+            { text: "zzz", seconds: 2 },
+            { text: "sss", seconds: 2 },
+          ], 3),
+        ],
         instruction:
           "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
         tips: BREATH_SOUND_TIPS,
         introModal: modal.volumeDetection({
-          targetSeconds: 18,
+          targetSeconds: 14,
           instruction:
             "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss. You'll do 3 rounds of 6 seconds each.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
         }),

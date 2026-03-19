@@ -16,16 +16,19 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
     gen.timeBased({
       slug: "warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 18 seconds",
-      cues: repeat([
+      headerSubtitle: "Wake up breath · 21 seconds",
+      cues: [
         { text: "sss", seconds: 3 },
-        { text: "zzz", seconds: 3 },
-      ], 3),
+        ...repeat([
+          { text: "zzz", seconds: 3 },
+          { text: "sss", seconds: 3 },
+        ], 3),
+      ],
       instruction:
         "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
       tips: BREATH_SOUND_TIPS,
       introModal: modal.volumeDetection({
-        targetSeconds: 18,
+        targetSeconds: 21,
         instruction:
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
