@@ -1,26 +1,15 @@
-"use client";
-
-import { useParams, useRouter } from "next/navigation";
-import { Suspense, useEffect } from "react";
-import { ChapterDetail } from "@/components/ChapterDetail";
+import type { Metadata } from "next";
 import { journey } from "@/constants/journey";
+import ChapterPageClient from "./ChapterPageClient";
+
+type Props = { params: Promise<{ chapter: string }> };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { chapter: slug } = await params;
+  const chapter = journey.getChapterBySlug(slug);
+  return { title: chapter?.title ?? "Chapter" };
+}
 
 export default function ChapterPage() {
-  const params = useParams();
-  const router = useRouter();
-
-  const chapterSlug = typeof params?.chapter === "string" ? params.chapter : "";
-  const chapter = journey.getChapterBySlug(chapterSlug);
-
-  useEffect(() => {
-    if (!chapter) router.replace("/journey");
-  }, [chapter, router]);
-
-  if (!chapter) return null;
-
-  return (
-    <Suspense>
-      <ChapterDetail chapter={chapter} />
-    </Suspense>
-  );
+  return <ChapterPageClient />;
 }
