@@ -64,7 +64,7 @@ export function ChapterDetail({ chapter }: ChapterDetailProps) {
             </Button>
           )}
           {started && firstExercise && (
-            <Button variant="ghost" onClick={() => router.push(journey.exerciseHref(firstExercise))}>
+            <Button variant="outline" onClick={() => router.push(journey.exerciseHref(firstExercise))}>
               Start from beginning
             </Button>
           )}

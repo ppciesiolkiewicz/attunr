@@ -15,12 +15,12 @@ const sizeStyles: Record<ButtonSize, string> = {
 };
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: "text-white",
+  primary: "border border-transparent text-white",
   secondary:
-    "bg-violet-600 text-white hover:bg-violet-500",
+    "border border-transparent bg-violet-600 text-white hover:bg-violet-500",
   outline:
     "border border-white/20 text-white/68 hover:text-white/90 hover:border-white/30",
-  ghost: "text-white/70 hover:text-white/85",
+  ghost: "border border-transparent text-white/70 hover:text-white/85",
   icon: "p-2.5 rounded-full flex items-center justify-center text-white/65 hover:text-white/95 hover:bg-white/[0.08]",
 };
 
@@ -41,7 +41,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
-        className={`cursor-pointer transition-all disabled:opacity-70 disabled:cursor-not-allowed ${variantStyles[variant]} ${isIcon ? "" : sizeStyles[size]} ${className}`}
+        className={`cursor-pointer transition-all duration-150 hover:brightness-125 active:brightness-90 disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:brightness-100 ${variantStyles[variant]} ${isIcon ? "" : sizeStyles[size]} ${className}`}
         style={
           isPrimary
             ? {

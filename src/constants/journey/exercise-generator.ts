@@ -415,7 +415,7 @@ export class ExerciseGenerator {
         {
           type: "play",
           targets: [toTarget(1), toTarget(chromaticDegree)],
-          duration: NoteDuration.Quarter,
+          duration: NoteDuration.Eighth,
         },
         { type: "pause", duration: NoteDuration.Eighth },
         { type: "note", target: toTarget(1), duration: noteDuration },

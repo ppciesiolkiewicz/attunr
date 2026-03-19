@@ -191,10 +191,10 @@ function AppShellInner({
             <nav className="flex items-center bg-white/[0.05] rounded-lg p-1 mr-1">
               <Link
                 href="/journey"
-                className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
+                className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all duration-150 ${
                   pathname.startsWith("/journey")
-                    ? "bg-violet-600 text-white"
-                    : "text-white/65 hover:text-white/90"
+                    ? "bg-violet-600 text-white hover:brightness-125 active:brightness-90"
+                    : "text-white/65 hover:text-white/90 hover:brightness-125 active:brightness-90"
                 }`}
               >
                 Journey
