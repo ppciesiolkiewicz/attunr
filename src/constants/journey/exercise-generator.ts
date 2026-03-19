@@ -334,6 +334,11 @@ export interface HillSustainParams extends CommonParams {
   displayNotes?: DisplayScale[];
 }
 
+export interface TimeBasedParams extends CommonParams {
+  cues: TimedCue[];
+  tips?: string[];
+}
+
 // ── Helper functions ──────────────────────────────────────────────────────────
 
 /** Resolve intro modal — copy exercise title when the modal has an empty placeholder. */
@@ -831,6 +836,22 @@ export class ExerciseGenerator {
       requiredPlays,
     };
   }
+
+  /** Time-based exercise — flat cue sequence, no mic. */
+  timeBased(params: TimeBasedParams): ExerciseConfigInput {
+    const { cues, tips } = params;
+    return {
+      ...pickCommon(params),
+      exerciseTypeId: "time-based",
+      cues,
+      ...(tips != null && { tips }),
+    };
+  }
 }
 
 export { buildDisplayNotes };
+
+/** Repeat an array N times into a flat array. */
+export function repeat<T>(items: T[], times: number): T[] {
+  return Array.from({ length: times }, () => items).flat();
+}

@@ -16,6 +16,7 @@ export type ExerciseTypeId =
   | "tone-follow"                 // play tone and follow along (no mic detection)
   | "melody"                      // sing along to scrolling melody with scoring
   | "volume-detection"            // accumulate sound for targetSeconds to complete
+  | "time-based"                   // timed cue sequence — no mic
   | "rhythm";                     // tap along to a rhythm pattern
 
 /** 1-indexed chromatic degree from user's lowest note (1 = lowest). Negative values count from top (-1 = highest). */
@@ -287,6 +288,15 @@ export interface VolumeDetectionConfig extends BaseExerciseConfig {
   instruction: string;
 }
 
+export interface TimeBasedConfig extends BaseExerciseConfig {
+  exerciseTypeId: "time-based";
+  /** Flat sequence of timed cues — played once, start to finish. */
+  cues: TimedCue[];
+  instruction: string;
+  /** Rotating tips shown at the bottom during exercise. Omit for no tips. */
+  tips?: string[];
+}
+
 /** A rhythm timeline event — tap (user must hit) or pause (gap). */
 export type RhythmEvent =
   | { type: "tap"; duration: NoteDuration }
@@ -315,6 +325,7 @@ export type ExerciseConfig =
   | ToneFollowConfig
   | MelodyConfig
   | VolumeDetectionConfig
+  | TimeBasedConfig
   | RhythmConfig;
 
 /** Input type for part files — `id`, `chapter`, `chapterSlug`, and `stageId` are assigned automatically in index.ts. */

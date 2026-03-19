@@ -1,7 +1,7 @@
 import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
-import { ExerciseGenerator, IntroModalGenerator } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS } from "./exercise-tips";
+import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
+import { VOWEL_TIPS, HEAD_VOICE_TIPS, BREATH_SOUND_TIPS } from "./exercise-tips";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -13,21 +13,21 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
   id: "ch2-warmup",
   title: "Warmup",
   exercises: [
-    gen.volumeDetection({
+    gen.timeBased({
       slug: "warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 15 seconds",
-      targetSeconds: 15,
-      cues: [
+      headerSubtitle: "Wake up breath · 18 seconds",
+      cues: repeat([
         { text: "sss", seconds: 3 },
         { text: "zzz", seconds: 3 },
-      ],
+      ], 3),
       instruction:
         "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
+      tips: BREATH_SOUND_TIPS,
       introModal: modal.volumeDetection({
-        targetSeconds: 15,
+        targetSeconds: 18,
         instruction:
-          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Keep making sound until the progress line is full.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
     gen.lipRoll({

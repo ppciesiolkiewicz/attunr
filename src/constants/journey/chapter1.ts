@@ -1,6 +1,6 @@
 import type { StageConfigInput } from "./types";
-import { ExerciseGenerator, IntroModalGenerator } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS, LIP_ROLL_TIPS } from "./exercise-tips";
+import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
+import { VOWEL_TIPS, HEAD_VOICE_TIPS, LIP_ROLL_TIPS, BREATH_SOUND_TIPS } from "./exercise-tips";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -125,22 +125,21 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
         }),
       }),
-      gen.volumeDetection({
+      gen.timeBased({
         slug: "sss-zzz-sss",
         title: "Sss-zzz-sss",
-        headerSubtitle: "Make sound · 6 seconds × 3",
+        headerSubtitle: "Breath sound · 18 seconds",
         cardSubtitle: "All breath, no voice — feel what happens",
-        targetSeconds: 6,
-        reps: 3,
-        cues: [
+        cues: repeat([
           { text: "sss", seconds: 2 },
           { text: "zzz", seconds: 2 },
           { text: "sss", seconds: 2 },
-        ],
+        ], 3),
         instruction:
           "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
+        tips: BREATH_SOUND_TIPS,
         introModal: modal.volumeDetection({
-          targetSeconds: 6,
+          targetSeconds: 18,
           instruction:
             "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss. You'll do 3 rounds of 6 seconds each.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
         }),

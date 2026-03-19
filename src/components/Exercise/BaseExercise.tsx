@@ -14,6 +14,7 @@ import { ToneFollowExercise } from "./ToneFollowExercise";
 import { MelodyExercise } from "./MelodyExercise";
 import { RhythmExercise } from "./RhythmExercise";
 import { HillExercise } from "./HillExercise";
+import { TimeBasedExerciseContent } from "./TimeBasedExercise";
 
 interface BaseExerciseProps {
   exercise: ExerciseConfig;
@@ -64,7 +65,8 @@ export function BaseExercise({
       exercise.exerciseTypeId === "learn" ||
       exercise.exerciseTypeId === "learn-notes-1" ||
       exercise.exerciseTypeId === "breathwork-farinelli" ||
-      exercise.exerciseTypeId === "volume-detection"
+      exercise.exerciseTypeId === "volume-detection" ||
+      exercise.exerciseTypeId === "time-based"
     ) {
       return null;
     }
@@ -146,6 +148,19 @@ export function BaseExercise({
     case "volume-detection":
       return (
         <VolumeDetectionExerciseContent
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
+        />
+      );
+
+    case "time-based":
+      return (
+        <TimeBasedExerciseContent
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}

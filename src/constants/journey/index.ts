@@ -58,6 +58,7 @@ export type {
   DisplayScale,
   TimedCue,
   VolumeDetectionConfig,
+  TimeBasedConfig,
   RhythmConfig,
   RhythmEvent,
 } from "./types";
