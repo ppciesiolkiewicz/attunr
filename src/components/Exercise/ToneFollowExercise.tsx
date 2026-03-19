@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import confetti from "canvas-confetti";
+import { useRepCompletion, CongratsOverlay } from "@/features/rep-progress";
 import PitchCanvas from "@/components/PitchCanvas";
 import { Button, Text } from "@/components/ui";
 import { ProgressArc } from "./components/ProgressArc";
@@ -53,7 +53,15 @@ export function ToneFollowExercise({
   const toneTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const exerciseComplete = playCount >= exercise.requiredPlays;
-  const [showCongrats, setShowCongrats] = useState(false);
+
+  const { showCongrats, completeRep: completeFinal } = useRepCompletion({
+    totalReps: 1,
+    exerciseId,
+  });
+
+  useEffect(() => {
+    if (exerciseComplete) completeFinal();
+  }, [exerciseComplete, completeFinal]);
 
   // Reset on exercise change
   useEffect(() => {
@@ -63,14 +71,6 @@ export function ToneFollowExercise({
     if (toneTimeoutRef.current) clearTimeout(toneTimeoutRef.current);
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
   }, [exerciseId]);
-
-  useEffect(() => {
-    if (!exerciseComplete) return;
-    setShowCongrats(true);
-    confetti({ particleCount: 80, spread: 70, origin: { y: 0.45 } });
-    const id = setTimeout(() => setShowCongrats(false), 2400);
-    return () => clearTimeout(id);
-  }, [exerciseComplete]);
 
   // ── Animate simulated Hz ───────────────────────────────────────────────
   const animateSlide = useCallback((fromHz: number, toHz: number) => {
@@ -161,24 +161,7 @@ export function ToneFollowExercise({
         />
 
         {/* Completion checkmark */}
-        {showCongrats && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
-            <div className="congrats-appear flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
-              <svg
-                width="40"
-                height="40"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#a78bfa"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-          </div>
-        )}
+        <CongratsOverlay show={showCongrats} />
 
         {/* Play count dots — desktop only */}
         {!exerciseComplete && (

@@ -8,6 +8,7 @@ import HillBallCanvas from "@/components/HillBallCanvas";
 import { Button, CircularProgress, Text } from "@/components/ui";
 import { usePitchProgress } from "./usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
+import { CongratsOverlay, StepCheckOverlay } from "@/features/rep-progress";
 import { ExerciseStartButton } from "../ExerciseStartButton";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
@@ -42,6 +43,8 @@ export function PitchExercise({
   onSkip,
   onPrev,
 }: PitchExerciseProps) {
+  const REP_PHRASES = ["Nice!", "Good one!", "Keep going!"];
+
   // ── Start / detection gating ────────────────────────────────────────────────
   const [hasStarted, setHasStarted] = useState(false);
   const [detectionActive, setDetectionActive] = useState(false);
@@ -192,15 +195,12 @@ export function PitchExercise({
         {!hasStarted && <ExerciseStartButton onStart={handleExerciseStart} />}
 
         {/* Per-step checkmark (sequences only) */}
-        {showStepCheck && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
-            <div className="step-check-appear flex items-center justify-center w-12 h-12 rounded-full bg-violet-600/20">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-          </div>
-        )}
+        <StepCheckOverlay
+          show={showStepCheck}
+          phrase={REP_PHRASES[(seqIndex - 1) % REP_PHRASES.length]}
+          round={seqIndex + 1}
+          totalReps={resolved.exerciseTypeId === "pitch-detection" ? resolved.targets.length : 1}
+        />
 
         {/* Centered progress ring */}
         {!exerciseComplete && !showCongrats && pitchHz !== null && (
@@ -216,15 +216,7 @@ export function PitchExercise({
         )}
 
         {/* Completion checkmark */}
-        {showCongrats && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
-            <div className="congrats-appear flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-          </div>
-        )}
+        <CongratsOverlay show={showCongrats} />
 
         {/* Pitch overlay */}
         {pitchHz !== null && (

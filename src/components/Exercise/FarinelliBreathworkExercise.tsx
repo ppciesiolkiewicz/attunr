@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import confetti from "canvas-confetti";
+import { useRepCompletion, CongratsOverlay } from "@/features/rep-progress";
 import { FarinelliExercise } from "@/components/FarinelliExercise";
 import { Button } from "@/components/ui";
 import type { FarinelliBreathworkConfig } from "@/constants/journey";
@@ -26,15 +26,21 @@ export function FarinelliBreathworkExerciseContent({
   onPrev,
 }: FarinelliBreathworkExerciseProps) {
   const [exerciseComplete, setExerciseComplete] = useState(false);
-  const [showCongrats, setShowCongrats] = useState(false);
+  const [prevExerciseId, setPrevExerciseId] = useState(exerciseId);
+
+  if (prevExerciseId !== exerciseId) {
+    setPrevExerciseId(exerciseId);
+    setExerciseComplete(false);
+  }
+
+  const { showCongrats, completeRep: completeFinal } = useRepCompletion({
+    totalReps: 1,
+    exerciseId,
+  });
 
   useEffect(() => {
-    if (!exerciseComplete) return;
-    setShowCongrats(true);
-    confetti({ particleCount: 80, spread: 70, origin: { y: 0.45 } });
-    const id = setTimeout(() => setShowCongrats(false), 2400);
-    return () => clearTimeout(id);
-  }, [exerciseComplete]);
+    if (exerciseComplete) completeFinal();
+  }, [exerciseComplete, completeFinal]);
 
   return (
     <>
@@ -44,15 +50,7 @@ export function FarinelliBreathworkExerciseContent({
           startCount={4}
           onComplete={() => setExerciseComplete(true)}
         />
-        {showCongrats && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
-            <div className="congrats-appear flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-          </div>
-        )}
+        <CongratsOverlay show={showCongrats} />
       </div>
 
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">

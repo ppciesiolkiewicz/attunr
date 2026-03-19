@@ -278,8 +278,10 @@ export interface TimedCue {
 
 export interface VolumeDetectionConfig extends BaseExerciseConfig {
   exerciseTypeId: "volume-detection";
-  /** Seconds of accumulated sound needed to complete. */
+  /** Seconds of accumulated sound needed per rep. */
   targetSeconds: number;
+  /** Number of reps (defaults to 1). */
+  reps?: number;
   /** Timed cue labels that cycle on screen. */
   cues: TimedCue[];
   instruction: string;

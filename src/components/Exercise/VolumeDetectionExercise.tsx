@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import confetti from "canvas-confetti";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button, Text } from "@/components/ui";
 import { useVolumeDetection } from "@/hooks/useVolumeDetection";
+import { useRepCompletion, CongratsOverlay, StepCheckOverlay, RepDots } from "@/features/rep-progress";
+import { ProgressArc } from "./components/ProgressArc";
 import type { VolumeDetectionConfig } from "@/constants/journey";
 
 interface VolumeDetectionExerciseProps {
@@ -27,9 +28,30 @@ export function VolumeDetectionExerciseContent({
 }: VolumeDetectionExerciseProps) {
   const { volume, isActive, status, error, startListening, stopListening } = useVolumeDetection();
   const [accumulatedSeconds, setAccumulatedSeconds] = useState(0);
-  const [exerciseComplete, setExerciseComplete] = useState(false);
-  const [showCongrats, setShowCongrats] = useState(false);
   const lastTickRef = useRef<number | null>(null);
+  const repCompleteRef = useRef(false);
+
+  const totalReps = exercise.reps ?? 1;
+
+  const resetAccumulation = useCallback(() => {
+    setAccumulatedSeconds(0);
+    lastTickRef.current = null;
+    repCompleteRef.current = false;
+  }, []);
+
+  const {
+    currentRep,
+    isComplete: exerciseComplete,
+    completeRep,
+    showStepCheck,
+    showCongrats,
+    repPhrase,
+    resetProgress,
+  } = useRepCompletion({
+    totalReps,
+    exerciseId,
+    onRepAdvanced: resetAccumulation,
+  });
 
   // Start listening on mount
   useEffect(() => {
@@ -37,10 +59,15 @@ export function VolumeDetectionExerciseContent({
     return () => stopListening();
   }, [startListening, stopListening]);
 
+  // Reset accumulation on exercise change
+  useEffect(() => {
+    queueMicrotask(resetAccumulation);
+  }, [exerciseId, resetAccumulation]);
+
   // Accumulate seconds when active.
   // Intentionally no dependency array — runs every render to sample time deltas.
   useEffect(() => {
-    if (exerciseComplete) return;
+    if (exerciseComplete || showStepCheck) return;
 
     if (isActive) {
       const now = performance.now();
@@ -48,8 +75,10 @@ export function VolumeDetectionExerciseContent({
         const delta = (now - lastTickRef.current) / 1000;
         setAccumulatedSeconds((prev) => {
           const next = prev + delta;
-          if (next >= exercise.targetSeconds) {
-            setExerciseComplete(true);
+          if (next >= exercise.targetSeconds && !repCompleteRef.current) {
+            repCompleteRef.current = true;
+            // Schedule completeRep outside of setState
+            queueMicrotask(() => completeRep());
             return exercise.targetSeconds;
           }
           return next;
@@ -60,15 +89,6 @@ export function VolumeDetectionExerciseContent({
       lastTickRef.current = null;
     }
   });
-
-  // Congrats animation
-  useEffect(() => {
-    if (!exerciseComplete) return;
-    setShowCongrats(true);
-    confetti({ particleCount: 80, spread: 70, origin: { y: 0.45 } });
-    const id = setTimeout(() => setShowCongrats(false), 2400);
-    return () => clearTimeout(id);
-  }, [exerciseComplete]);
 
   // Cycle through timed cues based on accumulated time
   const cues = exercise.cues;
@@ -86,9 +106,18 @@ export function VolumeDetectionExerciseContent({
     }
   }
 
-  const progress = exercise.targetSeconds > 0
+  const perRepProgress = exercise.targetSeconds > 0
     ? Math.min(accumulatedSeconds / exercise.targetSeconds, 1)
     : 0;
+
+  const smoothOverallProgress = totalReps > 0
+    ? (currentRep + perRepProgress) / totalReps
+    : 0;
+
+  const handleRestart = useCallback(() => {
+    resetProgress();
+    resetAccumulation();
+  }, [resetProgress, resetAccumulation]);
 
   return (
     <>
@@ -109,7 +138,7 @@ export function VolumeDetectionExerciseContent({
         <div className="relative w-12 h-48 sm:h-64 rounded-full bg-white/[0.06] overflow-hidden">
           <div
             className="absolute bottom-0 left-0 right-0 rounded-full bg-violet-500/60 transition-all duration-150"
-            style={{ height: `${progress * 100}%` }}
+            style={{ height: `${perRepProgress * 100}%` }}
           />
           {/* Volume indicator — thin bright bar showing current amplitude */}
           {isActive && (
@@ -133,19 +162,36 @@ export function VolumeDetectionExerciseContent({
           <div className="text-sm text-red-400">{error}</div>
         )}
 
-        {showCongrats && (
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center z-10">
-            <div className="congrats-appear flex items-center justify-center w-20 h-20 rounded-full bg-violet-600/25 drop-shadow-lg">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </div>
-          </div>
-        )}
+
+
+        <StepCheckOverlay
+          show={showStepCheck && !exerciseComplete}
+          phrase={repPhrase}
+          round={currentRep + 1}
+          totalReps={totalReps}
+        />
+
+        <CongratsOverlay show={showCongrats} />
       </div>
 
+      {/* Bottom panel */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row flex-wrap sm:flex-nowrap items-center justify-between gap-2 sm:gap-4 shrink-0">
+        <div className="shrink-0 order-first sm:order-0 flex items-center gap-2">
+          <ProgressArc progress={exerciseComplete ? 1 : smoothOverallProgress} complete={exerciseComplete} />
+          <RepDots totalReps={totalReps} currentRep={currentRep} isComplete={exerciseComplete} />
+        </div>
+
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
+          {exerciseComplete && (
+            <Button
+              variant="outline"
+              onClick={handleRestart}
+              className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
+              title="Restart exercise"
+            >
+              ↺  Restart
+            </Button>
+          )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
             {exerciseId > 1 && onPrev && (
               <Button variant="outline" onClick={onPrev} title="Previous exercise" className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">

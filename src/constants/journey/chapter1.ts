@@ -128,9 +128,10 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.volumeDetection({
         slug: "sss-zzz-sss",
         title: "Sss-zzz-sss",
-        headerSubtitle: "Make sound · 18 seconds",
+        headerSubtitle: "Make sound · 6 seconds × 3",
         cardSubtitle: "All breath, no voice — feel what happens",
-        targetSeconds: 18,
+        targetSeconds: 6,
+        reps: 3,
         cues: [
           { text: "sss", seconds: 2 },
           { text: "zzz", seconds: 2 },
@@ -139,9 +140,9 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         instruction:
           "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
         introModal: modal.volumeDetection({
-          targetSeconds: 18,
+          targetSeconds: 6,
           instruction:
-            "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss. Keep making sound until the progress line is full.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
+            "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss. You'll do 3 rounds of 6 seconds each.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
         }),
       }),
     ],
@@ -259,7 +260,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body responds as the rhythm lengthens.",
         }),
       }),
-      gen.lipRollSustain({
+      gen.lipRollSug gstain({
         slug: "lip-roll-sustain",
         note: 5,
         seconds: 5,

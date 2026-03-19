@@ -314,6 +314,7 @@ export interface FarinelliParams extends Omit<CommonParams, "instruction"> {
 
 export interface VolumeDetectionParams extends CommonParams {
   targetSeconds: number;
+  reps?: number;
   cues: TimedCue[];
 }
 
@@ -713,11 +714,12 @@ export class ExerciseGenerator {
 
   /** Volume detection exercise with timed cues. */
   volumeDetection(params: VolumeDetectionParams): ExerciseConfigInput {
-    const { targetSeconds, cues } = params;
+    const { targetSeconds, reps, cues } = params;
     return {
       ...pickCommon(params),
       exerciseTypeId: "volume-detection",
       targetSeconds,
+      ...(reps != null && { reps }),
       cues,
     };
   }
