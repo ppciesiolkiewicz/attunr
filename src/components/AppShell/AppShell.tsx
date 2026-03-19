@@ -171,14 +171,14 @@ function AppShellInner({ pathname, children }: { pathname: string; children: Rea
             >
               Journey
             </Link>
-            <Link
-              href="/train"
-              className={`px-3.5 py-1.5 rounded-md text-sm font-medium transition-all ${
-                pathname === "/train" ? "bg-violet-600 text-white" : "text-white/65 hover:text-white/90"
-              }`}
-            >
-              Train
-            </Link>
+            <span className="relative group cursor-not-allowed">
+              <span className="px-3.5 py-1.5 rounded-md text-sm font-medium text-white/35">
+                Train
+              </span>
+              <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 px-3.5 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm text-white/70 text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                Coming soon
+              </span>
+            </span>
           </nav>
           <Link
             href="/articles"
