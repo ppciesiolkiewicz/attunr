@@ -11,7 +11,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-4 py-2 text-sm font-medium rounded-lg",
   md: "px-5 py-2.5 text-sm font-medium rounded-xl",
-  lg: "py-4 text-base font-semibold rounded-xl",
+  lg: "px-8 py-4 text-base font-semibold rounded-xl",
 };
 
 const variantStyles: Record<ButtonVariant, string> = {

@@ -23,11 +23,14 @@ export function ExerciseStartButton({ onStart }: ExerciseStartButtonProps) {
         fading ? "opacity-0" : "opacity-100"
       }`}
     >
-      <div className="pointer-events-auto backdrop-blur-md bg-black/20 rounded-2xl px-8 py-6">
-        <Button variant="primary" size="lg" onClick={handleStart}>
-          Start
-        </Button>
-      </div>
+      <Button
+        variant="primary"
+        size="lg"
+        className="pointer-events-auto"
+        onClick={handleStart}
+      >
+        Start
+      </Button>
     </div>
   );
 }
