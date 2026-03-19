@@ -4,7 +4,7 @@ import Logo from "../../Logo";
 import {
   CloseIcon,
   MenuJourneyIcon,
-  MenuTrainIcon,
+  MenuPracticeIcon,
   MenuLearnIcon,
 } from "./icons";
 
@@ -65,9 +65,9 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
           </Link>
           <span className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/35 cursor-not-allowed">
             <Text as="span" variant="body-sm" color="text-2">
-              <MenuTrainIcon />
+              <MenuPracticeIcon />
             </Text>
-            Train
+            Practice
             <span className="ml-auto text-sm text-white/30">Coming soon</span>
           </span>
           <Link

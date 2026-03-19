@@ -26,7 +26,7 @@ export function JourneyList({ onSelect }: JourneyListProps) {
             and exploring techniques like mantras and vowels.
           </Text>
           <Text variant="body-sm" color="text-2">
-            When you&apos;ve built confidence, switch to Train for freeform
+            When you&apos;ve built confidence, switch to Practice for freeform
             practice — any tone, any order.
           </Text>
         </div>

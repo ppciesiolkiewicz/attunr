@@ -19,7 +19,7 @@ export function ChapterList() {
             and exploring techniques like mantras and vowels.
           </Text>
           <Text variant="body-sm" as="p" style={{ color: "rgba(255,255,255,0.45)" }}>
-            When you&apos;ve built confidence, switch to Train for freeform
+            When you&apos;ve built confidence, switch to Practice for freeform
             practice — any tone, any order.
           </Text>
         </div>

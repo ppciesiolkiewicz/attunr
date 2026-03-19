@@ -99,7 +99,7 @@ function AppShellInner({
     playTone(band.frequencyHz, { binaural: true });
     analytics.tonePlayed(
       band.id,
-      pathname?.startsWith("/train") ? "explore" : "journey",
+      pathname?.startsWith("/practice") ? "explore" : "journey",
     );
   }
 
@@ -144,7 +144,7 @@ function AppShellInner({
     );
   }
 
-  const needsMic = pathname?.startsWith("/journey") || pathname === "/train";
+  const needsMic = pathname?.startsWith("/journey") || pathname === "/practice";
   const showMicGate =
     !(showOnboarding || redetect) && needsMic && status === "idle";
 
@@ -201,7 +201,7 @@ function AppShellInner({
               </Link>
               <span className="relative group cursor-not-allowed">
                 <span className="px-3.5 py-1.5 rounded-md text-sm font-medium text-white/35">
-                  Train
+                  Practice
                 </span>
                 <span className="absolute left-1/2 -translate-x-1/2 top-full mt-1.5 px-3.5 py-1.5 rounded-lg bg-white/10 backdrop-blur-sm text-white/70 text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                   Coming soon

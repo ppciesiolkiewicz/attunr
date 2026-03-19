@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import TrainView from "@/components/TrainView";
+import PracticeView from "@/components/PracticeView";
 import { useApp } from "@/context/AppContext";
 import { analytics } from "@/lib/analytics";
 
-export default function TrainPage() {
+export default function PracticePage() {
   const { settings, pitchHz, pitchHzRef, playTone, updateSettings } = useApp();
 
   useEffect(() => {
@@ -13,7 +13,7 @@ export default function TrainPage() {
   }, []);
 
   return (
-    <TrainView
+    <PracticeView
       settings={settings}
       pitchHz={pitchHz}
       pitchHzRef={pitchHzRef}

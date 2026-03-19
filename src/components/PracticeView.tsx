@@ -30,7 +30,7 @@ function MicIcon() {
   );
 }
 
-interface TrainViewProps {
+interface PracticeViewProps {
   settings: Settings;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
@@ -38,12 +38,12 @@ interface TrainViewProps {
   onSettingsUpdate: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
 }
 
-export default function TrainView({
+export default function PracticeView({
   settings,
   pitchHz,
   pitchHzRef,
   onPlayTone,
-}: TrainViewProps) {
+}: PracticeViewProps) {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -151,9 +151,9 @@ export default function TrainView({
         </div>
       </div>
 
-      {/* ── Train info modal ──────────────────────────────────────────────── */}
+      {/* ── Practice info modal ───────────────────────────────────────────── */}
       {showInfo && (
-        <TabInfoModal title="Train" onClose={handleCloseInfo}>
+        <TabInfoModal title="Practice" onClose={handleCloseInfo}>
           <Text variant="body" color="text-2">
             Free-form vocal placement practice. No goals, no instructions — just sing and
             explore your voice against the canvas.
