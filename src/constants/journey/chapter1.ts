@@ -44,10 +44,10 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         seconds: 5,
         direction: "down",
         title: "Gentle hum",
-        headerSubtitle: "Hum · 5 seconds × 3",
+        headerSubtitle: "Hum · 5 seconds",
         cardSubtitle: "Your first pitched sound — a low, steady hum",
         instruction:
-          "Hum mmmm on a low tone.\nFeel the buzz in your lips and chest.\nBreathe whenever you need to — there's no rush.",
+          "Hum mmmm on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 5,
           instruction:
@@ -60,14 +60,14 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         seconds: 6,
         direction: "down",
         title: "Low Uu",
-        headerSubtitle: "Chest voice · 6 seconds × 3",
+        headerSubtitle: "Chest voice · 6 seconds",
         cardSubtitle: "A low Uu that settles in your chest",
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone.\nNotice where the sound lands — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
+          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 6,
           instruction:
-            "Sing uuuu (as in 'moon') on a low tone. Let the sound settle deep.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel naturally opens your chest voice. It's the warmest, most grounding sound you can make.\n\nBreathe whenever you need to — there's no rush.",
+            "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let the sound settle deep.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel naturally opens your chest voice. It's the warmest, most grounding sound you can make.\n\nBreathe whenever you need to — there's no rush.",
         }),
       }),
       gen.hillSustain({
@@ -76,14 +76,14 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         seconds: 6,
         direction: "between",
         title: "Middle tone",
-        headerSubtitle: "Chest voice · 6 seconds × 3",
+        headerSubtitle: "Chest voice · 6 seconds",
         cardSubtitle: "A steady Uu in the middle of your voice",
         instruction:
           "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 6,
           instruction:
-            "Sing uuuu (as in 'moon') on a comfortable tone in the middle of your range.\n\nFeel where the sound sits — not too high, not too low. Just easy.\n\nSustaining a tone in your comfortable range trains your breath and steadies your voice without you noticing.\n\nKeep it relaxed. There's no wrong way to do this.",
+            "Sing uuuu (as in 'moon') on a comfortable tone in the middle of your range. Keep your mouth rounded like Uu — relaxed, not smiling.\n\nFeel where the sound sits — not too high, not too low. Just easy.\n\nSustaining a tone in your comfortable range trains your breath and steadies your voice without you noticing.\n\nKeep it relaxed. There's no wrong way to do this.",
         }),
       }),
       gen.zoneAbove({
@@ -92,7 +92,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         seconds: 5,
         repeats: 3,
         title: "Hoo hoo",
-        headerSubtitle: "Head voice · 5 seconds × 3",
+        headerSubtitle: "Head voice · 5 seconds",
         cardSubtitle: "Find your head voice — light, owl-like, floating",
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head and face.\nKeep it gentle. There's no wrong way.",
@@ -131,7 +131,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         introModal: modal.volumeDetection({
           targetSeconds: 18,
           instruction:
-            "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
+            "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss. Keep making sound until the progress line is full.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
         }),
       }),
     ],
@@ -154,7 +154,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         introModal: modal.volumeDetection({
           targetSeconds: 15,
           instruction:
-            "Let your lips buzz loosely — like a motorboat. No pitch, no melody, just the buzz.\n\nNotice the vibration spreading through your lips and face. Feel how your breath drives the sound.\n\nLip rolls loosen tension in your face and jaw. They wake up the connection between breath and voice — the foundation for everything that follows.\n\nIt's okay to take breaths between rolls. Just notice what happens.",
+            "Let your lips buzz loosely — like a motorboat. No pitch, no melody, just the buzz. Keep buzzing until the progress line is full.\n\nNotice the vibration spreading through your lips and face. Feel how your breath drives the sound.\n\nLip rolls loosen tension in your face and jaw. They wake up the connection between breath and voice — the foundation for everything that follows.\n\nIt's okay to take breaths between rolls. Just notice what happens.",
         }),
       }),
       gen.lipRoll({
@@ -221,7 +221,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         introModal: modal.sustain({
           seconds: 6,
           instruction:
-            "Sing uuuu (as in 'moon') on a mid-low tone. Let it open naturally from the hum.\n\nNotice how the vowel feels different from humming — warmer, more open, more resonant.\n\nMoving from hum to vowel is how you build your voice. The vowel carries the resonance further.\n\nLet it be easy. There's no wrong way.",
+            "Sing uuuu (as in 'moon') on a mid-low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it open naturally from the hum.\n\nNotice how the vowel feels different from humming — warmer, more open, more resonant.\n\nMoving from hum to vowel is how you build your voice. The vowel carries the resonance further.\n\nLet it be easy. There's no wrong way.",
         }),
       }),
     ],
