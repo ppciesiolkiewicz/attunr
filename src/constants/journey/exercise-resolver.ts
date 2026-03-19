@@ -225,13 +225,10 @@ function resolveToneFollow(
     } else {
       displayScaleNotes = ds.notes.flatMap((dn: DisplayNote) => dsScale.resolve(dn.target));
     }
-    const displayScaleColoredNotes = displayScaleNotes
+    displayNotes = displayScaleNotes
       .map((n) => vocalRange.findNote(n.midi))
       .filter((n): n is ColoredNote => n != null);
-    const range = computeDisplayRange(exerciseColoredNotes, allNotes);
-    const rangeIds = new Set(range.map((n) => n.id));
-    displayNotes = displayScaleColoredNotes.filter((n) => rangeIds.has(n.id));
-    highlightIds = displayNotes.map((n) => n.id);
+    highlightIds = exerciseColoredNotes.map((n) => n.id);
   } else {
     displayNotes = computeDisplayRange(exerciseColoredNotes, allNotes);
     highlightIds = exerciseColoredNotes.map((n) => n.id);

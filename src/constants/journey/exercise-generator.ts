@@ -811,16 +811,14 @@ export class ExerciseGenerator {
   lipRollSustain(params: LipRollSustainParams): ExerciseConfigInput {
     const { note, seconds, requiredPlays } = params;
 
-    // Show a few chromatic notes around the target (degree 1 = root)
-    // with the target note "full" and surrounding notes "muted"
-    const contextRadius = 3;
-    const lo = 1 - contextRadius;
-    const hi = 1 + contextRadius;
+    // Show 5 chromatic notes centered on the target: 2 below, target, 2 above.
+    // Root the display scale 2 semitones below so the target lands at index 3.
+    const displayRoot = note - 2;
     const contextNotes: DisplayNote[] = [];
-    for (let i = lo; i <= hi; i++) {
+    for (let i = 1; i <= 5; i++) {
       contextNotes.push({
         target: toTarget(i),
-        style: i === 1 ? "full" : "muted",
+        style: i === 3 ? "full" : "muted",
       });
     }
 
@@ -829,7 +827,7 @@ export class ExerciseGenerator {
       exerciseTypeId: "tone-follow",
       scale: { type: "chromatic", root: note },
       toneShape: { kind: "sustain", target: toTarget(1), seconds },
-      displayNotes: [{ type: "major", root: note, notes: contextNotes }],
+      displayNotes: [{ type: "chromatic", root: displayRoot, notes: contextNotes }],
       requiredPlays,
     };
   }
