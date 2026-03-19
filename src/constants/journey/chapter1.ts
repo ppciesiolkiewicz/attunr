@@ -187,15 +187,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-first-melody",
     title: "First Melody",
     exercises: [
-      gen.sustain({
+      gen.hillSustain({
         slug: "hum-mid-low",
-        note: 4,
+        note: [2, 6],
         seconds: 5,
+        direction: "between",
         title: "Hum — mid-low",
         headerSubtitle: "Hum · 5 seconds × 3",
         instruction:
           "Hum mmmm just above your lowest tone.\nNotice the warmth spreading through your chest.\nBreathe whenever you need to.",
-        introModal: modal.sustain({
+        introModal: modal.hill({
           seconds: 5,
           instruction:
             "Hum mmmm just above your lowest comfortable tone. Keep it steady and warm.\n\nNotice the warmth spreading through your chest. Feel where the buzz sits.\n\nHumming at this pitch grounds your voice in your body. It's a return to the simplest sound — a foundation before melody.\n\nBreathe whenever you need to.",
@@ -215,15 +216,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Sing the two notes as they appear — the piano plays each one for you. Match what you hear.\n\nNotice the distance between the notes. Feel how your voice shifts — even a small step changes where the sound lives.\n\nThis is your first melody. Two notes, one small step. Everything larger builds from here.\n\nThere's no rush. Listen first, then follow.",
         }),
       }),
-      gen.sustain({
+      gen.hillSustain({
         slug: "u-mid-low",
-        note: 4,
+        note: [2, 6],
         seconds: 6,
+        direction: "between",
         title: "U — mid-low",
         headerSubtitle: "Vowel U · 6 seconds × 3",
         instruction:
           "Sing uuuu (as in 'moon') on a mid-low tone.\nNotice how the vowel opens from the hum — warmer, fuller.\nLet it be easy.",
-        introModal: modal.sustain({
+        introModal: modal.hill({
           seconds: 6,
           instruction:
             "Sing uuuu (as in 'moon') on a mid-low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it open naturally from the hum.\n\nNotice how the vowel feels different from humming — warmer, more open, more resonant.\n\nMoving from hum to vowel is how you build your voice. The vowel carries the resonance further.\n\nLet it be easy. There's no wrong way.",
@@ -264,15 +266,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Play the tone and lip roll alongside it. Hold the buzz at a steady pitch.\n\nNotice where the resonance sits — lips, face, or deeper. Feel the vibration without forcing it.\n\nSustaining a lip roll at one pitch trains your breath control and builds stability. It's practice for holding any tone steady.\n\nTake a breath between each one.",
         }),
       }),
-      gen.sustain({
+      gen.hillSustain({
         slug: "hum-mid",
-        note: 7,
+        note: [5, 9],
         seconds: 6,
+        direction: "between",
         title: "Hum — mid",
         headerSubtitle: "Hum · 6 seconds × 3",
         instruction:
           "Hum mmmm on a mid tone.\nNotice the buzz in your chest and face.\nStay relaxed. Let the sound arrive.",
-        introModal: modal.sustain({
+        introModal: modal.hill({
           seconds: 6,
           instruction:
             "Hum mmmm on a mid tone — a step higher than before. Keep it relaxed.\n\nNotice the buzz in your chest and face. Feel how the resonance shifts as the pitch rises.\n\nYou've hummed low, now mid. Each pitch lives in a different place in your body. This awareness stays with you.\n\nStay relaxed. Let the sound arrive.",

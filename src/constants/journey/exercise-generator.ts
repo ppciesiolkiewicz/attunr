@@ -696,6 +696,7 @@ export class ExerciseGenerator {
   }
 
   /**
+   * @deprecated Use `hillSustain` with `direction: "between"` instead.
    * Sustain exercise. Pitch-detection with repeated holds on a single note.
    * Chromatic scale rooted at `note`.
    */

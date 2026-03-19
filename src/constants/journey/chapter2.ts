@@ -331,29 +331,31 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     id: "ch2-sustain-control",
     title: "Sustain & Control",
     exercises: [
-      gen.sustain({
+      gen.hillSustain({
         slug: "hum-mid-long",
-        note: 7,
+        note: [5, 9],
         seconds: 8,
+        direction: "between",
         title: "Hum — mid",
         headerSubtitle: "Hum · 8 seconds × 3",
         instruction:
           "Hum mmmm on a mid tone — longer holds this time.\nFeel the buzz settle.\nBreathe whenever you need to.",
-        introModal: modal.sustain({
+        introModal: modal.hill({
           seconds: 8,
           instruction:
             "Hum mmmm on a mid tone. Hold it steady for 8 seconds — longer than before.\n\nFeel the buzz settle in your chest and face. Notice how it deepens as you hold.\n\nLonger holds train your breath control and build stability without you noticing.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
-      gen.sustain({
+      gen.hillSustain({
         slug: "u-mid",
-        note: 7,
+        note: [5, 9],
         seconds: 8,
+        direction: "between",
         title: "U — mid",
         headerSubtitle: "Vowel U · 8 seconds × 3",
         instruction:
           "Sing uuuu on the mid tone — longer holds.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
-        introModal: modal.sustain({
+        introModal: modal.hill({
           seconds: 8,
           tips: VOWEL_TIPS,
           instruction:
