@@ -275,8 +275,15 @@ export function RhythmExercise({
 
   // ── Retry ───────────────────────────────────────────────────────────────
   const handleRetry = useCallback(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    setIsPlaying(false);
     setShowScoreModal(false);
     setOverallScore(0);
+    setBeatStates([]);
+    setElapsedMs(0);
+    beatStatesRef.current = [];
+    tapMatchedRef.current = [];
+    metronomeTickPlayedRef.current = [];
     setTimeout(() => handleStart(), 100);
   }, [handleStart]);
 
@@ -329,13 +336,13 @@ export function RhythmExercise({
         </div>
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
-          {hasStartedOnce && !showScoreModal && (
+          {!showScoreModal && (
             <Button
               variant="outline"
-              onClick={handleStart}
+              onClick={hasStartedOnce ? handleRetry : handleStart}
               className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm flex items-center gap-2"
             >
-              ▶ Restart
+              {hasStartedOnce ? "▶ Restart" : "▶ Start"}
             </Button>
           )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
