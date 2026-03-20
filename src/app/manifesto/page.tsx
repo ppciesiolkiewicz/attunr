@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/Button";
 
 export const metadata = {
   title: "Manifesto",
@@ -294,7 +294,8 @@ export default function ManifestoPage() {
           >
             Find what&rsquo;s truly you.
           </p>
-          <Link href="/journey" tabIndex={-1} className="mt-10 inline-block">
+          <Separator />
+          <Link href="/journey" tabIndex={-1} className="mt-6 inline-block">
             <Button variant="landing" size="lg" className="px-14">
               Begin the journey
             </Button>
