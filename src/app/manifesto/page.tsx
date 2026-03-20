@@ -301,6 +301,13 @@ export default function ManifestoPage() {
           >
             Find what&rsquo;s truly you.
           </p>
+          <Link
+            href="/journey"
+            className="inline-block mt-10 px-8 py-3 rounded-xl bg-violet-600 text-white text-sm font-medium hover:brightness-125 active:brightness-90 transition-all"
+            style={{ fontFamily: body }}
+          >
+            Begin the journey
+          </Link>
         </div>
       </div>
     </div>

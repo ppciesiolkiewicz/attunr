@@ -9,11 +9,11 @@ interface RepDotsProps {
 export function RepDots({ totalReps, currentRep, isComplete }: RepDotsProps) {
   if (totalReps <= 1) return null;
   return (
-    <div className="hidden sm:flex items-center gap-1.5">
+    <div className="flex items-center gap-1.5">
       {Array.from({ length: totalReps }, (_, i) => (
         <div
           key={i}
-          className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+          className={`hidden sm:block w-2 h-2 rounded-full transition-colors duration-300 ${
             i < currentRep
               ? "bg-violet-400"
               : i === currentRep && !isComplete
@@ -23,7 +23,7 @@ export function RepDots({ totalReps, currentRep, isComplete }: RepDotsProps) {
         />
       ))}
       <Text variant="caption" color="muted-1" className="ml-0.5 tabular-nums">
-        {Math.min(currentRep + 1, totalReps)}/{totalReps}
+        {currentRep}/{totalReps}
       </Text>
     </div>
   );

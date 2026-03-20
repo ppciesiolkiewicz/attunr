@@ -90,7 +90,8 @@ function AppShellInner({
 
   // Auto-start mic when app loads (skip on landing page — no mic needed there)
   useEffect(() => {
-    if (status === "idle" && pathname !== "/") startListening();
+    const needsMicNow = pathname?.startsWith("/journey") || pathname === "/practice";
+    if (status === "idle" && needsMicNow) startListening();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
