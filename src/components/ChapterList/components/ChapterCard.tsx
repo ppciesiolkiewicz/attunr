@@ -36,6 +36,13 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
   const nextHref = nextExercise ? journey.exerciseHref(nextExercise) : null;
   const firstExercise = allExercises[0];
 
+  const displayNum = journey.getDisplayNumber(chapter);
+  const prevChapter = journey.chapters.find((ch) => ch.chapter === chapter.chapter - 1);
+  const prevDisplay = prevChapter ? journey.getDisplayNumber(prevChapter) : undefined;
+  const lockedMessage = prevDisplay
+    ? `Complete Chapter ${toRoman(prevDisplay)} to unlock`
+    : "Complete the previous chapter to unlock";
+
   function handleCardClick() {
     if (isLocked) return;
     router.push(journey.chapterHref(chapter));
@@ -71,17 +78,22 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
       }}
     >
       {/* Color accent strip */}
-      <div className="h-[3px] w-full" style={{ background: "#a855f7", opacity: isLocked ? 0.4 : 1 }} />
+      <div className="h-[3px] w-full" style={{
+        background: chapter.secret ? "#f59e0b" : "#a855f7",
+        opacity: isLocked ? 0.4 : 1,
+      }} />
 
       {/* Header */}
       <div className="px-4 pt-4 pb-3">
         <div className="flex justify-between items-start">
           <div>
-            <Text variant="label" as="span" style={{ color: "rgba(168,133,246,0.5)" }}>
-              Chapter {toRoman(chapter.chapter)}
-            </Text>
+            {displayNum && (
+              <Text variant="label" as="span" style={{ color: "rgba(168,133,246,0.5)" }}>
+                Chapter {toRoman(displayNum)}
+              </Text>
+            )}
             <Text variant="heading-sm" as="h2" className="mt-1">
-              {chapter.title}
+              {chapter.secret && isLocked ? "???" : chapter.title}
             </Text>
           </div>
           {!isLocked && (
@@ -90,9 +102,11 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
             </Text>
           )}
         </div>
-        <Text variant="body-sm" as="p" className="mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>
-          {chapter.description}
-        </Text>
+        {!(chapter.secret && isLocked) && (
+          <Text variant="body-sm" as="p" className="mt-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+            {chapter.description}
+          </Text>
+        )}
       </div>
 
       {/* Stage dots */}
@@ -165,7 +179,7 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
       {isLocked && (
         <div className="px-4 pb-3">
           <Text variant="caption" as="p" style={{ color: "rgba(255,255,255,0.3)" }}>
-            Complete Chapter {toRoman(chapter.chapter - 1)} to unlock
+            {lockedMessage}
           </Text>
         </div>
       )}
