@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import confetti from "canvas-confetti";
 import { Button, Text, Modal } from "@/components/ui";
+import { ExerciseStartButton } from "./ExerciseStartButton";
 import { ProgressArc } from "./components/ProgressArc";
 import { RhythmCanvas } from "./RhythmCanvas";
 import type { RhythmBeatState, BeatStatus } from "./RhythmCanvas";
@@ -43,6 +44,7 @@ export function RhythmExercise({
 
   // ── Playback state ──────────────────────────────────────────────────────
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStartedOnce, setHasStartedOnce] = useState(false);
   const [showScoreModal, setShowScoreModal] = useState(false);
   const [overallScore, setOverallScore] = useState(0);
   const [tapFlash, setTapFlash] = useState(false);
@@ -65,6 +67,7 @@ export function RhythmExercise({
   // ── Reset on exercise change ────────────────────────────────────────────
   useEffect(() => {
     setIsPlaying(false);
+    setHasStartedOnce(false);
     setShowScoreModal(false);
     setOverallScore(0);
     setTapFlash(false);
@@ -149,6 +152,7 @@ export function RhythmExercise({
   // ── Start playback ──────────────────────────────────────────────────────
   const handleStart = useCallback(() => {
     if (isPlaying) return;
+    setHasStartedOnce(true);
 
     // Initialize AudioContext on user gesture
     if (!audioCtxRef.current) {
@@ -304,6 +308,9 @@ export function RhythmExercise({
           elapsedMs={elapsedMs}
           tapFlash={tapFlash}
         />
+
+        {/* Start overlay */}
+        {!hasStartedOnce && <ExerciseStartButton onStart={handleStart} />}
       </div>
 
       {/* ── Touch/click handler on canvas area ─────────────────────────── */}
@@ -322,7 +329,7 @@ export function RhythmExercise({
         </div>
 
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
-          {!isPlaying && !showScoreModal && (
+          {hasStartedOnce && !showScoreModal && (
             <Button
               variant="outline"
               onClick={handleStart}
@@ -337,12 +344,12 @@ export function RhythmExercise({
                 ← <span className="hidden sm:inline">Prev</span>
               </Button>
             )}
-            {(isAlreadyCompleted && !isPlaying) && (
+            {isAlreadyCompleted && (
               <Button onClick={onComplete} className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
                 {isLast ? "Complete ✓" : "Next →"}
               </Button>
             )}
-            {(!isAlreadyCompleted && !isPlaying && !showScoreModal) && (
+            {(!isAlreadyCompleted && !showScoreModal) && (
               <Button onClick={onSkip} title="Skip this step (won't mark as complete)" className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
                 Skip →
               </Button>

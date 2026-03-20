@@ -49,7 +49,7 @@ function TickingProgressRing({
 }) {
   const [displayCount, setDisplayCount] = useState(count);
   const onTickRef = useRef(onTick);
-  onTickRef.current = onTick;
+  useEffect(() => { onTickRef.current = onTick; });
 
   useEffect(() => {
     setDisplayCount(count);
@@ -133,6 +133,7 @@ export function TimeBasedExerciseContent({
   const [tipIndex, setTipIndex] = useState(0);
 
   const countdownTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const [hasStartedOnce, setHasStartedOnce] = useState(false);
 
   // Reset on exercise change
   if (prevExerciseId !== exerciseId) {
@@ -164,6 +165,7 @@ export function TimeBasedExerciseContent({
 
   // Start handler — begin countdown
   const handleStart = useCallback(() => {
+    setHasStartedOnce(true);
     setStatus("countdown");
     countdownTimers.current = [
       setTimeout(() => setStatus("running"), 3000),
@@ -246,7 +248,7 @@ export function TimeBasedExerciseContent({
                 onClick={handleStart}
               >
                 <span className="flex items-center justify-center w-full h-full">
-                  <span className="text-xl font-semibold text-white">▶ Restart</span>
+                  <span className="text-xl font-semibold text-white">{hasStartedOnce ? "▶ Restart" : "▶ Start"}</span>
                 </span>
               </button>
             ) : (
