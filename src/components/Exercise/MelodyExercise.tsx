@@ -66,6 +66,7 @@ export function MelodyExercise({
   const inTuneTimeRef = useRef<number[]>([]);
   const lastTickRef = useRef(0);
   const rafRef = useRef<number>(0);
+  const isPlayingRef = useRef(false);
 
   // MelodyRectNote state for PitchCanvas
   const [melodyRectNotes, setMelodyRectNotes] = useState<MelodyRectNote[]>([]);
@@ -74,20 +75,22 @@ export function MelodyExercise({
   // Stop playback when tab is hidden
   useEffect(() => {
     const handler = () => {
-      if (document.hidden && isPlaying) {
+      if (document.hidden && isPlayingRef.current) {
         stopSampler();
         if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        isPlayingRef.current = false;
         setIsPlaying(false);
         setMelodyStartTime(undefined);
       }
     };
     document.addEventListener("visibilitychange", handler);
     return () => document.removeEventListener("visibilitychange", handler);
-  }, [isPlaying, stopSampler]);
+  }, [stopSampler]);
 
   // Reset on exercise change
   useEffect(() => {
     setHasStarted(false);
+    isPlayingRef.current = false;
     setIsPlaying(false);
     setMelodyStartTime(undefined);
     setShowScoreModal(false);
@@ -115,7 +118,7 @@ export function MelodyExercise({
 
   // ── Start playback ─────────────────────────────────────────────────────
   const handleStart = useCallback(() => {
-    if (!isLoaded || isPlaying) return;
+    if (!isLoaded || isPlayingRef.current) return;
 
     // Build schedule for Tone.js — all non-silent entries with audio
     const audioNotes: { frequencyHz: number; startSec: number; durationSec: number }[] = [];
@@ -140,8 +143,9 @@ export function MelodyExercise({
 
     const startTime = performance.now();
     setMelodyStartTime(startTime);
+    isPlayingRef.current = true;
     setIsPlaying(true);
-  }, [isLoaded, isPlaying, singableNotes, melodyTimeline, scheduleMelody, buildRectNotes]);
+  }, [isLoaded, singableNotes, melodyTimeline, scheduleMelody, buildRectNotes]);
 
   const handleExerciseStart = useCallback(() => {
     setHasStarted(true);
@@ -224,6 +228,7 @@ export function MelodyExercise({
 
         setNoteScores(scores);
         setOverallScore(overall);
+        isPlayingRef.current = false;
         setIsPlaying(false);
         setShowScoreModal(true);
 
@@ -248,6 +253,7 @@ export function MelodyExercise({
     setShowScoreModal(false);
     setOverallScore(0);
     setNoteScores([]);
+    isPlayingRef.current = false;
     setIsPlaying(false);
     stopSampler();
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
