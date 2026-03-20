@@ -11,14 +11,18 @@ import { midiToHz, NOTE_NAMES } from "@/lib/pitch";
 export class Scale {
   /** All notes in this scale, sorted low → high. */
   readonly notes: ResolvedNote[];
+  /** 0-based array index of the root note within this.notes. */
+  readonly rootIndex: number;
   private readonly vocalRange: VocalRange;
 
   constructor(definition: BaseScale, vocalRange: VocalRange) {
     this.vocalRange = vocalRange;
-    this.notes = Scale.buildNotes(definition, vocalRange);
+    const result = Scale.buildNotes(definition, vocalRange);
+    this.notes = result.notes;
+    this.rootIndex = result.rootIndex;
   }
 
-  /** Pick specific note(s) by index or range. */
+  /** Pick specific note(s) by index or range. Original semantics: negative Index = from end. */
   resolve(target: NoteTarget): ResolvedNote[] {
     const n = this.notes.length;
     if (n === 0) return [];
@@ -39,6 +43,21 @@ export class Scale {
     }
 
     return [];
+  }
+
+  /**
+   * Root-relative resolution for melody events.
+   * Index: i=1 is root, i=0 is one below root, i=-1 is two below root.
+   * Range: delegates to resolve() (unchanged full-array semantics).
+   */
+  resolveFromRoot(target: NoteTarget): ResolvedNote[] {
+    if (target.kind === BandTargetKind.Index) {
+      const n = this.notes.length;
+      if (n === 0) return [];
+      const idx = this.rootIndex + (target.i - 1);
+      return idx >= 0 && idx < n ? [this.notes[idx]] : [];
+    }
+    return this.resolve(target);
   }
 
   /** Map colors from VocalRange onto this scale's notes. */
@@ -73,16 +92,32 @@ export class Scale {
   }
 
   /** Build the note pool for a scale definition. */
-  private static buildNotes(definition: BaseScale, vocalRange: VocalRange): ResolvedNote[] {
+  private static buildNotes(
+    definition: BaseScale,
+    vocalRange: VocalRange,
+  ): { notes: ResolvedNote[]; rootIndex: number } {
     const lowMidi = Note.midi(vocalRange.lowNote);
     const highMidi = Note.midi(vocalRange.highNote);
-    if (lowMidi == null || highMidi == null) return [];
+    if (lowMidi == null || highMidi == null) return { notes: [], rootIndex: 0 };
 
     if (definition.type === "even-7-from-major") {
-      return Scale.buildEven7FromMajor(lowMidi, highMidi, definition.root);
+      const notes = Scale.buildEven7FromMajor(lowMidi, highMidi, definition.root);
+      return { notes, rootIndex: 0 };
     }
 
-    return Scale.buildTonalScale(lowMidi, highMidi, definition.type, definition.root);
+    // Compute rootMidi based on startPoint
+    const startPoint = definition.startPoint ?? "start";
+    let rootMidi: number;
+    if (startPoint === "end") {
+      rootMidi = highMidi - (definition.root - 1);
+    } else if (startPoint === "center") {
+      const centerMidi = Math.round((lowMidi + highMidi) / 2);
+      rootMidi = centerMidi + (definition.root - 1);
+    } else {
+      rootMidi = lowMidi + (definition.root - 1);
+    }
+
+    return Scale.buildTonalScale(lowMidi, highMidi, definition.type, rootMidi);
   }
 
   /** Build 7 evenly-spaced notes from the major scale across the range. */
@@ -123,27 +158,52 @@ export class Scale {
       .map((idx) => Scale.midiToResolvedNote(allMidi[idx]));
   }
 
-  /** Build notes for any tonal.js scale type. */
-  private static buildTonalScale(lowMidi: number, highMidi: number, scaleType: string, root: number): ResolvedNote[] {
-    const rootMidi = lowMidi + (root - 1);
+  /** Build notes for any tonal.js scale type. Includes notes below root. */
+  private static buildTonalScale(
+    lowMidi: number,
+    highMidi: number,
+    scaleType: string,
+    rootMidi: number,
+  ): { notes: ResolvedNote[]; rootIndex: number } {
     const rootName = NOTE_NAMES[((rootMidi % 12) + 12) % 12];
-    const scaleNotes = TonalScale.get(`${rootName} ${scaleType}`).notes;
-    const scalePCs = new Set(scaleNotes.map((n) => Note.chroma(n) ?? -1));
 
-    const allMidi: number[] = [];
-    for (let midi = rootMidi; midi <= highMidi; midi++) {
-      if (scalePCs.has(((midi % 12) + 12) % 12)) allMidi.push(midi);
+    // For chromatic, every semitone matches; for named scales, use pitch classes
+    const isChromatic = scaleType === "chromatic";
+    let scalePCs: Set<number> | null = null;
+    if (!isChromatic) {
+      const scaleNotes = TonalScale.get(`${rootName} ${scaleType}`).notes;
+      scalePCs = new Set(scaleNotes.map((n) => Note.chroma(n) ?? -1));
+    }
+    const matches = (midi: number) =>
+      isChromatic || scalePCs!.has(((midi % 12) + 12) % 12);
+
+    // Notes below root (lowMidi to rootMidi - 1)
+    const belowRoot: number[] = [];
+    for (let midi = lowMidi; midi < rootMidi; midi++) {
+      if (matches(midi)) belowRoot.push(midi);
     }
 
-    // Fallback: if fewer than 2 notes, fill chromatically
-    if (allMidi.length < 2) {
+    // Notes from root upward (rootMidi to highMidi)
+    const fromRoot: number[] = [];
+    for (let midi = rootMidi; midi <= highMidi; midi++) {
+      if (matches(midi)) fromRoot.push(midi);
+    }
+
+    const allMidi = [...belowRoot, ...fromRoot];
+    const rootIndex = belowRoot.length;
+
+    // Fallback: if fewer than 2 notes from root, fill chromatically
+    if (fromRoot.length < 2) {
       for (let midi = rootMidi; midi <= highMidi; midi++) {
         if (!allMidi.includes(midi)) allMidi.push(midi);
       }
       allMidi.sort((a, b) => a - b);
     }
 
-    return allMidi.map((midi) => Scale.midiToResolvedNote(midi));
+    return {
+      notes: allMidi.map((midi) => Scale.midiToResolvedNote(midi)),
+      rootIndex,
+    };
   }
 
   /** Convert a MIDI number to a ResolvedNote. */

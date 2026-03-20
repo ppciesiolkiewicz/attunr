@@ -33,8 +33,13 @@ export enum BandTargetKind {
 /**
  * Describes which note(s) in a scale an exercise targets.
  *
- * - index: 1-indexed ChromaticDegree position in the scale's note pool; negative counts from end (-1 = last note)
- * - range: inclusive ChromaticDegree range (negative supported); used for loose detection exercises
+ * - index: Position in the scale's note pool.
+ *   When resolved via resolveFromRoot() (melody events): root-relative.
+ *     i=1 is root, i=2 is one above root, i=0 is one below root, i=-1 is two below root.
+ *   When resolved via resolve() (all other exercises): full-array indexed.
+ *     Positive i: 1-indexed from start. Negative i: from end (-1 = last note).
+ * - range: Inclusive range using full-array indexing (1-indexed from start, negative from end).
+ *   Used for loose detection exercises.
  *   - accept: "below" = any tone at or below the range; "above" = any tone at or above
  */
 export type NoteTarget =
@@ -197,6 +202,8 @@ export interface BaseScale {
   type: string;
   /** 1-indexed chromatic degree from user's lowest note. */
   root: ChromaticDegree;
+  /** Reference point for root positioning. Default: "start" (from lowest note). */
+  startPoint?: "start" | "end" | "center";
 }
 
 /** Shape of the tone played in a tone-follow exercise. */

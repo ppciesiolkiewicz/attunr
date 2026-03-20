@@ -259,14 +259,14 @@ function resolveMelody(
         // Advance cursor only
       } else if (event.type === "play") {
         for (const target of event.targets) {
-          const resolved = localScale.resolve(target);
+          const resolved = localScale.resolveFromRoot(target);
           const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
           if (colored) {
             timeline.push({ note: colored, startMs: cursor, durationMs: ms, audioOnly: true });
           }
         }
       } else {
-        const resolved = localScale.resolve(event.target);
+        const resolved = localScale.resolveFromRoot(event.target);
         const colored = resolved[0] ? vocalRange.findNote(resolved[0].midi) : null;
         if (colored) {
           timeline.push({

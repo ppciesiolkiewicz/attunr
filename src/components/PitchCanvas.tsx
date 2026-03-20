@@ -49,15 +49,18 @@ interface PitchCanvasProps {
   melodyStartTime?: number;
 }
 
-const DOT_INTERVAL_MS = 85;
-const MAX_DOTS = 90;
-const DOT_SPACING_PX = 8;
+import {
+  DOT_INTERVAL_MS,
+  DOT_SPACING_PX,
+  MAX_TRAIL_DOTS,
+  PLAYHEAD_X,
+} from "@/constants/settings";
+
 /** Pixels per millisecond — constant scroll speed regardless of whether pitch is detected */
 const PX_PER_MS = DOT_SPACING_PX / DOT_INTERVAL_MS;
 /** Dots older than this are discarded (~7.6 s of history) */
-const DOT_MAX_AGE_MS = MAX_DOTS * DOT_INTERVAL_MS;
+const DOT_MAX_AGE_MS = MAX_TRAIL_DOTS * DOT_INTERVAL_MS;
 const DOT_RADIUS = 5;
-const NEWEST_X = 0.68;
 
 /**
  * Minimum distance from the top edge to the highest band. Large enough so that
@@ -233,7 +236,7 @@ export default function PitchCanvas({
     const bands = bandsRef.current;
     const n = bands.length;
     const hz = currentHzRef.current;
-    const newestX = W * NEWEST_X;
+    const newestX = W * PLAYHEAD_X;
 
     // ── Band layout (computed fresh each frame so it adapts to resize) ────────
     const { topY, bottomY, slotH } = computeBandLayout(n, H);
@@ -309,6 +312,17 @@ export default function PitchCanvas({
       ctx.fillStyle = `rgba(${band.rgb}, ${(active ? 0.82 : 0.65) * dim})`;
       ctx.fillText(`${band.frequencyHz} Hz`, 12 + noteW + 9, cy + 1);
     }
+
+    // ── Centre reference line (dashed, faint, spans band cluster) ─────────
+    ctx.save();
+    ctx.setLineDash([4, 6]);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(newestX, topY - 10);
+    ctx.lineTo(newestX, bottomY + 10);
+    ctx.stroke();
+    ctx.restore();
 
     // ── Melody rectangles ──────────────────────────────────────────────────
     const mNotes = melodyNotesRef.current;

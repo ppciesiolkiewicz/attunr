@@ -9,29 +9,78 @@ const base = { slug: "test", title: "Test", instruction: "Test instruction" };
 
 describe("interval()", () => {
   it("returns exerciseTypeId melody", () => {
-    const result = gen.interval({ ...base, startNote: 1, endNote: 4, chromaticDegree: 5 });
+    const result = gen.interval({ ...base, startNote: 1, endNote: 4, chromaticDegree: 3 });
     expect(result.exerciseTypeId).toBe("melody");
   });
 
-  it("generates play-pause-note-note pattern for each step", () => {
-    const result = gen.interval({ ...base, startNote: 1, endNote: 4, chromaticDegree: 5 });
+  it("generates one MelodyScale per root in lo→hi→lo arc", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
-    // range 1-4, chromaticDegree 5 → root can be 1 only (1 + 5 - 1 = 5 > 4, so no steps)
-    // Use smaller degree: chromaticDegree 3, range 1-4 → roots 1, 2 (1+3-1=3 ≤ 4, 2+3-1=4 ≤ 4, 3+3-1=5 > 4)
-    const r2 = gen.interval({ ...base, startNote: 1, endNote: 4, chromaticDegree: 3 });
-    if (r2.exerciseTypeId !== "melody") throw new Error("wrong type");
-    expect(r2.melody).toHaveLength(2);
-    const [firstStep] = r2.melody;
-    expect(firstStep.events).toHaveLength(4);
-    expect(firstStep.events[0].type).toBe("play");
-    expect(firstStep.events[1].type).toBe("pause");
-    expect(firstStep.events[1].duration).toBe(NoteDuration.Eighth);
-    expect(firstStep.events[2].type).toBe("note");
-    expect(firstStep.events[3].type).toBe("note");
+    // roots: 1, 2, 3, 2, 1
+    expect(result.melody).toHaveLength(5);
+    expect(result.melody.map((m) => m.root)).toEqual([1, 2, 3, 2, 1]);
+  });
+
+  it("every root has 5 events: approach chord + I-chord + singing", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    const second = result.melody[1];
+    expect(second.events).toHaveLength(5);
+    expect(second.events[0].type).toBe("play"); // approach chord
+    expect(second.events[1].type).toBe("play"); // I-chord
+    expect(second.events[2].type).toBe("note");
+    expect(second.events[3].type).toBe("note");
+    expect(second.events[4].type).toBe("note");
+  });
+
+  it("approach chord targets [0, 4, 7] (one step below root)", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    const approach = result.melody[1].events[0];
+    if (approach.type !== "play") throw new Error("expected play");
+    const indices = approach.targets.map((t) => {
+      if (t.kind !== BandTargetKind.Index) throw new Error("expected Index");
+      return t.i;
+    });
+    expect(indices).toEqual([0, 4, 7]);
+    expect(approach.duration).toBe(NoteDuration.Quarter);
+  });
+
+  it("I-chord targets [1, 5, 8]", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    // Non-first: I-chord is event[1]
+    const play = result.melody[1].events[1];
+    if (play.type !== "play") throw new Error("expected play");
+    const indices = play.targets.map((t) => {
+      if (t.kind !== BandTargetKind.Index) throw new Error("expected Index");
+      return t.i;
+    });
+    expect(indices).toEqual([1, 5, 8]);
+    expect(play.duration).toBe(NoteDuration.Quarter);
+  });
+
+  it("singing events are root(Half), degree(Quarter), root(Quarter)", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    // Non-first root: singing starts at event[2]
+    const events = result.melody[1].events;
+    if (events[2].type !== "note") throw new Error("expected note");
+    if (events[2].target.kind !== BandTargetKind.Index) throw new Error("expected Index");
+    expect(events[2].target.i).toBe(1);
+    expect(events[2].duration).toBe(NoteDuration.Half);
+    if (events[3].type !== "note") throw new Error("expected note");
+    if (events[3].target.kind !== BandTargetKind.Index) throw new Error("expected Index");
+    expect(events[3].target.i).toBe(3);
+    expect(events[3].duration).toBe(NoteDuration.Quarter);
+    if (events[4].type !== "note") throw new Error("expected note");
+    if (events[4].target.kind !== BandTargetKind.Index) throw new Error("expected Index");
+    expect(events[4].target.i).toBe(1);
+    expect(events[4].duration).toBe(NoteDuration.Quarter);
   });
 
   it("uses default tempo 80 and minScore 0", () => {
-    const result = gen.interval({ ...base, startNote: 1, endNote: 4, chromaticDegree: 3 });
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
     expect(result.tempo).toBe(80);
     expect(result.minScore).toBe(0);
@@ -39,41 +88,31 @@ describe("interval()", () => {
 
   it("accepts custom tempo and minScore", () => {
     const result = gen.interval({
-      ...base,
-      startNote: 1,
-      endNote: 4,
-      chromaticDegree: 3,
-      tempo: 100,
-      minScore: 70,
+      ...base, startNote: 1, endNote: 3, chromaticDegree: 3,
+      tempo: 100, minScore: 70,
     });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
     expect(result.tempo).toBe(100);
     expect(result.minScore).toBe(70);
   });
 
-  it("displayNotes covers the full range lo to hi", () => {
-    const result = gen.interval({ ...base, startNote: 1, endNote: 4, chromaticDegree: 3 });
+  it("displayNotes range includes chord P5", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
-    const displayNotes = result.displayNotes;
-    expect(displayNotes).toBeDefined();
-    expect(displayNotes).toHaveLength(1);
-    const scale = displayNotes![0];
-    expect(scale.type).toBe("chromatic");
-    expect(scale.root).toBe(1);
-    // Should have notes for indices 1 through 4
-    expect(scale.notes).toHaveLength(4);
-    const targets = scale.notes.map((n) => {
-      if (n.target.kind !== BandTargetKind.Index) throw new Error("expected Index target");
+    const scale = result.displayNotes![0];
+    const maxTarget = Math.max(...scale.notes.map((n) => {
+      if (n.target.kind !== BandTargetKind.Index) throw new Error("expected Index");
       return n.target.i;
-    });
-    expect(targets).toEqual([1, 2, 3, 4]);
+    }));
+    expect(maxTarget).toBeGreaterThanOrEqual(10); // hi(3) + 7
   });
 
-  it("melody scale uses type chromatic and root lo", () => {
-    const result = gen.interval({ ...base, startNote: 2, endNote: 5, chromaticDegree: 3 });
+  it("all melody scales use type chromatic", () => {
+    const result = gen.interval({ ...base, startNote: 1, endNote: 3, chromaticDegree: 3 });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
-    expect(result.melody[0].type).toBe("chromatic");
-    expect(result.melody[0].root).toBe(2);
+    for (const m of result.melody) {
+      expect(m.type).toBe("chromatic");
+    }
   });
 });
 
@@ -83,30 +122,22 @@ describe("fifth()", () => {
   it("delegates to interval with chromaticDegree 8", () => {
     const result = gen.fifth({ ...base });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
-    // fifth uses chromaticDegree 8 — each step's play event targets root and root+7
-    const firstStep = result.melody[0];
-    const playEvent = firstStep.events[0];
-    if (playEvent.type !== "play") throw new Error("expected play event");
-    expect(playEvent.targets).toHaveLength(2);
-    const [rootTarget, intervalTarget] = playEvent.targets;
-    if (rootTarget.kind !== BandTargetKind.Index) throw new Error("expected Index");
-    if (intervalTarget.kind !== BandTargetKind.Index) throw new Error("expected Index");
-    expect(intervalTarget.i - rootTarget.i).toBe(7); // chromaticDegree 8 → interval of 7 semitones
+    const noteEvents = result.melody[0].events.filter((e) => e.type === "note");
+    const degreeEvent = noteEvents[1];
+    if (degreeEvent.type !== "note") throw new Error("expected note");
+    if (degreeEvent.target.kind !== BandTargetKind.Index) throw new Error("expected Index");
+    expect(degreeEvent.target.i).toBe(8);
   });
 
   it("uses default startNote 4 and endNote -4", () => {
     const result = gen.fifth({ ...base });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
-    // The melody should be non-empty (valid range with degree 8 applied)
     expect(result.melody.length).toBeGreaterThan(0);
   });
 
   it("accepts custom startNote and endNote overrides", () => {
     const result = gen.fifth({ ...base, startNote: 1, endNote: 8 });
-    const resultDefault = gen.fifth({ ...base });
     if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
-    if (resultDefault.exerciseTypeId !== "melody") throw new Error("wrong type");
-    // Custom range 1-8 should produce a different number of steps
     expect(result.melody.length).not.toBe(0);
   });
 });

@@ -9,19 +9,14 @@ import type { RhythmBeatState, BeatStatus } from "./RhythmCanvas";
 import type { RhythmConfig } from "@/constants/journey";
 import type { RhythmExercise as RhythmExerciseType } from "@/constants/journey";
 
-/** Scoring windows (ms) */
-const HIT_WINDOW_MS = 80;
-const CLOSE_WINDOW_MS = 150;
-
-/** Score weights per classification */
-const HIT_WEIGHT = 1.0;
-const CLOSE_WEIGHT = 0.5;
-
-/** Ignore taps within this window of the previous tap */
-const TAP_DEBOUNCE_MS = 50;
-
-/** Tap flash duration (ms) */
-const TAP_FLASH_MS = 120;
+import {
+  RHYTHM_HIT_WINDOW_MS,
+  RHYTHM_CLOSE_WINDOW_MS,
+  RHYTHM_HIT_WEIGHT,
+  RHYTHM_CLOSE_WEIGHT,
+  RHYTHM_TAP_DEBOUNCE_MS,
+  RHYTHM_TAP_FLASH_MS,
+} from "@/constants/settings";
 
 interface RhythmExerciseProps {
   exercise: RhythmConfig;
@@ -105,13 +100,13 @@ export function RhythmExercise({
     const now = performance.now();
 
     // Debounce
-    if (now - lastTapTimeRef.current < TAP_DEBOUNCE_MS) return;
+    if (now - lastTapTimeRef.current < RHYTHM_TAP_DEBOUNCE_MS) return;
     lastTapTimeRef.current = now;
 
     // Visual flash
     setTapFlash(true);
     if (tapFlashTimerRef.current) clearTimeout(tapFlashTimerRef.current);
-    tapFlashTimerRef.current = setTimeout(() => setTapFlash(false), TAP_FLASH_MS);
+    tapFlashTimerRef.current = setTimeout(() => setTapFlash(false), RHYTHM_TAP_FLASH_MS);
 
     const tapElapsed = now - startTimeRef.current;
 
@@ -123,7 +118,7 @@ export function RhythmExercise({
       if (tapMatchedRef.current[i]) continue;
       const beatStart = beats[i].startMs;
       const dist = Math.abs(tapElapsed - beatStart);
-      if (dist < bestDist && dist <= CLOSE_WINDOW_MS) {
+      if (dist < bestDist && dist <= RHYTHM_CLOSE_WINDOW_MS) {
         bestDist = dist;
         bestIdx = i;
       }
@@ -131,7 +126,7 @@ export function RhythmExercise({
 
     if (bestIdx >= 0) {
       tapMatchedRef.current[bestIdx] = true;
-      const status: BeatStatus = bestDist <= HIT_WINDOW_MS ? "hit" : "close";
+      const status: BeatStatus = bestDist <= RHYTHM_HIT_WINDOW_MS ? "hit" : "close";
       beatStatesRef.current[bestIdx] = status;
     }
   }, [isPlaying, beats]);
@@ -243,8 +238,8 @@ export function RhythmExercise({
         let weightSum = 0;
         for (let i = 0; i < beats.length; i++) {
           const status = beatStatesRef.current[i];
-          if (status === "hit") weightSum += HIT_WEIGHT;
-          else if (status === "close") weightSum += CLOSE_WEIGHT;
+          if (status === "hit") weightSum += RHYTHM_HIT_WEIGHT;
+          else if (status === "close") weightSum += RHYTHM_CLOSE_WEIGHT;
         }
         const score = beats.length > 0 ? Math.round((weightSum / beats.length) * 100) : 0;
 

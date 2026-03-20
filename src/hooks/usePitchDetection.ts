@@ -23,9 +23,7 @@ interface PitchDetectionState {
 const CREPE_MODEL_URL =
   "https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/";
 
-/** Valid human-voice pitch range accepted from CREPE */
-const MIN_HZ = 50;
-const MAX_HZ = 2000;
+import { MIN_VOICE_HZ, MAX_VOICE_HZ } from "@/constants/settings";
 
 /** How often to push React state updates (for UI labels). Canvas uses the ref. */
 const UI_THROTTLE_MS = 66; // ~15 fps
@@ -53,7 +51,7 @@ export function usePitchDetection(): PitchDetectionState {
     detectorRef.current.getPitch((_, freq) => {
       if (!activeRef.current) return;
 
-      const valid = freq && freq > MIN_HZ && freq < MAX_HZ ? freq : null;
+      const valid = freq && freq > MIN_VOICE_HZ && freq < MAX_VOICE_HZ ? freq : null;
 
       // ① Write ref immediately — canvas sees this on its very next RAF tick
       pitchHzRef.current = valid;

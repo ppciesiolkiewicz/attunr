@@ -1,5 +1,6 @@
 import type { ResolvedNote } from "@/lib/VocalRange";
 import { VOICE_TYPES } from "@/constants/voice-types";
+import { PITCH_TOLERANCE, NOTE_RANGE_BUFFER } from "@/constants/settings";
 import type { VoiceTypeId } from "@/constants/voice-types";
 
 export const NOTE_NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"] as const;
@@ -42,7 +43,7 @@ export function deriveVoiceType(lowHz: number, highHz: number): VoiceTypeId {
 export function isInTune(
   detectedHz: number,
   targetHz: number,
-  tolerance: number = 0.03
+  tolerance: number = PITCH_TOLERANCE
 ): boolean {
   return Math.abs(detectedHz - targetHz) / targetHz <= tolerance;
 }
@@ -67,7 +68,7 @@ export function matchesNoteTarget(
   const freqs = notes.map((n) => n.frequencyHz);
   const minHz = Math.min(...freqs);
   const maxHz = Math.max(...freqs);
-  const buffer = 0.1;
+  const buffer = NOTE_RANGE_BUFFER;
   const low = minHz * (1 - buffer);
   const high = maxHz * (1 + buffer);
   switch (accept) {
@@ -93,5 +94,5 @@ export function findClosestNote(hz: number, notes: ResolvedNote[]): ResolvedNote
 export function pitchConfidence(hz: number, notes: ResolvedNote[]): number {
   const closest = findClosestNote(hz, notes);
   const ratio = Math.abs(hz - closest.frequencyHz) / closest.frequencyHz;
-  return Math.max(0, 1 - ratio / 0.03);
+  return Math.max(0, 1 - ratio / PITCH_TOLERANCE);
 }

@@ -1,6 +1,15 @@
 import type { StageConfigInput } from "./types";
-import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS, LIP_ROLL_TIPS, BREATH_SOUND_TIPS } from "./exercise-tips";
+import {
+  ExerciseGenerator,
+  IntroModalGenerator,
+  repeat,
+} from "./exercise-generator";
+import {
+  VOWEL_TIPS,
+  HEAD_VOICE_TIPS,
+  LIP_ROLL_TIPS,
+  BREATH_SOUND_TIPS,
+} from "./exercise-tips";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -132,10 +141,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "All breath, no voice — feel what happens",
         cues: [
           { text: "sss", seconds: 2 },
-          ...repeat([
-            { text: "zzz", seconds: 2 },
-            { text: "sss", seconds: 2 },
-          ], 3),
+          ...repeat(
+            [
+              { text: "zzz", seconds: 2 },
+              { text: "sss", seconds: 2 },
+            ],
+            3,
+          ),
         ],
         instruction:
           "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
@@ -172,8 +184,8 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       }),
       gen.lipRoll({
         slug: "lip-roll-slide",
-        startNote: -5,
-        endNote: 4,
+        startNote: 13,
+        endNote: 1,
         scale: { type: "major", root: 1 },
         requiredPlays: 3,
         title: "Lip roll slide",
@@ -216,7 +228,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Two-note step",
         headerSubtitle: "Sing two notes · listen and match",
         cardSubtitle: "Your first melody — just two adjacent notes",
-        tempo: 50,
+        tempo: 100,
         instruction:
           "Sing the two notes as they appear.\nListen and match — this is the smallest melodic step.\nThere's no rush. Just notice the distance between them.",
         introModal: modal.melody({

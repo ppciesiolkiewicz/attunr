@@ -19,10 +19,7 @@ interface VolumeDetectionState {
   stopListening: () => void;
 }
 
-/** RMS threshold below which we consider "silence". */
-const SILENCE_THRESHOLD = 0.02;
-/** How often to sample volume (ms). */
-const SAMPLE_INTERVAL_MS = 33; // ~30 fps
+import { SILENCE_THRESHOLD, VOLUME_SAMPLE_INTERVAL_MS } from "@/constants/settings";
 
 export function useVolumeDetection(): VolumeDetectionState {
   const [volume, setVolume] = useState(0);
@@ -89,7 +86,7 @@ export function useVolumeDetection(): VolumeDetectionState {
       source.connect(analyser);
       analyserRef.current = analyser;
 
-      intervalRef.current = setInterval(sample, SAMPLE_INTERVAL_MS);
+      intervalRef.current = setInterval(sample, VOLUME_SAMPLE_INTERVAL_MS);
 
       setStatus("listening");
     } catch (err) {

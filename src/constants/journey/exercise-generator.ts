@@ -253,7 +253,6 @@ export interface IntervalParams extends CommonParams {
   endNote: number;
   chromaticDegree: number;
   tempo?: number;
-  noteDuration?: NoteDuration;
   minScore?: number;
 }
 
@@ -403,7 +402,6 @@ export class ExerciseGenerator {
       endNote,
       chromaticDegree,
       tempo = 80,
-      noteDuration = NoteDuration.Half,
       minScore = 0,
     } = params;
 
@@ -416,43 +414,67 @@ export class ExerciseGenerator {
     for (let r = hi - 1; r > lo; r--) roots.push(r);
     roots.push(lo);
 
-    const melody: MelodyScale[] = roots.map((root) => {
-      const events: MelodyEvent[] = [
-        {
-          type: "play",
-          targets: [toTarget(1), toTarget(chromaticDegree)],
-          duration: NoteDuration.Eighth,
-        },
-        { type: "pause", duration: NoteDuration.Eighth },
-        { type: "note", target: toTarget(1), duration: noteDuration },
-        {
-          type: "note",
-          target: toTarget(chromaticDegree),
-          duration: noteDuration,
-        },
-        { type: "note", target: toTarget(1), duration: noteDuration },
-      ];
-      return { type: "chromatic" as const, root, events };
-    });
+    // Approach chord: I-chord one semitone below current root
+    const approachChord: MelodyEvent = {
+      type: "play",
+      targets: [toTarget(0), toTarget(4), toTarget(7)],
+      duration: NoteDuration.Quarter,
+    };
 
-    // Active notes span the full range: every root and its interval note
+    // I-chord on current root
+    const rootChord: MelodyEvent = {
+      type: "play",
+      targets: [toTarget(1), toTarget(5), toTarget(8)],
+      duration: NoteDuration.Quarter,
+    };
+
+    // Singing pattern: root (Half) → degree (Quarter) → root (Quarter)
+    const singingEvents: MelodyEvent[] = [
+      { type: "note", target: toTarget(1), duration: NoteDuration.Half },
+      {
+        type: "note",
+        target: toTarget(chromaticDegree),
+        duration: NoteDuration.Quarter,
+      },
+      { type: "note", target: toTarget(1), duration: NoteDuration.Quarter },
+    ];
+
+    // All roots: approach chord + I-chord + singing
+    const events: MelodyEvent[] = [
+      approachChord,
+      rootChord,
+      ...singingEvents,
+    ];
+
+    const melody: MelodyScale[] = roots.map((root) => ({
+      type: "chromatic" as const,
+      root,
+      events,
+    }));
+
+    // Active notes: every root, its interval note, chord notes, and approach chord notes
     const activeNotes: number[] = [];
     for (let r = lo; r <= hi; r++) {
-      if (!activeNotes.includes(r)) activeNotes.push(r);
-      const intervalNote = r + chromaticDegree - 1;
-      if (!activeNotes.includes(intervalNote)) activeNotes.push(intervalNote);
+      // Root chord offsets (0, +4, +7) and interval degree
+      for (const offset of [0, chromaticDegree - 1, 4, 7]) {
+        const note = r + offset;
+        if (!activeNotes.includes(note)) activeNotes.push(note);
+      }
+      // Approach chord offsets (-1, +3, +6) — chord one step below root
+      for (const offset of [-1, 3, 6]) {
+        const note = r + offset;
+        if (!activeNotes.includes(note)) activeNotes.push(note);
+      }
     }
+
+    const displayHi = hi + Math.max(chromaticDegree - 1, 7);
 
     return {
       ...pickCommon(params),
       exerciseTypeId: "melody",
       tempo,
       melody,
-      displayNotes: buildDisplayNotes(
-        lo,
-        hi + chromaticDegree - 1,
-        activeNotes,
-      ),
+      displayNotes: buildDisplayNotes(lo, displayHi, activeNotes),
       minScore,
     };
   }

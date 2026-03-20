@@ -11,10 +11,10 @@ export interface RhythmBeatState {
   status: BeatStatus;
 }
 
+import { DOT_SPACING_PX, DOT_INTERVAL_MS, PLAYHEAD_X } from "@/constants/settings";
+
 /** Scroll speed — matches PitchCanvas DOT_SPACING_PX / DOT_INTERVAL_MS */
-const PX_PER_MS = 8 / 85;
-/** "Now" line position as fraction of canvas width (matches PitchCanvas) */
-const NEWEST_X = 0.68;
+const PX_PER_MS = DOT_SPACING_PX / DOT_INTERVAL_MS;
 /** Canvas height */
 const CANVAS_H = 200;
 /** Beat marker height */
@@ -50,7 +50,7 @@ export function RhythmCanvas({ beats, elapsedMs, tapFlash }: RhythmCanvasProps) 
 
     ctx.clearRect(0, 0, w, h);
 
-    const nowX = w * NEWEST_X;
+    const nowX = w * PLAYHEAD_X;
     const centerY = h / 2;
 
     // Draw "now" line

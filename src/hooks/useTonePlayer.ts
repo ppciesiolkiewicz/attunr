@@ -1,14 +1,13 @@
 "use client";
 
 import { useRef, useCallback } from "react";
-
-/** Fixed binaural beat offset (Hz) — 6 Hz theta for calming/somatic effect */
-const BINAURAL_BEAT_HZ = 6;
-
-const TONE_DURATION_MS = 1800;
-const FADE_IN_S  = 0.02;
-const FADE_OUT_S = 0.2;
-const GAIN = 0.42;
+import {
+  BINAURAL_BEAT_HZ,
+  TONE_DURATION_MS,
+  TONE_FADE_IN_S,
+  TONE_FADE_OUT_S,
+  TONE_GAIN,
+} from "@/constants/settings";
 
 export function useTonePlayer() {
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -50,8 +49,8 @@ export function useTonePlayer() {
       // Shared gain envelope (applied after merge)
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, now);
-      masterGain.gain.linearRampToValueAtTime(GAIN, now + FADE_IN_S);
-      masterGain.gain.setValueAtTime(GAIN, now + dur - FADE_OUT_S);
+      masterGain.gain.linearRampToValueAtTime(TONE_GAIN, now + TONE_FADE_IN_S);
+      masterGain.gain.setValueAtTime(TONE_GAIN, now + dur - TONE_FADE_OUT_S);
       masterGain.gain.linearRampToValueAtTime(0, now + dur);
       masterGain.connect(ctx.destination);
 
@@ -121,8 +120,8 @@ export function useTonePlayer() {
 
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, now);
-      masterGain.gain.linearRampToValueAtTime(GAIN, now + FADE_IN_S);
-      masterGain.gain.setValueAtTime(GAIN, now + totalDur - FADE_OUT_S);
+      masterGain.gain.linearRampToValueAtTime(TONE_GAIN, now + TONE_FADE_IN_S);
+      masterGain.gain.setValueAtTime(TONE_GAIN, now + totalDur - TONE_FADE_OUT_S);
       masterGain.gain.linearRampToValueAtTime(0, now + totalDur);
       masterGain.connect(ctx.destination);
 
@@ -186,8 +185,8 @@ export function useTonePlayer() {
 
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0, now);
-      masterGain.gain.linearRampToValueAtTime(GAIN, now + FADE_IN_S);
-      masterGain.gain.setValueAtTime(GAIN, now + dur - FADE_OUT_S);
+      masterGain.gain.linearRampToValueAtTime(TONE_GAIN, now + TONE_FADE_IN_S);
+      masterGain.gain.setValueAtTime(TONE_GAIN, now + dur - TONE_FADE_OUT_S);
       masterGain.gain.linearRampToValueAtTime(0, now + dur);
       masterGain.connect(ctx.destination);
 
@@ -262,8 +261,8 @@ export function useTonePlayer() {
       function scheduleHoot(hootStart: number) {
         const masterGain = ctx.createGain();
         masterGain.gain.setValueAtTime(0, hootStart);
-        masterGain.gain.linearRampToValueAtTime(GAIN, hootStart + FADE_IN_S);
-        masterGain.gain.setValueAtTime(GAIN, hootStart + hootDur - FADE_OUT_S);
+        masterGain.gain.linearRampToValueAtTime(TONE_GAIN, hootStart + TONE_FADE_IN_S);
+        masterGain.gain.setValueAtTime(TONE_GAIN, hootStart + hootDur - TONE_FADE_OUT_S);
         masterGain.gain.linearRampToValueAtTime(0, hootStart + hootDur);
         masterGain.connect(ctx.destination);
 

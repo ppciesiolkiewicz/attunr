@@ -12,13 +12,12 @@ import { isInTune } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import type { MelodyExercise as MelodyExerciseType } from "@/constants/journey";
 import { usePianoSampler } from "@/hooks/usePianoSampler";
-
-/** Pre-roll time (ms) — visual lead-in before first note */
-const PRE_ROLL_MS = 2000;
-
-/** Scoring thresholds for per-note classification */
-const HIT_THRESHOLD = 0.7;
-const CLOSE_THRESHOLD = 0.4;
+import {
+  PRE_ROLL_MS,
+  AUDIO_LEAD_MS,
+  MELODY_HIT_THRESHOLD,
+  MELODY_CLOSE_THRESHOLD,
+} from "@/constants/settings";
 
 interface MelodyExerciseProps {
   exercise: MelodyConfig;
@@ -112,7 +111,7 @@ export function MelodyExercise({
       if (n.silent) continue;
       audioNotes.push({
         frequencyHz: n.note.frequencyHz,
-        startSec: (n.startMs + PRE_ROLL_MS) / 1000,
+        startSec: (n.startMs + PRE_ROLL_MS - AUDIO_LEAD_MS) / 1000,
         durationSec: n.durationMs / 1000,
       });
     }
@@ -174,7 +173,7 @@ export function MelodyExercise({
           if (rect.status === "active" || rect.status === "upcoming") {
             const noteSeconds = rect.durationMs / 1000;
             const score = noteSeconds > 0 ? inTuneTimeRef.current[i] / noteSeconds : 0;
-            const status = score >= HIT_THRESHOLD ? "hit" : score >= CLOSE_THRESHOLD ? "close" : "missed";
+            const status = score >= MELODY_HIT_THRESHOLD ? "hit" : score >= MELODY_CLOSE_THRESHOLD ? "close" : "missed";
             rects[i] = { ...rect, status };
             changed = true;
           }
@@ -198,7 +197,7 @@ export function MelodyExercise({
           if (finalRects[i].status === "active" || finalRects[i].status === "upcoming") {
             finalRects[i] = {
               ...finalRects[i],
-              status: score >= HIT_THRESHOLD ? "hit" : score >= CLOSE_THRESHOLD ? "close" : "missed",
+              status: score >= MELODY_HIT_THRESHOLD ? "hit" : score >= MELODY_CLOSE_THRESHOLD ? "close" : "missed",
             };
           }
         }
@@ -341,8 +340,8 @@ export function MelodyExercise({
                   className="w-3 h-3 rounded-full"
                   style={{
                     backgroundColor:
-                      score >= HIT_THRESHOLD ? "#50dc64"
-                      : score >= CLOSE_THRESHOLD ? "#dccc3c"
+                      score >= MELODY_HIT_THRESHOLD ? "#50dc64"
+                      : score >= MELODY_CLOSE_THRESHOLD ? "#dccc3c"
                       : "#dc3c3c",
                   }}
                   title={`Note ${i + 1}: ${Math.round(score * 100)}%`}
