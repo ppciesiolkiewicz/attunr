@@ -406,7 +406,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
             },
             {
               type: "paragraph",
-              text: "Chapter 3 builds on this foundation — new vowels, longer phrases, and deeper resonance.",
+              text: "Chapter III opens a new vowel — Oo. A rounder shape. A different resonance.",
               variant: "secondary",
             },
           ],
