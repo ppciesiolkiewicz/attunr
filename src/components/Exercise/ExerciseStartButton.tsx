@@ -28,7 +28,7 @@ export function ExerciseStartButton({ onStart }: ExerciseStartButtonProps) {
         className="pointer-events-auto"
         onClick={handleStart}
       >
-        Restart
+        ▶ Restart
       </Button>
     </div>
   );
