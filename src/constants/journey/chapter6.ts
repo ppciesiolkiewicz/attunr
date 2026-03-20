@@ -1,7 +1,7 @@
 import { NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator } from "./exercise-generator";
-import { RHYTHM_TIPS } from "./exercise-tips";
+import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -76,6 +76,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
           "Tap the spacebar or touch the screen on each beat.\nFeel the pulse — steady quarter notes.",
         introModal: modal.rhythm({
           minScore: 60,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Tap along to the beat — spacebar or touch the screen. The metronome clicks to guide you.\n\nFeel the rhythm in your body. Notice how each beat lands — even and steady, like a heartbeat.\n\nQuarter notes are the foundation of all rhythm. Every pattern you'll learn builds on this pulse.\n\nJust tap along. Match 60% to continue.",
         }),
@@ -119,6 +120,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
           "Tap the longer beat, then the short one — long-short, long-short.\nFeel the swing in the pattern.",
         introModal: modal.rhythm({
           minScore: 60,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Tap along to a dotted rhythm — a longer beat followed by a shorter one. The metronome clicks to guide you.\n\nFeel the swing. Notice how the uneven spacing creates a lilt — long-short, long-short.\n\nDotted rhythms add groove and movement to straight time. They're the first step beyond the basic pulse.\n\nJust tap along. Match 60% to continue.",
         }),
@@ -165,6 +167,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
           "Tap along — a long beat followed by two short ones.\nFeel how the half note stretches before the quarters arrive.",
         introModal: modal.rhythm({
           minScore: 60,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Tap along to a mixed pattern — half notes and quarter notes together. The metronome clicks to guide you.\n\nFeel the difference between holding and tapping. Notice how the long beat creates space before the short ones fill it.\n\nMixing durations trains your body to feel different beat lengths — the foundation of musical phrasing.\n\nJust tap along. Match 60% to continue.",
         }),
@@ -206,6 +209,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
           "Tap the dotted pattern — long-short, then two even beats.\nFeel how the swing resolves into straight time.",
         introModal: modal.rhythm({
           minScore: 60,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Tap along to a dotted pattern mixed with straight beats. The metronome clicks to guide you.\n\nFeel the swing of the dotted quarter resolve into even quarter notes. Notice the push and pull.\n\nCombining dotted and straight rhythms builds flexibility — your body learns to shift between groove and pulse.\n\nJust tap along. Match 60% to continue.",
         }),
@@ -255,6 +259,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
           "Tap along — two quick beats, one medium, one long.\nFeel the acceleration and release in each phrase.",
         introModal: modal.rhythm({
           minScore: 70,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Tap along to a pattern mixing eighth notes, quarter notes, and half notes. The metronome clicks to guide you.\n\nFeel the acceleration — two quick taps, then a medium beat, then a long hold. Notice how the pattern breathes.\n\nMixed durations train your body to shift between fast and slow within the same phrase. It's how real music moves.\n\nMatch 70% to continue. Let your body find it.",
         }),
@@ -306,6 +311,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
           "Tap the full groove — swing into quick beats, then land on a steady quarter.\nFeel the whole pattern as one phrase.",
         introModal: modal.rhythm({
           minScore: 70,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Tap along to the full groove — dotted quarters, eighths, and quarter notes woven together. The metronome clicks to guide you.\n\nFeel the swing of the dotted quarter open into quick eighth notes, then resolve on a steady quarter. Notice how the whole pattern breathes.\n\nThis is rhythm as expression — not just keeping time, but shaping it. Your body knows more than you think.\n\nMatch 70% to continue. Let it carry you.",
         }),

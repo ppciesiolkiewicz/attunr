@@ -1,6 +1,6 @@
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
-import { BREATHWORK_TIPS } from "./exercise-tips";
+import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -38,6 +38,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 9,
+          tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body responds as the rhythm lengthens. Feel everything settle.",
         }),
@@ -57,7 +58,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
           ],
           4,
         ),
-        tips: BREATHWORK_TIPS,
+        tips: exerciseTips("farinelli", "intermediate"),
         instruction:
           "Follow the cues — inhale, hold, exhale, rest.\nLet each cycle deepen naturally.\nThere's no rush.",
       }),
@@ -80,7 +81,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
           ],
           3,
         ),
-        tips: BREATHWORK_TIPS,
+        tips: exerciseTips("breathSound", "intermediate"),
         instruction:
           "Alternate sss and zzz — longer holds this time.\nFeel the vibration shift between voiceless and voiced.\nIt's okay to pause between sounds.",
       }),
@@ -96,7 +97,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
           { text: "Breathe into your shoulders", seconds: 8 },
           { text: "Let everything soften", seconds: 8 },
         ],
-        tips: BREATHWORK_TIPS,
+        tips: exerciseTips("farinelli", "intermediate"),
         instruction:
           "Follow the cues — direct your breath to each area.\nNotice where it moves easily and where it feels stuck.\nJust breathe and notice.",
       }),
@@ -116,6 +117,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 11,
+          tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. The deepest breathing yet.\n\nNotice how your body responds as the rhythm lengthens. Feel everything settle.",
         }),
@@ -131,7 +133,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
           ],
           4,
         ),
-        tips: BREATHWORK_TIPS,
+        tips: exerciseTips("farinelli", "intermediate"),
         instruction:
           "Inhale for 4, exhale for 8 — twice as long.\nThe extended exhale calms your nervous system.\nLet it be easy.",
         completionModal: {

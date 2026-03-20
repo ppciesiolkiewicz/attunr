@@ -1,7 +1,7 @@
 import { BandTargetKind } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS, BREATH_SOUND_TIPS } from "./exercise-tips";
+import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -26,9 +26,10 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       ],
       instruction:
         "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
-      tips: BREATH_SOUND_TIPS,
+      tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
         targetSeconds: 21,
+        tips: exerciseTips("breathSound", "introduction"),
         instruction:
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
@@ -44,6 +45,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
         "Lip roll alongside the tone.\nSlide smoothly from low to high — loosen your lips.",
       introModal: modal.lipRoll({
         requiredPlays: 4,
+        tips: exerciseTips("lipRoll", "introduction"),
         instruction:
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
@@ -61,6 +63,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
+        tips: exerciseTips("hum", "introduction"),
         instruction:
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
@@ -78,7 +81,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
@@ -95,7 +98,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: HEAD_VOICE_TIPS,
+        tips: exerciseTips("headVoice", "introduction"),
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
@@ -107,6 +110,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
         maxCount: 5,
+        tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
       }),
@@ -152,7 +156,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "intermediate"),
           instruction:
             "Sing oooo (as in 'go') on a low tone. Keep your mouth rounded and open — wider than Uu. Let it wobble gently.\n\nFeel the warmth settle in your chest. Notice how the extra openness changes the resonance compared to Uu.\n\nOo opens your throat and introduces a rounder, warmer quality to your voice.\n\nBreathe whenever you need to. Just notice what happens.",
         }),
@@ -170,7 +174,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "intermediate"),
           instruction:
             "Sing oooo (as in 'go') in your mid range. Keep your mouth rounded and open — wider than Uu.\n\nNotice how the vowel feels different here — less chest, more face. The resonance lifts.\n\nMoving Oo into your mid range builds awareness of how the same vowel changes colour at different pitches.\n\nLet it be easy. There's no rush.",
         }),
@@ -206,7 +210,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           "Start with uuuu, then open into oooo as the pitch rises.\nFeel the shape change — lips stay rounded but jaw drops.\nLet the transition be smooth.",
         introModal: modal.melody({
           minScore: 0,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Sing uuuu on the first tone, then gradually open into oooo as the pitches rise. Follow the piano.\n\nFeel the shape change in your mouth — your lips stay rounded but your jaw drops slightly. Notice how the resonance warms and opens.\n\nVowel transitions train your voice to move between shapes without tension. It's the beginning of expressive singing.\n\nYou don't need to get this right. Just notice the shift.",
         }),
@@ -224,7 +228,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "intermediate"),
           instruction:
             "Sing oooo (as in 'go') in your mid range. Hold for 6 seconds — longer than before.\n\nFeel the vowel settle as you sustain it. Notice how the resonance deepens the longer you hold.\n\nLonger holds build breath control and let your voice find its natural placement.\n\nBreathe whenever you need to. It's okay to pause.",
         }),
@@ -240,6 +244,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           "Lip roll alongside the tone.\nSlide smoothly from high to low — feel the glide.\nDon't worry about matching exactly.",
         introModal: modal.lipRoll({
           requiredPlays: 4,
+          tips: exerciseTips("lipRoll", "intermediate"),
           instruction:
             "Play the tone and lip roll alongside it. Slide smoothly from high to low.\n\nFeel the glide in your lips. Notice how the resonance moves — from lighter and higher to deeper and lower.\n\nLip rolls loosen tension and train your voice to move smoothly between pitches.\n\nJust follow the movement. There's no wrong way.",
         }),
@@ -262,6 +267,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           "Sing the two notes as they appear — a wider leap this time.\nListen to the piano and match the jump.\nLet your voice move freely between the notes.",
         introModal: modal.melody({
           minScore: 0,
+          tips: exerciseTips("melody", "intermediate"),
           instruction:
             "Sing a perfect fifth — two notes with a wider gap than anything so far. The piano plays each one for you.\n\nFeel the leap in your body. Notice how the higher note lifts and the lower note grounds.\n\nWider intervals stretch your voice and build confidence in jumping between distant pitches.\n\nThere's no rush. Listen first, then follow.",
         }),
@@ -279,7 +285,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "intermediate"),
           instruction:
             "Sing oooo (as in 'go') across a wider range than before. Keep your mouth rounded and open.\n\nNotice how the vowel changes colour as you move through different pitches — warmer low, brighter high.\n\nSinging a vowel across a wider range trains your voice to carry resonance everywhere.\n\nLet it be easy. Breathe whenever you need to.",
         }),
@@ -296,7 +302,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 4,
           reps: 3,
-          tips: HEAD_VOICE_TIPS,
+          tips: exerciseTips("headVoice", "intermediate"),
           instruction:
             "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light and easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.",
         }),
@@ -322,7 +328,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 8,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "intermediate"),
           instruction:
             "Sing oooo (as in 'go') in your mid range. Hold for 8 seconds — the longest holds yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into a rhythm.\n\nLonger holds carry your vowel further and build the stability behind your voice.\n\nBreathe whenever you need to. There's no rush.",
         }),
@@ -334,6 +340,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 7,
+          tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. Deeper breathing this time.\n\nNotice how your body responds as the rhythm lengthens.",
         }),

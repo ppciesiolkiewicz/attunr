@@ -1,7 +1,7 @@
 import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS, BREATH_SOUND_TIPS, CHAKRA_TIPS } from "./exercise-tips";
+import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -31,9 +31,10 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       ],
       instruction:
         "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
-      tips: BREATH_SOUND_TIPS,
+      tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
         targetSeconds: 21,
+        tips: exerciseTips("breathSound", "introduction"),
         instruction:
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
@@ -49,6 +50,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
         "Lip roll alongside the tone.\nSlide smoothly from low to high — loosen your lips.",
       introModal: modal.lipRoll({
         requiredPlays: 4,
+        tips: exerciseTips("lipRoll", "introduction"),
         instruction:
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
@@ -66,6 +68,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
+        tips: exerciseTips("hum", "introduction"),
         instruction:
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
@@ -83,7 +86,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
@@ -100,7 +103,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: HEAD_VOICE_TIPS,
+        tips: exerciseTips("headVoice", "introduction"),
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
@@ -112,6 +115,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
         maxCount: 7,
+        tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
       }),
@@ -156,7 +160,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
-          tips: CHAKRA_TIPS,
+          tips: exerciseTips("chakra", "advanced"),
           instruction:
             "Hum LAM on a low tone. Let the vibration settle at the base of your spine.\n\nFeel the grounding — heavy, warm, rooted. Notice where the sound lands in your body.\n\nThe root chakra is your foundation. This tone connects you to the earth beneath you.\n\nThere's no rush. Just let it hum through you.",
         }),
@@ -175,7 +179,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
-          tips: CHAKRA_TIPS,
+          tips: exerciseTips("chakra", "advanced"),
           instruction:
             "Hum VAM on this tone. Feel the vibration settle in your lower belly.\n\nNotice the warmth — softer than the root, more fluid. Let the sound move gently.\n\nThe sacral chakra holds creativity and feeling. This tone opens that space.\n\nLet it be easy. Just notice what happens.",
         }),
@@ -202,7 +206,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
-          tips: CHAKRA_TIPS,
+          tips: exerciseTips("chakra", "advanced"),
           instruction:
             "Hum RAM on this tone. Feel the vibration in your solar plexus — your core.\n\nNotice the strength there. Let the sound radiate outward from your centre.\n\nThe solar plexus is where confidence lives. This tone wakes it up.\n\nBreathe whenever you need to.",
         }),
@@ -221,7 +225,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
-          tips: CHAKRA_TIPS,
+          tips: exerciseTips("chakra", "advanced"),
           instruction:
             "Hum YAM on this tone. Feel your chest open as the vibration settles.\n\nNotice the space — wider, softer. Let the sound fill your heart.\n\nThe heart chakra is where openness lives. This tone invites it.\n\nThere's no wrong way to feel this. Just notice what happens.",
         }),
@@ -239,7 +243,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 8,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "advanced"),
           instruction:
             "Sing an open Ah from your heart. Let the sound be wide and warm.\n\nFeel the openness in your chest — the vowel naturally opens your body.\n\nAh is the most open sound you can make. It carries the heart's energy outward.\n\nBreathe whenever you need to. Let it be easy.",
         }),
@@ -266,7 +270,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
-          tips: CHAKRA_TIPS,
+          tips: exerciseTips("chakra", "advanced"),
           instruction:
             "Hum HAM on this tone. Feel the vibration settle in your throat.\n\nNotice the clarity — this is where your voice lives. Let it speak freely.\n\nThe throat chakra is truth. This tone opens the channel.\n\nThere's no rush. Just let the sound be.",
         }),
@@ -285,7 +289,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
-          tips: CHAKRA_TIPS,
+          tips: exerciseTips("chakra", "advanced"),
           instruction:
             "Hum OM on this tone. Feel the vibration between your brows.\n\nNotice the stillness — awareness without effort. Let inner vision arrive on its own.\n\nThe third eye is perception beyond sight. This tone opens that space.\n\nJust notice what happens. There's no wrong way.",
         }),
@@ -307,7 +311,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         ],
         instruction:
           "The crown chakra is silence. Just breathe and notice what's there.\nNo sound needed. Just awareness.",
-        tips: CHAKRA_TIPS,
+        tips: exerciseTips("chakra", "advanced"),
       }),
       {
         exerciseTypeId: "melody" as const,
@@ -335,6 +339,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
           "Sing each tone as it rises — feel the energy move upward through all seven centres.\nLet each note lift you a little higher.\nJust follow the sound.",
         introModal: modal.melody({
           minScore: 0,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Sing seven ascending tones — one for each chakra, from root to crown.\n\nFeel the energy rise through your body as the pitch climbs. Each note maps to a different centre.\n\nThis ascent traces the full chakra path in a single breath of melody.\n\nJust follow the notes. There's no wrong way.",
         }),
@@ -380,6 +385,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
           "Sing seven tones ascending, then return back down.\nFeel the energy rise and settle.\nLet each note find its place.",
         introModal: modal.melody({
           minScore: 0,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Sing the full chakra scale — seven tones ascending from root to crown, then descending back to root.\n\nFeel the energy rise through your body and then return. Notice how the descent feels different from the ascent.\n\nThis is the complete chakra flow — a single arc through all seven centres.\n\nJust follow the notes. Let it be easy.",
         }),
@@ -400,7 +406,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         ],
         instruction:
           "Hum each mantra as it appears. Feel it vibrate in its place.\nLet each one settle before the next arrives.\nJust notice what happens.",
-        tips: CHAKRA_TIPS,
+        tips: exerciseTips("chakra", "advanced"),
       }),
       gen.farinelli({
         slug: "farinelli-ch9",
@@ -409,6 +415,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 9,
+          tips: exerciseTips("farinelli", "advanced"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles after the chakra journey. Let the breath carry you home.",
         }),

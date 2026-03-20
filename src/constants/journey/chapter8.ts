@@ -1,7 +1,7 @@
 import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS, BREATH_SOUND_TIPS, SUSTAIN_TIPS } from "./exercise-tips";
+import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -29,9 +29,10 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       ],
       instruction:
         "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
-      tips: BREATH_SOUND_TIPS,
+      tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
         targetSeconds: 21,
+        tips: exerciseTips("breathSound", "introduction"),
         instruction:
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
@@ -47,6 +48,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
         "Lip roll alongside the tone.\nSlide smoothly from low to high — loosen your lips.",
       introModal: modal.lipRoll({
         requiredPlays: 4,
+        tips: exerciseTips("lipRoll", "introduction"),
         instruction:
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
@@ -64,6 +66,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
+        tips: exerciseTips("hum", "introduction"),
         instruction:
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
@@ -81,7 +84,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
@@ -98,7 +101,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: HEAD_VOICE_TIPS,
+        tips: exerciseTips("headVoice", "introduction"),
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
@@ -110,6 +113,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
         maxCount: 5,
+        tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
       }),
@@ -127,7 +131,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing oooo (as in 'go') on a low tone. Keep your mouth rounded and open.\n\nFeel the warmth settle in your chest. Notice how the rounded shape changes the resonance.\n\nOo grounds your voice with a rounder, warmer quality — a quick reset before we begin.\n\nLet it be easy. There's no rush.",
       }),
@@ -145,7 +149,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing ahhh (as in 'father') on a low tone. Open your mouth wide — jaw dropped, tongue low.\n\nFeel the openness in your throat. Notice how the resonance fills your chest.\n\nAh grounds your voice with full openness — a warm reset before we begin.\n\nIt's okay to pause. There's no rush.",
       }),
@@ -163,7 +167,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing eeee (as in 'see') in your mid-high range. Let the sound project forward — bright, focused, resonating in your face.\n\nNotice where the buzz lands. Feel it in your sinuses, your cheekbones, the front of your mouth.\n\nEe keeps your voice forward and bright — completing the vowel warmup.\n\nThere's no wrong way to do this. Breathe whenever you need to.",
       }),
@@ -188,6 +192,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Sing the complete major scale — up and back down.\nFeel each step as a distinct pitch.\nListen first, then match.",
         introModal: modal.melody({
           minScore: 50,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Sing the full major scale — all the way up and back down. The piano plays each note for you.\n\nFeel each step as a distinct pitch. Notice how the scale builds and resolves — rising tension, then release.\n\nThe full major scale ties together everything you've sung so far — intervals, breath, and placement in one continuous line.\n\nMatch 50% to continue. Let it be easy.",
         }),
@@ -221,6 +226,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Hum mmmm through the scale — up five notes, then back down.\nFeel each step land in your body.\nBreathe whenever you need to.",
         introModal: modal.melody({
           minScore: 40,
+          tips: exerciseTips("hum", "advanced"),
           instruction:
             "Hum mmmm through a nine-note scale — up five notes, then back down the same way. The piano plays each note for you.\n\nFeel the buzz shift as the pitch rises and falls. Notice where each note lives in your body.\n\nHumming through a scale combines placement and pitch awareness — your voice learns the distances between notes.\n\nMatch 40% to continue. There's no rush.",
         }),
@@ -238,7 +244,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 8,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "advanced"),
           instruction:
             "Sing oooo (as in 'go') across a wide range. Hold each tone for 8 seconds.\n\nFeel the warmth settle and shift as the pitch moves. Notice how the rounded shape carries the resonance differently at each pitch.\n\nOo across a wide range builds consistent placement — the same warm quality from low to high.\n\nIt's okay to pause. Breathe whenever you need to.",
         }),
@@ -287,6 +293,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Sing two rising phrases — the second starts higher than the first.\nCarry the melody across both starting points.\nListen first, then match.",
         introModal: modal.melody({
           minScore: 50,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Sing two rising phrases, each starting on a different root. The piano plays each note for you.\n\nFeel how the second phrase lifts from where the first left off. Notice the shift — same pattern, new starting point.\n\nCarrying a melody across two roots builds fluency. Your voice learns to move between tonal centres with confidence.\n\nMatch 50% to continue. Just follow the sound.",
         }),
@@ -304,7 +311,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 10,
           reps: 3,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "advanced"),
           instruction:
             "Sing ahhh (as in 'father') in your mid range. Hold each tone for 10 seconds — the longest sustain yet.\n\nFeel the openness in your throat and chest. Notice how the resonance deepens as you hold longer.\n\nLonger sustains build breath control and teach your voice to stay steady under pressure.\n\nThere's no rush. Breathe whenever you need to.",
         }),
@@ -320,6 +327,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Lip roll alongside the tone.\nSlide smoothly across your full range — low to high.\nLet the buzz carry you through.",
         introModal: modal.lipRoll({
           requiredPlays: 5,
+          tips: exerciseTips("lipRoll", "advanced"),
           instruction:
             "Play the tone and lip roll alongside it. Slide smoothly from your lowest to your highest — your full range.\n\nFeel the buzz travel through your entire voice. Notice how the resonance shifts from chest to head as you glide.\n\nFull-range lip rolls loosen everything and connect your registers into one continuous sound.\n\nDon't worry about matching exactly. Just follow the movement.",
         }),
@@ -346,7 +354,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         introModal: modal.hill({
           seconds: 8,
           reps: 3,
-          tips: SUSTAIN_TIPS,
+          tips: exerciseTips("sustain", "advanced"),
           instruction:
             "Sing a sustained tone within a narrow 2-semitone zone. Hold each tone for 8 seconds.\n\nFeel the precision. Notice how small adjustments keep you in the zone — tiny movements of breath and placement.\n\nNarrow-zone sustains build fine pitch control. Your voice learns to hold steady in a tight space.\n\nIt's okay to drift. Just notice and adjust. There's no wrong way to explore.",
         }),
@@ -362,6 +370,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Sing the major scale at a faster tempo.\nPrecision matters — aim for each note cleanly.\nListen first, then match.",
         introModal: modal.melody({
           minScore: 60,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Sing the major scale again — this time at a faster tempo with a higher accuracy target. The piano plays each note for you.\n\nFeel the difference. Faster means less time to find each note — your ear and voice need to work together more quickly.\n\nPrecision melody builds the speed and accuracy your voice needs for real musical phrases.\n\nMatch 60% to continue. You don't need to get this right.",
         }),
@@ -409,6 +418,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Tap along to the rhythm — eighth notes followed by quarters.\nFeel the pulse quicken with the shorter notes.\nStay with the metronome.",
         introModal: modal.rhythm({
           minScore: 70,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Tap along to a fast rhythm pattern — pairs of eighth notes followed by quarter notes. The metronome keeps time.\n\nFeel the pulse quicken when the eighth notes arrive. Notice how your body locks into the faster subdivision.\n\nFast rhythm builds timing precision and teaches your body to feel subdivisions — essential for singing in time.\n\nMatch 70% to continue. It's okay to pause.",
         }),
@@ -432,6 +442,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           "Sing the major scale one more time — everything comes together here.\nScales, vowels, breath, placement — it's all in this melody.\nListen first, then match.",
         introModal: modal.melody({
           minScore: 60,
+          tips: exerciseTips("melody", "advanced"),
           instruction:
             "Sing the full major scale one final time. The piano plays each note for you.\n\nFeel how far you've come. Scales, vowels, rhythm, breath — everything you've practised lives in this melody.\n\nThis is integration. Your voice knows more than you think — trust what your body has learned.\n\nMatch 60% to continue. Let it be easy.",
         }),
@@ -443,6 +454,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 11,
+          tips: exerciseTips("farinelli", "advanced"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. The deepest breathing yet.\n\nNotice how your body responds as the rhythm lengthens. Feel everything settle.",
         }),

@@ -1,7 +1,7 @@
 import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
-import { VOWEL_TIPS, HEAD_VOICE_TIPS, BREATH_SOUND_TIPS } from "./exercise-tips";
+import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
 const modal = new IntroModalGenerator();
@@ -26,9 +26,10 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       ],
       instruction:
         "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
-      tips: BREATH_SOUND_TIPS,
+      tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
         targetSeconds: 21,
+        tips: exerciseTips("breathSound", "introduction"),
         instruction:
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
@@ -44,6 +45,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
         "Lip roll alongside the tone.\nSlide smoothly from low to high — loosen your lips.",
       introModal: modal.lipRoll({
         requiredPlays: 4,
+        tips: exerciseTips("lipRoll", "introduction"),
         instruction:
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
@@ -61,6 +63,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
+        tips: exerciseTips("hum", "introduction"),
         instruction:
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
@@ -78,7 +81,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: VOWEL_TIPS,
+        tips: exerciseTips("vowel", "introduction"),
         instruction:
           "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
@@ -95,7 +98,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
-        tips: HEAD_VOICE_TIPS,
+        tips: exerciseTips("headVoice", "introduction"),
         instruction:
           "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
@@ -107,6 +110,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
         maxCount: 5,
+        tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
       }),
@@ -142,6 +146,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Hum at three rising pitches — low, mid-low, mid.\nFeel the resonance shift as you rise.\nKeep each hum steady and relaxed.",
         introModal: modal.melody({
           minScore: 0,
+          tips: exerciseTips("hum", "introduction"),
           instruction:
             "Hum mmmm at three rising pitches. The piano plays each one — match what you hear.\n\nFeel where the resonance lives at each pitch. Notice how it shifts as you rise — from chest to throat to face.\n\nThis is your first pitched hum sequence. It maps where sound lives across your low-to-mid range.\n\nThere's no rush. Listen first, then follow.",
         }),
@@ -168,7 +173,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Sing uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
         introModal: modal.melody({
           minScore: 0,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "introduction"),
           instruction:
             "Sing uuuu (as in 'moon') at three rising pitches. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
         }),
@@ -184,6 +189,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Lip roll alongside the tone.\nSlide smoothly from high to low — keep it easy.\nDon't worry about matching exactly.",
         introModal: modal.lipRoll({
           requiredPlays: 3,
+          tips: exerciseTips("lipRoll", "introduction"),
           instruction:
             "Play the tone and lip roll alongside it. Slide smoothly from high to low.\n\nFeel the glide in your lips. Notice how the resonance moves — from lighter and higher to deeper and lower.\n\nLip rolls loosen tension and train your voice to move smoothly between pitches.\n\nDon't worry about matching exactly. The goal is to feel the movement.",
         }),
@@ -232,6 +238,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         instruction: "Tap the spacebar or touch the screen on each beat.",
         introModal: modal.rhythm({
           minScore: 60,
+          tips: exerciseTips("melody", "introduction"),
           instruction:
             "Tap along to the beat — spacebar or touch the screen. The metronome clicks to guide you.\n\nFeel the rhythm in your body. Notice how your breath settles into the pattern.\n\nRhythm is the foundation of all music. Feeling the beat grounds everything that follows.\n\nJust tap along. Match 60% to continue.",
         }),
@@ -273,6 +280,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Sing each note as it scrolls past.\nUp five notes, then back down.\nListen to the piano and follow along.",
         introModal: modal.melody({
           minScore: 0,
+          tips: exerciseTips("melody", "introduction"),
           instruction:
             "Sing each note as it scrolls past — up five notes, then back down. The piano plays each one for you.\n\nNotice how the distance between notes feels. Feel your voice stepping through the scale.\n\nThis is your first scale. Five notes up and five back down — the building block of melody.\n\nThere's no rush. Listen first, then follow.",
         }),
@@ -299,6 +307,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Hum three tones rising from low.\nMove smoothly between each tone.\nFeel the resonance shift as you rise.",
         introModal: modal.melody({
           minScore: 0,
+          tips: exerciseTips("hum", "introduction"),
           instruction:
             "Hum mmmm on three rising tones. The piano plays each one — follow along.\n\nFeel the resonance shift as you rise. Notice where each tone lives in your body.\n\nHumming through a sequence builds the bridge between single tones and melody.\n\nJust follow the sound. There's no wrong way.",
         }),
@@ -325,7 +334,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Sing uuuu (as in 'moon') on three rising tones.\nKeep your mouth rounded like Uu — relaxed, not smiling.\nFeel the vowel resonate differently at each pitch.",
         introModal: modal.melody({
           minScore: 0,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "introduction"),
           instruction:
             "Sing uuuu (as in 'moon') on three rising tones. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSinging a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
         }),
@@ -350,6 +359,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Hum mmmm on a mid tone — longer holds this time.\nFeel the buzz settle.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 8,
+          tips: exerciseTips("hum", "introduction"),
           instruction:
             "Hum mmmm on a mid tone. Hold it steady for 8 seconds — longer than before.\n\nFeel the buzz settle in your chest and face. Notice how it deepens as you hold.\n\nLonger holds train your breath control and build stability without you noticing.\n\nBreathe whenever you need to. There's no rush.",
         }),
@@ -366,7 +376,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Sing uuuu on the mid tone — longer holds.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
         introModal: modal.hill({
           seconds: 8,
-          tips: VOWEL_TIPS,
+          tips: exerciseTips("vowel", "introduction"),
           instruction:
             "Sing uuuu (as in 'moon') on a mid tone. Hold for 8 seconds.\n\nNotice the resonance in your chest and face. Feel how the vowel opens up with a longer hold.\n\nLonger vowel holds carry your resonance further and build the breath support behind your voice.\n\nKeep your mouth rounded like Uu — relaxed, not smiling. Breathe whenever you need to.",
         }),
@@ -382,6 +392,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           "Lip roll alongside the tone.\nKeep the buzz steady at mid pitch.\nTake a breath between each one.",
         introModal: modal.lipRollSustain({
           requiredPlays: 3,
+          tips: exerciseTips("lipRoll", "introduction"),
           instruction:
             "Play the tone and lip roll alongside it. Hold the buzz at a steady mid pitch.\n\nNotice where the resonance sits — lips, face, or deeper. Feel the vibration without forcing it.\n\nSustaining a lip roll at one pitch builds breath control and stability.\n\nTake a breath between each one. Just notice what happens.",
         }),
@@ -393,6 +404,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 7,
+          tips: exerciseTips("farinelli", "introduction"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. Deeper breathing this time.\n\nNotice how your body responds as the rhythm lengthens.",
         }),
