@@ -5,6 +5,7 @@ import { deriveVoiceType, hzToNoteName } from "@/lib/pitch";
 import type { VoiceTypeId } from "@/constants/voice-types";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 import { Text } from "@/components/ui";
+import { analytics } from "@/lib/analytics";
 import { ToneSpectrum } from "./components/ToneSpectrum";
 import { WelcomePhase } from "./components/WelcomePhase";
 import { DetectFlowPhase } from "./components/DetectFlowPhase";
@@ -49,6 +50,15 @@ export default function OnboardingModal({
   const isError = status === "error";
   const isListening = status === "listening";
   const currentNote = pitchHz !== null ? hzToNoteName(pitchHz) : null;
+
+  useEffect(() => {
+    if (phase === "detect-low") {
+      analytics.onboardingStarted();
+    }
+    if (phase !== "welcome") {
+      analytics.onboardingPhaseChanged(phase);
+    }
+  }, [phase]);
 
   useEffect(() => {
     if (phase !== "detect-low" && phase !== "detect-high") {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { journey } from "@/constants/journey";
 import { Text, Button } from "@/components/ui";
@@ -7,6 +8,7 @@ import { toRoman } from "@/lib/format";
 import { ExerciseCard } from "@/components/JourneyView";
 import type { Chapter, ExerciseConfig } from "@/constants/journey";
 import { useApp } from "@/context/AppContext";
+import { analytics } from "@/lib/analytics";
 
 interface ChapterDetailProps {
   chapter: Chapter;
@@ -15,6 +17,10 @@ interface ChapterDetailProps {
 export function ChapterDetail({ chapter }: ChapterDetailProps) {
   const router = useRouter();
   const { journeyProgress: jp } = useApp();
+
+  useEffect(() => {
+    analytics.chapterViewed(chapter.chapter, chapter.title);
+  }, [chapter.chapter, chapter.title]);
 
   const allStages = chapter.warmup
     ? [chapter.warmup, ...chapter.stages]

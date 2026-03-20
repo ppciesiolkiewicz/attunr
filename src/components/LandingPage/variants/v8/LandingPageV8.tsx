@@ -5,6 +5,7 @@ import Link from "next/link";
 import Logo from "@/components/Logo";
 import { Button } from "@/components/ui";
 import { LandingHeader } from "../../components/LandingHeader";
+import { analytics } from "@/lib/analytics";
 
 const FEATURES = [
   {
@@ -126,6 +127,10 @@ function handleRipple(e: React.MouseEvent<HTMLButtonElement>) {
 
 export default function LandingPageV8() {
   const particlesRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    analytics.landingVariantViewed("v8");
+  }, []);
 
   useEffect(() => {
     const els = document.querySelectorAll(".landing-section");
@@ -482,7 +487,7 @@ export default function LandingPageV8() {
               <Button
                 size="lg"
                 className="v7-btn relative overflow-hidden px-14 text-lg cursor-pointer"
-                onClick={handleRipple}
+                onClick={(e) => { handleRipple(e); analytics.landingCtaClicked("try_it_now", "v8"); }}
                 onMouseMove={handleMagnetic}
                 onMouseLeave={handleMagneticLeave}
                 style={{
@@ -792,7 +797,7 @@ export default function LandingPageV8() {
               <Button
                 size="lg"
                 className="v7-btn relative overflow-hidden px-14 text-lg cursor-pointer"
-                onClick={handleRipple}
+                onClick={(e) => { handleRipple(e); analytics.landingCtaClicked("start_your_practice", "v8"); }}
                 onMouseMove={handleMagnetic}
                 onMouseLeave={handleMagneticLeave}
                 style={{

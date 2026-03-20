@@ -30,6 +30,26 @@ export const analytics = {
   articleViewed: (slug: string, title: string) =>
     capture("article_viewed", { slug, title }),
 
+  // Landing
+  landingCtaClicked: (buttonName: string, variant?: string) =>
+    capture("landing_cta_clicked", { button_name: buttonName, variant }),
+  landingVariantViewed: (variant: string) =>
+    capture("landing_variant_viewed", { variant }),
+
+  // Onboarding (granular)
+  onboardingStarted: () => capture("onboarding_started"),
+  onboardingPhaseChanged: (phase: string) =>
+    capture("onboarding_phase_changed", { phase }),
+
+  // Cookie consent
+  cookieConsentResponded: (response: "accepted" | "declined") =>
+    capture("cookie_consent_responded", { response }),
+
+  // Journey navigation
+  journeyViewed: () => capture("journey_viewed"),
+  chapterViewed: (chapterId: number, chapterTitle: string) =>
+    capture("chapter_viewed", { chapter_id: chapterId, chapter_title: chapterTitle }),
+
   // Auth
   loginCodeSent: () => capture("login_code_sent"),
   loginSucceeded: () => capture("login_succeeded"),

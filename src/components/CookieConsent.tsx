@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button, Text } from "@/components/ui";
+import { analytics } from "@/lib/analytics";
 
 const EU_COUNTRY_CODES = new Set([
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
@@ -58,11 +59,13 @@ export default function CookieConsent() {
   function handleAccept() {
     localStorage.setItem(CONSENT_KEY, "accepted");
     setState("accepted");
+    analytics.cookieConsentResponded("accepted");
   }
 
   function handleDecline() {
     localStorage.setItem(CONSENT_KEY, "declined");
     setState("declined");
+    analytics.cookieConsentResponded("declined");
   }
 
   return (

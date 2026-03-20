@@ -1,12 +1,18 @@
 "use client";
 
+import { useEffect } from "react";
 import { journey } from "@/constants/journey";
 import { Text } from "@/components/ui";
 import { useApp } from "@/context/AppContext";
+import { analytics } from "@/lib/analytics";
 import { ChapterCard } from "./components/ChapterCard";
 
 export function ChapterList() {
   const { journeyProgress: jp } = useApp();
+
+  useEffect(() => {
+    analytics.journeyViewed();
+  }, []);
 
   return (
     <div className="h-full overflow-y-auto">
