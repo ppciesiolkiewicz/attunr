@@ -119,3 +119,17 @@ Later it can fall down quicker forcing users to make sound for longer.
 We could have more visual feedback to drive engagement
 
 ## SEO
+
+## Remove "kind": "index" from melody
+
+I think would be more peformant to just store array of integers as alternative to other methods and assume we always use either index or the other type. Each note should note have "kind"
+
+## Use Facemesh to detect i someone smiles too much
+
+## Bug:
+
+rep progress should start at 0, e.g. 0/3, then after first goes to 1/3
+
+# Stop freesing canvas when i unfocus
+
+This causes some issues when navigating away from browsers
