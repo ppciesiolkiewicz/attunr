@@ -37,10 +37,9 @@ Badges reward cumulative practice and milestones. Some badges serve as keys that
 
 ### Open questions
 
-- Where do badges live in the UI? Dedicated profile/achievements screen? Inline in journey?
-- Quiet personal milestones vs celebratory moments (modals, animations, confetti)?
-- How granular? A few meaningful badges vs many small ones?
 - Should badges be visible before they're earned (motivation) or hidden (surprise)?
+  I like the surprise idea - you get your first badge and the Badges tab appears
+
 - What data do we need to track to compute badge progress? (session time per exercise type, streak days, accuracy stats)
 
 ---
@@ -63,13 +62,9 @@ Main Journey (linear)
 
 The main journey is always the spine. Secret stages are optional branches that reward engagement without blocking progress.
 
----
-
 ## Streak grace
 
 - Freeze / grace mechanic (e.g. one free miss per week)?
-
----
 
 ## Social: Invite friends & multiplayer
 
@@ -83,16 +78,7 @@ Invite-based growth and social practice to make vocal training less solitary.
 
 ### Multiplayer games
 
-- Real-time or turn-based vocal games between friends (e.g. pitch-matching duels, call-and-response rounds).
-- Leaderboards among friends for accuracy, streak length, or exercises completed.
-- Collaborative challenges — friends work toward a shared goal together.
-
-### Open questions
-
-- What multiplayer formats fit vocal exercises? Synchronous vs asynchronous?
-- How does matchmaking work — friends only, or open lobbies?
-- What's the minimum viable social feature to ship first?
-- Privacy considerations — how much practice data is visible to friends?
+Real-time or turn-based vocal games between friends (e.g. pitch-matching duels, call-and-response rounds).
 
 ---
 

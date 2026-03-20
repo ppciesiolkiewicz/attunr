@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, CloseButton, Modal, Text } from "@/components/ui";
+import { useBluetoothMic } from "@/hooks/useBluetoothMic";
 
 interface TabInfoModalProps {
   title: string;
@@ -61,21 +62,31 @@ export function InfoButton({ onClick }: { onClick: () => void }) {
 }
 
 export function HeadphonesNotice() {
+  const isBluetoothMic = useBluetoothMic();
+
   return (
     <div
-      className="flex items-center gap-3 rounded-xl px-4 py-3"
+      className="flex flex-col gap-2.5 rounded-xl px-4 py-3"
       style={{
-        background: "rgba(255,255,255,0.06)",
-        border: "1px solid rgba(255,255,255,0.12)",
+        background: isBluetoothMic ? "rgba(251,191,36,0.08)" : "rgba(255,255,255,0.06)",
+        border: isBluetoothMic ? "1px solid rgba(251,191,36,0.35)" : "1px solid rgba(255,255,255,0.12)",
       }}
     >
-      <Text as="span" variant="caption" color="muted-1" className="shrink-0 flex items-center justify-center">
-        <HeadphonesIcon />
-      </Text>
-      <Text variant="body-sm" color="text-2" className="text-left">
-        For the best experience, use headphones — they keep the playback out of your
-        mic so we can hear your voice clearly.
-      </Text>
+      <div className="flex items-center gap-3">
+        <Text as="span" variant="caption" color="muted-1" className="shrink-0 flex items-center justify-center">
+          <HeadphonesIcon />
+        </Text>
+        <Text variant="body-sm" color="text-2" className="text-left">
+          For the best experience, use headphones — they keep the playback out of your
+          mic so we can hear your voice clearly.
+        </Text>
+      </div>
+      {isBluetoothMic && (
+        <Text variant="body-sm" color="warning" className="text-left pl-[30px]">
+          It looks like a Bluetooth mic (e.g. AirPods) is active. Wired headphones work
+          better for pitch detection — Bluetooth mics add latency and lower audio quality.
+        </Text>
+      )}
     </div>
   );
 }
