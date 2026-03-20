@@ -361,7 +361,6 @@ function resolveRhythm(
   _vocalRange: VocalRange,
 ): RhythmExercise {
   const beats: Beat[] = [];
-  const metronomeTicks: number[] = [];
   let cursor = 0;
 
   for (const event of exercise.pattern) {
@@ -369,9 +368,14 @@ function resolveRhythm(
     if (event.type === "tap") {
       beats.push({ startMs: cursor, durationMs: ms });
     }
-    // All events (tap + pause) get a metronome tick at their start
-    metronomeTicks.push(cursor);
     cursor += ms;
+  }
+
+  // Metronome ticks at regular quarter-note intervals throughout
+  const quarterNoteMs = (60 / exercise.tempo) * 1000;
+  const metronomeTicks: number[] = [];
+  for (let t = 0; t < cursor; t += quarterNoteMs) {
+    metronomeTicks.push(Math.round(t));
   }
 
   return {

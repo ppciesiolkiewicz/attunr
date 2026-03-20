@@ -284,7 +284,7 @@ export function TimeBasedExerciseContent({
             <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
               {exerciseId > 1 && onPrev && (
                 <Button variant="outline" onClick={onPrev} title="Previous exercise" className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
-                  ← Prev
+                  ← <span className="hidden sm:inline">Prev</span>
                 </Button>
               )}
               <Button onClick={onSkip} title="Skip this step (won't mark as complete)" className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
@@ -366,7 +366,7 @@ export function TimeBasedExerciseContent({
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
             {exerciseId > 1 && onPrev && (
               <Button variant="outline" onClick={onPrev} title="Previous exercise" className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
-                ← Prev
+                ← <span className="hidden sm:inline">Prev</span>
               </Button>
             )}
             {(exerciseComplete || isAlreadyCompleted) ? (

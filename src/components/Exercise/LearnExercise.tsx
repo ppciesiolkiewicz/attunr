@@ -51,7 +51,7 @@ export function LearnExercise({
         <div className="flex items-center gap-2 sm:gap-3 ml-auto w-full sm:w-auto justify-end">
           {exerciseId > 1 && onPrev && (
             <Button variant="outline" onClick={onPrev} title="Previous" className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
-              ← Prev
+              ← <span className="hidden sm:inline">Prev</span>
             </Button>
           )}
           <Button onClick={onComplete} className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0">
