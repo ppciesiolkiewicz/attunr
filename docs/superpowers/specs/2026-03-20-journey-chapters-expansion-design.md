@@ -108,14 +108,14 @@ In `ChapterCard.tsx`:
 
 **Focus:** Ah vowel, octave intervals, stronger dynamics, pitch accuracy.
 
-**Warmup:** Standard + Oo in warmup (building on ch3).
+**Warmup:** Ch2 warmup + Oo hill sustain (3s×5, note 6, direction: "down"). 7 exercises total.
 
 **Stages (4):**
 
-1. **The Open Ah** — Learn about Ah vowel and open placement. Ah hill sustains. Ah between-zone hills.
-2. **Reaching Higher** — Octave interval melodies (`gen.octave()`). Ah across full range. Zone-above with longer holds (5s×3).
-3. **Dynamics** — Stronger sustains (10s×3). Melody with minScore: 40. Rhythm at tempo 90, minScore: 60.
-4. **Power & Rest** — Full range lip rolls. Farinelli (maxCount: 9). Completion modal.
+1. **The Open Ah** — Learn about Ah vowel and open placement. Ah hill sustains (5s×3, note 4, direction: "down"). Ah between-zone hills (5s×3, notes [5,9]).
+2. **Reaching Higher** — Octave interval melodies (`gen.octave()`, minScore: 0). Ah hill across wider range (6s×3, notes [3,12]). Zone-above (5s×3, boundaryNote: -5).
+3. **Dynamics** — Ah sustains (10s×3, notes [5,9]). Melody (major scale, tempo 55, minScore: 40). Rhythm at tempo 90, minScore: 60.
+4. **Power & Rest** — Full range lip rolls (startNote: 1, endNote: -1, 5 plays). Farinelli (maxCount: 9). Completion modal.
 
 ### Chapter 5 — Breathe Deep (SECRET)
 
@@ -145,33 +145,33 @@ In `ChapterCard.tsx`:
 
 **Focus:** Ee vowel, vowel modification sequences, forward placement, pentatonic scale.
 
-**Warmup:** Standard + Oo and Ah warmup exercises.
+**Warmup:** Ch4 warmup + Ah hill sustain (3s×5, note 5, direction: "down"). 8 exercises total.
 
 **Stages (4):**
 
-1. **The Ee Vowel** — Learn about Ee and forward bright placement. Ee sustains. Ee hill exercises.
-2. **Vowel Sequences** — a-o-u-o-a melody exercises (vowel modification). ee-uu-ee contrast melodies. Sustained vowel transitions.
-3. **Pentatonic** — Pentatonic scale melodies (`gen.pentatonic()`). Ee on pentatonic. minScore: 50.
-4. **Weaving** — Full vowel rotation melodies. Lip rolls on pentatonic scale. Farinelli (maxCount: 9). Completion modal.
+1. **The Ee Vowel** — Learn about Ee and forward bright placement. Ee hill sustains (5s×3, note [7,11], direction: "between"). Ee zone-above (4s×3, boundaryNote: -5).
+2. **Vowel Sequences** — a-o-u-o-a melody (chromatic, tempo 45, 5 notes, minScore: 30). ee-uu-ee contrast melody (chromatic, tempo 45, 3 notes, minScore: 30). Sustained vowel transition hill (6s×3).
+3. **Pentatonic** — Pentatonic scale melodies (`gen.pentatonic()`, minScore: 50). Ee hill on pentatonic range (6s×3). Lip roll slide on pentatonic (startNote: 3, endNote: -3, 4 plays, scale: major pentatonic).
+4. **Weaving** — Full vowel rotation melody (major, tempo 50, 7 notes, minScore: 40). Lip rolls (startNote: 1, endNote: -1, 5 plays). Farinelli (maxCount: 9). Completion modal.
 
 ### Chapter 8 — Integration
 
 **Focus:** Combining all techniques. Full scales, longer melodies, higher accuracy thresholds.
 
-**Warmup:** Full warmup with all four vowels.
+**Warmup:** Ch7 warmup + Ee hill sustain (3s×5, note [7,11], direction: "between"). 9 exercises total — covers sss-zzz, lip roll, hum, Uu, Oo, Ah, Ee, hoo hoo, Farinelli.
 
 **Stages (4):**
 
-1. **Full Scale** — Major scale melodies (full octave up and down). All vowels on scale. minScore: 50.
-2. **Longer Phrases** — Multi-scale melodies (key changes within exercise). Sustained holds at 10s+. Wider lip roll spans.
-3. **Precision** — Narrow "between" hills (tight pitch zone). minScore: 60 melodies. Rhythm at 120bpm, minScore: 70.
-4. **Coming Together** — Final integrative melody. Farinelli (maxCount: 11). Grand completion modal with confetti.
+1. **Full Scale** — Major scale melody (full octave up+down, tempo 55, minScore: 50). Hum scale melody (major, tempo 50, minScore: 40). Oo scale hill (8s×3, notes [3,12]).
+2. **Longer Phrases** — Multi-scale melody (2 MelodyScale segments at different roots, tempo 50, minScore: 50). Sustained Ah holds (10s×3). Lip rolls (startNote: 1, endNote: -1, 5 plays).
+3. **Precision** — Narrow "between" hills (8s×3, notes [6,8] — tight 2-semitone zone). Melody (major, tempo 60, minScore: 60). Rhythm at 120bpm, minScore: 70.
+4. **Coming Together** — Final integrative melody (major, full octave, tempo 55, minScore: 60). Farinelli (maxCount: 11). Grand completion modal with confetti.
 
 ### Chapter 9 — Chakras (SECRET)
 
 **Focus:** Mantras, affirmations, 7-even-space scale. Each chakra maps to a tone.
 
-**Warmup:** Standard warmup + grounding breathwork.
+**Warmup:** Ch2-style warmup (sss-zzz, lip roll, hum, Uu, hoo hoo) + grounding Farinelli (maxCount: 7). 7 exercises total.
 
 **Stages (4):**
 
@@ -191,17 +191,23 @@ Affirmations appear as on-screen instruction text and in intro modal instruction
 
 #### 7-even-space scale
 
-A new scale type `"even-7"` in the exercise resolver. It divides the user's calibrated vocal range into 7 equally spaced tones:
-- Tone 1 (Root) = lowest comfortable note
-- Tone 7 (Crown) = highest comfortable note
-- Tones 2–6 = equally spaced between
+A new scale type `"even-7"` in `Scale.buildNotes()` (in `src/lib/scale.ts`), alongside the existing `"even-7-from-major"`. The difference:
 
+- `"even-7-from-major"` — picks 7 evenly distributed notes from the major scale pitch classes
+- `"even-7"` — divides the full chromatic range into 7 equally spaced tones (pure linear interpolation, not constrained to any scale)
+
+The `"even-7"` scale always spans the user's full vocal range. The `root` field is set to `1` by convention but is not used for positioning — the scale always starts from the lowest note. This is an intentional exception to the `BaseScale` contract, documented in the code.
+
+Implementation in `Scale.buildNotes()`:
 ```typescript
-// In exercise-resolver.ts, scale resolution:
-if (scale.type === "even-7") {
-  // Divide user's range into 7 equal steps
-  const step = (range.highestNote - range.lowestNote) / 6;
-  return Array.from({ length: 7 }, (_, i) => range.lowestNote + i * step);
+if (definition.type === "even-7") {
+  // 7 equally spaced tones across the full vocal range (chakra scale)
+  const step = (highMidi - lowMidi) / 6;
+  const notes: ResolvedNote[] = Array.from({ length: 7 }, (_, i) => {
+    const midi = Math.round(lowMidi + i * step);
+    return { midi, color: Scale.colorForMidi(midi), /* ... */ };
+  });
+  return { notes, rootIndex: 0 };
 }
 ```
 
@@ -209,11 +215,11 @@ Used in chakra exercises:
 ```typescript
 {
   type: "even-7",
-  root: 1,  // always starts from lowest
+  root: 1,  // convention — scale always spans full range
 }
 ```
 
-Melody events reference `i: 1` through `i: 7` for chakras root through crown.
+Melody events use root-relative indexing (`resolveFromRoot`): `i: 1` = tone 1 (Root chakra, lowest), through `i: 7` = tone 7 (Crown chakra, highest). This is consistent with how melody events work in all other exercises.
 
 ## File structure
 
@@ -232,8 +238,9 @@ src/constants/journey/
 ├── chapter8.ts      — NEW: Integration
 ├── chapter9.ts      — NEW: Chakras (secret)
 ├── exercise-generator.ts  — (may need minor additions)
-├── exercise-resolver.ts   — add "even-7" scale type
-└── exercise-tips.ts       — add CHAKRA_TIPS, BREATHWORK_TIPS
+├── exercise-tips.ts       — add CHAKRA_TIPS, BREATHWORK_TIPS
+src/lib/
+└── scale.ts               — add "even-7" scale type in Scale.buildNotes()
 ```
 
 ## UI changes
@@ -250,6 +257,48 @@ src/constants/journey/
 - If `chapter.secret`: never show chapter number label.
 - Locked message for secret chapters: "Complete the previous chapter to unlock" (no roman numeral reference).
 
+### Completion modal titles for secret chapters
+
+Secret chapters use the chapter title instead of "Chapter {N} Complete":
+- Regular: "Chapter IV Complete" / "Range & Projection"
+- Secret: "Breathe Deep Complete" / (no subtitle — the title IS the identity)
+
+### New exercise tips
+
+**BREATHWORK_TIPS** (for ch5 breathwork exercises):
+- "Breathe from your belly — let it expand on the inhale, soften on the exhale."
+- "There's no right speed. Follow the cues and let your body adjust."
+- "If you feel lightheaded, pause and breathe normally. This is gentle exploration."
+- "Close your eyes if it helps you focus inward."
+- "Notice the pause between inhale and exhale — that's where stillness lives."
+
+**CHAKRA_TIPS** (for ch9 chakra exercises):
+- "Each tone maps to a place in your body. Feel where it resonates."
+- "The mantra is a vibration, not a word. Let it hum through you."
+- "Start quietly. Let the sound grow from inside rather than pushing it out."
+- "If a tone feels stuck, soften your jaw and breathe into it."
+- "There's no right way to feel this. Just notice what happens."
+
+### `secret` field propagation
+
+The `secret` field propagates automatically through `Journey.assignIds()` via the spread operator (`...ch`). No changes needed to `assignIds()`.
+
 ### Progression
 
 No changes to locking logic — chapters still unlock sequentially by completing the previous chapter's exercises. The `secret` flag only affects display, not progression.
+
+### index.ts registration
+
+```typescript
+export const journey = new Journey([
+  { chapter: 1, slug: "introduction", title: "Introduction", description: "...", stages: CHAPTER_1_STAGES },
+  { chapter: 2, slug: "building-foundation", title: "Building Foundation", description: "...", warmup: CHAPTER_2_WARMUP, stages: CHAPTER_2_STAGES },
+  { chapter: 3, slug: "vowel-exploration", title: "Vowel Exploration", description: "...", warmup: CHAPTER_3_WARMUP, stages: CHAPTER_3_STAGES },
+  { chapter: 4, slug: "range-and-projection", title: "Range & Projection", description: "...", warmup: CHAPTER_4_WARMUP, stages: CHAPTER_4_STAGES },
+  { chapter: 5, slug: "breathe-deep", title: "Breathe Deep", description: "...", secret: true, stages: CHAPTER_5_STAGES },
+  { chapter: 6, slug: "rhythm-deep-dive", title: "Rhythm Deep Dive", description: "...", secret: true, stages: CHAPTER_6_STAGES },
+  { chapter: 7, slug: "forward-placement", title: "Forward Placement", description: "...", warmup: CHAPTER_7_WARMUP, stages: CHAPTER_7_STAGES },
+  { chapter: 8, slug: "integration", title: "Integration", description: "...", warmup: CHAPTER_8_WARMUP, stages: CHAPTER_8_STAGES },
+  { chapter: 9, slug: "chakras", title: "Chakras", description: "...", secret: true, warmup: CHAPTER_9_WARMUP, stages: CHAPTER_9_STAGES },
+]);
+```
