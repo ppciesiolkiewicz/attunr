@@ -241,7 +241,7 @@ function AppShellInner({
           <MobileMenu pathname={pathname} onClose={() => setMenuOpen(false)} />
         )}
 
-        <main className="flex-1 min-h-0 relative">
+        <main className="flex-1 min-h-0 relative overflow-auto">
           {children}
           {showMicGate && (
             <div
