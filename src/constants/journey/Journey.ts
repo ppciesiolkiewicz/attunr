@@ -30,6 +30,14 @@ export class Journey {
     return stages.flatMap((s) => s.exercises);
   }
 
+  /** Display number for non-secret chapters (I, II, III…). Secret chapters return undefined. */
+  getDisplayNumber(chapter: Chapter): number | undefined {
+    if (chapter.secret) return undefined;
+    return this.chapters
+      .filter((ch) => !ch.secret)
+      .findIndex((ch) => ch.chapter === chapter.chapter) + 1;
+  }
+
   // ── Slug-based lookups ─────────────────────────────────────────────────
 
   /** Find a chapter by its slug. */
