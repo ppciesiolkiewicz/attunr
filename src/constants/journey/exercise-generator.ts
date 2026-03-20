@@ -331,6 +331,8 @@ export interface HillSustainParams extends CommonParams {
   direction: "up" | "down" | "between";
   toneShape?: ToneShape;
   displayNotes?: DisplayScale[];
+  /** Override the default chromatic scale (e.g. for even-7 chakra exercises). */
+  scale?: BaseScale;
 }
 
 export interface TimeBasedParams extends CommonParams {
@@ -823,7 +825,7 @@ export class ExerciseGenerator {
     return {
       ...pickCommon(params),
       exerciseTypeId: "pitch-detection-hill",
-      scale: { type: "chromatic", root },
+      scale: params.scale ?? { type: "chromatic", root },
       toneShape,
       direction,
       displayNotes,
