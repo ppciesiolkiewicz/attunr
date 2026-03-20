@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { usePageVisible } from "@/hooks/usePageVisible";
+import { useAnimationLoop } from "@/hooks/usePageVisible";
 import { findClosestNote as findClosestResolvedNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 
@@ -120,12 +120,9 @@ export default function BalanceBallCanvas({
   const bandsRef = useRef<ColoredNote[]>([]);
   const highlightIdsRef = useRef(highlightIds);
   const inTuneOverrideRef = useRef(inTuneOverride);
-  const rafRef = useRef<number | null>(null);
-
   const ballTRef = useRef(0.5);
   const trailRef = useRef<{ t: number; ts: number }[]>([]);
   const lastTrailMs = useRef(0);
-  const { hiddenRef, resumedAtRef } = usePageVisible();
 
   useEffect(() => {
     bandsRef.current = [...bands].sort((a, b) => a.frequencyHz - b.frequencyHz);
@@ -158,18 +155,12 @@ export default function BalanceBallCanvas({
     ctx?.scale(dpr, dpr);
   }, []);
 
+  const flushStale = useCallback(() => {
+    trailRef.current = [];
+    lastTrailMs.current = 0;
+  }, []);
+
   const render = useCallback(() => {
-    rafRef.current = requestAnimationFrame(render);
-
-    if (hiddenRef.current) return;
-
-    // On resume: flush stale trail and reset timer
-    if (resumedAtRef.current > 0) {
-      trailRef.current = [];
-      lastTrailMs.current = 0;
-      resumedAtRef.current = 0;
-    }
-
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !ctx) return;
@@ -349,22 +340,21 @@ export default function BalanceBallCanvas({
         }
       }
     }
-  }, [currentHzRef, hiddenRef, resumedAtRef]);
+  }, [currentHzRef]);
+
+  const startLoop = useAnimationLoop(render, flushStale);
 
   useEffect(() => {
     setupCanvas();
-    rafRef.current = requestAnimationFrame(render);
+    startLoop();
 
     const observer = new ResizeObserver(setupCanvas);
     if (canvasRef.current?.parentElement) {
       observer.observe(canvasRef.current.parentElement);
     }
 
-    return () => {
-      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      observer.disconnect();
-    };
-  }, [render, setupCanvas]);
+    return () => observer.disconnect();
+  }, [startLoop, setupCanvas]);
 
   return (
     <canvas

@@ -1,30 +1,56 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 
 /**
- * Tracks page visibility state for canvas animation loops.
+ * Manages a requestAnimationFrame loop that fully stops when the tab is hidden
+ * and restarts when visible again. On resume, calls `onResume` so components
+ * can flush stale timestamps (trails, dots).
  *
- * Returns:
- * - `hiddenRef` — true while the tab is hidden (use to skip rendering)
- * - `resumedAtRef` — set to `performance.now()` on the first visible frame
- *   after a hide. Animation loops should use this to flush stale timestamps
- *   (trails, dots) and reset interval timers. Reset it to `0` after handling.
+ * Returns `startLoop` — call it once (in a useEffect) to kick off the loop.
+ * Cleanup is automatic.
  */
-export function usePageVisible() {
-  const hiddenRef = useRef(document.hidden);
-  const resumedAtRef = useRef(0);
+export function useAnimationLoop(
+  render: () => void,
+  onResume: () => void,
+) {
+  const rafRef = useRef<number | null>(null);
+  const renderRef = useRef(render);
+  const onResumeRef = useRef(onResume);
+
+  renderRef.current = render;
+  onResumeRef.current = onResume;
+
+  const stop = useCallback(() => {
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+  }, []);
+
+  const loop = useCallback(() => {
+    renderRef.current();
+    rafRef.current = requestAnimationFrame(loop);
+  }, []);
+
+  const start = useCallback(() => {
+    stop();
+    rafRef.current = requestAnimationFrame(loop);
+  }, [stop, loop]);
 
   useEffect(() => {
     const handler = () => {
       if (document.hidden) {
-        hiddenRef.current = true;
+        stop();
       } else {
-        hiddenRef.current = false;
-        resumedAtRef.current = performance.now();
+        onResumeRef.current();
+        start();
       }
     };
     document.addEventListener("visibilitychange", handler);
-    return () => document.removeEventListener("visibilitychange", handler);
-  }, []);
+    return () => {
+      document.removeEventListener("visibilitychange", handler);
+      stop();
+    };
+  }, [start, stop]);
 
-  return { hiddenRef, resumedAtRef };
+  return start;
 }
