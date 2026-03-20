@@ -24,6 +24,12 @@ export default function Footer() {
           >
             Terms
           </Link>
+          <Link
+            href="/manifesto"
+            className="hover:text-white/70 transition-colors"
+          >
+            Manifesto
+          </Link>
         </div>
         <Text as="span" variant="caption" color="muted-1" className="hidden sm:inline">Align your voice · find your frequency</Text>
       </div>
