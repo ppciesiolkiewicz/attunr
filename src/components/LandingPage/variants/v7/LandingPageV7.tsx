@@ -813,6 +813,17 @@ export default function LandingPageV7() {
                 Start your practice
               </Button>
             </Link>
+            <p className="mt-5 text-xs text-white/30" style={{ fontFamily: body }}>
+              or{" "}
+              <a
+                href="/manifesto"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-white/50 transition-colors"
+              >
+                read our manifesto
+              </a>
+            </p>
           </div>
         </section>
 
