@@ -291,7 +291,7 @@ export function HillExercise({
               className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm"
               title="Play reference tone"
             >
-              ♪ Play<span className="hidden sm:inline">&nbsp;tone</span>
+              ♪ Play&nbsp;tone
             </Button>
           )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
@@ -302,7 +302,7 @@ export function HillExercise({
                 title="Previous exercise"
                 className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
               >
-                ←<span className="hidden sm:inline"> Prev</span>
+                ← Prev
               </Button>
             )}
             {exerciseComplete || isAlreadyCompleted ? (
@@ -310,7 +310,7 @@ export function HillExercise({
                 onClick={onComplete}
                 className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
               >
-                {isLast ? "Complete ✓" : <><span className="hidden sm:inline">Next </span>→</>}
+                {isLast ? "Complete ✓" : "Next →"}
               </Button>
             ) : (
               <Button
@@ -318,7 +318,7 @@ export function HillExercise({
                 title="Skip this step (won't mark as complete)"
                 className="flex-1 sm:flex-initial sm:min-w-[6.5rem] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
               >
-                <span className="hidden sm:inline">Skip </span>→
+                Skip →
               </Button>
             )}
           </div>

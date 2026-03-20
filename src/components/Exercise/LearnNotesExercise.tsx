@@ -238,14 +238,14 @@ export function LearnNotesExercise({
               title="Previous"
               className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
             >
-              ←<span className="hidden sm:inline"> Prev</span>
+              ← Prev
             </Button>
           )}
           <Button
             onClick={onComplete}
             className="flex-1 sm:flex-none px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm min-w-0"
           >
-            {isLast ? "Complete ✓" : <><span className="hidden sm:inline">Next </span>→</>}
+            {isLast ? "Complete ✓" : "Next →"}
           </Button>
         </div>
       </div>
