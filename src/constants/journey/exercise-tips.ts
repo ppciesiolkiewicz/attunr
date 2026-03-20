@@ -72,3 +72,19 @@ export const SLIDE_TIPS = [
   "Keep your breath steady throughout — don't run out halfway.",
   "Don't try to control every moment. Let the movement happen.",
 ];
+
+export const BREATHWORK_TIPS = [
+  "Breathe from your belly — let it expand on the inhale, soften on the exhale.",
+  "There's no right speed. Follow the cues and let your body adjust.",
+  "If you feel lightheaded, pause and breathe normally. This is gentle exploration.",
+  "Close your eyes if it helps you focus inward.",
+  "Notice the pause between inhale and exhale — that's where stillness lives.",
+];
+
+export const CHAKRA_TIPS = [
+  "Each tone maps to a place in your body. Feel where it resonates.",
+  "The mantra is a vibration, not a word. Let it hum through you.",
+  "Start quietly. Let the sound grow from inside rather than pushing it out.",
+  "If a tone feels stuck, soften your jaw and breathe into it.",
+  "There's no right way to feel this. Just notice what happens.",
+];
