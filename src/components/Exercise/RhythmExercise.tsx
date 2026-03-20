@@ -64,6 +64,20 @@ export function RhythmExercise({
   const [beatStates, setBeatStates] = useState<RhythmBeatState[]>([]);
   const [elapsedMs, setElapsedMs] = useState(0);
 
+  // Stop playback when tab is hidden
+  useEffect(() => {
+    const handler = () => {
+      if (document.hidden && isPlaying) {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        setIsPlaying(false);
+        setBeatStates([]);
+        setElapsedMs(0);
+      }
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
+  }, [isPlaying]);
+
   // ── Reset on exercise change ────────────────────────────────────────────
   useEffect(() => {
     setIsPlaying(false);

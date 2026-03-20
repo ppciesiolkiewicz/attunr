@@ -71,6 +71,20 @@ export function MelodyExercise({
   const [melodyRectNotes, setMelodyRectNotes] = useState<MelodyRectNote[]>([]);
   const melodyRectNotesRef = useRef<MelodyRectNote[]>([]);
 
+  // Stop playback when tab is hidden
+  useEffect(() => {
+    const handler = () => {
+      if (document.hidden && isPlaying) {
+        stopSampler();
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        setIsPlaying(false);
+        setMelodyStartTime(undefined);
+      }
+    };
+    document.addEventListener("visibilitychange", handler);
+    return () => document.removeEventListener("visibilitychange", handler);
+  }, [isPlaying, stopSampler]);
+
   // Reset on exercise change
   useEffect(() => {
     setHasStarted(false);
