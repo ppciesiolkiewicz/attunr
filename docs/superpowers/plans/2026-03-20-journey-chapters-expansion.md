@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add chapters 3–9 to the journey (including 3 secret chapters), the `secret` flag on `ChapterInput`/`Chapter`, display numbering logic, secret chapter UI treatment in `ChapterCard`, breathwork/chakra tip sets, and the `"even-7"` scale type.
+**Goal:** Add chapters 3–9 to the journey (including 3 secret chapters), the `secret` flag on `ChapterInput`/`Chapter`, display numbering logic, secret chapter UI treatment in `ChapterCard`, and breathwork/chakra tip sets.
 
-**Architecture:** Each chapter is a standalone config file (`chapter{n}.ts`) exporting warmup + stages. The `secret?: boolean` field on chapter types drives all UI differences. `Journey.getDisplayNumber()` computes roman numeral labels for non-secret chapters. The `"even-7"` scale type in `Scale.buildNotes()` enables the chakra chapter's 7-tone mapping.
+**Architecture:** Each chapter is a standalone config file (`chapter{n}.ts`) exporting warmup + stages. The `secret?: boolean` field on chapter types drives all UI differences. `Journey.getDisplayNumber()` computes roman numeral labels for non-secret chapters. The existing `"even-7-from-major"` scale type enables the chakra chapter's 7-tone mapping.
 
 **Tech Stack:** TypeScript, Next.js, React, tonal.js, Vitest
 
@@ -32,11 +32,9 @@
 - `src/constants/journey/chapter2.ts` — update completion modal text to tease chapter 3
 - `src/constants/journey/exercise-tips.ts` — add `BREATHWORK_TIPS` and `CHAKRA_TIPS`
 - `src/constants/journey/exercise-generator.ts` — add optional `scale` param to `HillSustainParams` and `hillSustain()`
-- `src/lib/scale.ts` — add `"even-7"` scale type
 - `src/components/ChapterList/components/ChapterCard.tsx` — secret chapter UI treatment
 
 ### Test files
-- `src/lib/scale.test.ts` — add tests for `"even-7"` scale
 - `src/constants/journey/exercise-generator.test.ts` — add tests for new chapter exercise counts
 
 ---
@@ -147,82 +145,7 @@ git commit -m "feat: add BREATHWORK_TIPS and CHAKRA_TIPS"
 
 ---
 
-## Task 4: Add `"even-7"` scale type (TDD)
-
-**Files:**
-- Modify: `src/lib/scale.ts:95-121`
-- Modify: `src/lib/scale.test.ts`
-
-- [ ] **Step 1: Write failing test for even-7 scale**
-
-Add to `src/lib/scale.test.ts`:
-
-```typescript
-describe("Scale — even-7 type", () => {
-  it("produces exactly 7 notes", () => {
-    const scale = new Scale({ type: "even-7", root: 1 }, mockVocalRange);
-    expect(scale.notes).toHaveLength(7);
-  });
-
-  it("first note equals lowMidi, last note equals highMidi", () => {
-    const scale = new Scale({ type: "even-7", root: 1 }, mockVocalRange);
-    expect(scale.notes[0].midi).toBe(48); // C3
-    expect(scale.notes[6].midi).toBe(72); // C5
-  });
-
-  it("notes are evenly spaced (within rounding)", () => {
-    const scale = new Scale({ type: "even-7", root: 1 }, mockVocalRange);
-    const midis = scale.notes.map((n) => n.midi);
-    // Expected: 48, 52, 56, 60, 64, 68, 72 (step = 4)
-    for (let i = 1; i < midis.length; i++) {
-      expect(midis[i] - midis[i - 1]).toBeGreaterThanOrEqual(3);
-      expect(midis[i] - midis[i - 1]).toBeLessThanOrEqual(5);
-    }
-  });
-
-  it("rootIndex is 0", () => {
-    const scale = new Scale({ type: "even-7", root: 1 }, mockVocalRange);
-    expect(scale.rootIndex).toBe(0);
-  });
-});
-```
-
-- [ ] **Step 2: Run test to verify it fails**
-
-Run: `npx vitest run src/lib/scale.test.ts`
-Expected: FAIL — "even-7" type not handled
-
-- [ ] **Step 3: Implement even-7 in `Scale.buildNotes()`**
-
-In `src/lib/scale.ts`, inside `buildNotes()`, add before the `"even-7-from-major"` check:
-
-```typescript
-if (definition.type === "even-7") {
-  // 7 equally spaced tones across the full vocal range (chakra scale)
-  const step = (highMidi - lowMidi) / 6;
-  const notes: ResolvedNote[] = Array.from({ length: 7 }, (_, i) => {
-    const midi = Math.round(lowMidi + i * step);
-    return Scale.midiToResolvedNote(midi);
-  });
-  return { notes, rootIndex: 0 };
-}
-```
-
-- [ ] **Step 4: Run test to verify it passes**
-
-Run: `npx vitest run src/lib/scale.test.ts`
-Expected: PASS
-
-- [ ] **Step 5: Commit**
-
-```bash
-git add src/lib/scale.ts src/lib/scale.test.ts
-git commit -m "feat: add even-7 scale type for chakra exercises"
-```
-
----
-
-## Task 5: Update chapter 2 completion modal
+## Task 4: Update chapter 2 completion modal
 
 **Files:**
 - Modify: `src/constants/journey/chapter2.ts:399-415`
@@ -250,7 +173,7 @@ git commit -m "feat: update ch2 completion modal to tease chapter 3"
 
 ---
 
-## Task 6: Chapter 3 — Vowel Exploration
+## Task 5: Chapter 3 — Vowel Exploration
 
 **Files:**
 - Create: `src/constants/journey/chapter3.ts`
@@ -297,7 +220,7 @@ git commit -m "feat: add chapter 3 — Vowel Exploration"
 
 ---
 
-## Task 7: Chapter 4 — Range & Projection
+## Task 6: Chapter 4 — Range & Projection
 
 **Files:**
 - Create: `src/constants/journey/chapter4.ts`
@@ -342,7 +265,7 @@ git commit -m "feat: add chapter 4 — Range & Projection"
 
 ---
 
-## Task 8: Chapter 5 — Breathe Deep (secret)
+## Task 7: Chapter 5 — Breathe Deep (secret)
 
 **Files:**
 - Create: `src/constants/journey/chapter5.ts`
@@ -379,7 +302,7 @@ git commit -m "feat: add chapter 5 — Breathe Deep (secret)"
 
 ---
 
-## Task 9: Chapter 6 — Rhythm Deep Dive (secret)
+## Task 8: Chapter 6 — Rhythm Deep Dive (secret)
 
 **Files:**
 - Create: `src/constants/journey/chapter6.ts`
@@ -416,7 +339,7 @@ git commit -m "feat: add chapter 6 — Rhythm Deep Dive (secret)"
 
 ---
 
-## Task 10: Chapter 7 — Forward Placement
+## Task 9: Chapter 7 — Forward Placement
 
 **Files:**
 - Create: `src/constants/journey/chapter7.ts`
@@ -462,7 +385,7 @@ git commit -m "feat: add chapter 7 — Forward Placement"
 
 ---
 
-## Task 11: Chapter 8 — Integration
+## Task 10: Chapter 8 — Integration
 
 **Files:**
 - Create: `src/constants/journey/chapter8.ts`
@@ -507,7 +430,7 @@ git commit -m "feat: add chapter 8 — Integration"
 
 ---
 
-## Task 12: Add `scale` override to `hillSustain()`
+## Task 11: Add `scale` override to `hillSustain()`
 
 **Files:**
 - Modify: `src/constants/journey/exercise-generator.ts:326-334` (HillSustainParams)
@@ -560,12 +483,12 @@ git commit -m "feat: add scale override to hillSustain params"
 
 ---
 
-## Task 13: Chapter 9 — Chakras (secret)
+## Task 12: Chapter 9 — Chakras (secret)
 
 **Files:**
 - Create: `src/constants/journey/chapter9.ts`
 
-This chapter uses the `"even-7"` scale type from Task 4 and the `scale` override from Task 12. Mantra exercises use existing exercise types with instruction text carrying the mantra cues.
+This chapter uses the existing `"even-7-from-major"` scale type and the `scale` override from Task 11. Mantra exercises use existing exercise types with instruction text carrying the mantra cues.
 
 - [ ] **Step 1: Create chapter9.ts**
 
@@ -577,22 +500,22 @@ Export `CHAPTER_9_WARMUP` and `CHAPTER_9_STAGES`.
 
 1. **Root & Sacral** (`ch9-root-sacral`)
    - Learn: "Chakras and sound" — about chakras, the 7-even-space scale, and how each tone maps to a place in the body. `slug: "chakra-intro"`. Elements: paragraph about 7 energy centers, paragraph (secondary) about how each maps to a tone, video.
-   - Hill sustain: LAM mantra (Root chakra). `slug: "lam-root"`. Scale: `{ type: "even-7", root: 1 }`. note: 1, 6s×3, direction: "down". Instruction: "Hum LAM on this tone. Feel it ground you.\nLet the vibration settle at the base of your spine.\nBreathe whenever you need to." Tips: CHAKRA_TIPS.
-   - Hill sustain: VAM mantra (Sacral). `slug: "vam-sacral"`. Scale: `{ type: "even-7", root: 1 }`. note: 2, 6s×3, direction: "down". Instruction about VAM, feeling it in lower belly. Tips: CHAKRA_TIPS.
+   - Hill sustain: LAM mantra (Root chakra). `slug: "lam-root"`. Scale: `{ type: "even-7-from-major", root: 1 }`. note: 1, 6s×3, direction: "down". Instruction: "Hum LAM on this tone. Feel it ground you.\nLet the vibration settle at the base of your spine.\nBreathe whenever you need to." Tips: CHAKRA_TIPS.
+   - Hill sustain: VAM mantra (Sacral). `slug: "vam-sacral"`. Scale: `{ type: "even-7-from-major", root: 1 }`. note: 2, 6s×3, direction: "down". Instruction about VAM, feeling it in lower belly. Tips: CHAKRA_TIPS.
 
 2. **Solar Plexus & Heart** (`ch9-solar-heart`)
-   - Hill sustain: RAM mantra (Solar plexus). `slug: "ram-solar"`. Scale: `{ type: "even-7", root: 1 }`. note: 3, 6s×3, direction: "between" with note: [3,3]. Instruction: "Hum RAM on this tone. Feel strength in your core.\nI am strong.\nLet the sound radiate outward." Tips: CHAKRA_TIPS.
-   - Hill sustain: YAM mantra (Heart). `slug: "yam-heart"`. Scale: `{ type: "even-7", root: 1 }`. note: 4, 6s×3, direction: "between" with note: [4,4]. Instruction about YAM, heart opening, "I am open". Tips: CHAKRA_TIPS.
+   - Hill sustain: RAM mantra (Solar plexus). `slug: "ram-solar"`. Scale: `{ type: "even-7-from-major", root: 1 }`. note: 3, 6s×3, direction: "between" with note: [3,3]. Instruction: "Hum RAM on this tone. Feel strength in your core.\nI am strong.\nLet the sound radiate outward." Tips: CHAKRA_TIPS.
+   - Hill sustain: YAM mantra (Heart). `slug: "yam-heart"`. Scale: `{ type: "even-7-from-major", root: 1 }`. note: 4, 6s×3, direction: "between" with note: [4,4]. Instruction about YAM, heart opening, "I am open". Tips: CHAKRA_TIPS.
    - Hill sustain: Heart Ah. `slug: "heart-ah"`. note: [5,9], 8s×3, direction: "between". Tips: VOWEL_TIPS. Instruction: "Sing an open Ah from your heart.\nFeel the openness in your chest.\nI am open."
 
 3. **Throat, Third Eye & Crown** (`ch9-upper-chakras`)
-   - Hill sustain: HAM mantra (Throat). `slug: "ham-throat"`. Scale: `{ type: "even-7", root: 1 }`. note: 5, 5s×3, direction: "up" with appropriate targets. Instruction about HAM, throat, truth. Tips: CHAKRA_TIPS.
-   - Hill sustain: OM (Third eye). `slug: "om-third-eye"`. Scale: `{ type: "even-7", root: 1 }`. note: 6, 5s×3. Instruction about OM, awareness, inner vision. Tips: CHAKRA_TIPS.
+   - Hill sustain: HAM mantra (Throat). `slug: "ham-throat"`. Scale: `{ type: "even-7-from-major", root: 1 }`. note: 5, 5s×3, direction: "up" with appropriate targets. Instruction about HAM, throat, truth. Tips: CHAKRA_TIPS.
+   - Hill sustain: OM (Third eye). `slug: "om-third-eye"`. Scale: `{ type: "even-7-from-major", root: 1 }`. note: 6, 5s×3. Instruction about OM, awareness, inner vision. Tips: CHAKRA_TIPS.
    - Time-based: Crown silence. `slug: "crown-silence"`. Cues: "Breathe in" 5s, "Hold in silence" 5s, "Exhale slowly" 8s — repeated twice. Instruction: "The crown chakra is silence. Just breathe and notice what's there.\nNo sound needed. Just awareness." Tips: CHAKRA_TIPS.
-   - Melody: 7-tone ascent. `slug: "chakra-ascent"`. Scale: `{ type: "even-7", root: 1 }`. Tempo 40, 7 notes ascending (i:1 through i:7), minScore: 0. Instruction about feeling the energy rise through all 7 centers.
+   - Melody: 7-tone ascent. `slug: "chakra-ascent"`. Scale: `{ type: "even-7-from-major", root: 1 }`. Tempo 40, 7 notes ascending (i:1 through i:7), minScore: 0. Instruction about feeling the energy rise through all 7 centers.
 
 4. **Full Chakra Flow** (`ch9-full-flow`)
-   - Melody: 7-tone ascend + descend. `slug: "chakra-flow"`. Scale: `{ type: "even-7", root: 1 }`. Tempo 35, ascending i:1→i:7 then descending i:6→i:1, each Half duration, minScore: 0.
+   - Melody: 7-tone ascend + descend. `slug: "chakra-flow"`. Scale: `{ type: "even-7-from-major", root: 1 }`. Tempo 35, ascending i:1→i:7 then descending i:6→i:1, each Half duration, minScore: 0.
    - Time-based: Mantra sequence. `slug: "mantra-flow"`. Cues: "LAM" 5s, "VAM" 5s, "RAM" 5s, "YAM" 5s, "HAM" 5s, "OM" 5s, "Silence" 5s. Tips: CHAKRA_TIPS. Instruction about feeling each mantra vibrate in its place.
    - Farinelli: `slug: "farinelli-ch9"`, maxCount: 9. Instruction cue about chakra awareness. With completionModal (title: "Chakras Complete", no subtitle, grand confetti: true, paragraph about the 7 tones living in the body now).
 
@@ -609,7 +532,7 @@ git commit -m "feat: add chapter 9 — Chakras (secret)"
 
 ---
 
-## Task 14: Register all chapters in index.ts
+## Task 13: Register all chapters in index.ts
 
 **Files:**
 - Modify: `src/constants/journey/index.ts:1-21`
@@ -720,7 +643,7 @@ git commit -m "feat: register chapters 3-9 in journey index"
 
 ---
 
-## Task 15: Secret chapter UI in ChapterCard
+## Task 14: Secret chapter UI in ChapterCard
 
 **Files:**
 - Modify: `src/components/ChapterList/components/ChapterCard.tsx:1-175`
@@ -838,7 +761,7 @@ git commit -m "feat: secret chapter UI treatment in ChapterCard"
 
 ---
 
-## Task 16: Verify everything works end-to-end
+## Task 15: Verify everything works end-to-end
 
 - [ ] **Step 1: Run all tests**
 

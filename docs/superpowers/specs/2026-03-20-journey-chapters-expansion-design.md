@@ -191,31 +191,13 @@ Affirmations appear as on-screen instruction text and in intro modal instruction
 
 #### 7-even-space scale
 
-A new scale type `"even-7"` in `Scale.buildNotes()` (in `src/lib/scale.ts`), alongside the existing `"even-7-from-major"`. The difference:
-
-- `"even-7-from-major"` — picks 7 evenly distributed notes from the major scale pitch classes
-- `"even-7"` — divides the full chromatic range into 7 equally spaced tones (pure linear interpolation, not constrained to any scale)
-
-The `"even-7"` scale always spans the user's full vocal range. The `root` field is set to `1` by convention but is not used for positioning — the scale always starts from the lowest note. This is an intentional exception to the `BaseScale` contract, documented in the code.
-
-Implementation in `Scale.buildNotes()`:
-```typescript
-if (definition.type === "even-7") {
-  // 7 equally spaced tones across the full vocal range (chakra scale)
-  const step = (highMidi - lowMidi) / 6;
-  const notes: ResolvedNote[] = Array.from({ length: 7 }, (_, i) => {
-    const midi = Math.round(lowMidi + i * step);
-    return { midi, color: Scale.colorForMidi(midi), /* ... */ };
-  });
-  return { notes, rootIndex: 0 };
-}
-```
+Chakra exercises use the existing `"even-7-from-major"` scale type, which picks 7 evenly distributed notes from the major scale pitch classes across the user's vocal range.
 
 Used in chakra exercises:
 ```typescript
 {
-  type: "even-7",
-  root: 1,  // convention — scale always spans full range
+  type: "even-7-from-major",
+  root: 1,
 }
 ```
 
@@ -237,10 +219,8 @@ src/constants/journey/
 ├── chapter7.ts      — NEW: Forward Placement
 ├── chapter8.ts      — NEW: Integration
 ├── chapter9.ts      — NEW: Chakras (secret)
-├── exercise-generator.ts  — (may need minor additions)
+├── exercise-generator.ts  — add scale override to hillSustain()
 ├── exercise-tips.ts       — add CHAKRA_TIPS, BREATHWORK_TIPS
-src/lib/
-└── scale.ts               — add "even-7" scale type in Scale.buildNotes()
 ```
 
 ## UI changes
