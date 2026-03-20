@@ -663,7 +663,6 @@ export default function LandingPageV8() {
             >
               Tuned to your voice. <br />
               You feel where each tone lands in your body. <br />
-              No two practices are the same because no two voices are.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               {TAGS.map((p) => (
@@ -813,7 +812,10 @@ export default function LandingPageV8() {
                 Start your practice
               </Button>
             </Link>
-            <p className="mt-5 text-xs text-white/30" style={{ fontFamily: body }}>
+            <p
+              className="mt-5 text-xs text-white/30"
+              style={{ fontFamily: body }}
+            >
               or{" "}
               <a
                 href="/manifesto"
