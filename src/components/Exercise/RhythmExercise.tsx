@@ -328,13 +328,8 @@ export function RhythmExercise({
               onClick={handleStart}
               className="shrink-0 px-3 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm flex items-center gap-2"
             >
-              ▶ Start
+              ↺ Restart
             </Button>
-          )}
-          {isPlaying && (
-            <Text variant="caption" color="muted-1" className="text-xs">
-              Tap on each beat…
-            </Text>
           )}
           <div className="flex gap-2 flex-1 sm:flex-initial min-w-0">
             {exerciseId > 1 && onPrev && (

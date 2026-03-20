@@ -246,7 +246,7 @@ export function TimeBasedExerciseContent({
                 onClick={handleStart}
               >
                 <span className="flex items-center justify-center w-full h-full">
-                  <span className="text-xl font-semibold text-white">Start</span>
+                  <span className="text-xl font-semibold text-white">Restart</span>
                 </span>
               </button>
             ) : (
