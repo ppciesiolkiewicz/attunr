@@ -201,6 +201,7 @@ export default function LandingPageV3() {
         <div className="flex gap-6 text-xs text-white/40">
           <Link href="/privacy" className="hover:text-white/70 transition-colors duration-200">Privacy</Link>
           <Link href="/terms" className="hover:text-white/70 transition-colors duration-200">Terms</Link>
+          <Link href="/manifesto" className="hover:text-white/70 transition-colors duration-200">Manifesto</Link>
         </div>
       </footer>
     </div>

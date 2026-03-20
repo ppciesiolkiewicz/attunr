@@ -359,6 +359,7 @@ export default function LandingPageV4() {
             <div className="flex items-center gap-6 text-xs" style={{ fontFamily: outfit, color: "rgba(226,221,212,0.3)" }}>
               <Link href="/privacy" className="hover:text-white/55 transition-colors duration-800">Privacy</Link>
               <Link href="/terms" className="hover:text-white/55 transition-colors duration-800">Terms</Link>
+              <Link href="/manifesto" className="hover:text-white/55 transition-colors duration-800">Manifesto</Link>
             </div>
           </div>
         </footer>

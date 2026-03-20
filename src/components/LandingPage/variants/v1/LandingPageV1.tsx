@@ -301,6 +301,7 @@ export default function LandingPageV1() {
           <div className="flex items-center gap-6 v1-sans text-xs" style={{ color: `${MOON}44` }}>
             <Link href="/privacy" className="hover:opacity-70 transition-opacity">Privacy</Link>
             <Link href="/terms" className="hover:opacity-70 transition-opacity">Terms</Link>
+            <Link href="/manifesto" className="hover:opacity-70 transition-opacity">Manifesto</Link>
           </div>
         </div>
       </footer>

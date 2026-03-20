@@ -295,6 +295,7 @@ export default function LandingPageV2() {
           <div className="flex gap-6">
             <Link href="/privacy" className="v2-sans text-xs text-white/20 hover:text-white/40 transition-colors cursor-pointer">Privacy</Link>
             <Link href="/terms" className="v2-sans text-xs text-white/20 hover:text-white/40 transition-colors cursor-pointer">Terms</Link>
+            <Link href="/manifesto" className="v2-sans text-xs text-white/20 hover:text-white/40 transition-colors cursor-pointer">Manifesto</Link>
           </div>
         </footer>
       </div>

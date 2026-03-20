@@ -833,6 +833,12 @@ export default function LandingPageV7() {
               >
                 Terms
               </Link>
+              <Link
+                href="/manifesto"
+                className="hover:text-white/55 transition-colors"
+              >
+                Manifesto
+              </Link>
             </div>
           </div>
         </footer>
