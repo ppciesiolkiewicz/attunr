@@ -10,6 +10,7 @@ const LandingPageV4 = lazy(() => import("./variants/v4/LandingPageV4"));
 const LandingPageV5 = lazy(() => import("./variants/v5/LandingPageV5"));
 const LandingPageV6 = lazy(() => import("./variants/v6/LandingPageV6"));
 const LandingPageV7 = lazy(() => import("./variants/v7/LandingPageV7"));
+const LandingPageV8 = lazy(() => import("./variants/v8/LandingPageV8"));
 
 function VariantContent({ v }: { v: string }) {
   switch (v) {
@@ -27,8 +28,10 @@ function VariantContent({ v }: { v: string }) {
       return <LandingPageV5 />;
     case "6":
       return <LandingPageV6 />;
-    default:
+    case "7":
       return <LandingPageV7 />;
+    default:
+      return <LandingPageV8 />;
   }
 }
 
