@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
+import { usePageVisible } from "@/hooks/usePageVisible";
 import {
   findClosestNote as findClosestResolvedNote,
   isInTune,
@@ -179,6 +180,7 @@ export default function PitchCanvas({
   const layoutRef = useRef({ W: 0, H: 0, bottomY: 0, topY: 0 });
   const melodyNotesRef = useRef<MelodyRectNote[] | undefined>(melodyNotes);
   const melodyStartTimeRef = useRef<number | undefined>(melodyStartTime);
+  const { hiddenRef, resumedAtRef } = usePageVisible();
 
   // Sort on every prop change and flush stale dots so they don't appear in
   // the wrong position after a frequency-mode switch.
@@ -227,6 +229,16 @@ export default function PitchCanvas({
   const render = useCallback(() => {
     // Schedule next frame first so the loop survives any early return.
     rafRef.current = requestAnimationFrame(render);
+
+    // Skip rendering while tab is hidden — avoids stale timestamp accumulation
+    if (hiddenRef.current) return;
+
+    // On resume: flush stale trail dots and reset dot timer
+    if (resumedAtRef.current > 0) {
+      dotsRef.current = [];
+      lastDotMs.current = 0;
+      resumedAtRef.current = 0;
+    }
 
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
@@ -464,7 +476,7 @@ export default function PitchCanvas({
       ctx.stroke();
       ctx.restore();
     }
-  }, [currentHzRef]);
+  }, [currentHzRef, hiddenRef, resumedAtRef]);
 
   useEffect(() => {
     setupCanvas();

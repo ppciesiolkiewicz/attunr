@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
+import { usePageVisible } from "@/hooks/usePageVisible";
 import { findClosestNote as findClosestResolvedNote, matchesNoteTarget } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 
@@ -103,6 +104,7 @@ export default function HillBallCanvas({
   const ballTRef = useRef(0.2);
   const trailRef = useRef<{ t: number; ts: number }[]>([]);
   const lastTrailMs = useRef(0);
+  const { hiddenRef, resumedAtRef } = usePageVisible();
 
   useEffect(() => {
     bandsRef.current = [...bands].sort(
@@ -131,6 +133,15 @@ export default function HillBallCanvas({
 
   const render = useCallback(() => {
     rafRef.current = requestAnimationFrame(render);
+
+    if (hiddenRef.current) return;
+
+    // On resume: flush stale trail and reset timer
+    if (resumedAtRef.current > 0) {
+      trailRef.current = [];
+      lastTrailMs.current = 0;
+      resumedAtRef.current = 0;
+    }
 
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
@@ -383,7 +394,7 @@ export default function HillBallCanvas({
         }
       }
     }
-  }, [currentHzRef, direction, accept]);
+  }, [currentHzRef, direction, accept, hiddenRef, resumedAtRef]);
 
   useEffect(() => {
     setupCanvas();
