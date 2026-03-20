@@ -13,6 +13,9 @@ export function LandingFooter() {
           <Link href="/terms" className="hover:text-white/55 transition-colors">
             Terms
           </Link>
+          <Link href="/manifesto" className="hover:text-white/55 transition-colors">
+            Manifesto
+          </Link>
         </div>
       </div>
     </footer>
