@@ -28,9 +28,9 @@ import { MobileMenu } from "./components/MobileMenu";
 /** Outer shell — provides ToastProvider so inner hooks can use useToast. */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isLanding = pathname === "/" || pathname === "/manifesto";
+  const isLanding = pathname === "/";
 
-  // Landing / manifesto: skip all app chrome
+  // Landing page: skip all app chrome
   if (isLanding) return <>{children}</>;
 
   return (
