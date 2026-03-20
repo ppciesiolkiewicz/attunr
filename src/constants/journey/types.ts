@@ -355,6 +355,8 @@ export interface Chapter {
   slug: string;
   title: string;
   description: string;
+  /** Secret chapters show "???" when locked, no chapter number. */
+  secret?: boolean;
   /** Warmup stage — prompted if >4h since last warmup. Chapter 1 has none. */
   warmup?: StageConfig;
   stages: StageConfig[];
@@ -371,6 +373,8 @@ export interface ChapterInput {
   slug: string;
   title: string;
   description: string;
+  /** Secret chapters show "???" when locked, no chapter number. */
+  secret?: boolean;
   warmup?: StageConfigInput;
   stages: StageConfigInput[];
 }
