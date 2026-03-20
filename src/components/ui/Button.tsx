@@ -10,6 +10,7 @@ const buttonVariants = cva(
         outline: "border",
         ghost: "border border-transparent",
         icon: "p-2.5 rounded-full flex items-center justify-center",
+        landing: "border border-transparent",
       },
       size: {
         sm: "px-4 py-2 text-sm font-medium rounded-lg",
@@ -48,23 +49,40 @@ const primaryGlow: Record<string, string> = {
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   VariantProps<typeof buttonVariants>;
 
+const landingStyle: React.CSSProperties = {
+  fontFamily: '"Fraunces", Georgia, serif',
+  letterSpacing: "0.08em",
+  fontSize: "0.95rem",
+  background:
+    "linear-gradient(135deg, rgba(139,92,246,0.25), rgba(99,102,241,0.15))",
+  border: "1px solid rgba(139,92,246,0.5)",
+  color: "#e0d4ff",
+  boxShadow:
+    "0 0 30px rgba(139,92,246,0.2), 0 0 60px rgba(139,92,246,0.1), inset 0 1px 0 rgba(255,255,255,0.1)",
+  transition:
+    "transform 0.3s ease, box-shadow 0.4s ease, background 0.4s ease, border-color 0.4s ease",
+};
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "solid", size = "md", color = "primary", className = "", style, ...props }, ref) => {
     const isIcon = variant === "icon";
+    const isLanding = variant === "landing";
     const isSolidPrimary = variant === "solid" && color === "primary";
 
     return (
       <button
         ref={ref}
-        className={`${buttonVariants({ variant, size: isIcon ? null : size, color })} ${className}`}
+        className={`${buttonVariants({ variant, size: isIcon ? null : size, color: isLanding ? null : color })} ${className}`}
         style={
-          isSolidPrimary
-            ? {
-                background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
-                boxShadow: primaryGlow[size ?? "md"],
-                ...style,
-              }
-            : style
+          isLanding
+            ? { ...landingStyle, ...style }
+            : isSolidPrimary
+              ? {
+                  background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
+                  boxShadow: primaryGlow[size ?? "md"],
+                  ...style,
+                }
+              : style
         }
         {...props}
       />

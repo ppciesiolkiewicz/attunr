@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Button } from "@/components/ui";
 
 export const metadata = {
   title: "Manifesto",
@@ -29,14 +30,6 @@ export default function ManifestoPage() {
       `}</style>
 
       <div className="max-w-lg mx-auto px-6 pt-8 pb-16">
-        <Link
-          href="/"
-          className="text-xs tracking-wide text-white/40 hover:text-white/65 transition-colors mb-12 inline-block uppercase"
-          style={{ fontFamily: body, letterSpacing: "0.12em" }}
-        >
-          &larr; Back
-        </Link>
-
         {/* ── Title ──────────────────────────────────── */}
         <h1
           className="text-3xl sm:text-4xl text-center leading-tight mb-3 text-white"
@@ -301,12 +294,10 @@ export default function ManifestoPage() {
           >
             Find what&rsquo;s truly you.
           </p>
-          <Link
-            href="/journey"
-            className="inline-block mt-10 px-8 py-3 rounded-xl bg-violet-600 text-white text-sm font-medium hover:brightness-125 active:brightness-90 transition-all"
-            style={{ fontFamily: body }}
-          >
-            Begin the journey
+          <Link href="/journey" tabIndex={-1} className="mt-10 inline-block">
+            <Button variant="landing" size="lg" className="px-14">
+              Begin the journey
+            </Button>
           </Link>
         </div>
       </div>
