@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import { Outfit } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-outfit",
+  display: "swap",
+});
 
 // Production domain for OG/twitter - Messenger/Facebook require accessible image URLs.
 // Vercel preview URLs can expire; always use production for link previews.
@@ -58,7 +66,7 @@ const fbAppId = process.env.NEXT_PUBLIC_FB_APP_ID;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className={`h-full ${outfit.variable}`}>
       <head>
         {fbAppId && (
           <meta property="fb:app_id" content={fbAppId} />

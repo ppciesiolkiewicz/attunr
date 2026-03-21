@@ -44,7 +44,7 @@ const LOGO_LETTERS = ["a", "t", "t", "u", "n", "r"] as const;
 
 export default function Logo({ layout = "horizontal", size = "default", animate, className = "" }: LogoProps) {
   const text = (
-    <span className={`inline-flex font-semibold tracking-tight text-white leading-none ${textSizes[size]}`}>
+    <span className={`inline-flex font-semibold tracking-tight text-white leading-none ${textSizes[size]}`} style={{ fontFamily: "var(--font-outfit), 'Outfit', sans-serif" }}>
       {LOGO_LETTERS.map((letter, i) => (
         <span
           key={i}
