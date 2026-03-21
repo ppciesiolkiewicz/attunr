@@ -70,4 +70,8 @@ export const analytics = {
     capture("notification_frequency_selected", { frequency }),
   notificationToggled: (enabled: boolean) =>
     capture("notification_toggled", { enabled }),
+
+  // Contact
+  contactSubmitted: (email: string, message: string) =>
+    capture("contact_submitted", { email, message }),
 };

@@ -211,6 +211,13 @@ export default function SettingsPanel({
             >
               What are Solfeggio frequencies? →
             </Link>
+            <Link
+              href="/contact"
+              onClick={onClose}
+              className="cursor-pointer text-sm text-violet-400/75 hover:text-violet-400 transition-colors"
+            >
+              Talk to us →
+            </Link>
           </Section>
         </div>
       </div>

@@ -30,6 +30,12 @@ export default function Footer() {
           >
             Manifesto
           </Link>
+          <Link
+            href="/contact"
+            className="hover:text-white/70 transition-colors"
+          >
+            Talk to us
+          </Link>
         </div>
         <Text as="span" variant="caption" color="muted-1" className="hidden sm:inline">Align your voice · find your frequency</Text>
       </div>
