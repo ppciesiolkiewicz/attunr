@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { journey } from "@/constants/journey";
-import ExercisePageClient from "./ExercisePageClient";
+import ExerciseLoading from "./loading";
+
+const ExercisePageClient = dynamic(() => import("./ExercisePageClient"), {
+  loading: () => <ExerciseLoading />,
+});
 
 type Props = { params: Promise<{ chapter: string; exercise: string }> };
 
