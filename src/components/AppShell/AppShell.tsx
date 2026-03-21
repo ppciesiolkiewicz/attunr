@@ -64,6 +64,7 @@ function AppShellInner({
     status,
     error: micError,
     startListening,
+    stopListening,
   } = usePitchDetection();
   const { playTone, playSlide } = useTonePlayer();
 
@@ -88,12 +89,18 @@ function AppShellInner({
     if (!onboarded || !hasVoice) setShowOnboarding(true);
   }, []);
 
-  // Auto-start mic when app loads (skip on landing page — no mic needed there)
+  // Start mic only on exercise pages; stop when navigating away
+  const isExercisePage =
+    /^\/journey\/[^/]+\/[^/]+/.test(pathname) || pathname === "/practice";
+
   useEffect(() => {
-    const needsMicNow = pathname?.startsWith("/journey") || pathname === "/practice";
-    if (status === "idle" && needsMicNow) startListening();
+    if (isExercisePage && status === "idle") {
+      startListening();
+    } else if (!isExercisePage && status === "listening") {
+      stopListening();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  }, [isExercisePage]);
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(band: ColoredNote) {
@@ -145,9 +152,8 @@ function AppShellInner({
     );
   }
 
-  const needsMic = pathname?.startsWith("/journey") || pathname === "/practice";
   const showMicGate =
-    !(showOnboarding || redetect) && needsMic && status === "idle";
+    !(showOnboarding || redetect) && isExercisePage && status === "idle";
 
   return (
     <AppContext.Provider value={contextValue}>
