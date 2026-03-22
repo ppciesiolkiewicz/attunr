@@ -221,17 +221,38 @@ async function uploadType(exerciseTypeId: string) {
 
 // ── generate-chapter ─────────────────────────────────────────────────────
 
-async function generateChapter(chapterSlug: string, force: boolean) {
+async function generateChapter(chapterSlug: string, exerciseSlug: string | undefined, force: boolean) {
   const chapter = journey.chapters.find((c) => c.slug === chapterSlug);
   if (!chapter) throw new Error(`No chapter with slug "${chapterSlug}"`);
 
-  const exercises = chapter.stages
+  let exercises = chapter.stages
     .flatMap((s) => s.exercises)
     .filter((e): e is LearnVoiceDrivenConfig => e.exerciseTypeId === "learn-voice-driven");
+
+  if (exerciseSlug) {
+    exercises = exercises.filter((e) => e.slug === exerciseSlug);
+    if (exercises.length === 0) {
+      throw new Error(`No learn-voice-driven exercise "${exerciseSlug}" in chapter "${chapterSlug}"`);
+    }
+  }
 
   if (exercises.length === 0) {
     console.log(`No learn-voice-driven exercises in chapter "${chapterSlug}"`);
     return;
+  }
+
+  // Confirm when regenerating entire chapter (no specific exercise)
+  if (!exerciseSlug && exercises.length > 1) {
+    const readline = await import("readline");
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    const answer = await new Promise<string>((resolve) =>
+      rl.question(`Regenerate all ${exercises.length} exercises in "${chapterSlug}"? (y/N) `, resolve),
+    );
+    rl.close();
+    if (answer.toLowerCase() !== "y") {
+      console.log("Aborted.");
+      return;
+    }
   }
 
   console.log(`Generating voice for ${exercises.length} learn exercises in chapter "${chapterSlug}"...\n`);
@@ -263,7 +284,7 @@ async function generateChapter(chapterSlug: string, force: boolean) {
 
 // ── upload-chapter ──────────────────────────────────────────────────────
 
-async function uploadChapter(chapterSlug: string) {
+async function uploadChapter(chapterSlug: string, exerciseSlug?: string) {
   if (!BLOB_TOKEN) throw new Error("ATTUNR_BLOB_READ_WRITE_TOKEN not set in .env.local");
 
   const chapterDir = path.join(OUTPUT_DIR, "exercise-types", "learn-voice-driven", chapterSlug);
@@ -271,9 +292,16 @@ async function uploadChapter(chapterSlug: string) {
     throw new Error(`No generated files found in ${chapterDir}. Run 'generate-chapter' first.`);
   }
 
-  const exerciseDirs = fs.readdirSync(chapterDir, { withFileTypes: true })
+  let exerciseDirs = fs.readdirSync(chapterDir, { withFileTypes: true })
     .filter((d) => d.isDirectory())
     .map((d) => d.name);
+
+  if (exerciseSlug) {
+    exerciseDirs = exerciseDirs.filter((d) => d === exerciseSlug);
+    if (exerciseDirs.length === 0) {
+      throw new Error(`No generated files for exercise "${exerciseSlug}" in ${chapterDir}`);
+    }
+  }
 
   for (const exerciseSlug of exerciseDirs) {
     const exerciseDir = path.join(chapterDir, exerciseSlug);
@@ -341,29 +369,51 @@ async function main() {
       break;
     }
     case "generate-chapter": {
-      const [chapterSlug] = rest;
+      const [chapterSlug, exerciseSlug] = rest;
       if (!chapterSlug) {
-        console.error("Usage: generate-chapter <chapterSlug> [--force]");
+        console.error("Usage: generate-chapter <chapterSlug> [exerciseSlug] [--force]");
         process.exit(1);
       }
-      await generateChapter(chapterSlug, force);
+      await generateChapter(chapterSlug, exerciseSlug, force);
       break;
     }
     case "upload-chapter": {
-      const [chapterSlug] = rest;
+      const [chapterSlug, exerciseSlug] = rest;
       if (!chapterSlug) {
-        console.error("Usage: upload-chapter <chapterSlug>");
+        console.error("Usage: upload-chapter <chapterSlug> [exerciseSlug]");
         process.exit(1);
       }
-      await uploadChapter(chapterSlug);
+      await uploadChapter(chapterSlug, exerciseSlug);
       break;
     }
     case "test":
       await test();
       break;
+    case "--help":
+    case "help":
+      console.log(`Voice Instruction Generator
+
+Commands:
+  generate-type <exerciseTypeId> [--force]          Generate segments for an exercise type (e.g. breathwork-farinelli)
+  upload-type <exerciseTypeId>                      Upload generated segments for an exercise type
+
+  generate-chapter <chapter> [exercise] [--force]   Generate voice for learn-voice-driven exercises in a chapter
+  upload-chapter <chapter> [exercise]               Upload generated voice for a chapter
+
+  test                                              Generate a short test segment
+
+Options:
+  --force   Regenerate even if files already exist
+  --help    Show this help message
+
+Examples:
+  generate-chapter introduction vocal-placement --force
+  upload-chapter introduction vocal-placement
+  generate-chapter introduction                      # all exercises in chapter (asks for confirmation)`);
+      break;
     default:
       console.error(
-        "Usage: npx tsx -r tsconfig-paths/register scripts/voice-instruction-generator <generate-type|generate-chapter|upload-type|upload-chapter|test> [args]",
+        "Unknown command. Run with --help for usage.",
       );
       process.exit(1);
   }
