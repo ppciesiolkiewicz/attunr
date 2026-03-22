@@ -77,7 +77,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       title: "Low Uu",
       headerSubtitle: "Chest voice · 3 seconds × 5",
       instruction:
-        "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
+        "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -152,7 +152,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         headerSubtitle: "Oo vowel · 5 seconds × 3",
         cardSubtitle: "A low Oo — rounded and open, settling in your chest",
         instruction:
-          "Sing oooo (as in 'go') on a low tone.\nKeep your mouth rounded and open — wider than Uu.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
+          "Oooo (as in 'go') — keep the ball at the bottom of the hill.\nKeep your mouth rounded and open — wider than Uu.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
@@ -170,7 +170,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         title: "Oo — mid",
         headerSubtitle: "Oo vowel · 5 seconds × 3",
         instruction:
-          "Sing oooo (as in 'go') in your mid range.\nKeep your mouth rounded and open — wider than Uu.\nFeel the resonance shift as you move higher.",
+          "Oooo (as in 'go') — keep the ball between the markers.\nKeep your mouth rounded and open — wider than Uu.\nFeel the resonance shift as you move higher.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
@@ -224,7 +224,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         title: "Oo — longer",
         headerSubtitle: "Oo vowel · 6 seconds × 3",
         instruction:
-          "Sing oooo (as in 'go') — longer holds this time.\nKeep your mouth rounded and open — wider than Uu.\nBreathe whenever you need to.",
+          "Oooo (as in 'go') — keep the ball between the markers.\nKeep your mouth rounded and open — wider than Uu.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
@@ -281,7 +281,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         title: "Oo — wider range",
         headerSubtitle: "Oo vowel · 6 seconds × 3",
         instruction:
-          "Sing oooo (as in 'go') across a wider range.\nKeep your mouth rounded and open — wider than Uu.\nNotice how the vowel changes colour at different pitches.",
+          "Oooo (as in 'go') — keep the ball between the markers.\nKeep your mouth rounded and open — wider than Uu.\nNotice how the vowel changes colour at different pitches.",
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
@@ -324,7 +324,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         title: "Oo — long",
         headerSubtitle: "Oo vowel · 8 seconds × 3",
         instruction:
-          "Sing oooo (as in 'go') — the longest holds yet.\nKeep your mouth rounded and open — wider than Uu.\nFeel the resonance deepen as you sustain.",
+          "Oooo (as in 'go') — keep the ball between the markers.\nKeep your mouth rounded and open — wider than Uu.\nFeel the resonance deepen as you sustain.",
         introModal: modal.hill({
           seconds: 8,
           reps: 3,

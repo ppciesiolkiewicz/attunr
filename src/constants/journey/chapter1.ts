@@ -86,7 +86,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         headerSubtitle: "Chest voice · 3 seconds × 5",
         cardSubtitle: "A low Uu that settles in your chest",
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
+          "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -105,7 +105,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         headerSubtitle: "Chest voice · 3 seconds × 5",
         cardSubtitle: "A steady Uu in the middle of your voice",
         instruction:
-          "Sing uuuu (as in 'moon') on a comfortable tone.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
+          "Uuuu (as in 'moon') — keep the ball between the markers.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -262,7 +262,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "U — mid-low",
         headerSubtitle: "Vowel U · 6 seconds × 3",
         instruction:
-          "Sing uuuu (as in 'moon') on a mid-low tone.\nNotice how the vowel opens from the hum — warmer, fuller.\nLet it be easy.",
+          "Uuuu (as in 'moon') — keep the ball between the markers.\nNotice how the vowel opens from the hum — warmer, fuller.\nLet it be easy.",
         introModal: modal.hill({
           seconds: 6,
           tips: exerciseTips("vowel", "introduction"),

@@ -22,6 +22,7 @@ async function generateSegmentAudio(
   segmentName: string,
   outDir: string,
   voiceType: "instruction" | "tips" = "instruction",
+  voiceOverrides?: { speed?: number; stability?: number; similarityBoost?: number; style?: number },
 ) {
   if (!ELEVENLABS_API_KEY) {
     throw new Error("ELEVENLABS_API_KEY not set in .env.local");
@@ -29,8 +30,13 @@ async function generateSegmentAudio(
 
   const charCount = ssml.length;
   const voice = voiceType === "tips" ? voiceSettings.tipsVoice : voiceSettings.instructionVoice;
+  const speed = voiceOverrides?.speed ?? voice.speed;
+  const stability = voiceOverrides?.stability ?? voice.stability;
+  const similarityBoost = voiceOverrides?.similarityBoost ?? voice.similarityBoost;
+  const style = voiceOverrides?.style ?? voice.style;
   console.log(`  [${segmentName}] Calling TTS (${charCount} chars)...`);
 
+  const hasVoiceSettings = speed !== undefined || stability !== undefined;
   const ttsResponse = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${voice.voiceId}`,
     {
@@ -43,18 +49,13 @@ async function generateSegmentAudio(
       body: JSON.stringify({
         text: ssml,
         model_id: voiceSettings.modelId,
-        ...(voice.speed !== undefined ||
-        voice.stability !== undefined
+        ...(hasVoiceSettings
           ? {
               voice_settings: {
-                ...(voice.speed !== undefined && { speed: voice.speed }),
-                ...(voice.stability !== undefined && {
-                  stability: voice.stability,
-                }),
-                ...(voice.similarityBoost !== undefined && {
-                  similarity_boost: voice.similarityBoost,
-                }),
-                ...(voice.style !== undefined && { style: voice.style }),
+                ...(speed !== undefined && { speed }),
+                ...(stability !== undefined && { stability }),
+                ...(similarityBoost !== undefined && { similarity_boost: similarityBoost }),
+                ...(style !== undefined && { style }),
                 ...(voice.speakerBoost !== undefined && {
                   use_speaker_boost: voice.speakerBoost,
                 }),
@@ -169,7 +170,7 @@ async function generateType(exerciseTypeId: string, force: boolean) {
       continue;
     }
 
-    await generateSegmentAudio(segment.ssml, segment.name, outDir, segment.voice);
+    await generateSegmentAudio(segment.ssml, segment.name, outDir, segment.voice, segment.voiceOverrides);
     generated++;
   }
 
@@ -251,7 +252,7 @@ async function generateChapter(chapterSlug: string, force: boolean) {
         continue;
       }
       const ssml = `<speak>${segment.text}</speak>`;
-      await generateSegmentAudio(ssml, segment.name, outDir);
+      await generateSegmentAudio(ssml, segment.name, outDir, "instruction", { speed: 0.8 });
     }
     console.log();
   }

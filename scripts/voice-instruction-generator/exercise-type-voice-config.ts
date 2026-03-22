@@ -7,6 +7,8 @@ export interface VoiceSegment {
   ssml: string;
   /** Which voice to use. Defaults to "instruction". */
   voice?: "instruction" | "tips";
+  /** Override voice settings for this segment (e.g. speed). */
+  voiceOverrides?: { speed?: number; stability?: number; similarityBoost?: number; style?: number };
 }
 
 // ── Base class ───────────────────────────────────────────────────────────────
@@ -88,6 +90,7 @@ class LearnVoiceDrivenVoiceConfig extends ExerciseTypeVoiceConfig {
     return exercise.segments.map((s) => ({
       name: s.name,
       ssml: `<speak>${s.text}</speak>`,
+      voiceOverrides: { speed: 0.8 },
     }));
   }
 
@@ -102,6 +105,7 @@ class LearnVoiceDrivenVoiceConfig extends ExerciseTypeVoiceConfig {
       ex.segments.map((s) => ({
         name: s.name,
         ssml: `<speak>${s.text}</speak>`,
+        voiceOverrides: { speed: 0.8 },
       })),
     );
   }

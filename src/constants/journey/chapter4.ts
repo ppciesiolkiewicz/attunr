@@ -77,7 +77,7 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
       title: "Low Uu",
       headerSubtitle: "Chest voice · 3 seconds × 5",
       instruction:
-        "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nTake as many breaths as you need.",
+        "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nTake as many breaths as you need.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -124,7 +124,7 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
       title: "Oo hill sustain",
       headerSubtitle: "Oo vowel · 3 seconds × 5",
       instruction:
-        "Sing oooo (as in 'go') on a low tone.\nSlightly wobble your voice to keep it loose.\nTake as many breaths as you need.",
+        "Oooo (as in 'go') — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nTake as many breaths as you need.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -170,7 +170,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         headerSubtitle: "Ah vowel · 5 seconds × 3",
         cardSubtitle: "Open your mouth wide — feel the space inside",
         instruction:
-          "Sing ahhh (as in 'father') on a low tone.\nOpen your mouth wide — Ah is the most open vowel.\nSlightly wobble your voice to keep it loose.\nTake as many breaths as you need.",
+          "Ahhh (as in 'father') — keep the ball at the bottom of the hill.\nOpen your mouth wide — Ah is the most open vowel.\nSlightly wobble your voice to keep it loose.\nTake as many breaths as you need.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
@@ -188,7 +188,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         title: "Ah — mid",
         headerSubtitle: "Ah vowel · 5 seconds × 3",
         instruction:
-          "Sing ahhh in your mid range.\nOpen your mouth wide — Ah is the most open vowel.\nTake as many breaths as you need.",
+          "Ahhh (as in 'father') — keep the ball between the markers.\nOpen your mouth wide — Ah is the most open vowel.\nTake as many breaths as you need.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
@@ -229,7 +229,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         title: "Ah — wider range",
         headerSubtitle: "Ah vowel · 6 seconds × 3",
         instruction:
-          "Sing ahhh across a wider range.\nOpen your mouth wide — Ah is the most open vowel.\nTake as many breaths as you need.",
+          "Ahhh (as in 'father') — keep the ball between the markers.\nOpen your mouth wide — Ah is the most open vowel.\nTake as many breaths as you need.",
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
@@ -272,7 +272,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         title: "Ah — long",
         headerSubtitle: "Ah vowel · 10 seconds × 3",
         instruction:
-          "Sing ahhh — the longest Ah hold yet.\nOpen your mouth wide and let the sound carry.\nTake as many breaths as you need.",
+          "Ahhh (as in 'father') — keep the ball between the markers.\nOpen your mouth wide and let the sound carry.\nTake as many breaths as you need.",
         introModal: modal.hill({
           seconds: 10,
           reps: 3,

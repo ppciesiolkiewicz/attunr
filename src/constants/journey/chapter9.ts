@@ -82,7 +82,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       title: "Low Uu",
       headerSubtitle: "Chest voice · 3 seconds × 5",
       instruction:
-        "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
+        "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -239,7 +239,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         title: "Heart Ah",
         headerSubtitle: "Open Ah · 8 seconds × 3",
         instruction:
-          "Sing an open Ah from your heart.\nFeel the openness in your chest.\nI am open.",
+          "Open Ah from your heart — keep the ball between the markers.\nFeel the openness in your chest.\nI am open.",
         introModal: modal.hill({
           seconds: 8,
           reps: 3,

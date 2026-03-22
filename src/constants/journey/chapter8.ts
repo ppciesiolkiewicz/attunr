@@ -80,7 +80,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       title: "Low Uu",
       headerSubtitle: "Chest voice · 3 seconds × 5",
       instruction:
-        "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
+        "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -127,7 +127,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       title: "Oo hill sustain",
       headerSubtitle: "Oo vowel · 3 seconds × 5",
       instruction:
-        "Sing oooo (as in 'go') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
+        "Oooo (as in 'go') — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -145,7 +145,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       title: "Ah hill sustain",
       headerSubtitle: "Ah vowel · 3 seconds × 5",
       instruction:
-        "Sing ahhh (as in 'father') on a low tone.\nOpen your mouth wide — let the sound carry.\nBreathe whenever you need to.",
+        "Ahhh (as in 'father') — keep the ball at the bottom of the hill.\nOpen your mouth wide — let the sound carry.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -163,7 +163,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
       title: "Ee hill sustain",
       headerSubtitle: "Ee vowel · 3 seconds × 5",
       instruction:
-        "Sing eeee (as in 'see') in your mid-high range.\nKeep the sound forward and bright — feel it in your face.\nBreathe whenever you need to.",
+        "Eeee (as in 'see') — keep the ball between the markers.\nKeep the sound forward and bright — feel it in your face.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -240,7 +240,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         title: "Oo scale hill",
         headerSubtitle: "Oo vowel · 8 seconds × 3",
         instruction:
-          "Sing oooo (as in 'go') across a wide range.\nKeep your mouth rounded — feel the warmth spread.\nBreathe whenever you need to.",
+          "Oooo (as in 'go') — keep the ball between the markers.\nKeep your mouth rounded — feel the warmth spread.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 8,
           reps: 3,
@@ -307,7 +307,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         title: "Ah sustained",
         headerSubtitle: "Ah vowel · 10 seconds × 3",
         instruction:
-          "Sing ahhh (as in 'father') and hold for 10 seconds.\nOpen your mouth wide — let the sound fill you.\nBreathe whenever you need to.",
+          "Ahhh (as in 'father') — keep the ball between the markers.\nOpen your mouth wide — let the sound fill you.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 10,
           reps: 3,
@@ -350,7 +350,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         headerSubtitle: "Sustain · 8 seconds × 3",
         cardSubtitle: "Sing in a tight 2-semitone zone — precision work",
         instruction:
-          "Sing in a tight 2-semitone zone — stay between the markers.\nFeel the precision — small movements, steady control.\nBreathe whenever you need to.",
+          "Keep the ball between the markers — tight 2-semitone zone.\nFeel the precision — small movements, steady control.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 8,
           reps: 3,

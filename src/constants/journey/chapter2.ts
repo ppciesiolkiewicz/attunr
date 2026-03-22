@@ -77,7 +77,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       title: "Low Uu",
       headerSubtitle: "Chest voice · 3 seconds × 5",
       instruction:
-        "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
+        "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -373,7 +373,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         title: "U — mid",
         headerSubtitle: "Vowel U · 8 seconds × 3",
         instruction:
-          "Sing uuuu on the mid tone — longer holds.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
+          "Uuuu (as in 'moon') — keep the ball between the markers.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
         introModal: modal.hill({
           seconds: 8,
           tips: exerciseTips("vowel", "introduction"),

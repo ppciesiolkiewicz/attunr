@@ -80,7 +80,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
       title: "Low Uu",
       headerSubtitle: "Chest voice · 3 seconds × 5",
       instruction:
-        "Sing uuuu (as in 'moon') on a low tone.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
+        "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -127,7 +127,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
       title: "Oo hill sustain",
       headerSubtitle: "Oo vowel · 3 seconds × 5",
       instruction:
-        "Sing oooo (as in 'go') on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
+        "Oooo (as in 'go') — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -145,7 +145,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
       title: "Ah hill sustain",
       headerSubtitle: "Ah vowel · 3 seconds × 5",
       instruction:
-        "Sing ahhh (as in 'father') on a low tone.\nOpen your mouth wide — let the sound carry.\nBreathe whenever you need to.",
+        "Ahhh (as in 'father') — keep the ball at the bottom of the hill.\nOpen your mouth wide — let the sound carry.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -193,7 +193,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
         cardSubtitle:
           "Feel the brightness land in your face — forward and focused",
         instruction:
-          "Sing eeee (as in 'see') in your mid-high range.\nKeep the sound forward and bright — feel it in your face.\nBreathe whenever you need to.",
+          "Eeee (as in 'see') — keep the ball between the markers.\nKeep the sound forward and bright — feel it in your face.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
@@ -296,7 +296,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
         title: "Vowel transition",
         headerSubtitle: "Vowel transition · 6 seconds × 3",
         instruction:
-          "Sing through different vowels on each rep — Ee, Oo, Ah.\nFeel how each shape changes the resonance at the same pitch.\nBreathe whenever you need to.",
+          "Different vowels on each rep — Ee, Oo, Ah. Keep the ball between the markers.\nFeel how each shape changes the resonance at the same pitch.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
@@ -338,7 +338,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
         title: "Ee — pentatonic range",
         headerSubtitle: "Ee vowel · 6 seconds × 3",
         instruction:
-          "Sing eeee (as in 'see') across a wider range.\nKeep the sound forward and bright — feel the placement hold as you move.\nBreathe whenever you need to.",
+          "Eeee (as in 'see') — keep the ball between the markers.\nKeep the sound forward and bright — feel the placement hold as you move.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 6,
           reps: 3,
