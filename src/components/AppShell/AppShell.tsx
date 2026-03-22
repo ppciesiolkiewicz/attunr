@@ -15,6 +15,7 @@ import { useTonePlayer } from "@/hooks/useTonePlayer";
 import { useServiceWorker } from "@/hooks/useServiceWorker";
 import { useNotificationScheduler } from "@/hooks/useNotificationScheduler";
 import { useNotificationPrompt } from "@/hooks/useNotificationPrompt";
+import { journey } from "@/constants/journey";
 import { AppContext } from "@/context/AppContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { StreakProvider, StreakBadge } from "@/features/streak";
@@ -89,18 +90,24 @@ function AppShellInner({
     if (!onboarded || !hasVoice) setShowOnboarding(true);
   }, []);
 
-  // Start mic only on exercise pages; stop when navigating away
-  const isExercisePage =
-    /^\/journey\/[^/]+\/[^/]+/.test(pathname) || pathname === "/practice";
+  // Start mic only on exercise pages that need it; stop when navigating away
+  const exerciseMatch = pathname.match(/^\/journey\/([^/]+)\/([^/]+)/);
+  const currentExercise = exerciseMatch
+    ? journey.getExerciseByRoute(exerciseMatch[1], exerciseMatch[2])
+    : null;
+  const NO_MIC_TYPES = new Set(["learn", "learn-notes-1", "learn-voice-driven", "walkthrough", "time-based"]);
+  const needsMic =
+    pathname === "/practice" ||
+    (currentExercise != null && !NO_MIC_TYPES.has(currentExercise.exerciseTypeId));
 
   useEffect(() => {
-    if (isExercisePage && status === "idle") {
+    if (needsMic && status === "idle") {
       startListening();
-    } else if (!isExercisePage && status === "listening") {
+    } else if (!needsMic && status === "listening") {
       stopListening();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isExercisePage]);
+  }, [needsMic]);
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(band: ColoredNote) {
@@ -153,7 +160,7 @@ function AppShellInner({
   }
 
   const showMicGate =
-    !(showOnboarding || redetect) && isExercisePage && status === "idle";
+    !(showOnboarding || redetect) && needsMic && status === "idle";
 
   return (
     <AppContext.Provider value={contextValue}>
