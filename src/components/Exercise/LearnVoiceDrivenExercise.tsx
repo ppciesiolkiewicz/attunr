@@ -26,7 +26,7 @@ interface LoadedSegment {
   text: string;
 }
 
-type Status = "ready" | "loading" | "playing" | "paused" | "complete";
+type Status = "ready" | "loading" | "intro" | "playing" | "paused" | "complete";
 
 // ── Audio loading ────────────────────────────────────────────────────────────
 
@@ -206,8 +206,12 @@ function LearnVoiceDrivenPlayer({
   async function handleStart() {
     setStatus("loading");
     if (preloadPromiseRef.current) await preloadPromiseRef.current;
-    setStatus("playing");
-    playSegment(0);
+    setStatus("intro");
+    // Blink animation runs for 2s, then start playback
+    setTimeout(() => {
+      setStatus("playing");
+      playSegment(0);
+    }, 2000);
   }
 
   // Cleanup on unmount
@@ -233,32 +237,40 @@ function LearnVoiceDrivenPlayer({
     return null;
   }
 
-  // Playing or complete
+  // Intro, playing, paused, or complete
   return (
     <div className="flex flex-col h-full px-6 py-8">
       <div
         ref={scrollRef}
         className="flex-1 min-h-0 overflow-y-auto flex flex-col justify-center gap-3"
       >
-        {completedLines.map((line, i) => (
-          <p
-            key={i}
-            className="text-base leading-relaxed text-white/60 transition-colors duration-500"
-          >
-            {line}
-          </p>
-        ))}
-        {revealedWords.length > 0 && (
-          <p className="text-base leading-relaxed text-white font-medium">
-            {revealedWords.map((word, i) => (
-              <span
+        {status === "intro" ? (
+          <div className="flex items-center justify-center h-full overflow-hidden">
+            <div className="animate-supernova w-3 h-3 rounded-full bg-white" />
+          </div>
+        ) : (
+          <>
+            {completedLines.map((line, i) => (
+              <p
                 key={i}
-                className="inline animate-in fade-in slide-in-from-bottom-1 duration-300"
+                className="text-base leading-relaxed text-white/60 transition-colors duration-500"
               >
-                {i > 0 ? " " : ""}{word}
-              </span>
+                {line}
+              </p>
             ))}
-          </p>
+            {revealedWords.length > 0 && (
+              <p className="text-base leading-relaxed text-white font-medium">
+                {revealedWords.map((word, i) => (
+                  <span
+                    key={i}
+                    className="inline animate-in fade-in slide-in-from-bottom-1 duration-300"
+                  >
+                    {i > 0 ? " " : ""}{word}
+                  </span>
+                ))}
+              </p>
+            )}
+          </>
         )}
       </div>
 

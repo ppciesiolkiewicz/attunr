@@ -82,6 +82,16 @@ body {
   100% { transform: scale(0.75); }
 }
 
+/* Intro — blink twice then fade out */
+@keyframes intro-blink {
+  0%   { opacity: 0; }
+  25%  { opacity: 0.6; }
+  45%  { opacity: 0.1; }
+  70%  { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+.animate-supernova { animation: intro-blink 2s ease-in-out forwards; }
+
 .glow-pulse       { animation: glow-pulse 2s ease-in-out infinite; }
 .fade-in          { animation: fade-in 0.35s ease-out forwards; }
 .slide-in-right   { animation: slide-in-right 0.3s ease-out forwards; }
