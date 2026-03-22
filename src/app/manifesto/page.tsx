@@ -128,9 +128,10 @@ export default function ManifestoPage() {
             <p className="text-[0.94rem] leading-[1.75] text-white/62">
               When that happens, people don&rsquo;t just lose a job. They lose
               the thing that told them who they are. And the response
-              won&rsquo;t be more screens, more content, more optimisation. The
-              response will be a hunger for something real. Something felt.
-              Something that can&rsquo;t be generated, outsourced, or automated.
+              won&rsquo;t be more content, more optimisation, more
+              consumption. It will be a hunger for something real. Something
+              felt. Something that can&rsquo;t be generated, outsourced, or
+              automated.
             </p>
             <p
               className="text-[0.94rem] text-white/80"
@@ -280,9 +281,9 @@ export default function ManifestoPage() {
               lineHeight: 1.6,
             }}
           >
-            Everything else can be generated.
+            This app is just the beginning.
             <br />
-            This can only be felt.
+            The practice lives in your body.
           </p>
           <p
             className="text-base text-violet-400/60 mt-6"
