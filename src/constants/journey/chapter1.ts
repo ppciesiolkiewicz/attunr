@@ -118,11 +118,12 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light and gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.",
         }),
       }),
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-1",
         maxCount: 7,
         title: "Farinelli breathwork",
         cardSubtitle: "Slow down. Breathe deep. Feel your body settle",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
           maxCount: 7,

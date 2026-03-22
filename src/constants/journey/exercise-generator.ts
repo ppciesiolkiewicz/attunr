@@ -11,6 +11,7 @@ import type {
   DisplayNote,
   ToneShape,
   TimedCue,
+  VoiceConfig,
 } from "./types";
 import { BandTargetKind, NoteDuration } from "./types";
 
@@ -298,6 +299,12 @@ export interface LipRollParams extends CommonParams {
 
 export interface FarinelliParams extends Omit<CommonParams, "instruction"> {
   maxCount: number;
+  voice?: VoiceConfig;
+}
+
+export interface FarinelliVoiceDrivenParams extends Omit<CommonParams, "instruction"> {
+  maxCount: number;
+  voiceBaseUrl: string;
 }
 
 export interface VolumeDetectionParams extends CommonParams {
@@ -752,6 +759,7 @@ export class ExerciseGenerator {
       introModal,
       completionModal,
       maxCount,
+      voice,
     } = params;
     return {
       slug,
@@ -767,6 +775,37 @@ export class ExerciseGenerator {
       completionModal,
       exerciseTypeId: "breathwork-farinelli",
       maxCount,
+      voice,
+    };
+  }
+
+  /** Voice-driven Farinelli — audio segments drive the exercise UI. */
+  farinelliVoiceDriven(params: FarinelliVoiceDrivenParams): ExerciseConfigInput {
+    const {
+      slug,
+      title,
+      headerSubtitle,
+      cardSubtitle,
+      introModal,
+      completionModal,
+      maxCount,
+      voiceBaseUrl,
+    } = params;
+    return {
+      slug,
+      title,
+      headerSubtitle,
+      cardSubtitle,
+      instruction: "",
+      introModal: introModal?.title
+        ? introModal
+        : introModal
+          ? { ...introModal, title }
+          : undefined,
+      completionModal,
+      exerciseTypeId: "farinelli-voice-driven",
+      maxCount,
+      voiceBaseUrl,
     };
   }
 

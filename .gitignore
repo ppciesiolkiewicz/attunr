@@ -30,6 +30,9 @@
 # audio
 *.wav
 
+# voice generation output
+scripts/voice-instruction-generator/output/
+
 # worktrees
 .worktrees
 

@@ -67,9 +67,9 @@ body {
   to   { stroke-dashoffset: 0; }
 }
 
-/* Circle inflates (inhale), holds (hold), deflates (exhale) — max 120%, min 55% */
+/* Circle inflates (inhale), holds (hold), deflates (exhale) — max 120%, min 75% */
 @keyframes farinelli-inflate {
-  0%   { transform: scale(0.55); }
+  0%   { transform: scale(0.75); }
   100% { transform: scale(1.2); }
 }
 
@@ -79,7 +79,7 @@ body {
 
 @keyframes farinelli-deflate {
   0%   { transform: scale(1.2); }
-  100% { transform: scale(0.55); }
+  100% { transform: scale(0.75); }
 }
 
 .glow-pulse       { animation: glow-pulse 2s ease-in-out infinite; }
