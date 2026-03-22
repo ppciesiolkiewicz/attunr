@@ -472,7 +472,7 @@ export function WalkthroughExercise({ onComplete, onSkip, parentRef }: Walkthrou
     <div ref={containerRef} className="relative flex flex-col h-full overflow-hidden">
       {/* Skip button — always visible during walkthrough */}
       {!done && (
-        <div className="absolute top-3 right-3 z-50">
+        <div className="absolute bottom-3 right-3 z-50">
           <Button variant="ghost" size="sm" onClick={onSkip} className="text-white/50 hover:text-white/80">
             Skip walkthrough
           </Button>
