@@ -1,9 +1,12 @@
 import { journey } from "../../src/constants/journey";
 import type { FarinelliBreathworkConfig } from "../../src/constants/journey";
+import { FARINELLI_TIPS } from "../../src/constants/farinelli-tips";
 
 export interface VoiceSegment {
   name: string;
   ssml: string;
+  /** Which voice to use. Defaults to "instruction". */
+  voice?: "instruction" | "tips";
 }
 
 // ── Base class ───────────────────────────────────────────────────────────────
@@ -54,6 +57,15 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
     segments.push({
       name: "exhale-8",
       ssml: `<speak>Exhale. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(8)}</speak>`,
+    });
+
+    // Tips — spoken by Riley voice
+    FARINELLI_TIPS.forEach((tip, i) => {
+      segments.push({
+        name: `tip-${i + 1}`,
+        ssml: `<speak>${tip}</speak>`,
+        voice: "tips",
+      });
     });
 
     return segments;

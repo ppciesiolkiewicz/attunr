@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRepCompletion, CongratsOverlay } from "@/features/rep-progress";
 import { Button } from "@/components/ui";
 import type { FarinelliVoiceDrivenConfig } from "@/constants/journey";
+import { FARINELLI_TIPS } from "@/constants/farinelli-tips";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -95,11 +96,16 @@ function FarinelliVoiceDrivenPlayer({
   const [breathPhase, setBreathPhase] = useState<BreathPhase>(null);
   const [segmentDuration, setSegmentDuration] = useState(0);
 
+  const [tipText, setTipText] = useState("");
+
   const segmentsRef = useRef<LoadedSegment[]>([]);
   const segmentNames = useRef(buildSegmentNames(maxCount));
   const animFrameRef = useRef<number>(0);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
+  const tipAudiosRef = useRef<HTMLAudioElement[]>([]);
+  const tipIndexRef = useRef(0);
+  const tipTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   // Preload all segments
   useEffect(() => {
@@ -126,6 +132,12 @@ function FarinelliVoiceDrivenPlayer({
           };
         });
 
+        // Preload tip audio
+        const tipBase = `${VOICE_BASE_URL}/${voiceBaseUrl}`;
+        tipAudiosRef.current = FARINELLI_TIPS.map((_, i) =>
+          new Audio(`${tipBase}/tip-${i + 1}.mp3`),
+        );
+
         setStatus("ready");
       } catch (err) {
         console.error("Failed to preload voice segments:", err);
@@ -142,6 +154,8 @@ function FarinelliVoiceDrivenPlayer({
     if (index >= segments.length) {
       setStatus("complete");
       setDisplayText("");
+      setTipText("");
+      if (tipTimerRef.current) clearTimeout(tipTimerRef.current);
       onCompleteRef.current?.();
       return;
     }
@@ -191,15 +205,33 @@ function FarinelliVoiceDrivenPlayer({
     audio.play().catch(console.error);
   }, []);
 
+  const playNextTip = useCallback(() => {
+    const tips = tipAudiosRef.current;
+    if (tips.length === 0) return;
+    const tipAudio = tips[tipIndexRef.current % tips.length];
+    tipAudio.volume = 0.85;
+    setTipText(FARINELLI_TIPS[tipIndexRef.current % FARINELLI_TIPS.length]);
+    tipAudio.onended = () => setTipText("");
+    tipAudio.play().catch(() => {});
+    tipIndexRef.current++;
+  }, []);
+
   function handleStart() {
     setStatus("playing");
     playSegment(0);
+    // Start tip interval — first tip after 10s, then every 15s
+    tipTimerRef.current = setTimeout(function scheduleTip() {
+      playNextTip();
+      tipTimerRef.current = setTimeout(scheduleTip, 15_000);
+    }, 10_000);
   }
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       cancelAnimationFrame(animFrameRef.current);
+      if (tipTimerRef.current) clearTimeout(tipTimerRef.current);
+      tipAudiosRef.current.forEach((a) => { a.pause(); a.src = ""; });
       segmentsRef.current.forEach((s) => {
         s.audio.pause();
         s.audio.src = "";
@@ -309,7 +341,13 @@ function FarinelliVoiceDrivenPlayer({
         </div>
       </div>
 
-      <div className="min-h-[4.5rem]" />
+      <div className="min-h-[4.5rem] flex flex-col items-center justify-start max-w-70 px-4 text-center">
+        {tipText && (
+          <p className="text-xs text-white/65">
+            Tip: {tipText}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

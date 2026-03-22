@@ -19,13 +19,14 @@ async function generateSegmentAudio(
   ssml: string,
   segmentName: string,
   outDir: string,
+  voiceType: "instruction" | "tips" = "instruction",
 ) {
   if (!ELEVENLABS_API_KEY) {
     throw new Error("ELEVENLABS_API_KEY not set in .env.local");
   }
 
   const charCount = ssml.length;
-  const voice = voiceSettings.instructionVoice;
+  const voice = voiceType === "tips" ? voiceSettings.tipsVoice : voiceSettings.instructionVoice;
   console.log(`  [${segmentName}] Calling TTS (${charCount} chars)...`);
 
   const ttsResponse = await fetch(
@@ -166,7 +167,7 @@ async function generateType(exerciseTypeId: string, force: boolean) {
       continue;
     }
 
-    await generateSegmentAudio(segment.ssml, segment.name, outDir);
+    await generateSegmentAudio(segment.ssml, segment.name, outDir, segment.voice);
     generated++;
   }
 
@@ -210,6 +211,8 @@ async function uploadType(exerciseTypeId: string) {
       access: "public",
       token: BLOB_TOKEN,
       contentType,
+      addRandomSuffix: false,
+      allowOverwrite: true,
     });
 
     console.log(`  ${file} → ${blob.url}`);
