@@ -205,9 +205,9 @@ export default function ManifestoPage() {
             style={{ fontFamily: body, fontWeight: 300 }}
           >
             <p className="text-[0.94rem] leading-[1.75] text-white/62">
-              Attunr is a body practice that uses sound. That&rsquo;s the
-              simplest description and it&rsquo;s true. But the deeper truth is
-              that attunr is a practice for staying human.
+              Attunr is a body practice that uses voice. That&rsquo;s the
+              simplest description and it&rsquo;s true. But it&rsquo;s also something deeper — a way
+              to reconnect with what&rsquo;s already in you.
             </p>
             <p className="text-[0.94rem] leading-[1.75] text-white/62">
               <strong
