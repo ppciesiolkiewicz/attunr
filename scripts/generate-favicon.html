@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: transparent; }
+  .icon {
+    --size: 96px;
+    --font-size: calc(var(--size) * 0.44);
+    --dot-size: calc(var(--size) * 0.075);
+    --dot-gap: calc(var(--size) * 0.02);
+    width: var(--size);
+    height: var(--size);
+    background: #0b0b0b;
+    border-radius: calc(var(--size) * 0.1875);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--size) * 0.04);
+  }
+  .text {
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-size: var(--font-size);
+    font-weight: 600;
+    line-height: 1;
+  }
+  .dots {
+    display: flex;
+    gap: var(--dot-gap);
+  }
+  .dot {
+    width: var(--dot-size);
+    height: var(--dot-size);
+    border-radius: 50%;
+  }
+</style>
+</head>
+<body>
+  <div class="icon" id="icon">
+    <div class="content">
+    <span class="text">a</span>
+    <div class="dots">
+      <div class="dot" style="background: #ef4444"></div>
+      <div class="dot" style="background: #f97316"></div>
+      <div class="dot" style="background: #eab308"></div>
+      <div class="dot" style="background: #22c55e"></div>
+      <div class="dot" style="background: #3b82f6"></div>
+      <div class="dot" style="background: #6366f1"></div>
+      <div class="dot" style="background: #a855f7"></div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>
