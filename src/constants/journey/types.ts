@@ -19,7 +19,8 @@ export type ExerciseTypeId =
   | "melody"                      // sing along to scrolling melody with scoring
   | "volume-detection"            // accumulate sound for targetSeconds to complete
   | "time-based"                   // timed cue sequence — no mic
-  | "rhythm";                     // tap along to a rhythm pattern
+  | "rhythm"                      // tap along to a rhythm pattern
+  | "walkthrough";                // UI walkthrough — spotlight tutorial, no exercise
 
 /** 1-indexed chromatic degree from user's lowest note (1 = lowest). Negative values count from top (-1 = highest). */
 export type ChromaticDegree = number;
@@ -365,6 +366,10 @@ export interface RhythmConfig extends BaseExerciseConfig {
   instruction: string;
 }
 
+export interface WalkthroughConfig extends BaseExerciseConfig {
+  exerciseTypeId: "walkthrough";
+}
+
 export type ExerciseConfig =
   | LearnConfig
   | LearnVoiceDrivenConfig
@@ -378,7 +383,8 @@ export type ExerciseConfig =
   | MelodyConfig
   | VolumeDetectionConfig
   | TimeBasedConfig
-  | RhythmConfig;
+  | RhythmConfig
+  | WalkthroughConfig;
 
 /** Input type for part files — `id`, `chapter`, `chapterSlug`, and `stageId` are assigned automatically in index.ts. */
 type DistributiveOmit<T, K extends keyof T> = T extends unknown ? Omit<T, K> : never;

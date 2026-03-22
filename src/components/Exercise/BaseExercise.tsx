@@ -17,6 +17,7 @@ import { MelodyExercise } from "./MelodyExercise";
 import { RhythmExercise } from "./RhythmExercise";
 import { HillExercise } from "./HillExercise";
 import { TimeBasedExerciseContent } from "./TimeBasedExercise";
+import { WalkthroughExercise } from "./WalkthroughExercise";
 
 interface BaseExerciseProps {
   exercise: ExerciseConfig;
@@ -70,7 +71,8 @@ export function BaseExercise({
       exercise.exerciseTypeId === "breathwork-farinelli" ||
       exercise.exerciseTypeId === "farinelli-voice-driven" ||
       exercise.exerciseTypeId === "volume-detection" ||
-      exercise.exerciseTypeId === "time-based"
+      exercise.exerciseTypeId === "time-based" ||
+      exercise.exerciseTypeId === "walkthrough"
     ) {
       return null;
     }
@@ -211,6 +213,15 @@ export function BaseExercise({
           isAlreadyCompleted={isAlreadyCompleted}
           onComplete={onComplete}
           onSkip={onSkip}
+          onPrev={onPrev}
+        />
+      );
+
+    case "walkthrough":
+      return (
+        <WalkthroughExercise
+          isLast={isLast}
+          onComplete={onComplete}
           onPrev={onPrev}
         />
       );

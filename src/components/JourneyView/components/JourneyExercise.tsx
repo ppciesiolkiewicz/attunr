@@ -48,17 +48,30 @@ export function JourneyExercise({
   const streak = useStreak();
   const exerciseId = exercise.id;
   const isCompleted = jp.isCompleted(exercise);
-  const chapter = journey.chapters.find((ch) => ch.chapter === exercise.chapter);
-  const allStages = chapter ? (chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages) : [];
-  const stageTitle = allStages.find((s) => s.id === exercise.stageId)?.title ?? "";
+  const chapter = journey.chapters.find(
+    (ch) => ch.chapter === exercise.chapter,
+  );
+  const allStages = chapter
+    ? chapter.warmup
+      ? [chapter.warmup, ...chapter.stages]
+      : chapter.stages
+    : [];
+  const stageTitle =
+    allStages.find((s) => s.id === exercise.stageId)?.title ?? "";
 
   const vocalRange = useMemo(() => {
     const lowHz = settings.vocalRangeLowHz > 0 ? settings.vocalRangeLowHz : 131;
-    const highHz = settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523;
+    const highHz =
+      settings.vocalRangeHighHz > 0 ? settings.vocalRangeHighHz : 523;
     return new VocalRange(lowHz, highHz, settings.tuning);
   }, [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning]);
 
-  const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1" || exercise.exerciseTypeId === "learn-voice-driven";
+  const isLearnType =
+    exercise.exerciseTypeId === "learn" ||
+    exercise.exerciseTypeId === "learn-notes-1" ||
+    exercise.exerciseTypeId === "learn-voice-driven" ||
+    exercise.exerciseTypeId === "walkthrough";
+  // TODO: this should be set on modal config on exercise
   const shouldAutoShowInfo = () => {
     if (isLearnType) return false;
     if (exercise.introModalInfoOnly) return false;
@@ -69,8 +82,13 @@ export function JourneyExercise({
 
   // Trigger notification prompt when info modal is shown for flagged exercises
   useEffect(() => {
-    if (showInfoModal && exercise.showEnableNotificationsPrompt) triggerNotificationPrompt();
-  }, [showInfoModal, exercise.showEnableNotificationsPrompt, triggerNotificationPrompt]);
+    if (showInfoModal && exercise.showEnableNotificationsPrompt)
+      triggerNotificationPrompt();
+  }, [
+    showInfoModal,
+    exercise.showEnableNotificationsPrompt,
+    triggerNotificationPrompt,
+  ]);
 
   const [partCompleteData, setPartCompleteData] = useState<{
     part: number;
@@ -137,23 +155,52 @@ export function JourneyExercise({
     <div className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────── */}
       <div className="flex items-center gap-1.5 sm:gap-2 pl-3 pr-4 sm:pl-4 sm:pr-5 py-2 sm:py-2.5 border-b border-white/6 shrink-0 overflow-x-auto">
-        <Button variant="ghost" onClick={onBack} className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90 pr-1!">
+        <Button
+          variant="ghost"
+          onClick={onBack}
+          className="shrink-0 text-xs sm:text-sm text-white/68 hover:text-white/90 pr-1!"
+        >
           {backLabel ?? "← Journey"}
         </Button>
-        <Text variant="caption" as="span" color="muted-2">|</Text>
-        <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
+        <Text variant="caption" as="span" color="muted-2">
+          |
+        </Text>
+        <Text
+          variant="caption"
+          as="span"
+          color="muted-1"
+          className="sm:text-sm shrink-0"
+        >
           Ch {toRoman(exercise.chapter)}
         </Text>
-        <Text variant="caption" as="span" color="text-2" className="hidden md:inline font-medium shrink-0">
+        <Text
+          variant="caption"
+          as="span"
+          color="text-2"
+          className="hidden md:inline font-medium shrink-0"
+        >
           — {stageTitle}
         </Text>
-        <Text variant="caption" as="span" color="muted-2">·</Text>
-        <Text variant="caption" as="span" color="muted-1" className="sm:text-sm shrink-0">
-          {stepInfo.stepIndex} of{" "}
-          {stepInfo.stepsInStage}
+        <Text variant="caption" as="span" color="muted-2">
+          ·
         </Text>
-        <Text variant="caption" as="span" color="muted-2">—</Text>
-        <Text variant="caption" as="span" color="text-2" className="sm:text-sm font-medium truncate min-w-0">
+        <Text
+          variant="caption"
+          as="span"
+          color="muted-1"
+          className="sm:text-sm shrink-0"
+        >
+          {stepInfo.stepIndex} of {stepInfo.stepsInStage}
+        </Text>
+        <Text variant="caption" as="span" color="muted-2">
+          —
+        </Text>
+        <Text
+          variant="caption"
+          as="span"
+          color="text-2"
+          className="sm:text-sm font-medium truncate min-w-0"
+        >
           {exercise.title}
         </Text>
         {!isLearnType && (
@@ -181,7 +228,9 @@ export function JourneyExercise({
         partRoman={toRoman(exercise.chapter)}
         stepIndex={stepInfo.stepIndex}
         stepsInPart={stepInfo.stepsInStage}
-        isLast={exerciseId === journey.exercises[journey.exercises.length - 1]?.id}
+        isLast={
+          exerciseId === journey.exercises[journey.exercises.length - 1]?.id
+        }
         vocalRange={vocalRange}
         pitchHz={pitchHz}
         pitchHzRef={pitchHzRef}

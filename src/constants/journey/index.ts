@@ -129,6 +129,7 @@ export type {
   TimeBasedConfig,
   RhythmConfig,
   RhythmEvent,
+  WalkthroughConfig,
 } from "./types";
 
 export { NoteDuration, BandTargetKind } from "./types";

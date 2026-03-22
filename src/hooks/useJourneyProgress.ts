@@ -31,13 +31,20 @@ export function useJourneyProgress() {
     [progress],
   );
 
-  /** An exercise is unlocked if it's the very first, or the previous exercise is completed. */
+  /** An exercise is unlocked if it's the very first, or the previous exercise is completed.
+   *  Walkthrough exercises never gate progress — they are skipped when checking unlock. */
   const isUnlocked = useCallback(
     (exercise: ExerciseConfig) => {
       if (unlockAll) return true;
       const idx = journey.exercises.findIndex((e) => e.id === exercise.id);
       if (idx <= 0) return true; // first exercise is always unlocked
-      const prev = journey.exercises[idx - 1];
+      // Walk backwards past any walkthrough exercises to find the real predecessor
+      let prevIdx = idx - 1;
+      while (prevIdx > 0 && journey.exercises[prevIdx].exerciseTypeId === "walkthrough") {
+        prevIdx--;
+      }
+      const prev = journey.exercises[prevIdx];
+      if (prev.exerciseTypeId === "walkthrough") return true; // all predecessors are walkthroughs
       return progress.isCompleted(prev.chapterSlug, prev.stageId, prev.slug);
     },
     [progress, unlockAll],

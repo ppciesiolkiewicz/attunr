@@ -58,6 +58,12 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         ],
       }),
       {
+        exerciseTypeId: "walkthrough",
+        slug: "exercise-walkthrough",
+        title: "Walkthrough",
+        cardSubtitle: "A quick look at how things work",
+      },
+      {
         exerciseTypeId: "learn-notes-1",
         slug: "understanding-notes",
         title: "Understanding notes",
