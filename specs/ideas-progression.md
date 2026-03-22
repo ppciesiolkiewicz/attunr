@@ -119,3 +119,7 @@ rep progress should start at 0, e.g. 0/3, then after first goes to 1/3
 # Stop freesing canvas when i unfocus
 
 This causes some issues when navigating away from browsers
+
+# Farinelli voice -
+
+we don't want to infer type based on text. Move to config.
