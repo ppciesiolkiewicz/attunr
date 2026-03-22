@@ -852,8 +852,8 @@ export class ExerciseGenerator {
       // Range target: user must sing between the two notes
       const rangeTarget: NoteTarget = {
         kind: BandTargetKind.Range,
-        from: 1,
-        to: note[1] - note[0] + 1,
+        from: note[0],
+        to: note[1],
         accept: "within",
       };
       notes = Array.from({ length: repeats }, () => ({
@@ -869,8 +869,8 @@ export class ExerciseGenerator {
             ? ("above" as const)
             : undefined;
       const target: NoteTarget = accept
-        ? { kind: BandTargetKind.Range, from: 1, to: 1, accept }
-        : { kind: BandTargetKind.Index, i: 1 };
+        ? { kind: BandTargetKind.Range, from: root, to: root, accept }
+        : { kind: BandTargetKind.Index, i: root };
       notes = Array.from({ length: repeats }, () => ({ target, seconds }));
     }
 
