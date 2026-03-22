@@ -207,11 +207,11 @@ function LearnVoiceDrivenPlayer({
     setStatus("loading");
     if (preloadPromiseRef.current) await preloadPromiseRef.current;
     setStatus("intro");
-    // Blink animation runs for 2s, then start playback
+    // Blink animation runs for 3s, then start playback
     setTimeout(() => {
       setStatus("playing");
       playSegment(0);
-    }, 2000);
+    }, 3000);
   }
 
   // Cleanup on unmount
