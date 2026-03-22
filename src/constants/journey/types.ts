@@ -112,10 +112,14 @@ export interface ModalConfig {
   confetti?: boolean;
 }
 
-/** Voice guidance URLs — generated offline, hosted on Vercel Blob. */
+/** Voice guidance — generated offline, hosted on Vercel Blob. */
 export interface VoiceConfig {
   instructionUrl: string;
   instructionTimestampsUrl: string;
+  /** SSML text for TTS generation. Used by the voice-instruction-generator only — not consumed at runtime. */
+  spokenText: string;
+  /** Display text shown on screen as words accumulate. Falls back to exercise instruction if omitted. */
+  displayText?: string;
 }
 
 // ── Layer 1: Base ─────────────────────────────────────────────────────────────
@@ -140,6 +144,8 @@ export interface BaseExerciseConfig {
   cardSubtitle?: string;
   /** Shown before exercise starts. */
   introModal?: ModalConfig;
+  /** When true, introModal only opens via (i) icon — not automatically on first visit. Default: false (auto-opens). */
+  introModalInfoOnly?: boolean;
   /** Shown after exercise completes (e.g. part-complete summary). */
   completionModal?: ModalConfig;
   /** Show the "enable practice reminders" toast when this exercise's info modal is displayed. */

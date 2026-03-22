@@ -61,6 +61,7 @@ export function JourneyExercise({
   const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1" || exercise.exerciseTypeId === "learn-voice-driven";
   const shouldAutoShowInfo = () => {
     if (isLearnType) return false;
+    if (exercise.introModalInfoOnly) return false;
     if (exercise.exerciseTypeId === "breathwork-farinelli") return true;
     return !getSkippedInfoExerciseIds().has(exerciseId);
   };

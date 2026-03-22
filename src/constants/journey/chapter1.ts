@@ -35,7 +35,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Vocal placement",
         cardSubtitle:
           "Notice where sound lives in your body — chest, throat, head",
-        voiceBaseUrl: "learn-voice-driven/introduction/vocal-placement",
+        voiceBaseUrl: "learn-voice-driven/chapters/introduction/vocal-placement",
         segments: [
           {
             name: "intro",
@@ -74,6 +74,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "Your first pitched sound — a low, steady hum",
         instruction:
           "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
+        introModalInfoOnly: true,
+        voice: {
+          instructionUrl: "pitch-detection-hill/chapters/introduction/gentle-hum/instruction.mp3",
+          instructionTimestampsUrl: "pitch-detection-hill/chapters/introduction/gentle-hum/instruction.timestamps.json",
+          spokenText: 'Close your lips and hum mmmm on a low tone. <break time="1s"/> Keep the sound steady. <break time="0.5s"/> Feel the buzz in your lips and teeth. <break time="0.5s"/> There\'s no rush. <break time="0.5s"/> There\'s no wrong way to hum.',
+          displayText: "Close your lips and hum mmmm on a low tone. Keep the sound steady. Feel the buzz in your lips and teeth. There's no rush. There's no wrong way to hum.",
+        },
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -93,6 +100,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "A low Uu that settles in your chest",
         instruction:
           "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
+        introModalInfoOnly: true,
+        voice: {
+          instructionUrl: "pitch-detection-hill/chapters/introduction/low-uu/instruction.mp3",
+          instructionTimestampsUrl: "pitch-detection-hill/chapters/introduction/low-uu/instruction.timestamps.json",
+          spokenText: 'Sound uuuu, as in moon, on a low tone. <break time="0.5s"/> Keep your mouth rounded. <break time="0.5s"/> Relaxed, not smiling. <break time="0.5s"/> Let the sound settle deep. <break time="0.5s"/> Notice where the resonance lands. <break time="0.5s"/> Breathe whenever you need to.',
+          displayText: "Sound uuuu, as in moon, on a low tone. Keep your mouth rounded. Relaxed, not smiling. Let the sound settle deep. Notice where the resonance lands. Breathe whenever you need to.",
+        },
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -112,6 +126,13 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "A steady Uu in the middle of your voice",
         instruction:
           "Uuuu (as in 'moon') — keep the ball between the markers.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
+        introModalInfoOnly: true,
+        voice: {
+          instructionUrl: "pitch-detection-hill/chapters/introduction/middle-tone/instruction.mp3",
+          instructionTimestampsUrl: "pitch-detection-hill/chapters/introduction/middle-tone/instruction.timestamps.json",
+          spokenText: 'Sound uuuu, as in moon, on a comfortable tone in the middle of your range. <break time="0.5s"/> Keep your mouth rounded. <break time="0.5s"/> Feel where the sound sits. <break time="0.5s"/> Not too high, not too low. <break time="0.5s"/> Just easy. <break time="0.5s"/> Keep it relaxed. There\'s no wrong way to do this.',
+          displayText: "Sound uuuu, as in moon, on a comfortable tone in the middle of your range. Keep your mouth rounded. Feel where the sound sits. Not too high, not too low. Just easy. Keep it relaxed. There's no wrong way to do this.",
+        },
         introModal: modal.hill({
           seconds: 3,
           reps: 5,

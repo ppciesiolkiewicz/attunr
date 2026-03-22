@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import { put } from "@vercel/blob";
 import { voiceSettings, australianBaritone } from "./settings";
 import { getExerciseTypeVoiceConfig } from "./exercise-type-voice-config";
+// Note: generate-chapter handles per-exercise voice directly (not via exercise-type-voice-config)
 import { journey } from "../../src/constants/journey";
 import type { LearnVoiceDrivenConfig } from "../../src/constants/journey";
 
@@ -219,34 +220,83 @@ async function uploadType(exerciseTypeId: string) {
   console.log(`\nUpload complete! Base URL: voice/exercise-types/${exerciseTypeId}/`);
 }
 
-// ── generate-chapter ─────────────────────────────────────────────────────
+// ── Voice generation entry ───────────────────────────────────────────────────
+// Describes how to generate voice for a single exercise. Each exercise type
+// that carries voice content returns one or more GenerationEntry items.
 
-async function generateChapter(chapterSlug: string, exerciseSlug: string | undefined, force: boolean) {
+interface GenerationEntry {
+  slug: string;
+  /** Subfolder under OUTPUT_DIR/chapter/<chapterSlug>/<exerciseSlug>/ */
+  exerciseTypeId: string;
+  segments: { name: string; ssml: string; voice?: ReturnType<typeof australianBaritone> }[];
+}
+
+/** Collect all exercises in a chapter that have voice content to generate. */
+function collectVoiceEntries(chapterSlug: string): GenerationEntry[] {
   const chapter = journey.chapters.find((c) => c.slug === chapterSlug);
   if (!chapter) throw new Error(`No chapter with slug "${chapterSlug}"`);
 
-  let exercises = chapter.stages
-    .flatMap((s) => s.exercises)
-    .filter((e): e is LearnVoiceDrivenConfig => e.exerciseTypeId === "learn-voice-driven");
+  const allStages = chapter.warmup ? [chapter.warmup, ...chapter.stages] : chapter.stages;
+  const exercises = allStages.flatMap((s) => s.exercises);
+  const entries: GenerationEntry[] = [];
 
-  if (exerciseSlug) {
-    exercises = exercises.filter((e) => e.slug === exerciseSlug);
-    if (exercises.length === 0) {
-      throw new Error(`No learn-voice-driven exercise "${exerciseSlug}" in chapter "${chapterSlug}"`);
+  for (const exercise of exercises) {
+    // learn-voice-driven: segments with spokenText
+    if (exercise.exerciseTypeId === "learn-voice-driven") {
+      const ex = exercise as LearnVoiceDrivenConfig;
+      const voiced = ex.segments.filter((s) => s.spokenText);
+      if (voiced.length > 0) {
+        entries.push({
+          slug: ex.slug,
+          exerciseTypeId: ex.exerciseTypeId,
+          segments: voiced.map((s) => ({
+            name: s.name,
+            ssml: `<speak>${s.spokenText}</speak>`,
+            voice: australianBaritone({ speed: 0.8 }),
+          })),
+        });
+      }
+    }
+
+    // Any exercise with voice.spokenText (hill, pitch-detection, etc.)
+    if (exercise.voice?.spokenText) {
+      entries.push({
+        slug: exercise.slug,
+        exerciseTypeId: exercise.exerciseTypeId,
+        segments: [{
+          name: "instruction",
+          ssml: `<speak>${exercise.voice.spokenText}</speak>`,
+          voice: australianBaritone({ speed: 0.85 }),
+        }],
+      });
     }
   }
 
-  if (exercises.length === 0) {
-    console.log(`No learn-voice-driven exercises in chapter "${chapterSlug}"`);
+  return entries;
+}
+
+// ── generate-chapter ─────────────────────────────────────────────────────
+
+async function generateChapter(chapterSlug: string, exerciseSlug: string | undefined, force: boolean) {
+  let entries = collectVoiceEntries(chapterSlug);
+
+  if (exerciseSlug) {
+    entries = entries.filter((e) => e.slug === exerciseSlug);
+    if (entries.length === 0) {
+      throw new Error(`No exercise "${exerciseSlug}" with voice content in chapter "${chapterSlug}"`);
+    }
+  }
+
+  if (entries.length === 0) {
+    console.log(`No exercises with voice content in chapter "${chapterSlug}"`);
     return;
   }
 
-  // Confirm when regenerating entire chapter (no specific exercise)
-  if (!exerciseSlug && exercises.length > 1) {
+  if (!exerciseSlug && entries.length > 1) {
     const readline = await import("readline");
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
     const answer = await new Promise<string>((resolve) =>
-      rl.question(`Regenerate all ${exercises.length} exercises in "${chapterSlug}"? (y/N) `, resolve),
+      rl.question(`Generate voice for all ${entries.length} exercises in "${chapterSlug}"? (y/N) `, resolve),
     );
     rl.close();
     if (answer.toLowerCase() !== "y") {
@@ -255,26 +305,19 @@ async function generateChapter(chapterSlug: string, exerciseSlug: string | undef
     }
   }
 
-  console.log(`Generating voice for ${exercises.length} learn exercises in chapter "${chapterSlug}"...\n`);
+  console.log(`Generating voice for ${entries.length} exercises in chapter "${chapterSlug}"...\n`);
 
-  for (const exercise of exercises) {
-    const outDir = path.join(OUTPUT_DIR, "exercise-types", "learn-voice-driven", chapterSlug, exercise.slug);
-    console.log(`Exercise: ${exercise.slug} (${exercise.segments.length} segments)`);
+  for (const entry of entries) {
+    const outDir = path.join(OUTPUT_DIR, "exercise-types", entry.exerciseTypeId, "chapters", chapterSlug, entry.slug);
+    console.log(`${entry.slug} [${entry.exerciseTypeId}] (${entry.segments.length} segment${entry.segments.length > 1 ? "s" : ""})`);
 
-    const voicedSegments = exercise.segments.filter((s) => s.spokenText);
-    if (voicedSegments.length === 0) {
-      console.log(`  No segments with spokenText — skipping`);
-      continue;
-    }
-
-    for (const segment of voicedSegments) {
+    for (const segment of entry.segments) {
       const audioPath = path.join(outDir, `${segment.name}.mp3`);
       if (!force && fs.existsSync(audioPath)) {
         console.log(`  Skipping ${segment.name} — already exists`);
         continue;
       }
-      const ssml = `<speak>${segment.spokenText}</speak>`;
-      await generateSegmentAudio(ssml, segment.name, outDir, australianBaritone({ speed: 0.8 }));
+      await generateSegmentAudio(segment.ssml, segment.name, outDir, segment.voice);
     }
     console.log();
   }
@@ -287,30 +330,26 @@ async function generateChapter(chapterSlug: string, exerciseSlug: string | undef
 async function uploadChapter(chapterSlug: string, exerciseSlug?: string) {
   if (!BLOB_TOKEN) throw new Error("ATTUNR_BLOB_READ_WRITE_TOKEN not set in .env.local");
 
-  const chapterDir = path.join(OUTPUT_DIR, "exercise-types", "learn-voice-driven", chapterSlug);
-  if (!fs.existsSync(chapterDir)) {
-    throw new Error(`No generated files found in ${chapterDir}. Run 'generate-chapter' first.`);
-  }
+  // Collect entries so we know which exercise-type dirs to look in
+  const entries = collectVoiceEntries(chapterSlug);
+  if (entries.length === 0) throw new Error(`No exercises with voice content in chapter "${chapterSlug}"`);
 
-  let exerciseDirs = fs.readdirSync(chapterDir, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name);
+  const filtered = exerciseSlug ? entries.filter((e) => e.slug === exerciseSlug) : entries;
+  if (filtered.length === 0) throw new Error(`No exercise "${exerciseSlug}" with voice content in chapter "${chapterSlug}"`);
 
-  if (exerciseSlug) {
-    exerciseDirs = exerciseDirs.filter((d) => d === exerciseSlug);
-    if (exerciseDirs.length === 0) {
-      throw new Error(`No generated files for exercise "${exerciseSlug}" in ${chapterDir}`);
+  for (const entry of filtered) {
+    const exerciseDir = path.join(OUTPUT_DIR, "exercise-types", entry.exerciseTypeId, "chapters", chapterSlug, entry.slug);
+    if (!fs.existsSync(exerciseDir)) {
+      console.log(`Skipping ${entry.slug} — no generated files`);
+      continue;
     }
-  }
 
-  for (const exerciseSlug of exerciseDirs) {
-    const exerciseDir = path.join(chapterDir, exerciseSlug);
     const files = fs.readdirSync(exerciseDir).filter(
       (f) => f.endsWith(".mp3") || f.endsWith(".timestamps.json"),
     );
 
-    const blobPrefix = `voice/exercise-types/learn-voice-driven/${chapterSlug}/${exerciseSlug}`;
-    console.log(`Uploading ${files.length} files for ${chapterSlug}/${exerciseSlug}...`);
+    const blobPrefix = `voice/exercise-types/${entry.exerciseTypeId}/chapters/${chapterSlug}/${entry.slug}`;
+    console.log(`Uploading ${files.length} files for ${entry.exerciseTypeId}/${chapterSlug}/${entry.slug}...`);
 
     for (const file of files) {
       const filePath = path.join(exerciseDir, file);
@@ -331,6 +370,47 @@ async function uploadChapter(chapterSlug: string, exerciseSlug?: string) {
   console.log("\nUpload complete!");
 }
 
+// ── upload-all ──────────────────────────────────────────────────────────────
+
+async function uploadAll() {
+  if (!BLOB_TOKEN) throw new Error("ATTUNR_BLOB_READ_WRITE_TOKEN not set in .env.local");
+
+  const exerciseTypesDir = path.join(OUTPUT_DIR, "exercise-types");
+  if (!fs.existsSync(exerciseTypesDir)) throw new Error("No output/exercise-types directory found");
+
+  /** Recursively find uploadable files and upload them preserving path structure. */
+  async function uploadDir(localDir: string, blobPrefix: string) {
+    const entries = fs.readdirSync(localDir, { withFileTypes: true });
+    for (const entry of entries) {
+      const localPath = path.join(localDir, entry.name);
+      if (entry.isDirectory()) {
+        await uploadDir(localPath, `${blobPrefix}/${entry.name}`);
+      } else if (entry.name.endsWith(".mp3") || entry.name.endsWith(".timestamps.json")) {
+        const contentType = entry.name.endsWith(".mp3") ? "audio/mpeg" : "application/json";
+        const blob = await put(`${blobPrefix}/${entry.name}`, fs.readFileSync(localPath), {
+          access: "public",
+          token: BLOB_TOKEN!,
+          contentType,
+          addRandomSuffix: false,
+          allowOverwrite: true,
+        });
+        console.log(`  ${blobPrefix}/${entry.name} → ${blob.url}`);
+      }
+    }
+  }
+
+  const types = fs.readdirSync(exerciseTypesDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name);
+
+  for (const typeId of types) {
+    console.log(`\n${typeId}/`);
+    await uploadDir(path.join(exerciseTypesDir, typeId), `voice/exercise-types/${typeId}`);
+  }
+
+  console.log("\nUpload complete!");
+}
+
 // ── test ─────────────────────────────────────────────────────────────────────
 
 async function test() {
@@ -344,6 +424,7 @@ async function test() {
 async function main() {
   const args = process.argv.slice(2);
   const force = args.includes("--force");
+  if (args.includes("--help")) { args.push("help"); }
   const positional = args.filter((a) => !a.startsWith("--"));
   const [subcommand, ...rest] = positional;
 
@@ -386,6 +467,9 @@ async function main() {
       await uploadChapter(chapterSlug, exerciseSlug);
       break;
     }
+    case "upload-all":
+      await uploadAll();
+      break;
     case "test":
       await test();
       break;
@@ -394,11 +478,13 @@ async function main() {
       console.log(`Voice Instruction Generator
 
 Commands:
-  generate-type <exerciseTypeId> [--force]          Generate segments for an exercise type (e.g. breathwork-farinelli)
+  generate-type <exerciseTypeId> [--force]          Generate reusable segments for an exercise type (e.g. breathwork-farinelli)
   upload-type <exerciseTypeId>                      Upload generated segments for an exercise type
 
-  generate-chapter <chapter> [exercise] [--force]   Generate voice for learn-voice-driven exercises in a chapter
+  generate-chapter <chapter> [exercise] [--force]   Generate per-exercise voice content in a chapter
   upload-chapter <chapter> [exercise]               Upload generated voice for a chapter
+
+  upload-all                                        Upload everything in output/exercise-types/ to blob
 
   test                                              Generate a short test segment
 
@@ -407,9 +493,11 @@ Options:
   --help    Show this help message
 
 Examples:
-  generate-chapter introduction vocal-placement --force
-  upload-chapter introduction vocal-placement
-  generate-chapter introduction                      # all exercises in chapter (asks for confirmation)`);
+  generate-type breathwork-farinelli                 # reusable segments shared across exercises
+  generate-chapter introduction                      # all exercises in chapter (asks for confirmation)
+  generate-chapter introduction gentle-hum --force   # single exercise
+  upload-chapter introduction gentle-hum
+  upload-all                                         # upload everything`);
       break;
     default:
       console.error(

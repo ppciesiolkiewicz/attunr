@@ -15,7 +15,9 @@ import { findClosestNote, matchesNoteTarget } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { usePitchProgress } from "./PitchExercise/usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
+import { useVoiceIntro } from "@/hooks/useVoiceIntro";
 import { ProgressArc } from "./components/ProgressArc";
+import { VoiceIntroOverlay } from "./components/VoiceIntroOverlay";
 import type { PitchDetectionHillConfig } from "@/constants/journey";
 import type { PitchDetectionHillExercise as ResolvedHillExercise } from "@/constants/journey";
 
@@ -46,6 +48,15 @@ export function HillExercise({
 }: HillExerciseProps) {
   const [detectionActive, setDetectionActive] = useState(false);
   const { playTone: playRawTone, playWobble, playOwlHoot } = useTonePlayer();
+
+  // Voice intro — plays instruction audio before detection starts
+  const voiceIntro = useVoiceIntro(
+    exercise.voice?.instructionUrl,
+    exercise.voice?.instructionTimestampsUrl,
+    exercise.voice?.displayText ?? exercise.instruction,
+  );
+  const hasVoiceIntro = !!exercise.voice;
+  const voiceIntroDone = voiceIntro.status === "complete";
 
   const exerciseColoredNotes = useMemo(
     () => resolved.targets.map((t) => t.note),
@@ -137,20 +148,28 @@ export function HillExercise({
     }
   }, [toneShape, exerciseColoredNotes, playWobble, playOwlHoot, playRawTone]);
 
+  // Start detection after voice intro completes (or immediately if no voice)
   useEffect(() => {
+    if (hasVoiceIntro && !voiceIntroDone) {
+      setDetectionActive(false);
+      return;
+    }
     setDetectionActive(false);
     const id = setTimeout(() => {
       playReferenceTone();
       setDetectionActive(true);
     }, 500);
     return () => clearTimeout(id);
-  }, [exerciseId, playReferenceTone]);
+  }, [exerciseId, playReferenceTone, hasVoiceIntro, voiceIntroDone]);
 
   return (
     <>
       <div className="relative flex-1 min-h-0">
-        {/* Instruction cue — always visible */}
-        <div className="absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12">
+        {/* Voice intro overlay */}
+        {hasVoiceIntro && <VoiceIntroOverlay voice={voiceIntro} />}
+
+        {/* Instruction cue — hidden while voice intro is active */}
+        <div className={`absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12 transition-opacity duration-300 ${!voiceIntroDone ? "opacity-0" : ""}`}>
           <Text
             variant="caption"
             color="muted-1"
