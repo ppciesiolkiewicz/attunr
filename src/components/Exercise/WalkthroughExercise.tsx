@@ -1,7 +1,19 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { Button, Text } from "@/components/ui";
+
+function HeadphonesIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="text-white/60">
+      <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+      <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" />
+      <path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+    </svg>
+  );
+}
 
 // ── Step definitions ────────────────────────────────────────────────────────
 
@@ -11,11 +23,43 @@ interface Step {
   target: SpotlightTarget;
   mockup: "hill" | "farinelli" | "none";
   text: string;
+  /** Rich content rendered below the text. */
+  extra?: React.ReactNode;
   button: string;
 }
 
 const STEPS: Step[] = [
   { target: null, mockup: "none", text: "Welcome! Let's do a quick walkthrough of the app.", button: "Next" },
+  {
+    target: null,
+    mockup: "none",
+    text: "",
+    extra: (
+      <div className="flex flex-col gap-3">
+        <div className="flex items-start gap-3">
+          <span className="shrink-0 mt-0.5">
+            <HeadphonesIcon />
+          </span>
+          <Text variant="body-sm" color="text-1">
+            For the best experience, use headphones. Some content is voice-guided, and headphones keep the playback out of your mic so we can hear your voice clearly.
+          </Text>
+        </div>
+        <Text variant="caption" color="text-2">
+          Wired headphones work best — Bluetooth (like AirPods) can add latency.
+        </Text>
+        <div className="flex flex-col gap-1.5">
+          <Text variant="caption" color="muted-1">To learn more, read the articles below. You can always do it later.</Text>
+          <Link href="/articles/headphones-and-mic" target="_blank" className="text-violet-400 text-xs underline underline-offset-2">
+            Why headphones matter
+          </Link>
+          <Link href="/articles/airpods-audio-routing" target="_blank" className="text-violet-400 text-xs underline underline-offset-2">
+            AirPods audio routing on iPhone
+          </Link>
+        </div>
+      </div>
+    ),
+    button: "Next",
+  },
   { target: "info", mockup: "hill", text: "Tap this icon anytime to see detailed information.", button: "Next" },
   { target: "reps-progress", mockup: "hill", text: "This shows your progress and how many reps are left.", button: "Next" },
   { target: "play-tone", mockup: "hill", text: "Some steps play a reference tone for you to match. Tap this to hear it again.", button: "Next" },
@@ -240,11 +284,14 @@ interface SpotlightOverlayProps {
   target: SpotlightTarget;
   containerRef: React.RefObject<HTMLDivElement | null>;
   text: string;
+  extra?: React.ReactNode;
   buttonLabel: string;
   onAction: () => void;
+  /** Show only the highlight ring — no overlay, no bubble. */
+  ringOnly?: boolean;
 }
 
-function SpotlightOverlay({ target, containerRef, text, buttonLabel, onAction }: SpotlightOverlayProps) {
+function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAction, ringOnly }: SpotlightOverlayProps) {
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [containerRect, setContainerRect] = useState<DOMRect | null>(null);
 
@@ -277,7 +324,10 @@ function SpotlightOverlay({ target, containerRef, text, buttonLabel, onAction }:
       className="max-w-[280px] rounded-xl px-4 py-3 flex flex-col gap-3"
       style={{ background: "rgba(20,10,40,0.95)", border: "1px solid rgba(167,139,250,0.35)", boxShadow: "0 4px 24px rgba(0,0,0,0.5)" }}
     >
-      <Text variant="body-sm" color="text-1">{text}</Text>
+      <div>
+        <Text variant="body-sm" color="text-1">{text}</Text>
+        {extra}
+      </div>
       <Button size="sm" onClick={onAction} className="self-start">{buttonLabel}</Button>
     </div>
   );
@@ -306,6 +356,22 @@ function SpotlightOverlay({ target, containerRef, text, buttonLabel, onAction }:
   };
 
   const bubble = computeBubblePos(targetRect, containerRect, BUBBLE_W, target);
+
+  // Ring-only mode: just the highlight ring, no overlay or bubble
+  if (ringOnly) {
+    return (
+      <svg className="absolute inset-0 z-30 w-full h-full pointer-events-none" style={{ overflow: "visible" }}>
+        <rect
+          x={cutout.x} y={cutout.y}
+          width={cutout.w} height={cutout.h}
+          rx={cutout.rx}
+          fill="none"
+          stroke="rgba(167,139,250,0.5)"
+          strokeWidth="2"
+        />
+      </svg>
+    );
+  }
 
   return (
     <>
@@ -378,29 +444,29 @@ export function WalkthroughExercise({ onComplete }: WalkthroughExerciseProps) {
     }
   }, [step]);
 
-  if (done) {
-    return (
-      <div className="flex-1 min-h-0 flex flex-col">
-        <FarinelliMockup live onComplete={onComplete} onSkip={onComplete} />
-      </div>
-    );
-  }
-
   return (
     <div ref={containerRef} className="relative flex flex-col h-full overflow-hidden">
       {/* Mockup layer */}
       <div className="flex-1 min-h-0 flex flex-col">
-        {current.mockup === "hill" && <HillMockup />}
-        {current.mockup === "farinelli" && <FarinelliMockup />}
+        {done ? (
+          <FarinelliMockup live onComplete={onComplete} onSkip={onComplete} />
+        ) : (
+          <>
+            {current.mockup === "hill" && <HillMockup />}
+            {current.mockup === "farinelli" && <FarinelliMockup />}
+          </>
+        )}
       </div>
 
-      {/* Spotlight + bubble */}
+      {/* Spotlight + bubble (ring-only when done) */}
       <SpotlightOverlay
-        target={current.target}
+        target={done ? "next-skip" : current.target}
         containerRef={containerRef}
-        text={current.text}
-        buttonLabel={current.button}
+        text={done ? "" : current.text}
+        extra={done ? undefined : current.extra}
+        buttonLabel={done ? "" : current.button}
         onAction={handleAction}
+        ringOnly={done}
       />
     </div>
   );

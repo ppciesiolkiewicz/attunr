@@ -143,6 +143,36 @@ For the effect to work, you need stereo headphones. Speakers blend the two frequ
 
 Binaural beats aren't magic — but combined with sustained tones, breath regulation, and physical vibration, they add one more gentle layer of nervous system support to your practice.`,
   },
+  {
+    slug: "headphones-and-mic",
+    title: "Why headphones matter",
+    excerpt:
+      "Headphones keep playback out of your mic so attunr can hear your voice clearly — and wired ones work best.",
+    content: `attunr listens to your voice through your device's microphone. When you use speakers, the reference tones bleed into the mic and make it harder to detect your pitch accurately. Headphones solve this by keeping the playback in your ears and your voice in the mic.
+
+Any headphones will improve the experience. Wired headphones are ideal — they have zero latency and full audio quality. The built-in EarPods that come with an iPhone work perfectly.
+
+Bluetooth headphones (AirPods, over-ear wireless) work too, but with a caveat: when a Bluetooth device acts as both speaker and microphone, most operating systems switch to a lower-quality audio codec (HFP/SCO). This can make pitch detection less reliable and introduce noticeable delay.
+
+If you prefer wireless, you can often get the best of both worlds by using your Bluetooth headphones for listening while routing the microphone input to your device's built-in mic. See our guide on AirPods audio routing for step-by-step instructions.
+
+No headphones at all? attunr still works — just keep the volume low so the mic picks up your voice over the playback.`,
+  },
+  {
+    slug: "airpods-audio-routing",
+    title: "AirPods audio routing on iPhone",
+    excerpt:
+      "How to use AirPods for listening while keeping your iPhone's built-in mic for voice detection.",
+    content: `When AirPods connect to your iPhone, iOS routes both audio output and microphone input through them by default. This triggers a lower-quality Bluetooth codec (HFP) that can affect pitch detection. The fix is simple: tell iOS to use the AirPods for listening but the iPhone's built-in mic for input.
+
+Before you start your practice, try this: Open Settings → Accessibility → AirPods on your iPhone. Under Microphone, select Always Left or Always Right — then switch it back to Automatically Switch AirPods. This sometimes helps reset the routing.
+
+Or, use Control Centre: start playing audio in attunr (or any app), open Control Centre and long-press the audio card (top right), then tap the AirPlay icon (triangle with circles). Make sure AirPods is selected for output. For mic input, iOS will fall back to the built-in mic if the AirPods mic is unavailable.
+
+The simplest approach: if routing feels complicated, just use wired EarPods or any wired headphones. They give you the best audio quality, zero latency, and the built-in mic stays active automatically.
+
+Why this matters: Bluetooth HFP mode reduces audio to 8 kHz mono — fine for phone calls, but not great for hearing tones or detecting pitch. By keeping the mic on the device, iOS stays in the higher-quality A2DP codec for playback, and your voice comes through the built-in mic at full quality.`,
+  },
 ];
 
 export function getArticleBySlug(slug: string): Article | undefined {
