@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { Pause, Play, RotateCcw, FastForward } from "lucide-react";
 import { Button } from "@/components/ui";
 import type { LearnVoiceDrivenConfig } from "@/constants/journey";
 
@@ -25,7 +26,7 @@ interface LoadedSegment {
   text: string;
 }
 
-type Status = "ready" | "loading" | "playing" | "complete";
+type Status = "ready" | "loading" | "playing" | "paused" | "complete";
 
 // ── Audio loading ────────────────────────────────────────────────────────────
 
@@ -79,6 +80,7 @@ function LearnVoiceDrivenPlayer({
   onCompleteRef.current = onComplete;
   const preloadPromiseRef = useRef<Promise<void> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const pauseTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   // Preload in background
   useEffect(() => {
@@ -144,11 +146,62 @@ function LearnVoiceDrivenPlayer({
       setCompletedLines((prev) => [...prev, segment.text]);
       setRevealedWords([]);
       // Pause between segments, then play next
-      setTimeout(() => playSegment(index + 1), 1500);
+      pauseTimerRef.current = setTimeout(() => playSegment(index + 1), 1500);
     };
 
     audio.play().catch(console.error);
   }, []);
+
+  function handlePause() {
+    const segment = segmentsRef.current[currentSegmentIndex];
+    if (segment) {
+      segment.audio.pause();
+      cancelAnimationFrame(animFrameRef.current);
+    }
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    setStatus("paused");
+  }
+
+  function handleResume() {
+    setStatus("playing");
+    const segment = segmentsRef.current[currentSegmentIndex];
+    if (segment && segment.audio.currentTime > 0 && !segment.audio.ended) {
+      segment.audio.play().catch(console.error);
+    } else {
+      // Audio had ended, we were in inter-segment pause — play next
+      playSegment(currentSegmentIndex + 1);
+    }
+  }
+
+  function handleReplay() {
+    // Stop all audio, reset state
+    segmentsRef.current.forEach((s) => {
+      s.audio.pause();
+      s.audio.currentTime = 0;
+    });
+    cancelAnimationFrame(animFrameRef.current);
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    setCompletedLines([]);
+    setRevealedWords([]);
+    setCurrentSegmentIndex(0);
+    setStatus("playing");
+    playSegment(0);
+  }
+
+  function handleFastForward() {
+    // Stop all audio, show all text immediately
+    segmentsRef.current.forEach((s) => {
+      s.audio.pause();
+      s.audio.currentTime = 0;
+    });
+    cancelAnimationFrame(animFrameRef.current);
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    setCompletedLines(segmentConfigs.map((s) => s.text));
+    setRevealedWords([]);
+    setCurrentSegmentIndex(segmentConfigs.length);
+    setStatus("complete");
+    onCompleteRef.current?.();
+  }
 
   async function handleStart() {
     setStatus("loading");
@@ -161,6 +214,7 @@ function LearnVoiceDrivenPlayer({
   useEffect(() => {
     return () => {
       cancelAnimationFrame(animFrameRef.current);
+      if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
       segmentsRef.current.forEach((s) => {
         s.audio.pause();
         s.audio.src = "";
@@ -208,8 +262,27 @@ function LearnVoiceDrivenPlayer({
         )}
       </div>
 
-      {status === "playing" && (
-        <div className="mt-6 flex justify-center">
+      <div className="mt-6 flex flex-col items-center gap-3">
+        <div className="flex items-center gap-2">
+          <Button variant="icon-outline" color="subtle" onClick={handleReplay} title="Replay">
+            <RotateCcw size={18} />
+          </Button>
+          {status === "playing" ? (
+            <Button variant="icon-outline" color="subtle" onClick={handlePause} title="Pause">
+              <Pause size={18} />
+            </Button>
+          ) : status === "paused" ? (
+            <Button variant="icon-outline" color="subtle" onClick={handleResume} title="Continue">
+              <Play size={18} />
+            </Button>
+          ) : null}
+          {status !== "complete" && (
+            <Button variant="icon-outline" color="subtle" onClick={handleFastForward} title="Show all">
+              <FastForward size={18} />
+            </Button>
+          )}
+        </div>
+        {status !== "complete" && (
           <div className="flex gap-1">
             {segmentConfigs.map((_, i) => (
               <div
@@ -224,8 +297,8 @@ function LearnVoiceDrivenPlayer({
               />
             ))}
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

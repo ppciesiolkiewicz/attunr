@@ -10,6 +10,7 @@ const buttonVariants = cva(
         outline: "border",
         ghost: "border border-transparent",
         icon: "p-2.5 rounded-full flex items-center justify-center",
+        "icon-outline": "p-2.5 rounded-full flex items-center justify-center border",
         landing: "border border-transparent",
       },
       size: {
@@ -30,6 +31,7 @@ const buttonVariants = cva(
       { variant: "outline", color: "primary", className: "border-white/20 text-white/68 hover:text-white/90 hover:border-white/30" },
       { variant: "ghost", color: "primary", className: "text-white/70 hover:text-white/85" },
       { variant: "icon", color: "subtle", className: "hover:bg-white/[0.08]" },
+      { variant: "icon-outline", color: "subtle", className: "border-white/20 hover:bg-white/[0.08] hover:border-white/30" },
     ],
     defaultVariants: {
       variant: "solid",
@@ -65,7 +67,7 @@ const landingStyle: React.CSSProperties = {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "solid", size = "md", color = "primary", className = "", style, ...props }, ref) => {
-    const isIcon = variant === "icon";
+    const isIcon = variant === "icon" || variant === "icon-outline";
     const isLanding = variant === "landing";
     const isSolidPrimary = variant === "solid" && color === "primary";
 
