@@ -64,7 +64,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       title: "Gentle hum",
       headerSubtitle: "Hum · 3 seconds × 5",
       instruction:
-        "Hum mmmm on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
+        "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -88,7 +88,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
         reps: 5,
         tips: exerciseTips("vowel", "introduction"),
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
+          "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
     gen.zoneAbove({
@@ -99,13 +99,13 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
       title: "Hoo hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
+        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.farinelli({
@@ -245,7 +245,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "advanced"),
           instruction:
-            "Sing an open Ah from your heart. Let the sound be wide and warm.\n\nFeel the openness in your chest — the vowel naturally opens your body.\n\nAh is the most open sound you can make. It carries the heart's energy outward.\n\nBreathe whenever you need to. Let it be easy.",
+            "An open Ah from your heart. Let the sound be wide and warm.\n\nFeel the openness in your chest — the vowel naturally opens your body.\n\nAh is the most open sound you can make. It carries the heart's energy outward.\n\nBreathe whenever you need to. Let it be easy.",
         }),
       }),
     ],
@@ -336,12 +336,12 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction:
-          "Sing each tone as it rises — feel the energy move upward through all seven centres.\nLet each note lift you a little higher.\nJust follow the sound.",
+          "Each tone as it rises — feel the energy move upward through all seven centres.\nLet each note lift you a little higher.\nJust follow the sound.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "advanced"),
           instruction:
-            "Sing seven ascending tones — one for each chakra, from root to crown.\n\nFeel the energy rise through your body as the pitch climbs. Each note maps to a different centre.\n\nThis ascent traces the full chakra path in a single breath of melody.\n\nJust follow the notes. There's no wrong way.",
+            "Seven ascending tones — one for each chakra, from root to crown.\n\nFeel the energy rise through your body as the pitch climbs. Each note maps to a different centre.\n\nThis ascent traces the full chakra path in a single breath of melody.\n\nJust follow the notes. There's no wrong way.",
         }),
       },
     ],
@@ -382,12 +382,12 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction:
-          "Sing seven tones ascending, then return back down.\nFeel the energy rise and settle.\nLet each note find its place.",
+          "Seven tones ascending, then return back down.\nFeel the energy rise and settle.\nLet each note find its place.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "advanced"),
           instruction:
-            "Sing the full chakra scale — seven tones ascending from root to crown, then descending back to root.\n\nFeel the energy rise through your body and then return. Notice how the descent feels different from the ascent.\n\nThis is the complete chakra flow — a single arc through all seven centres.\n\nJust follow the notes. Let it be easy.",
+            "The full chakra scale — seven tones ascending from root to crown, then descending back to root.\n\nFeel the energy rise through your body and then return. Notice how the descent feels different from the ascent.\n\nThis is the complete chakra flow — a single arc through all seven centres.\n\nJust follow the notes. Let it be easy.",
         }),
       },
       gen.timeBased({

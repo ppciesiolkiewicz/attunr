@@ -75,8 +75,8 @@ export class IntroModalGenerator {
       title: "",
       subtitle:
         p.minScore > 0
-          ? `Sing along — match ${p.minScore}% to continue`
-          : "Sing along — just follow the notes",
+          ? `Follow along — match ${p.minScore}% to continue`
+          : "Follow along — just match the notes",
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),

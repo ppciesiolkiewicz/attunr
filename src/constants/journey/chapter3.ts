@@ -59,7 +59,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       title: "Gentle hum",
       headerSubtitle: "Hum · 3 seconds × 5",
       instruction:
-        "Hum mmmm on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
+        "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -83,7 +83,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
         reps: 5,
         tips: exerciseTips("vowel", "introduction"),
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
+          "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
     gen.zoneAbove({
@@ -94,13 +94,13 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       title: "Hoo hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
+        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.farinelli({
@@ -158,7 +158,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing oooo (as in 'go') on a low tone. Keep your mouth rounded and open — wider than Uu. Let it wobble gently.\n\nFeel the warmth settle in your chest. Notice how the extra openness changes the resonance compared to Uu.\n\nOo opens your throat and introduces a rounder, warmer quality to your voice.\n\nBreathe whenever you need to. Just notice what happens.",
+            "Sound oooo (as in 'go') on a low tone. Keep your mouth rounded and open — wider than Uu. Let it wobble gently.\n\nFeel the warmth settle in your chest. Notice how the extra openness changes the resonance compared to Uu.\n\nOo opens your throat and introduces a rounder, warmer quality to your voice.\n\nBreathe whenever you need to. Just notice what happens.",
         }),
       }),
       gen.hillSustain({
@@ -176,7 +176,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing oooo (as in 'go') in your mid range. Keep your mouth rounded and open — wider than Uu.\n\nNotice how the vowel feels different here — less chest, more face. The resonance lifts.\n\nMoving Oo into your mid range builds awareness of how the same vowel changes colour at different pitches.\n\nLet it be easy. There's no rush.",
+            "Sound oooo (as in 'go') in your mid range. Keep your mouth rounded and open — wider than Uu.\n\nNotice how the vowel feels different here — less chest, more face. The resonance lifts.\n\nMoving Oo into your mid range builds awareness of how the same vowel changes colour at different pitches.\n\nLet it be easy. There's no rush.",
         }),
       }),
     ],
@@ -212,7 +212,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           minScore: 0,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Sing uuuu on the first tone, then gradually open into oooo as the pitches rise. Follow the piano.\n\nFeel the shape change in your mouth — your lips stay rounded but your jaw drops slightly. Notice how the resonance warms and opens.\n\nVowel transitions train your voice to move between shapes without tension. It's the beginning of expressive singing.\n\nYou don't need to get this right. Just notice the shift.",
+            "Sound uuuu on the first tone, then gradually open into oooo as the pitches rise. Follow the piano.\n\nFeel the shape change in your mouth — your lips stay rounded but your jaw drops slightly. Notice how the resonance warms and opens.\n\nVowel transitions train your voice to move between shapes without tension. It's the beginning of expressive singing.\n\nYou don't need to get this right. Just notice the shift.",
         }),
       },
       gen.hillSustain({
@@ -230,7 +230,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing oooo (as in 'go') in your mid range. Hold for 6 seconds — longer than before.\n\nFeel the vowel settle as you sustain it. Notice how the resonance deepens the longer you hold.\n\nLonger holds build breath control and let your voice find its natural placement.\n\nBreathe whenever you need to. It's okay to pause.",
+            "Sound oooo (as in 'go') in your mid range. Hold for 6 seconds — longer than before.\n\nFeel the vowel settle as you sustain it. Notice how the resonance deepens the longer you hold.\n\nLonger holds build breath control and let your voice find its natural placement.\n\nBreathe whenever you need to. It's okay to pause.",
         }),
       }),
       gen.lipRoll({
@@ -260,16 +260,16 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
       gen.fifth({
         slug: "fifth-melody",
         title: "Perfect fifth",
-        headerSubtitle: "Sing a wider leap · listen and match",
+        headerSubtitle: "A wider leap · listen and match",
         cardSubtitle: "Your first big interval — a leap of a fifth",
         minScore: 0,
         instruction:
-          "Sing the two notes as they appear — a wider leap this time.\nListen to the piano and match the jump.\nLet your voice move freely between the notes.",
+          "Match the two notes as they appear — a wider leap this time.\nListen to the piano and match the jump.\nLet your voice move freely between the notes.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Sing a perfect fifth — two notes with a wider gap than anything so far. The piano plays each one for you.\n\nFeel the leap in your body. Notice how the higher note lifts and the lower note grounds.\n\nWider intervals stretch your voice and build confidence in jumping between distant pitches.\n\nThere's no rush. Listen first, then follow.",
+            "A perfect fifth — two notes with a wider gap than anything so far. The piano plays each one for you.\n\nFeel the leap in your body. Notice how the higher note lifts and the lower note grounds.\n\nWider intervals stretch your voice and build confidence in jumping between distant pitches.\n\nThere's no rush. Listen first, then follow.",
         }),
       }),
       gen.hillSustain({
@@ -287,7 +287,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing oooo (as in 'go') across a wider range than before. Keep your mouth rounded and open.\n\nNotice how the vowel changes colour as you move through different pitches — warmer low, brighter high.\n\nSinging a vowel across a wider range trains your voice to carry resonance everywhere.\n\nLet it be easy. Breathe whenever you need to.",
+            "Sound oooo (as in 'go') across a wider range than before. Keep your mouth rounded and open.\n\nNotice how the vowel changes colour as you move through different pitches — warmer low, brighter high.\n\nSounding a vowel across a wider range trains your voice to carry resonance everywhere.\n\nLet it be easy. Breathe whenever you need to.",
         }),
       }),
       gen.zoneAbove({
@@ -298,13 +298,13 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         title: "Hoo hoo",
         headerSubtitle: "Head voice · 4 seconds × 3",
         instruction:
-          "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle and easy.",
+          "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle and easy.",
         introModal: modal.hill({
           seconds: 4,
           reps: 3,
           tips: exerciseTips("headVoice", "intermediate"),
           instruction:
-            "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light and easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.",
+            "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light and easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.",
         }),
       }),
     ],
@@ -330,7 +330,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing oooo (as in 'go') in your mid range. Hold for 8 seconds — the longest holds yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into a rhythm.\n\nLonger holds carry your vowel further and build the stability behind your voice.\n\nBreathe whenever you need to. There's no rush.",
+            "Sound oooo (as in 'go') in your mid range. Hold for 8 seconds — the longest holds yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into a rhythm.\n\nLonger holds carry your vowel further and build the stability behind your voice.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
       gen.farinelli({

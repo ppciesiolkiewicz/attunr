@@ -163,7 +163,7 @@ export default function PracticeView({
             {[
               {
                 icon: <MicIcon />,
-                text: "Sing into your mic and watch the canvas respond to your pitch in real time",
+                text: "Sound into your mic and watch the canvas respond to your pitch in real time",
               },
               {
                 icon: "●",

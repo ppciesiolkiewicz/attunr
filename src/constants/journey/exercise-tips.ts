@@ -44,7 +44,7 @@ export const BREATH_SOUND_TIPS = [
 
 export const MELODY_TIPS = [
   "Listen to the full note before you start — anticipation helps you find the pitch.",
-  "Sing softer rather than louder — gentle tone is easier to control.",
+  "Go softer rather than louder — gentle tone is easier to control.",
   "If you lose the pitch, don't chase it. Wait for the next note and rejoin.",
   "Breathe between phrases, not mid-note — even a quick breath resets your support.",
   "Let each note connect to the next. Think of a smooth line, not separate sounds.",

@@ -59,7 +59,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       title: "Gentle hum",
       headerSubtitle: "Hum · 3 seconds × 5",
       instruction:
-        "Hum mmmm on a low tone.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
+        "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -83,7 +83,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
         reps: 5,
         tips: exerciseTips("vowel", "introduction"),
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
+          "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
     gen.zoneAbove({
@@ -94,13 +94,13 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
       title: "Hoo hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
+        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.farinelli({
@@ -170,12 +170,12 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction:
-          "Sing uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
+          "Sound uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("vowel", "introduction"),
           instruction:
-            "Sing uuuu (as in 'moon') at three rising pitches. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
+            "Sound uuuu (as in 'moon') at three rising pitches. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
         }),
       },
       gen.lipRoll({
@@ -255,7 +255,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "5-tone-scale",
         title: "5-tone scale",
-        headerSubtitle: "Sing 5 notes up and back down",
+        headerSubtitle: "5 notes up and back down",
         cardSubtitle: "Your first scale — stepping up and back down",
         tempo: 55,
         melody: [
@@ -277,12 +277,12 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction:
-          "Sing each note as it scrolls past.\nUp five notes, then back down.\nListen to the piano and follow along.",
+          "Match each note as it scrolls past.\nUp five notes, then back down.\nListen to the piano and follow along.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "introduction"),
           instruction:
-            "Sing each note as it scrolls past — up five notes, then back down. The piano plays each one for you.\n\nNotice how the distance between notes feels. Feel your voice stepping through the scale.\n\nThis is your first scale. Five notes up and five back down — the building block of melody.\n\nThere's no rush. Listen first, then follow.",
+            "Match each note as it scrolls past — up five notes, then back down. The piano plays each one for you.\n\nNotice how the distance between notes feels. Feel your voice stepping through the scale.\n\nThis is your first scale. Five notes up and five back down — the building block of melody.\n\nThere's no rush. Listen first, then follow.",
         }),
       },
       {
@@ -331,12 +331,12 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         ],
         minScore: 0,
         instruction:
-          "Sing uuuu (as in 'moon') on three rising tones.\nKeep your mouth rounded like Uu — relaxed, not smiling.\nFeel the vowel resonate differently at each pitch.",
+          "Sound uuuu (as in 'moon') on three rising tones.\nKeep your mouth rounded like Uu — relaxed, not smiling.\nFeel the vowel resonate differently at each pitch.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("vowel", "introduction"),
           instruction:
-            "Sing uuuu (as in 'moon') on three rising tones. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSinging a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
+            "Sound uuuu (as in 'moon') on three rising tones. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSounding a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
         }),
       },
     ],
@@ -356,7 +356,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         title: "Hum — mid",
         headerSubtitle: "Hum · 8 seconds × 3",
         instruction:
-          "Hum mmmm on a mid tone — longer holds this time.\nFeel the buzz settle.\nBreathe whenever you need to.",
+          "Hum mmmm — keep the ball between the markers.\nFeel the buzz settle.\nBreathe whenever you need to.",
         introModal: modal.hill({
           seconds: 8,
           tips: exerciseTips("hum", "introduction"),
@@ -378,7 +378,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
           seconds: 8,
           tips: exerciseTips("vowel", "introduction"),
           instruction:
-            "Sing uuuu (as in 'moon') on a mid tone. Hold for 8 seconds.\n\nNotice the resonance in your chest and face. Feel how the vowel opens up with a longer hold.\n\nLonger vowel holds carry your resonance further and build the breath support behind your voice.\n\nKeep your mouth rounded like Uu — relaxed, not smiling. Breathe whenever you need to.",
+            "Sound uuuu (as in 'moon') on a mid tone. Hold for 8 seconds.\n\nNotice the resonance in your chest and face. Feel how the vowel opens up with a longer hold.\n\nLonger vowel holds carry your resonance further and build the breath support behind your voice.\n\nKeep your mouth rounded like Uu — relaxed, not smiling. Breathe whenever you need to.",
         }),
       }),
       gen.lipRollSustain({

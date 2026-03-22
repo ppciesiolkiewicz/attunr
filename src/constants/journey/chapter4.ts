@@ -59,7 +59,7 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
       title: "Gentle hum",
       headerSubtitle: "Hum · 3 seconds × 5",
       instruction:
-        "Hum mmmm on a low tone.\nSlightly wobble your voice to keep it loose.\nTake as many breaths as you need.",
+        "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nTake as many breaths as you need.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
@@ -83,7 +83,7 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
         reps: 5,
         tips: exerciseTips("vowel", "introduction"),
         instruction:
-          "Sing uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
+          "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
     gen.zoneAbove({
@@ -94,13 +94,13 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
       title: "Hoo hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sing 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nTake as many breaths as you need.",
+        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nTake as many breaths as you need.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sing 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.farinelli({
@@ -130,7 +130,7 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
         reps: 5,
         tips: exerciseTips("vowel", "introduction"),
         instruction:
-          "Sing oooo (as in 'go') on a low tone. Keep your mouth rounded and open.\n\nFeel the warmth settle in your chest. Notice how the rounded shape changes the resonance.\n\nOo grounds your voice with a rounder, warmer quality — a quick reset before we begin.\n\nLet it be easy. There's no rush.",
+          "Sound oooo (as in 'go') on a low tone. Keep your mouth rounded and open.\n\nFeel the warmth settle in your chest. Notice how the rounded shape changes the resonance.\n\nOo grounds your voice with a rounder, warmer quality — a quick reset before we begin.\n\nLet it be easy. There's no rush.",
       }),
     }),
   ],
@@ -176,7 +176,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing ahhh (as in 'father') on a low tone. Open your mouth wide — drop your jaw and let your tongue rest low.\n\nFeel the openness in your throat. Notice how the sound fills your chest differently than Uu or Oo.\n\nAh is the most open vowel. It teaches your voice to project without pushing.\n\nBreathe whenever you need to. There's no rush.",
+            "Sound ahhh (as in 'father') on a low tone. Open your mouth wide — drop your jaw and let your tongue rest low.\n\nFeel the openness in your throat. Notice how the sound fills your chest differently than Uu or Oo.\n\nAh is the most open vowel. It teaches your voice to project without pushing.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
       gen.hillSustain({
@@ -194,7 +194,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing ahhh (as in 'father') in your mid range. Keep your mouth wide open — jaw dropped, tongue low.\n\nNotice how the vowel feels different here — more face, less chest. The resonance lifts and brightens.\n\nMoving Ah into your mid range builds awareness of how this open vowel changes colour at different pitches.\n\nLet it be easy. Just notice what happens.",
+            "Sound ahhh (as in 'father') in your mid range. Keep your mouth wide open — jaw dropped, tongue low.\n\nNotice how the vowel feels different here — more face, less chest. The resonance lifts and brightens.\n\nMoving Ah into your mid range builds awareness of how this open vowel changes colour at different pitches.\n\nLet it be easy. Just notice what happens.",
         }),
       }),
     ],
@@ -208,16 +208,16 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
       gen.octave({
         slug: "octave-melody",
         title: "Octave leap",
-        headerSubtitle: "Sing a full octave · listen and match",
+        headerSubtitle: "Full octave · listen and match",
         cardSubtitle: "Your widest leap yet — a full octave apart",
         minScore: 0,
         instruction:
-          "Sing the two notes as they appear — a full octave apart.\nListen to the piano and match the leap.\nLet your voice move freely between low and high.",
+          "Match the two notes as they appear — a full octave apart.\nListen to the piano and match the leap.\nLet your voice move freely between low and high.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Sing a full octave — two notes with the widest gap you've tried. The piano plays each one for you.\n\nFeel the leap in your body. Notice how the lower note grounds and the higher note lifts — the full span of your voice in two notes.\n\nOctave leaps stretch your range and build confidence in moving between your registers.\n\nThere's no rush. Listen first, then follow.",
+            "A full octave — two notes with the widest gap you've tried. The piano plays each one for you.\n\nFeel the leap in your body. Notice how the lower note grounds and the higher note lifts — the full span of your voice in two notes.\n\nOctave leaps stretch your range and build confidence in moving between your registers.\n\nThere's no rush. Listen first, then follow.",
         }),
       }),
       gen.hillSustain({
@@ -235,7 +235,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing ahhh (as in 'father') across a wider range than before. Keep your mouth wide open.\n\nNotice how the vowel changes colour as you move through different pitches — warmer low, brighter high. Feel the openness carry through.\n\nSinging Ah across a wider range trains your voice to project with openness everywhere.\n\nBreathe whenever you need to. It's okay to pause.",
+            "Sound ahhh (as in 'father') across a wider range than before. Keep your mouth wide open.\n\nNotice how the vowel changes colour as you move through different pitches — warmer low, brighter high. Feel the openness carry through.\n\nSinging Ah across a wider range trains your voice to project with openness everywhere.\n\nBreathe whenever you need to. It's okay to pause.",
         }),
       }),
       gen.zoneAbove({
@@ -246,13 +246,13 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         title: "Hoo hoo — higher",
         headerSubtitle: "Head voice · 5 seconds × 3",
         instruction:
-          "Sing 'hoo hoo' higher than before — pushing into your upper range.\nNotice the lightness — the sound floats.\nTake as many breaths as you need.",
+          "Sound 'hoo hoo' higher than before — pushing into your upper range.\nNotice the lightness — the sound floats.\nTake as many breaths as you need.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
           tips: exerciseTips("headVoice", "intermediate"),
           instruction:
-            "Sing 'hoo hoo' on a higher tone than before — reaching further into your head voice.\n\nNotice how the sound floats — lighter, more agile, further from your chest.\n\nPushing your head voice boundary expands the top of your range and builds flexibility.\n\nKeep it gentle. You don't need to get this right.",
+            "Sound 'hoo hoo' on a higher tone than before — reaching further into your head voice.\n\nNotice how the sound floats — lighter, more agile, further from your chest.\n\nPushing your head voice boundary expands the top of your range and builds flexibility.\n\nKeep it gentle. You don't need to get this right.",
         }),
       }),
     ],
@@ -278,23 +278,23 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
           reps: 3,
           tips: exerciseTips("vowel", "intermediate"),
           instruction:
-            "Sing ahhh (as in 'father') in your mid range. Hold for 10 seconds — the longest Ah hold yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into the open shape.\n\nLonger holds with Ah build projection and breath control — your voice learns to carry without effort.\n\nThere's no rush. Breathe whenever you need to.",
+            "Sound ahhh (as in 'father') in your mid range. Hold for 10 seconds — the longest Ah hold yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into the open shape.\n\nLonger holds with Ah build projection and breath control — your voice learns to carry without effort.\n\nThere's no rush. Breathe whenever you need to.",
         }),
       }),
       gen.majorScale({
         slug: "major-scale",
         title: "Major scale",
-        headerSubtitle: "Sing the scale · match 40%",
+        headerSubtitle: "Scale · match 40%",
         cardSubtitle: "A full major scale — the sound of home",
         tempo: 55,
         minScore: 40,
         instruction:
-          "Sing each note as it scrolls past.\nUp the scale and back down — follow the piano.\nListen first, then match.",
+          "Match each note as it scrolls past.\nUp the scale and back down — follow the piano.\nListen first, then match.",
         introModal: modal.melody({
           minScore: 40,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Sing a full major scale — up and back down. The piano plays each note for you.\n\nFeel the steps between notes. Notice how the scale has a shape — rising tension, then release coming home.\n\nThe major scale is the foundation of melody. Every song you know lives inside it.\n\nMatch 40% to continue. Just follow the sound.",
+            "Match the major scale — up and back down. The piano plays each note for you.\n\nFeel the steps between notes. Notice how the scale has a shape — rising tension, then release coming home.\n\nThe major scale is the foundation of melody. Every song you know lives inside it.\n\nMatch 40% to continue. Just follow the sound.",
         }),
       }),
       {

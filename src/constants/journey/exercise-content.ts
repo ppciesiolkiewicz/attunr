@@ -102,7 +102,7 @@ function humContent(p: HumContentParams): ExerciseContent {
     headerSubtitle: `Hum · ${p.seconds} seconds × ${p.reps}`,
     cardSubtitle: "Your first pitched sound — a low, steady hum",
     instruction:
-      "Hum mmmm on a low tone.\nKeep the sound steady — feel the buzz in your lips.\nBreathe whenever you need to.",
+      "Hum mmmm — keep the ball at the bottom of the hill.\nKeep the sound steady — feel the buzz in your lips.\nBreathe whenever you need to.",
     introInstruction:
       "Close your lips and hum mmmm on a low tone. Keep the sound steady.\n\nFeel the buzz in your lips and teeth. Notice if it spreads into your chest.\n\nHumming is the simplest way to connect your voice to your body. It warms up your vocal cords and helps you find where sound lives.\n\nBreathe whenever you need to — there's no rush. There's no wrong way to hum.",
     tips: exerciseTips("hum", p.variant),
@@ -111,7 +111,7 @@ function humContent(p: HumContentParams): ExerciseContent {
   if (p.variant === "intermediate") {
     base.cardSubtitle = "Reconnect with a steady hum — feel the buzz";
     base.instruction =
-      "Hum mmmm on a low tone.\nNotice where the buzz lives — lips, teeth, chest.\nBreathe whenever you need to.";
+      "Hum mmmm — keep the ball at the bottom of the hill.\nNotice where the buzz lives — lips, teeth, chest.\nBreathe whenever you need to.";
     base.introInstruction =
       "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.";
   }
@@ -119,7 +119,7 @@ function humContent(p: HumContentParams): ExerciseContent {
   if (p.variant === "advanced") {
     base.cardSubtitle = "Deepen the hum — explore resonance placement";
     base.instruction =
-      "Hum mmmm on a low tone.\nFeel how the resonance shifts as the pitch rises.\nStay relaxed. Let the sound arrive.";
+      "Hum mmmm — keep the ball at the bottom of the hill.\nFeel how the resonance shifts as the pitch rises.\nStay relaxed. Let the sound arrive.";
     base.introInstruction =
       "Hum mmmm on a mid tone — a step higher than before. Keep it relaxed.\n\nNotice the buzz in your chest and face. Feel how the resonance shifts as the pitch rises.\n\nEach pitch lives in a different place in your body. This awareness stays with you.\n\nStay relaxed. Let the sound arrive.";
   }
