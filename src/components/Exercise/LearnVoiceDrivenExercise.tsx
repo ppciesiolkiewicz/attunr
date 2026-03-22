@@ -21,9 +21,10 @@ interface SegmentTimestamps {
 
 interface LoadedSegment {
   name: string;
-  audio: HTMLAudioElement;
-  timestamps: SegmentTimestamps;
+  audio: HTMLAudioElement | null;
+  timestamps: SegmentTimestamps | null;
   text: string;
+  hasVoice: boolean;
 }
 
 type Status = "ready" | "loading" | "intro" | "playing" | "paused" | "complete";
@@ -36,7 +37,12 @@ async function loadSegment(
   baseUrl: string,
   name: string,
   text: string,
+  hasVoice: boolean,
 ): Promise<LoadedSegment> {
+  if (!hasVoice) {
+    return { name, audio: null, timestamps: null, text, hasVoice: false };
+  }
+
   const fullBase = `${VOICE_BASE_URL}/${baseUrl}`;
   const audioUrl = `${fullBase}/${name}.mp3`;
   const timestampsUrl = `${fullBase}/${name}.timestamps.json`;
@@ -53,7 +59,7 @@ async function loadSegment(
     audio.load();
   });
 
-  return { name, audio, timestamps, text };
+  return { name, audio, timestamps, text, hasVoice: true };
 }
 
 // ── Player component ─────────────────────────────────────────────────────────
@@ -64,7 +70,7 @@ function LearnVoiceDrivenPlayer({
   onComplete,
 }: {
   voiceBaseUrl: string;
-  segments: { name: string; text: string }[];
+  segments: { name: string; text: string; spokenText?: string }[];
   onComplete?: () => void;
 }) {
   const [status, setStatus] = useState<Status>("ready");
@@ -77,7 +83,7 @@ function LearnVoiceDrivenPlayer({
   const segmentsRef = useRef<LoadedSegment[]>([]);
   const animFrameRef = useRef<number>(0);
   const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
   const preloadPromiseRef = useRef<Promise<void> | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pauseTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -87,7 +93,7 @@ function LearnVoiceDrivenPlayer({
     preloadPromiseRef.current = (async () => {
       try {
         const loaded = await Promise.all(
-          segmentConfigs.map((s) => loadSegment(voiceBaseUrl, s.name, s.text)),
+          segmentConfigs.map((s) => loadSegment(voiceBaseUrl, s.name, s.text, !!s.spokenText)),
         );
         segmentsRef.current = loaded;
       } catch (err) {
@@ -103,6 +109,8 @@ function LearnVoiceDrivenPlayer({
     }
   }, [completedLines, revealedWords]);
 
+  const playSegmentRef = useRef<(index: number) => void>(null);
+
   const playSegment = useCallback((index: number) => {
     const segments = segmentsRef.current;
     if (index >= segments.length) {
@@ -114,10 +122,17 @@ function LearnVoiceDrivenPlayer({
 
     setCurrentSegmentIndex(index);
     const segment = segments[index];
+
+    // No voice — show text immediately and advance
+    if (!segment.hasVoice || !segment.audio || !segment.timestamps) {
+      setCompletedLines((prev) => [...prev, segment.text]);
+      pauseTimerRef.current = setTimeout(() => playSegmentRef.current?.(index + 1), 1500);
+      return;
+    }
+
     const audio = segment.audio;
     const words = segment.timestamps.words.filter((w) => w.type === "word");
 
-    // Track words progressively
     function updateDisplay() {
       const currentTime = audio.currentTime;
       let count = 0;
@@ -142,19 +157,30 @@ function LearnVoiceDrivenPlayer({
 
     audio.onended = () => {
       cancelAnimationFrame(animFrameRef.current);
-      // Move current line to completed, clear current
       setCompletedLines((prev) => [...prev, segment.text]);
       setRevealedWords([]);
-      // Pause between segments, then play next
-      pauseTimerRef.current = setTimeout(() => playSegment(index + 1), 1500);
+      pauseTimerRef.current = setTimeout(() => playSegmentRef.current?.(index + 1), 1500);
     };
 
     audio.play().catch(console.error);
   }, []);
 
+  useEffect(() => { playSegmentRef.current = playSegment; }, [playSegment]);
+
+  function stopAllAudio() {
+    segmentsRef.current.forEach((s) => {
+      if (s.audio) {
+        s.audio.pause();
+        s.audio.currentTime = 0;
+      }
+    });
+    cancelAnimationFrame(animFrameRef.current);
+    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+  }
+
   function handlePause() {
     const segment = segmentsRef.current[currentSegmentIndex];
-    if (segment) {
+    if (segment?.audio) {
       segment.audio.pause();
       cancelAnimationFrame(animFrameRef.current);
     }
@@ -165,22 +191,15 @@ function LearnVoiceDrivenPlayer({
   function handleResume() {
     setStatus("playing");
     const segment = segmentsRef.current[currentSegmentIndex];
-    if (segment && segment.audio.currentTime > 0 && !segment.audio.ended) {
+    if (segment?.audio && segment.audio.currentTime > 0 && !segment.audio.ended) {
       segment.audio.play().catch(console.error);
     } else {
-      // Audio had ended, we were in inter-segment pause — play next
       playSegment(currentSegmentIndex + 1);
     }
   }
 
   function handleReplay() {
-    // Stop all audio, reset state
-    segmentsRef.current.forEach((s) => {
-      s.audio.pause();
-      s.audio.currentTime = 0;
-    });
-    cancelAnimationFrame(animFrameRef.current);
-    if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
+    stopAllAudio();
     setCompletedLines([]);
     setRevealedWords([]);
     setCurrentSegmentIndex(0);
@@ -189,11 +208,7 @@ function LearnVoiceDrivenPlayer({
   }
 
   function handleFastForward() {
-    // Stop all audio, show all text immediately
-    segmentsRef.current.forEach((s) => {
-      s.audio.pause();
-      s.audio.currentTime = 0;
-    });
+    stopAllAudio();
     cancelAnimationFrame(animFrameRef.current);
     if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
     setCompletedLines(segmentConfigs.map((s) => s.text));
@@ -220,8 +235,10 @@ function LearnVoiceDrivenPlayer({
       cancelAnimationFrame(animFrameRef.current);
       if (pauseTimerRef.current) clearTimeout(pauseTimerRef.current);
       segmentsRef.current.forEach((s) => {
-        s.audio.pause();
-        s.audio.src = "";
+        if (s.audio) {
+          s.audio.pause();
+          s.audio.src = "";
+        }
       });
     };
   }, []);

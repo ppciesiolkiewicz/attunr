@@ -1,6 +1,4 @@
-// scripts/voice-instruction-settings.ts
-
-interface VoiceProfile {
+export interface VoiceProfile {
   name: string;
   voiceId: string;
   speed?: number;
@@ -10,9 +8,11 @@ interface VoiceProfile {
   speakerBoost?: boolean;
 }
 
-// ── Voice profiles ───────────────────────────────────────────────────────────
+type VoiceOverrides = Partial<Omit<VoiceProfile, "name" | "voiceId">>;
 
-const VOICE_RILEY: VoiceProfile = {
+// ── Voice profile defaults ──────────────────────────────────────────────────
+
+const RILEY_DEFAULTS: VoiceProfile = {
   name: "Riley",
   voiceId: "hA4zGnmTwX2NQiTRMt7o",
   speed: 0.8,
@@ -22,16 +22,26 @@ const VOICE_RILEY: VoiceProfile = {
   speakerBoost: true,
 };
 
-const VOICE_AUSTRALIAN_BARITONE: VoiceProfile = {
+const AUSTRALIAN_BARITONE_DEFAULTS: VoiceProfile = {
   name: "Australian Baritone",
   voiceId: "KmnvDXRA0HU55Q0aqkPG",
 };
 
-// ── Settings ─────────────────────────────────────────────────────────────────
+// ── Factory functions ───────────────────────────────────────────────────────
+
+/** Riley voice with optional overrides. */
+export function riley(overrides?: VoiceOverrides): VoiceProfile {
+  return { ...RILEY_DEFAULTS, ...overrides };
+}
+
+/** Australian Baritone voice with optional overrides. */
+export function australianBaritone(overrides?: VoiceOverrides): VoiceProfile {
+  return { ...AUSTRALIAN_BARITONE_DEFAULTS, ...overrides };
+}
+
+// ── Global settings ─────────────────────────────────────────────────────────
 
 export const voiceSettings = {
-  instructionVoice: VOICE_AUSTRALIAN_BARITONE,
-  tipsVoice: VOICE_RILEY,
   /** ElevenLabs model to use. Must support SSML break tags (not v3). */
   modelId: "eleven_multilingual_v2",
   /** Language code for multilingual models. */

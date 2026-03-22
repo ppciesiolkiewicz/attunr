@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { config } from "dotenv";
 import { put } from "@vercel/blob";
-import { voiceSettings } from "./settings";
+import { voiceSettings, australianBaritone } from "./settings";
 import { getExerciseTypeVoiceConfig } from "./exercise-type-voice-config";
 import { journey } from "../../src/constants/journey";
 import type { LearnVoiceDrivenConfig } from "../../src/constants/journey";
@@ -21,21 +21,16 @@ async function generateSegmentAudio(
   ssml: string,
   segmentName: string,
   outDir: string,
-  voiceType: "instruction" | "tips" = "instruction",
-  voiceOverrides?: { speed?: number; stability?: number; similarityBoost?: number; style?: number },
+  voice = australianBaritone(),
 ) {
   if (!ELEVENLABS_API_KEY) {
     throw new Error("ELEVENLABS_API_KEY not set in .env.local");
   }
 
   const charCount = ssml.length;
-  const voice = voiceType === "tips" ? voiceSettings.tipsVoice : voiceSettings.instructionVoice;
-  const speed = voiceOverrides?.speed ?? voice.speed;
-  const stability = voiceOverrides?.stability ?? voice.stability;
-  const similarityBoost = voiceOverrides?.similarityBoost ?? voice.similarityBoost;
-  const style = voiceOverrides?.style ?? voice.style;
-  console.log(`  [${segmentName}] Calling TTS (${charCount} chars)...`);
+  console.log(`  [${segmentName}] Calling TTS (${charCount} chars, voice: ${voice.name})...`);
 
+  const { speed, stability, similarityBoost, style, speakerBoost } = voice;
   const hasVoiceSettings = speed !== undefined || stability !== undefined;
   const ttsResponse = await fetch(
     `https://api.elevenlabs.io/v1/text-to-speech/${voice.voiceId}`,
@@ -56,8 +51,8 @@ async function generateSegmentAudio(
                 ...(stability !== undefined && { stability }),
                 ...(similarityBoost !== undefined && { similarity_boost: similarityBoost }),
                 ...(style !== undefined && { style }),
-                ...(voice.speakerBoost !== undefined && {
-                  use_speaker_boost: voice.speakerBoost,
+                ...(speakerBoost !== undefined && {
+                  use_speaker_boost: speakerBoost,
                 }),
               },
             }
@@ -170,7 +165,7 @@ async function generateType(exerciseTypeId: string, force: boolean) {
       continue;
     }
 
-    await generateSegmentAudio(segment.ssml, segment.name, outDir, segment.voice, segment.voiceOverrides);
+    await generateSegmentAudio(segment.ssml, segment.name, outDir, segment.voice);
     generated++;
   }
 
@@ -245,14 +240,20 @@ async function generateChapter(chapterSlug: string, force: boolean) {
     const outDir = path.join(OUTPUT_DIR, "exercise-types", "learn-voice-driven", chapterSlug, exercise.slug);
     console.log(`Exercise: ${exercise.slug} (${exercise.segments.length} segments)`);
 
-    for (const segment of exercise.segments) {
+    const voicedSegments = exercise.segments.filter((s) => s.spokenText);
+    if (voicedSegments.length === 0) {
+      console.log(`  No segments with spokenText — skipping`);
+      continue;
+    }
+
+    for (const segment of voicedSegments) {
       const audioPath = path.join(outDir, `${segment.name}.mp3`);
       if (!force && fs.existsSync(audioPath)) {
         console.log(`  Skipping ${segment.name} — already exists`);
         continue;
       }
-      const ssml = `<speak>${segment.text}</speak>`;
-      await generateSegmentAudio(ssml, segment.name, outDir, "instruction", { speed: 0.8 });
+      const ssml = `<speak>${segment.spokenText}</speak>`;
+      await generateSegmentAudio(ssml, segment.name, outDir, australianBaritone({ speed: 0.8 }));
     }
     console.log();
   }
