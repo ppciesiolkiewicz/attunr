@@ -60,11 +60,22 @@ async function loadSegment(
   const audioUrl = `${fullBase}/${name}.mp3`;
   const timestampsUrl = `${fullBase}/${name}.timestamps.json`;
 
-  const timestamps = await fetch(timestampsUrl).then((r) => r.json()) as SegmentTimestamps;
+  const [timestamps, audioBlob] = await Promise.all([
+    fetch(timestampsUrl).then((r) => r.json()) as Promise<SegmentTimestamps>,
+    fetch(audioUrl).then((r) => r.blob()),
+  ]);
+
+  const audio = new Audio(URL.createObjectURL(audioBlob));
+  // Wait until audio is ready to play
+  await new Promise<void>((resolve, reject) => {
+    audio.addEventListener("canplaythrough", () => resolve(), { once: true });
+    audio.addEventListener("error", () => reject(new Error(`Failed to load ${audioUrl}`)), { once: true });
+    audio.load();
+  });
 
   return {
     name,
-    audio: new Audio(audioUrl),
+    audio,
     timestamps,
   };
 }
@@ -107,13 +118,15 @@ function FarinelliVoiceDrivenPlayer({
   const tipIndexRef = useRef(0);
   const tipTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
-  // Preload all segments
+  const loadedMapRef = useRef<Map<string, LoadedSegment>>(new Map());
+  const preloadPromiseRef = useRef<Promise<void> | null>(null);
+
+  // Start preloading immediately but don't block UI
   useEffect(() => {
     let cancelled = false;
 
-    async function preload() {
+    preloadPromiseRef.current = (async () => {
       try {
-        // Deduplicate segment names (exhale-8 appears multiple times)
         const uniqueNames = [...new Set(segmentNames.current)];
         const loaded = await Promise.all(
           uniqueNames.map((name) => loadSegment(voiceBaseUrl, name)),
@@ -121,11 +134,11 @@ function FarinelliVoiceDrivenPlayer({
 
         if (cancelled) return;
 
-        // Build full ordered list with references to shared loaded segments
-        const loadedMap = new Map(loaded.map((s) => [s.name, s]));
+        loadedMapRef.current = new Map(loaded.map((s) => [s.name, s]));
+
+        // Build full ordered list
         segmentsRef.current = segmentNames.current.map((name) => {
-          const seg = loadedMap.get(name)!;
-          // Create fresh Audio for each slot (same segment may play multiple times)
+          const seg = loadedMapRef.current.get(name)!;
           return {
             ...seg,
             audio: new Audio(seg.audio.src),
@@ -134,17 +147,22 @@ function FarinelliVoiceDrivenPlayer({
 
         // Preload tip audio
         const tipBase = `${VOICE_BASE_URL}/${voiceBaseUrl}`;
-        tipAudiosRef.current = FARINELLI_TIPS.map((_, i) =>
-          new Audio(`${tipBase}/tip-${i + 1}.mp3`),
+        const tipBlobs = await Promise.all(
+          FARINELLI_TIPS.map((_, i) =>
+            fetch(`${tipBase}/tip-${i + 1}.mp3`).then((r) => r.blob()).catch(() => null),
+          ),
         );
-
-        setStatus("ready");
+        tipAudiosRef.current = tipBlobs
+          .filter((b): b is Blob => b !== null)
+          .map((blob) => new Audio(URL.createObjectURL(blob)));
       } catch (err) {
         console.error("Failed to preload voice segments:", err);
       }
-    }
+    })();
 
-    preload();
+    // Show start button immediately — preload runs in background
+    setStatus("ready");
+
     return () => { cancelled = true; };
   }, [voiceBaseUrl]);
 
@@ -216,7 +234,10 @@ function FarinelliVoiceDrivenPlayer({
     tipIndexRef.current++;
   }, []);
 
-  function handleStart() {
+  async function handleStart() {
+    setStatus("loading");
+    // Wait for preload to finish if still in progress
+    if (preloadPromiseRef.current) await preloadPromiseRef.current;
     setStatus("playing");
     playSegment(0);
     // Start tip interval — first tip after 10s, then every 15s
