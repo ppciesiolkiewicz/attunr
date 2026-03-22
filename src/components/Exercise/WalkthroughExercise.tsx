@@ -470,8 +470,8 @@ export function WalkthroughExercise({ onComplete, onSkip, parentRef }: Walkthrou
 
   return (
     <div ref={containerRef} className="relative flex flex-col h-full overflow-hidden">
-      {/* Skip button — always visible during walkthrough */}
-      {!done && (
+      {/* Skip button — visible during walkthrough except on last step (which spotlights Next/Skip) */}
+      {!done && step < STEPS.length - 1 && (
         <div className="absolute bottom-3 right-3 z-50">
           <Button variant="outline" size="sm" onClick={onSkip} className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">
             Skip →
