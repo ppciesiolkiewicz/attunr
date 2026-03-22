@@ -12,6 +12,7 @@ import type {
   ToneShape,
   TimedCue,
   VoiceConfig,
+  LearnVoiceSegment,
 } from "./types";
 import { BandTargetKind, NoteDuration } from "./types";
 
@@ -305,6 +306,15 @@ export interface FarinelliParams extends Omit<CommonParams, "instruction"> {
 export interface FarinelliVoiceDrivenParams extends Omit<CommonParams, "instruction"> {
   maxCount: number;
   voiceBaseUrl: string;
+}
+
+export interface LearnVoiceDrivenParams {
+  slug: string;
+  title: string;
+  cardSubtitle?: string;
+  voiceBaseUrl: string;
+  segments: LearnVoiceSegment[];
+  completionModal?: ModalConfig;
 }
 
 export interface VolumeDetectionParams extends CommonParams {
@@ -806,6 +816,20 @@ export class ExerciseGenerator {
       exerciseTypeId: "farinelli-voice-driven",
       maxCount,
       voiceBaseUrl,
+    };
+  }
+
+  /** Voice-narrated learn — text accumulates on screen as words are spoken. */
+  learnVoiceDriven(params: LearnVoiceDrivenParams): ExerciseConfigInput {
+    const { slug, title, cardSubtitle, voiceBaseUrl, segments, completionModal } = params;
+    return {
+      slug,
+      title,
+      cardSubtitle,
+      completionModal,
+      exerciseTypeId: "learn-voice-driven",
+      voiceBaseUrl,
+      segments,
     };
   }
 

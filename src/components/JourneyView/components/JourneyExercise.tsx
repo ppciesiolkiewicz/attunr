@@ -58,7 +58,7 @@ export function JourneyExercise({
     return new VocalRange(lowHz, highHz, settings.tuning);
   }, [settings.vocalRangeLowHz, settings.vocalRangeHighHz, settings.tuning]);
 
-  const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1";
+  const isLearnType = exercise.exerciseTypeId === "learn" || exercise.exerciseTypeId === "learn-notes-1" || exercise.exerciseTypeId === "learn-voice-driven";
   const shouldAutoShowInfo = () => {
     if (isLearnType) return false;
     if (exercise.exerciseTypeId === "breathwork-farinelli") return true;

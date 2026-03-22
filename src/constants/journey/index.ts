@@ -109,6 +109,8 @@ export type {
   SlideConfig,
   BaseExerciseConfig,
   LearnConfig,
+  LearnVoiceDrivenConfig,
+  LearnVoiceSegment,
   LearnNotesConfig,
   PitchDetectionConfig,
   PitchDetectionSlideConfig,

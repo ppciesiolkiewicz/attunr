@@ -4,6 +4,8 @@ import { config } from "dotenv";
 import { put } from "@vercel/blob";
 import { voiceSettings } from "./settings";
 import { getExerciseTypeVoiceConfig } from "./exercise-type-voice-config";
+import { journey } from "../../src/constants/journey";
+import type { LearnVoiceDrivenConfig } from "../../src/constants/journey";
 
 // Load .env.local
 config({ path: path.resolve(__dirname, "../../.env.local") });
@@ -221,6 +223,84 @@ async function uploadType(exerciseTypeId: string) {
   console.log(`\nUpload complete! Base URL: voice/exercise-types/${exerciseTypeId}/`);
 }
 
+// ── generate-chapter ─────────────────────────────────────────────────────
+
+async function generateChapter(chapterSlug: string, force: boolean) {
+  const chapter = journey.chapters.find((c) => c.slug === chapterSlug);
+  if (!chapter) throw new Error(`No chapter with slug "${chapterSlug}"`);
+
+  const exercises = chapter.stages
+    .flatMap((s) => s.exercises)
+    .filter((e): e is LearnVoiceDrivenConfig => e.exerciseTypeId === "learn-voice-driven");
+
+  if (exercises.length === 0) {
+    console.log(`No learn-voice-driven exercises in chapter "${chapterSlug}"`);
+    return;
+  }
+
+  console.log(`Generating voice for ${exercises.length} learn exercises in chapter "${chapterSlug}"...\n`);
+
+  for (const exercise of exercises) {
+    const outDir = path.join(OUTPUT_DIR, "exercise-types", "learn-voice-driven", chapterSlug, exercise.slug);
+    console.log(`Exercise: ${exercise.slug} (${exercise.segments.length} segments)`);
+
+    for (const segment of exercise.segments) {
+      const audioPath = path.join(outDir, `${segment.name}.mp3`);
+      if (!force && fs.existsSync(audioPath)) {
+        console.log(`  Skipping ${segment.name} — already exists`);
+        continue;
+      }
+      const ssml = `<speak>${segment.text}</speak>`;
+      await generateSegmentAudio(ssml, segment.name, outDir);
+    }
+    console.log();
+  }
+
+  console.log("Done!");
+}
+
+// ── upload-chapter ──────────────────────────────────────────────────────
+
+async function uploadChapter(chapterSlug: string) {
+  if (!BLOB_TOKEN) throw new Error("ATTUNR_BLOB_READ_WRITE_TOKEN not set in .env.local");
+
+  const chapterDir = path.join(OUTPUT_DIR, "exercise-types", "learn-voice-driven", chapterSlug);
+  if (!fs.existsSync(chapterDir)) {
+    throw new Error(`No generated files found in ${chapterDir}. Run 'generate-chapter' first.`);
+  }
+
+  const exerciseDirs = fs.readdirSync(chapterDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory())
+    .map((d) => d.name);
+
+  for (const exerciseSlug of exerciseDirs) {
+    const exerciseDir = path.join(chapterDir, exerciseSlug);
+    const files = fs.readdirSync(exerciseDir).filter(
+      (f) => f.endsWith(".mp3") || f.endsWith(".timestamps.json"),
+    );
+
+    const blobPrefix = `voice/exercise-types/learn-voice-driven/${chapterSlug}/${exerciseSlug}`;
+    console.log(`Uploading ${files.length} files for ${chapterSlug}/${exerciseSlug}...`);
+
+    for (const file of files) {
+      const filePath = path.join(exerciseDir, file);
+      const contentType = file.endsWith(".mp3") ? "audio/mpeg" : "application/json";
+
+      const blob = await put(`${blobPrefix}/${file}`, fs.readFileSync(filePath), {
+        access: "public",
+        token: BLOB_TOKEN,
+        contentType,
+        addRandomSuffix: false,
+        allowOverwrite: true,
+      });
+
+      console.log(`  ${file} → ${blob.url}`);
+    }
+  }
+
+  console.log("\nUpload complete!");
+}
+
 // ── test ─────────────────────────────────────────────────────────────────────
 
 async function test() {
@@ -258,12 +338,30 @@ async function main() {
       await uploadType(exerciseTypeId);
       break;
     }
+    case "generate-chapter": {
+      const [chapterSlug] = rest;
+      if (!chapterSlug) {
+        console.error("Usage: generate-chapter <chapterSlug> [--force]");
+        process.exit(1);
+      }
+      await generateChapter(chapterSlug, force);
+      break;
+    }
+    case "upload-chapter": {
+      const [chapterSlug] = rest;
+      if (!chapterSlug) {
+        console.error("Usage: upload-chapter <chapterSlug>");
+        process.exit(1);
+      }
+      await uploadChapter(chapterSlug);
+      break;
+    }
     case "test":
       await test();
       break;
     default:
       console.error(
-        "Usage: npx tsx -r tsconfig-paths/register scripts/voice-instruction-generator <generate-type|upload-type|test> [args]",
+        "Usage: npx tsx -r tsconfig-paths/register scripts/voice-instruction-generator <generate-type|generate-chapter|upload-type|upload-chapter|test> [args]",
       );
       process.exit(1);
   }

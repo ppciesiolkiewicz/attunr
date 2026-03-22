@@ -1,5 +1,5 @@
 import { journey } from "../../src/constants/journey";
-import type { FarinelliBreathworkConfig } from "../../src/constants/journey";
+import type { FarinelliBreathworkConfig, LearnVoiceDrivenConfig } from "../../src/constants/journey";
 import { FARINELLI_TIPS } from "../../src/constants/farinelli-tips";
 
 export interface VoiceSegment {
@@ -72,9 +72,47 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
   }
 }
 
+// ── Learn Voice-Driven ──────────────────────────────────────────────────────
+
+class LearnVoiceDrivenVoiceConfig extends ExerciseTypeVoiceConfig {
+  readonly exerciseTypeId = "learn-voice-driven";
+
+  /** Generate segments for a specific exercise by slug. */
+  segmentsForSlug(slug: string): VoiceSegment[] {
+    const exercise = journey.exercises.find(
+      (e): e is LearnVoiceDrivenConfig =>
+        e.exerciseTypeId === "learn-voice-driven" && e.slug === slug,
+    );
+    if (!exercise) throw new Error(`No learn-voice-driven exercise with slug "${slug}"`);
+
+    return exercise.segments.map((s) => ({
+      name: s.name,
+      ssml: `<speak>${s.text}</speak>`,
+    }));
+  }
+
+  /** Returns segments for all learn-voice-driven exercises. */
+  segments(): VoiceSegment[] {
+    const exercises = journey.exercises.filter(
+      (e): e is LearnVoiceDrivenConfig =>
+        e.exerciseTypeId === "learn-voice-driven",
+    );
+
+    return exercises.flatMap((ex) =>
+      ex.segments.map((s) => ({
+        name: s.name,
+        ssml: `<speak>${s.text}</speak>`,
+      })),
+    );
+  }
+}
+
 // ── Registry ─────────────────────────────────────────────────────────────────
 
-const configs: ExerciseTypeVoiceConfig[] = [new FarinelliVoiceConfig()];
+const configs: ExerciseTypeVoiceConfig[] = [
+  new FarinelliVoiceConfig(),
+  new LearnVoiceDrivenVoiceConfig(),
+];
 
 export function getExerciseTypeVoiceConfig(
   exerciseTypeId: string,

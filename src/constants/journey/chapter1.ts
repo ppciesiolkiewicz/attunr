@@ -18,25 +18,39 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-wake-up",
     title: "Wake Up",
     exercises: [
-      {
-        exerciseTypeId: "learn",
+      // Old learn exercise — kept for reference
+      // {
+      //   exerciseTypeId: "learn",
+      //   slug: "vocal-placement",
+      //   title: "Vocal placement",
+      //   cardSubtitle: "Notice where sound lives in your body — chest, throat, head",
+      //   elements: [
+      //     { type: "paragraph", text: "Vocal placement is the practice of directing your voice to resonate in different parts of your body..." },
+      //     { type: "paragraph", text: "As you explore your range, you develop awareness of where sound lives...", variant: "secondary" },
+      //     { type: "video" },
+      //   ],
+      // },
+      gen.learnVoiceDriven({
         slug: "vocal-placement",
         title: "Vocal placement",
         cardSubtitle:
           "Notice where sound lives in your body — chest, throat, head",
-        elements: [
+        voiceBaseUrl: "learn-voice-driven/introduction/vocal-placement",
+        segments: [
           {
-            type: "paragraph",
-            text: "Vocal placement is the practice of directing your voice to resonate in different parts of your body. Lower tones naturally settle in the chest, mid-range tones open in the throat and mouth, and higher tones lift into the sinuses and head.",
+            name: "intro",
+            text: "Put your hand on your chest. Now hum a low note. Feel that vibration? That's your voice, living in your body.",
           },
           {
-            type: "paragraph",
-            text: "As you explore your range, you develop awareness of where sound lives in your body and build a deeper connection between voice, breath, and presence. The goal is not perfection, but feeling where the sound lands and how it shifts your state.",
-            variant: "secondary",
+            name: "explore",
+            text: "Now hum a little higher. Notice how the buzz moves — up from your chest, into your throat, maybe into your face. Every pitch has a home.",
           },
-          { type: "video" },
+          {
+            name: "closing",
+            text: "That awareness — knowing where sound lives — is vocal placement. You already have it. We're just going to sharpen it.",
+          },
         ],
-      },
+      }),
       {
         exerciseTypeId: "learn-notes-1",
         slug: "understanding-notes",

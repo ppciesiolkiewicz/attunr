@@ -9,6 +9,7 @@
 export type ExerciseTypeId =
   | "learn"                       // text + video placeholder, no exercise
   | "learn-notes-1"              // interactive notes introduction with range canvas
+  | "learn-voice-driven"          // voice-narrated learn — text accumulates as words are spoken
   | "pitch-detection"             // hold tone(s) — single note or sequence
   | "pitch-detection-slide"       // glide between two pitches
   | "pitch-detection-hill"        // roll ball uphill or downhill by pitch direction
@@ -153,6 +154,22 @@ export interface LearnConfig extends BaseExerciseConfig {
   exerciseTypeId: "learn";
   /** Body content rendered as ContentElement[]. */
   elements: ContentElement[];
+}
+
+/** A segment of voice-narrated learn content — one audio file + text. */
+export interface LearnVoiceSegment {
+  /** Audio file name (e.g. "intro", "explore", "closing"). */
+  name: string;
+  /** Full text for this segment — shown on screen as words accumulate. */
+  text: string;
+}
+
+export interface LearnVoiceDrivenConfig extends BaseExerciseConfig {
+  exerciseTypeId: "learn-voice-driven";
+  /** Base URL for voice segments on Vercel Blob (e.g. "learn/vocal-placement"). */
+  voiceBaseUrl: string;
+  /** Ordered segments — each becomes one audio file with timestamps. */
+  segments: LearnVoiceSegment[];
 }
 
 export interface LearnNotesConfig extends BaseExerciseConfig {
@@ -342,6 +359,7 @@ export interface RhythmConfig extends BaseExerciseConfig {
 
 export type ExerciseConfig =
   | LearnConfig
+  | LearnVoiceDrivenConfig
   | LearnNotesConfig
   | PitchDetectionConfig
   | PitchDetectionSlideConfig

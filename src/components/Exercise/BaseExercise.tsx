@@ -9,6 +9,7 @@ import { LearnExercise } from "./LearnExercise";
 import { LearnNotesExercise } from "./LearnNotesExercise";
 import { FarinelliBreathworkExerciseContent } from "./FarinelliBreathworkExercise";
 import { FarinelliVoiceDrivenExerciseContent } from "./FarinelliVoiceDrivenExercise";
+import { LearnVoiceDrivenExerciseContent } from "./LearnVoiceDrivenExercise";
 import { VolumeDetectionExerciseContent } from "./VolumeDetectionExercise";
 import { PitchExercise } from "./PitchExercise";
 import { ToneFollowExercise } from "./ToneFollowExercise";
@@ -65,6 +66,7 @@ export function BaseExercise({
     if (
       exercise.exerciseTypeId === "learn" ||
       exercise.exerciseTypeId === "learn-notes-1" ||
+      exercise.exerciseTypeId === "learn-voice-driven" ||
       exercise.exerciseTypeId === "breathwork-farinelli" ||
       exercise.exerciseTypeId === "farinelli-voice-driven" ||
       exercise.exerciseTypeId === "volume-detection" ||
@@ -106,6 +108,19 @@ export function BaseExercise({
     case "breathwork-farinelli":
       return (
         <FarinelliBreathworkExerciseContent
+          exercise={exercise}
+          exerciseId={exerciseId}
+          isLast={isLast}
+          isAlreadyCompleted={isAlreadyCompleted}
+          onComplete={onComplete}
+          onSkip={onSkip}
+          onPrev={onPrev}
+        />
+      );
+
+    case "learn-voice-driven":
+      return (
+        <LearnVoiceDrivenExerciseContent
           exercise={exercise}
           exerciseId={exerciseId}
           isLast={isLast}
