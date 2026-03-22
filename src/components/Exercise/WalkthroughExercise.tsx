@@ -473,8 +473,8 @@ export function WalkthroughExercise({ onComplete, onSkip, parentRef }: Walkthrou
       {/* Skip button — always visible during walkthrough */}
       {!done && (
         <div className="absolute bottom-3 right-3 z-50">
-          <Button variant="ghost" size="sm" onClick={onSkip} className="text-white/50 hover:text-white/80">
-            Skip walkthrough
+          <Button variant="outline" size="sm" onClick={onSkip} className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">
+            Skip →
           </Button>
         </div>
       )}
