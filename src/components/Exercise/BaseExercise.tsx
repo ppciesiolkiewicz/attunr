@@ -36,6 +36,8 @@ interface BaseExerciseProps {
   onPrev?: () => void;
   onPlayTone: (band: ColoredNote) => void;
   onPlaySlide?: (fromBand: ColoredNote, toBand: ColoredNote) => void;
+  /** Ref to outermost parent container (used by walkthrough for breadcrumb spotlight). */
+  parentRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 /**
@@ -62,6 +64,7 @@ export function BaseExercise({
   onPrev,
   onPlayTone,
   onPlaySlide,
+  parentRef,
 }: BaseExerciseProps) {
   const resolved = useMemo(() => {
     if (
@@ -222,7 +225,9 @@ export function BaseExercise({
         <WalkthroughExercise
           isLast={isLast}
           onComplete={onComplete}
+          onSkip={onSkip}
           onPrev={onPrev}
+          parentRef={parentRef}
         />
       );
 

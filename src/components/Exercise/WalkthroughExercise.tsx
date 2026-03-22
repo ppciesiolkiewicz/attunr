@@ -17,7 +17,7 @@ function HeadphonesIcon() {
 
 // ── Step definitions ────────────────────────────────────────────────────────
 
-type SpotlightTarget = "info" | "reps-progress" | "play-tone" | "start" | "canvas" | "next-skip" | null;
+type SpotlightTarget = "breadcrumb" | "info" | "reps-progress" | "play-tone" | "start" | "canvas" | "next-skip" | null;
 
 interface Step {
   target: SpotlightTarget;
@@ -30,6 +30,7 @@ interface Step {
 
 const STEPS: Step[] = [
   { target: null, mockup: "none", text: "Welcome! Let's do a quick walkthrough of the app.", button: "Next" },
+  { target: "breadcrumb", mockup: "none", text: "This bar shows where you are — the chapter, the section, and which step you're on.", button: "Next" },
   {
     target: null,
     mockup: "none",
@@ -346,14 +347,26 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
   // Waiting for layout measurement
   if (!targetRect || !containerRect) return null;
 
+  // When the target is outside the local container (e.g. breadcrumb in
+  // parent), use fixed positioning so the overlay covers the full viewport.
+  const useFixed = target === "breadcrumb";
+
   const pad = 8;
-  const cutout = {
-    x: targetRect.left - containerRect.left - pad,
-    y: targetRect.top - containerRect.top - pad,
-    w: targetRect.width + pad * 2,
-    h: targetRect.height + pad * 2,
-    rx: 12,
-  };
+  const cutout = useFixed
+    ? {
+        x: targetRect.left - pad,
+        y: targetRect.top - pad,
+        w: targetRect.width + pad * 2,
+        h: targetRect.height + pad * 2,
+        rx: 12,
+      }
+    : {
+        x: targetRect.left - containerRect.left - pad,
+        y: targetRect.top - containerRect.top - pad,
+        w: targetRect.width + pad * 2,
+        h: targetRect.height + pad * 2,
+        rx: 12,
+      };
 
   const bubble = computeBubblePos(targetRect, containerRect, BUBBLE_W, target);
 
@@ -373,10 +386,12 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
     );
   }
 
+  const posClass = useFixed ? "fixed inset-0 z-30" : "absolute inset-0 z-30";
+
   return (
     <>
       {/* Dark overlay with cutout */}
-      <svg className="absolute inset-0 z-30 w-full h-full pointer-events-none" style={{ overflow: "visible" }}>
+      <svg className={`${posClass} w-full h-full pointer-events-none`} style={{ overflow: "visible" }}>
         <defs>
           <mask id={`spotlight-mask-${target}`}>
             <rect width="100%" height="100%" fill="white" />
@@ -406,12 +421,14 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
 
       {/* Explanation bubble */}
       <div
-        className="absolute z-40 pointer-events-auto"
+        className={`${useFixed ? "fixed" : "absolute"} z-40 pointer-events-auto`}
         style={{
-          left: bubble.x,
-          ...(bubble.anchor === "above"
-            ? { bottom: containerRect.height - bubble.y }
-            : { top: bubble.y }),
+          left: useFixed ? targetRect.left : bubble.x,
+          ...(useFixed
+            ? { top: targetRect.bottom + 16 }
+            : bubble.anchor === "above"
+              ? { bottom: containerRect.height - bubble.y }
+              : { top: bubble.y }),
         }}
       >
         {bubbleContent}
@@ -425,10 +442,13 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
 interface WalkthroughExerciseProps {
   isLast: boolean;
   onComplete: () => void;
+  onSkip: () => void;
   onPrev?: () => void;
+  /** Ref to the outermost parent container (includes sub-nav breadcrumb). */
+  parentRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export function WalkthroughExercise({ onComplete }: WalkthroughExerciseProps) {
+export function WalkthroughExercise({ onComplete, onSkip, parentRef }: WalkthroughExerciseProps) {
   const [step, setStep] = useState(0);
   const [done, setDone] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -444,8 +464,21 @@ export function WalkthroughExercise({ onComplete }: WalkthroughExerciseProps) {
     }
   }, [step]);
 
+  // Use parent ref for breadcrumb target, own ref for everything else
+  const activeTarget = done ? "next-skip" : current.target;
+  const activeRef = activeTarget === "breadcrumb" && parentRef ? parentRef : containerRef;
+
   return (
     <div ref={containerRef} className="relative flex flex-col h-full overflow-hidden">
+      {/* Skip button — always visible during walkthrough */}
+      {!done && (
+        <div className="absolute top-3 right-3 z-50">
+          <Button variant="ghost" size="sm" onClick={onSkip} className="text-white/50 hover:text-white/80">
+            Skip walkthrough
+          </Button>
+        </div>
+      )}
+
       {/* Mockup layer */}
       <div className="flex-1 min-h-0 flex flex-col">
         {done ? (
@@ -460,8 +493,8 @@ export function WalkthroughExercise({ onComplete }: WalkthroughExerciseProps) {
 
       {/* Spotlight + bubble (ring-only when done) */}
       <SpotlightOverlay
-        target={done ? "next-skip" : current.target}
-        containerRef={containerRef}
+        target={activeTarget}
+        containerRef={activeRef}
         text={done ? "" : current.text}
         extra={done ? undefined : current.extra}
         buttonLabel={done ? "" : current.button}

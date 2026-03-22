@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { InfoButton } from "../../TabInfoModal";
 import { Button, Text } from "@/components/ui";
@@ -151,10 +151,12 @@ export function JourneyExercise({
     else onBack();
   }
 
+  const parentRef = useRef<HTMLDivElement | null>(null);
+
   return (
-    <div className="flex flex-col h-full">
+    <div ref={parentRef} className="flex flex-col h-full">
       {/* ── Sub-nav ───────────────────────────────────────────────────────── */}
-      <div className="flex items-center gap-1.5 sm:gap-2 pl-3 pr-4 sm:pl-4 sm:pr-5 py-2 sm:py-2.5 border-b border-white/6 shrink-0 overflow-x-auto">
+      <div data-spotlight="breadcrumb" className="flex items-center gap-1.5 sm:gap-2 pl-3 pr-4 sm:pl-4 sm:pr-5 py-2 sm:py-2.5 border-b border-white/6 shrink-0 overflow-x-auto">
         <Button
           variant="ghost"
           onClick={onBack}
@@ -240,6 +242,7 @@ export function JourneyExercise({
         onPrev={onPrev ? goToPrevExercise : undefined}
         onPlayTone={onPlayTone}
         onPlaySlide={onPlaySlide}
+        parentRef={parentRef}
       />
 
       {/* Part complete modal */}
