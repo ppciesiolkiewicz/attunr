@@ -66,7 +66,7 @@ const STEPS: Step[] = [
   { target: "play-tone", mockup: "hill", text: "Some steps play a reference tone for you to match. Tap this to hear it again.", button: "Next" },
   { target: "start", mockup: "hill", text: "Sometimes you need to press Start to begin.", button: "Next" },
   { target: "canvas", mockup: "farinelli", text: "There's a variety of things to explore. Each one guides you.", button: "Next" },
-  { target: "next-skip", mockup: "farinelli", text: "Tap Next to move on, or Skip to come back later.", button: "Got it" },
+  { target: "next-skip", mockup: "farinelli", text: "To move on, tap Next — or Skip to come back later.", button: "Got it" },
 ];
 
 // ── Minimal static mockups ──────────────────────────────────────────────────
