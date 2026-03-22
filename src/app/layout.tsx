@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s — attunr",
   },
   description:
-    "Feel your voice in your body. Not singing lessons — a body practice that uses sound and breath to calm your nervous system.",
+    "Feel your voice in your body. A somatic practice that uses sound and breath to calm your nervous system.",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     siteName: "attunr",
     title: "attunr — your voice, your calm",
     description:
-      "Feel your voice in your body. Not singing lessons — a body practice that uses sound and breath to calm your nervous system.",
+      "Feel your voice in your body. A somatic practice that uses sound and breath to calm your nervous system.",
     images: [
       {
         url: ogImageUrl,
@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "attunr — your voice, your calm",
     description:
-      "Feel your voice in your body. Not singing lessons — a body practice that uses sound and breath to calm your nervous system.",
+      "Feel your voice in your body. A somatic practice that uses sound and breath to calm your nervous system.",
     images: [ogImageUrl],
   },
 };
