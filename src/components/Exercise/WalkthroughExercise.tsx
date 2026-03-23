@@ -351,20 +351,23 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
   // parent), use fixed positioning so the overlay covers the full viewport.
   const useFixed = target === "breadcrumb";
 
-  const pad = 8;
+  const padY = 8;
+  // Negative horizontal padding for wide targets (breadcrumb, canvas) — ring overlaps element by 1px
+  const wideTargets = new Set<SpotlightTarget>(["breadcrumb", "canvas"]);
+  const padX = wideTargets.has(target) ? -1 : 8;
   const cutout = useFixed
     ? {
-        x: targetRect.left - pad,
-        y: targetRect.top - pad,
-        w: targetRect.width + pad * 2,
-        h: targetRect.height + pad * 2,
+        x: targetRect.left - padX,
+        y: targetRect.top - padY,
+        w: targetRect.width + padX * 2,
+        h: targetRect.height + padY * 2,
         rx: 12,
       }
     : {
-        x: targetRect.left - containerRect.left - pad,
-        y: targetRect.top - containerRect.top - pad,
-        w: targetRect.width + pad * 2,
-        h: targetRect.height + pad * 2,
+        x: targetRect.left - containerRect.left - padX,
+        y: targetRect.top - containerRect.top - padY,
+        w: targetRect.width + padX * 2,
+        h: targetRect.height + padY * 2,
         rx: 12,
       };
 
@@ -374,6 +377,12 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
   if (ringOnly) {
     return (
       <svg className="absolute inset-0 z-30 w-full h-full pointer-events-none" style={{ overflow: "visible" }}>
+        <defs>
+          <filter id="ring-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
         <rect
           x={cutout.x} y={cutout.y}
           width={cutout.w} height={cutout.h}
@@ -381,6 +390,7 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
           fill="none"
           stroke="rgba(167,139,250,0.5)"
           strokeWidth="2"
+          filter="url(#ring-glow)"
         />
       </svg>
     );
@@ -402,13 +412,17 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
               fill="black"
             />
           </mask>
+          <filter id={`spotlight-glow-${target}`} x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="8" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
         </defs>
         <rect
           width="100%" height="100%"
           fill="rgba(0,0,0,0.7)"
           mask={`url(#spotlight-mask-${target})`}
         />
-        {/* Highlight ring */}
+        {/* Highlight ring with glow */}
         <rect
           x={cutout.x} y={cutout.y}
           width={cutout.w} height={cutout.h}
@@ -416,6 +430,7 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
           fill="none"
           stroke="rgba(167,139,250,0.5)"
           strokeWidth="2"
+          filter={`url(#spotlight-glow-${target})`}
         />
       </svg>
 
