@@ -52,7 +52,7 @@ export function DetectFlowPhase({
           <>
             <Text variant="heading-sm" color="text-1">Hum low — uu</Text>
             <Text variant="body" className="mt-1.5" color="text-1">
-              Let the sound come from deep in your belly.
+              Hum as low as you can. Let the sound come from deep in your belly.
               Feel the vibration in your chest, not your throat.
               {activeDetection ? " Hold steady." : ""}
             </Text>
@@ -62,7 +62,7 @@ export function DetectFlowPhase({
           <>
             <Text variant="heading-sm" color="text-1">Now hoo hoo — high</Text>
             <Text variant="body" className="mt-1.5" color="text-1">
-              Make a short rising <Text as="span" variant="body" className="italic" color="text-1">hoo hoo</Text> sound — like an owl.
+              Reach as high as you can. Make a short rising <Text as="span" variant="body" className="italic" color="text-1">hoo hoo</Text> sound — like an owl.
               {activeDetection ? " Hold your highest note." : ""}
             </Text>
           </>
