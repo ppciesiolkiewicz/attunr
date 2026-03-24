@@ -11,7 +11,8 @@ import { WelcomePhase } from "./components/WelcomePhase";
 import { DetectFlowPhase } from "./components/DetectFlowPhase";
 
 const HOLD_SECONDS_LOW = 2;
-const HOLD_SECONDS_HIGH = 1.5;
+const PEAK_HOLD_SECONDS = 1;
+const PEAK_TOLERANCE_SEMITONES = 2;
 
 type Phase = "welcome" | "detect-low" | "detect-high" | "result";
 
@@ -38,6 +39,7 @@ export default function OnboardingModal({
   const [holdProgress, setHoldProgress] = useState(0);
   const [detectedLowHz, setDetectedLowHz] = useState<number | null>(null);
   const [detectedHighHz, setDetectedHighHz] = useState<number | null>(null);
+  const [activeDetection, setActiveDetection] = useState(false);
 
   const samplesRef = useRef<number[]>([]);
   const holdTimeRef = useRef(0);
@@ -46,6 +48,8 @@ export default function OnboardingModal({
   const rafRef = useRef<number | null>(null);
   const detectedHighHzRef = useRef(detectedHighHz);
   detectedHighHzRef.current = detectedHighHz;
+  const peakHzRef = useRef(0);
+  const currentPitchRef = useRef<number | null>(null);
 
   const isError = status === "error";
   const isListening = status === "listening";
@@ -60,8 +64,16 @@ export default function OnboardingModal({
     }
   }, [phase]);
 
+  // Reset activeDetection when phase changes
   useEffect(() => {
-    if (phase !== "detect-low" && phase !== "detect-high") {
+    setActiveDetection(false);
+  }, [phase]);
+
+  useEffect(() => {
+    if (
+      !activeDetection ||
+      (phase !== "detect-low" && phase !== "detect-high")
+    ) {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       return;
     }
@@ -70,6 +82,7 @@ export default function OnboardingModal({
     lastTickRef.current = 0;
     lastPitchTimeRef.current = 0;
     samplesRef.current = [];
+    peakHzRef.current = 0;
     setHoldProgress(0);
 
     function tick() {
@@ -80,32 +93,65 @@ export default function OnboardingModal({
       const hasPitch =
         lastPitchTimeRef.current > 0 && now - lastPitchTimeRef.current < 200;
 
-      if (hasPitch) {
-        holdTimeRef.current += dt;
-      } else {
-        holdTimeRef.current = Math.max(0, holdTimeRef.current - dt * 2);
-      }
-
-      const holdTarget =
-        phase === "detect-low" ? HOLD_SECONDS_LOW : HOLD_SECONDS_HIGH;
-      const p = holdTimeRef.current / holdTarget;
-      setHoldProgress(Math.min(p, 1));
-
-      if (p >= 1) {
-        const buf = samplesRef.current;
-        if (buf.length > 0) {
-          const sorted = [...buf].sort((a, b) => a - b);
-          const median = sorted[Math.floor(sorted.length / 2)];
-
-          if (phase === "detect-low") {
-            setDetectedLowHz(Math.round(median));
-            setPhase(detectedHighHzRef.current !== null ? "result" : "detect-high");
-          } else {
-            setDetectedHighHz(Math.round(median));
-            setPhase("result");
-          }
+      if (phase === "detect-low") {
+        // Low note: hold steady for HOLD_SECONDS_LOW (unchanged)
+        if (hasPitch) {
+          holdTimeRef.current += dt;
+        } else {
+          holdTimeRef.current = Math.max(0, holdTimeRef.current - dt * 2);
         }
-        return;
+
+        const p = holdTimeRef.current / HOLD_SECONDS_LOW;
+        setHoldProgress(Math.min(p, 1));
+
+        if (p >= 1) {
+          const buf = samplesRef.current;
+          if (buf.length > 0) {
+            const sorted = [...buf].sort((a, b) => a - b);
+            const median = sorted[Math.floor(sorted.length / 2)];
+            setDetectedLowHz(Math.round(median));
+            setPhase(
+              detectedHighHzRef.current !== null ? "result" : "detect-high",
+            );
+          }
+          return;
+        }
+      } else {
+        // High note: track the highest pitch held for PEAK_HOLD_SECONDS
+        const pitch = currentPitchRef.current;
+
+        if (hasPitch && pitch !== null) {
+          // Update peak — always drift upward
+          peakHzRef.current = Math.max(peakHzRef.current, pitch);
+
+          // Check if current pitch is within tolerance of peak
+          const semisFromPeak =
+            peakHzRef.current > 0
+              ? 12 * Math.abs(Math.log2(pitch / peakHzRef.current))
+              : Infinity;
+
+          if (semisFromPeak <= PEAK_TOLERANCE_SEMITONES) {
+            holdTimeRef.current += dt;
+          } else {
+            holdTimeRef.current = Math.max(0, holdTimeRef.current - dt * 2);
+          }
+        } else {
+          holdTimeRef.current = Math.max(0, holdTimeRef.current - dt * 2);
+        }
+
+        // Slowly lower peak when not sustaining (forgives brief dips)
+        if (holdTimeRef.current <= 0 && peakHzRef.current > 0) {
+          peakHzRef.current *= 1 - dt * 0.3;
+        }
+
+        const p = holdTimeRef.current / PEAK_HOLD_SECONDS;
+        setHoldProgress(Math.min(p, 1));
+
+        if (p >= 1 && peakHzRef.current > 0) {
+          setDetectedHighHz(Math.round(peakHzRef.current));
+          setPhase("result");
+          return;
+        }
       }
 
       rafRef.current = requestAnimationFrame(tick);
@@ -115,17 +161,19 @@ export default function OnboardingModal({
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [phase]);
+  }, [phase, activeDetection]);
 
   useEffect(() => {
+    currentPitchRef.current = pitchHz;
     if (
+      activeDetection &&
       (phase === "detect-low" || phase === "detect-high") &&
       pitchHz !== null
     ) {
       samplesRef.current.push(pitchHz);
       lastPitchTimeRef.current = performance.now();
     }
-  }, [pitchHz, phase]);
+  }, [pitchHz, phase, activeDetection]);
 
   function handleStart() {
     if (isError || status === "idle") {
@@ -133,6 +181,10 @@ export default function OnboardingModal({
     } else if (isListening) {
       setPhase("detect-low");
     }
+  }
+
+  function handleStartDetection() {
+    setActiveDetection(true);
   }
 
   function handleFinish() {
@@ -199,6 +251,8 @@ export default function OnboardingModal({
             holdProgress={holdProgress}
             currentNote={currentNote}
             pitchHz={pitchHz}
+            activeDetection={activeDetection}
+            onStartDetection={handleStartDetection}
             onAdjustNote={handleAdjustNote}
             onFinish={handleFinish}
           />

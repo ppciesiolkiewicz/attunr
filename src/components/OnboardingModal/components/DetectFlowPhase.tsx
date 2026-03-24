@@ -16,6 +16,8 @@ interface DetectFlowPhaseProps {
   holdProgress: number;
   currentNote: string | null;
   pitchHz: number | null;
+  activeDetection: boolean;
+  onStartDetection: () => void;
   onAdjustNote: (which: "low" | "high") => void;
   onFinish: () => void;
 }
@@ -27,6 +29,8 @@ export function DetectFlowPhase({
   holdProgress,
   currentNote,
   pitchHz,
+  activeDetection,
+  onStartDetection,
   onAdjustNote,
   onFinish,
 }: DetectFlowPhaseProps) {
@@ -46,19 +50,20 @@ export function DetectFlowPhase({
       <div>
         {phase === "detect-low" && (
           <>
-            <Text variant="body" className="font-medium" color="text-1">Hum low — uu</Text>
-            <Text variant="body-sm" className="mt-1" color="text-2">
+            <Text variant="heading-sm" color="text-1">Hum low — uu</Text>
+            <Text variant="body" className="mt-1.5" color="text-1">
               Let the sound come from deep in your belly.
               Feel the vibration in your chest, not your throat.
-              Hold steady for 2 seconds.
+              {activeDetection ? " Hold steady." : ""}
             </Text>
           </>
         )}
         {phase === "detect-high" && (
           <>
-            <Text variant="body" className="font-medium" color="text-1">Now hoo hoo — high</Text>
-            <Text variant="body-sm" className="mt-1" color="text-2">
-              Feel it in your head and face. Just a moment.
+            <Text variant="heading-sm" color="text-1">Now hoo hoo — high</Text>
+            <Text variant="body" className="mt-1.5" color="text-1">
+              Make a short rising <Text as="span" variant="body" className="italic" color="text-1">hoo hoo</Text> sound — like an owl.
+              {activeDetection ? " Hold your highest note." : ""}
             </Text>
           </>
         )}
@@ -78,11 +83,12 @@ export function DetectFlowPhase({
         {phase === "detect-low" ? (
           <NoteSlot
             variant="low"
-            mode="detecting"
+            mode={activeDetection ? "detecting" : "ready"}
             valueHz={null}
             progress={holdProgress}
             currentNote={currentNote}
             currentHz={pitchHz}
+            onClick={!activeDetection ? onStartDetection : undefined}
           />
         ) : (
           <NoteSlot
@@ -100,11 +106,12 @@ export function DetectFlowPhase({
         {phase === "detect-high" ? (
           <NoteSlot
             variant="high"
-            mode="detecting"
+            mode={activeDetection ? "detecting" : "ready"}
             valueHz={null}
             progress={holdProgress}
             currentNote={currentNote}
             currentHz={pitchHz}
+            onClick={!activeDetection ? onStartDetection : undefined}
           />
         ) : (
           <NoteSlot
@@ -116,6 +123,12 @@ export function DetectFlowPhase({
         )}
       </div>
 
+      {(phase === "detect-low" || phase === "detect-high") && !activeDetection && (
+        <Text variant="body-sm" color="muted-2">
+          Tap start when you&apos;re ready
+        </Text>
+      )}
+
       {rangeTooSmall && (
         <Text variant="body-sm" className="px-2" color="warning">
           Range seems narrow — detection may be off. Tap a note above
@@ -123,7 +136,7 @@ export function DetectFlowPhase({
         </Text>
       )}
 
-      <div className="w-full min-h-[100px] flex flex-col gap-3">
+      <div className="w-full min-h-25 flex flex-col gap-3">
         <Text variant="body-sm" className="px-2" color="muted-1">
           Exercises will be tuned to your range. Re-detect anytime in
           settings.

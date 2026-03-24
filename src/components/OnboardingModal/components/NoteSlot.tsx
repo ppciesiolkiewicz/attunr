@@ -4,7 +4,7 @@ import { hzToNoteName } from "@/lib/pitch";
 
 export interface NoteSlotProps {
   variant: "low" | "high";
-  mode: "detecting" | "detected";
+  mode: "ready" | "detecting" | "detected";
   valueHz: number | null;
   progress?: number;
   currentNote?: string | null;
@@ -33,6 +33,42 @@ export function NoteSlot({
     borderWidth: 2,
     borderStyle: "solid" as const,
   };
+
+  if (mode === "ready") {
+    return (
+      <div className="flex flex-col items-center gap-1.5">
+        <button
+          type="button"
+          onClick={onClick}
+          className="relative shrink-0 cursor-pointer transition-transform active:scale-95"
+        >
+          <svg
+            width={80}
+            height={80}
+            viewBox="0 0 80 80"
+            className="block"
+          >
+            <circle
+              cx={40}
+              cy={40}
+              r={34}
+              fill="none"
+              stroke={color}
+              strokeWidth={2}
+              strokeDasharray="5 4"
+              opacity={0.7}
+            />
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-sm font-medium" style={{ color }}>
+              Start
+            </span>
+          </div>
+        </button>
+        <span className="text-xs text-white/58">{label}</span>
+      </div>
+    );
+  }
 
   if (mode === "detecting") {
     return (
