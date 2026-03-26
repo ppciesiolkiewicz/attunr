@@ -55,12 +55,39 @@ export default function OnboardingModal({
   const isListening = status === "listening";
   const currentNote = pitchHz !== null ? hzToNoteName(pitchHz) : null;
 
+  const phaseRef = useRef(phase);
+  const detectedLowHzRef = useRef(detectedLowHz);
+  const completedRef = useRef(false);
+
+  useEffect(() => { phaseRef.current = phase; }, [phase]);
+  useEffect(() => { detectedLowHzRef.current = detectedLowHz; }, [detectedLowHz]);
+
+  useEffect(() => {
+    const completed = completedRef;
+    const phase = phaseRef;
+    const lowHz = detectedLowHzRef;
+    return () => {
+      if (!completed.current && phase.current !== "welcome") {
+        analytics.onboardingAbandoned(
+          phase.current,
+          lowHz.current ?? undefined,
+          undefined,
+        );
+      }
+    };
+  }, []);
+
+  const prevStatusRef = useRef(status);
+  useEffect(() => {
+    if (prevStatusRef.current !== "listening" && status === "listening") {
+      analytics.onboardingMicGranted();
+    }
+    prevStatusRef.current = status;
+  }, [status]);
+
   useEffect(() => {
     if (phase === "detect-low") {
       analytics.onboardingStarted();
-    }
-    if (phase !== "welcome") {
-      analytics.onboardingPhaseChanged(phase);
     }
   }, [phase]);
 
@@ -109,7 +136,9 @@ export default function OnboardingModal({
           if (buf.length > 0) {
             const sorted = [...buf].sort((a, b) => a - b);
             const median = sorted[Math.floor(sorted.length / 2)];
-            setDetectedLowHz(Math.round(median));
+            const lowHz = Math.round(median);
+            setDetectedLowHz(lowHz);
+            analytics.onboardingLowDetected(lowHz, hzToNoteName(lowHz));
             setPhase(
               detectedHighHzRef.current !== null ? "result" : "detect-high",
             );
@@ -148,7 +177,9 @@ export default function OnboardingModal({
         setHoldProgress(Math.min(p, 1));
 
         if (p >= 1 && peakHzRef.current > 0) {
-          setDetectedHighHz(Math.round(peakHzRef.current));
+          const highHz = Math.round(peakHzRef.current);
+          setDetectedHighHz(highHz);
+          analytics.onboardingHighDetected(highHz, hzToNoteName(highHz));
           setPhase("result");
           return;
         }
@@ -189,15 +220,22 @@ export default function OnboardingModal({
 
   function handleFinish() {
     if (!detectedLowHz || !detectedHighHz) return;
+    completedRef.current = true;
     const voiceType = deriveVoiceType(detectedLowHz, detectedHighHz);
     onBegin({ lowHz: detectedLowHz, highHz: detectedHighHz, voiceType });
   }
 
   function handleAdjustNote(which: "low" | "high") {
     if (which === "low") {
+      if (detectedLowHz) {
+        analytics.onboardingNoteReadjusted("low", detectedLowHz, hzToNoteName(detectedLowHz));
+      }
       setDetectedLowHz(null);
       setPhase("detect-low");
     } else {
+      if (detectedHighHz) {
+        analytics.onboardingNoteReadjusted("high", detectedHighHz, hzToNoteName(detectedHighHz));
+      }
       setDetectedHighHz(null);
       setPhase("detect-high");
     }

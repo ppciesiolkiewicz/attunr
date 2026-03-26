@@ -20,6 +20,7 @@ import { AppContext } from "@/context/AppContext";
 import { ToastProvider } from "@/context/ToastContext";
 import { StreakProvider, StreakBadge } from "@/features/streak";
 import { analytics } from "@/lib/analytics";
+import { hzToNoteName } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { Button, Text } from "@/components/ui";
 import Logo from "../Logo";
@@ -153,9 +154,10 @@ function AppShellInner({
     localStorage.setItem("attunr.onboarded", "1");
     analytics.onboardingCompleted(
       result.voiceType,
-      true,
       result.lowHz,
       result.highHz,
+      hzToNoteName(result.lowHz),
+      hzToNoteName(result.highHz),
     );
   }
 

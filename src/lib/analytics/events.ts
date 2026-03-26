@@ -10,8 +10,18 @@ export const analytics = {
   pageView: (url: string) => capture("$pageview", { $current_url: url }),
 
   // Onboarding
-  onboardingCompleted: (voiceType: string, detected?: boolean, lowHz?: number, highHz?: number) =>
-    capture("onboarding_completed", { voice_type: voiceType, detected: !!detected, low_hz: lowHz, high_hz: highHz }),
+  onboardingStarted: () => capture("onboarding_started"),
+  onboardingMicGranted: () => capture("onboarding_mic_granted"),
+  onboardingLowDetected: (hz: number, note: string) =>
+    capture("onboarding_low_detected", { hz, note }),
+  onboardingHighDetected: (hz: number, note: string) =>
+    capture("onboarding_high_detected", { hz, note }),
+  onboardingNoteReadjusted: (which: "low" | "high", previousHz: number, previousNote: string) =>
+    capture("onboarding_note_readjusted", { which, previous_hz: previousHz, previous_note: previousNote }),
+  onboardingCompleted: (voiceType: string, lowHz: number, highHz: number, lowNote: string, highNote: string) =>
+    capture("onboarding_completed", { voice_type: voiceType, low_hz: lowHz, high_hz: highHz, low_note: lowNote, high_note: highNote }),
+  onboardingAbandoned: (lastPhase: string, lowHz?: number, highHz?: number) =>
+    capture("onboarding_abandoned", { last_phase: lastPhase, low_hz: lowHz, high_hz: highHz }),
 
   // Journey
   journeyExerciseStarted: (exerciseId: number, part: number, partName: string) =>
@@ -35,11 +45,6 @@ export const analytics = {
     capture("landing_cta_clicked", { button_name: buttonName, variant }),
   landingVariantViewed: (variant: string) =>
     capture("landing_variant_viewed", { variant }),
-
-  // Onboarding (granular)
-  onboardingStarted: () => capture("onboarding_started"),
-  onboardingPhaseChanged: (phase: string) =>
-    capture("onboarding_phase_changed", { phase }),
 
   // Cookie consent
   cookieConsentResponded: (response: "accepted" | "declined") =>
