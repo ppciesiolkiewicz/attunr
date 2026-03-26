@@ -86,6 +86,7 @@ export interface ParagraphElement {
 export interface VideoElement {
   type: "video";
   url?: string;
+  text?: string;
 }
 
 export interface HeadphonesNoticeElement {

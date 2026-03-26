@@ -1,16 +1,27 @@
 interface VideoProps {
-  /** Compact inline style (e.g. onboarding) vs boxed card style (default) */
-  variant?: "box" | "inline";
+  /** Video source URL. Required when not a placeholder. */
+  src?: string;
+  /** When true, renders a styled placeholder frame instead of a video. Default: true. */
+  placeholder?: boolean;
+  /** Text shown inside the placeholder frame. */
+  text?: string;
 }
 
+const DEFAULT_TEXT = "Video coming soon";
+
 export function Video({
-  variant = "box",
+  src,
+  placeholder = true,
+  text = DEFAULT_TEXT,
 }: VideoProps) {
-  if (variant === "inline") {
+  if (!placeholder && src) {
     return (
-      <p className="text-[11px] text-white/40 italic">
-        Video guide coming soon
-      </p>
+      <video
+        className="w-full rounded-xl"
+        src={src}
+        controls
+        playsInline
+      />
     );
   }
 
@@ -22,9 +33,9 @@ export function Video({
         border: "1px dashed rgba(255,255,255,0.15)",
       }}
     >
-      <span className="text-2xl opacity-50">▶</span>
+      <span className="text-2xl opacity-50">{"\u25B6"}</span>
       <p className="text-sm text-white/55 font-medium">
-        Video coming soon
+        {text}
       </p>
     </div>
   );

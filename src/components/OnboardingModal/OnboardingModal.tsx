@@ -40,20 +40,18 @@ export default function OnboardingModal({
   const [detectedLowHz, setDetectedLowHz] = useState<number | null>(null);
   const [detectedHighHz, setDetectedHighHz] = useState<number | null>(null);
   const [activeDetection, setActiveDetection] = useState(false);
-
   const samplesRef = useRef<number[]>([]);
   const holdTimeRef = useRef(0);
   const lastTickRef = useRef(0);
   const lastPitchTimeRef = useRef(0);
   const rafRef = useRef<number | null>(null);
   const detectedHighHzRef = useRef(detectedHighHz);
-  detectedHighHzRef.current = detectedHighHz;
   const peakHzRef = useRef(0);
   const currentPitchRef = useRef<number | null>(null);
 
   const isError = status === "error";
-  const isListening = status === "listening";
   const currentNote = pitchHz !== null ? hzToNoteName(pitchHz) : null;
+
 
   const phaseRef = useRef(phase);
   const detectedLowHzRef = useRef(detectedLowHz);
@@ -209,9 +207,8 @@ export default function OnboardingModal({
   function handleStart() {
     if (isError || status === "idle") {
       onRetryMic();
-    } else if (isListening) {
-      setPhase("detect-low");
     }
+    setPhase("detect-low");
   }
 
   function handleStartDetection() {

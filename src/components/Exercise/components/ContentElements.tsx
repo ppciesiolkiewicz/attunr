@@ -48,7 +48,7 @@ export function ContentElements({ elements }: ContentElementsProps) {
             );
 
           case "video":
-            return <Video key={i} />;
+            return <Video key={i} src={el.url} placeholder={!el.url} text={el.text} />;
 
           case "headphones-notice":
             return <HeadphonesNotice key={i} />;

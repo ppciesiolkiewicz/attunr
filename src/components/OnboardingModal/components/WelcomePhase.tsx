@@ -1,13 +1,16 @@
 "use client";
 
-import { Button, Spinner, Text, Video } from "@/components/ui";
+import { Button, Spinner, Text } from "@/components/ui";
 import { MicrophoneIcon } from "./MicrophoneIcon";
 import type { PitchDetectionStatus } from "@/hooks/usePitchDetection";
 
 function getMicDeniedMessage(): string {
   const ua = navigator.userAgent;
-  const isIOS = /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
-  const isSafari = /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome/.test(ua);
+  const isIOS =
+    /iPad|iPhone|iPod/.test(ua) ||
+    (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const isSafari =
+    /Safari/.test(ua) && !/CriOS|FxiOS|OPiOS|EdgiOS|Chrome/.test(ua);
   const isAndroid = /Android/.test(ua);
 
   if (isIOS && isSafari) {
@@ -43,16 +46,9 @@ export function WelcomePhase({ status, micError, onStart }: WelcomePhaseProps) {
           Let&apos;s find your voice
         </Text>
         <Text variant="body-sm" className="mt-1.5 px-2" color="text-2">
-          We&apos;ll listen to you hum low and high to map your
-          comfortable range. Takes about 10 seconds.
+          We&apos;ll listen to you hum low and high to map your comfortable
+          range. Takes about 10 seconds.
         </Text>
-        <Text variant="body-sm" className="mt-2.5 px-2" color="muted-1">
-          Relax your body — drop your shoulders, soften your jaw.
-          You should never feel strain in your throat.
-        </Text>
-        <div className="mt-2">
-          <Video variant="inline" />
-        </div>
       </div>
 
       {isError && errorMessage && (
@@ -69,19 +65,31 @@ export function WelcomePhase({ status, micError, onStart }: WelcomePhaseProps) {
         style={isLoading ? { boxShadow: "none" } : undefined}
       >
         {isLoading ? (
-          <Text as="span" variant="body" className="flex items-center justify-center gap-2">
+          <Text
+            as="span"
+            variant="body"
+            className="flex items-center justify-center gap-2"
+          >
             <Spinner />
             {status === "requesting-mic"
               ? "Requesting microphone…"
               : "Loading pitch model…"}
           </Text>
         ) : isError ? (
-          <Text as="span" variant="body" className="inline-flex items-center justify-center gap-2">
+          <Text
+            as="span"
+            variant="body"
+            className="inline-flex items-center justify-center gap-2"
+          >
             <MicrophoneIcon />
             Retry microphone
           </Text>
         ) : (
-          <Text as="span" variant="body" className="inline-flex items-center justify-center gap-2">
+          <Text
+            as="span"
+            variant="body"
+            className="inline-flex items-center justify-center gap-2"
+          >
             <MicrophoneIcon />
             Begin
           </Text>
@@ -89,8 +97,7 @@ export function WelcomePhase({ status, micError, onStart }: WelcomePhaseProps) {
       </Button>
 
       <Text variant="caption" className="leading-relaxed px-2" color="muted-1">
-        Microphone used only for real-time pitch detection. Nothing is
-        recorded.
+        Microphone used only for real-time pitch detection. Nothing is recorded.
       </Text>
     </div>
   );
