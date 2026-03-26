@@ -68,7 +68,6 @@ export function HillExercise({
     exercise.voice?.displayText ?? exercise.instruction,
   );
   const hasVoiceIntro = !!exercise.voice;
-  const voiceIntroDone = voiceIntro.status === "complete";
 
   const exerciseColoredNotes = useMemo(
     () => resolved.targets.map((t) => t.note),
@@ -160,19 +159,15 @@ export function HillExercise({
     }
   }, [toneShape, exerciseColoredNotes, playWobble, playOwlHoot, playRawTone]);
 
-  // Start detection after voice intro completes (or immediately if no voice)
+  // Start detection immediately (voice intro plays in background, non-blocking)
   useEffect(() => {
-    if (hasVoiceIntro && !voiceIntroDone) {
-      setDetectionActive(false);
-      return;
-    }
     setDetectionActive(false);
     const id = setTimeout(() => {
       playReferenceTone();
       setDetectionActive(true);
     }, 500);
     return () => clearTimeout(id);
-  }, [exerciseId, playReferenceTone, hasVoiceIntro, voiceIntroDone]);
+  }, [exerciseId, playReferenceTone]);
 
   return (
     <>
@@ -180,8 +175,8 @@ export function HillExercise({
         {/* Voice intro overlay */}
         {hasVoiceIntro && <VoiceIntroOverlay voice={voiceIntro} />}
 
-        {/* Instruction cue — hidden while voice intro is active */}
-        <div className={`absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12 transition-opacity duration-300 ${!voiceIntroDone ? "opacity-0" : ""}`}>
+        {/* Instruction cue */}
+        <div className="absolute top-2 left-0 right-0 z-10 pointer-events-none flex justify-center px-12">
           <Text
             variant="caption"
             color="muted-1"
