@@ -12,7 +12,7 @@ import { CongratsOverlay, StepCheckOverlay } from "@/features/rep-progress";
 import { ExerciseStartButton } from "../ExerciseStartButton";
 import { ProgressArc } from "../components/ProgressArc";
 import type { PitchDetectionConfig, PitchDetectionSlideConfig } from "@/constants/journey";
-import { findClosestNote, isInTune, matchesNoteTarget } from "@/lib/pitch";
+import { findClosestNote, isInTune, matchesNoteTarget, hzToNoteName } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import type { PitchDetectionExercise, PitchDetectionSlideExercise } from "@/constants/journey";
 
@@ -49,6 +49,18 @@ export function PitchExercise({
   const [hasStarted, setHasStarted] = useState(false);
   const [detectionActive, setDetectionActive] = useState(false);
   const { playTone: playRawTone, playWobble, playOwlHoot } = useTonePlayer();
+
+  // Throttled note name from Hz (updates at most every 250ms)
+  const noteNameRef = useRef("");
+  const lastNoteUpdateRef = useRef(0);
+  const getNoteName = useCallback((hz: number) => {
+    const now = Date.now();
+    if (now - lastNoteUpdateRef.current > 250) {
+      noteNameRef.current = hzToNoteName(hz);
+      lastNoteUpdateRef.current = now;
+    }
+    return noteNameRef.current;
+  }, []);
 
   // ── Derived from resolved data ──────────────────────────────────────────────
   const { displayNotes, highlightIds } = resolved;
@@ -228,53 +240,43 @@ export function PitchExercise({
             </div>
             <div className="pointer-events-none absolute top-3 left-4 right-4 fade-in flex items-start justify-between gap-4">
               <div className="shrink-0">
-                {isRangeTarget ? (
-                  <>
-                    <Text
-                      as="div"
-                      variant="heading-lg"
-                      className="font-light"
-                      style={{ color: closestNote?.color ?? "#fff" }}
-                    >
-                      {locked ? "✓ " : ""}
-                      {locked
-                        ? (rangeAccept === "below" || rangeAccept === "within" ? "Low tone" : "High tone")
-                        : (rangeAccept === "below" ? "Too high" : "Too low")}
-                    </Text>
-                    {!locked && (
-                      <Text variant="body-sm" as="div" color="muted-1" className="mt-1">
-                        {rangeAccept === "below" ? "Push lower" : rangeAccept === "above" ? "Push higher" : ""}
-                      </Text>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Text
-                      as="div"
-                      variant="heading-lg"
-                      className="text-3xl font-light tabular-nums"
-                      style={{ color: closestNote?.color ?? "#fff" }}
-                    >
-                      {Math.round(pitchHz)} Hz
-                    </Text>
-                    {closestNote && (
-                      <Text
-                        as="div"
-                        variant="body-sm"
-                        className="mt-0.5"
-                        style={{ color: `${closestNote?.color ?? "#fff"}cc` }}
-                      >
-                        {locked ? "✓ " : "→ "}
-                        {closestNote.name}
-                      </Text>
-                    )}
-                    {!locked && targetNote && (
-                      <Text variant="body-sm" as="div" color="muted-1" className="mt-1">
-                        {pitchHz < targetNote.frequencyHz ? "↓ Too low" : "↑ Too high"}
-                      </Text>
-                    )}
-                  </>
-                )}
+                <Text
+                  as="div"
+                  variant="heading-lg"
+                  className="text-3xl font-light"
+                  style={{ color: closestNote?.color ?? "#fff" }}
+                >
+                  {locked
+                    ? "In tune"
+                    : isRangeTarget
+                      ? (rangeAccept === "below" ? "Too high" : rangeAccept === "above" ? "Too low" : "")
+                      : targetNote
+                        ? (pitchHz < targetNote.frequencyHz ? "Too low" : "Too high")
+                        : ""}
+                </Text>
+                <div className="flex items-baseline gap-2 mt-0.5">
+                  <Text
+                    as="div"
+                    variant="body-sm"
+                    style={{ color: `${closestNote?.color ?? "#fff"}cc` }}
+                  >
+                    {locked
+                      ? "Keep it up"
+                      : isRangeTarget
+                        ? (rangeAccept === "below" ? "Push lower" : rangeAccept === "above" ? "Push higher" : "")
+                        : targetNote
+                          ? (pitchHz < targetNote.frequencyHz ? "Go higher" : "Go lower")
+                          : ""}
+                  </Text>
+                  <Text
+                    as="div"
+                    variant="caption"
+                    color="muted-1"
+                    className="tabular-nums"
+                  >
+                    {getNoteName(pitchHz)} · {Math.round(pitchHz)} Hz
+                  </Text>
+                </div>
               </div>
               <Text variant="caption" color="muted-1" className="text-right leading-snug max-w-50 sm:hidden">
                 {exercise.instruction.split("\n")[0]}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import {
   useRepCompletion,
   CongratsOverlay,
@@ -11,7 +11,7 @@ import HillBallCanvas from "@/components/HillBallCanvas";
 import BalanceBallCanvas from "@/components/BalanceBallCanvas";
 import type { InTuneOverride } from "@/components/PitchCanvas";
 import { Button, CircularProgress, Text } from "@/components/ui";
-import { findClosestNote, matchesNoteTarget } from "@/lib/pitch";
+import { findClosestNote, matchesNoteTarget, hzToNoteName } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { usePitchProgress } from "./PitchExercise/usePitchProgress";
 import { useTonePlayer } from "@/hooks/useTonePlayer";
@@ -48,6 +48,18 @@ export function HillExercise({
 }: HillExerciseProps) {
   const [detectionActive, setDetectionActive] = useState(false);
   const { playTone: playRawTone, playWobble, playOwlHoot } = useTonePlayer();
+
+  // Throttled note name from Hz (updates at most every 250ms)
+  const noteNameRef = useRef("");
+  const lastNoteUpdateRef = useRef(0);
+  const getNoteName = useCallback((hz: number) => {
+    const now = Date.now();
+    if (now - lastNoteUpdateRef.current > 250) {
+      noteNameRef.current = hzToNoteName(hz);
+      lastNoteUpdateRef.current = now;
+    }
+    return noteNameRef.current;
+  }, []);
 
   // Voice intro — plays instruction audio before detection starts
   const voiceIntro = useVoiceIntro(
@@ -258,18 +270,27 @@ export function HillExercise({
                         ? "Too low"
                         : "Too high"}
                   </Text>
-                  <Text
-                    as="div"
-                    variant="body-sm"
-                    className="mt-0.5"
-                    style={{ color: `${closest?.color ?? "#fff"}cc` }}
-                  >
-                    {locked
-                      ? "Keep it up"
-                      : pitchHz < (closest?.frequencyHz ?? 0)
-                        ? "Go higher"
-                        : "Go lower"}
-                  </Text>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <Text
+                      as="div"
+                      variant="body-sm"
+                      style={{ color: `${closest?.color ?? "#fff"}cc` }}
+                    >
+                      {locked
+                        ? "Keep it up"
+                        : pitchHz < (closest?.frequencyHz ?? 0)
+                          ? "Go higher"
+                          : "Go lower"}
+                    </Text>
+                    <Text
+                      as="div"
+                      variant="caption"
+                      color="muted-1"
+                      className="tabular-nums"
+                    >
+                      {getNoteName(pitchHz)} · {Math.round(pitchHz)} Hz
+                    </Text>
+                  </div>
                 </div>
               </div>
             );
