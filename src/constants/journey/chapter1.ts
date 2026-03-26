@@ -62,24 +62,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         slug: "exercise-walkthrough",
         title: "Walkthrough",
         cardSubtitle: "A quick look at how things work",
-        introModal: {
-          title: "Walkthrough",
-          subtitle: "How exercises work",
-          elements: [
-            {
-              type: "paragraph",
-              text: "This quick walkthrough shows you how exercises work — what to look at, how to interact, and what the visual cues mean.",
-            },
-            { type: "video", text: "Video explanation coming soon" },
-            {
-              type: "paragraph",
-              text: "Each exercise type has its own guide. You can always tap the info icon to revisit it.",
-              variant: "secondary",
-            },
-          ],
-          actionLabel: "Start walkthrough",
-        },
-        introModalInfoOnly: true,
       },
       gen.hillSustain({
         slug: "gentle-hum",

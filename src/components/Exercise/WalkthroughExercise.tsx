@@ -21,11 +21,77 @@ type SpotlightTarget = "breadcrumb" | "info" | "reps-progress" | "play-tone" | "
 
 interface Step {
   target: SpotlightTarget;
-  mockup: "hill" | "farinelli" | "none";
+  mockup: "hill" | "farinelli" | "farinelli-live" | "none";
   text: string;
   /** Rich content rendered below the text. */
   extra?: React.ReactNode;
   button: string;
+}
+
+/** Mockup of the info modal that opens when tapping (i). Styled to match the real Modal + ExerciseInfoModal. */
+function InfoModalMockup() {
+  return (
+    <div
+      className="rounded-2xl w-full overflow-hidden flex flex-col mt-1"
+      style={{
+        background: "#0f0f1a",
+        border: "2px solid rgba(167,139,250,0.5)",
+        boxShadow: "0 24px 80px rgba(0,0,0,0.6), 0 0 16px rgba(167,139,250,0.15)",
+      }}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between px-5 pt-5 pb-4 border-b border-white/[0.06]">
+        <div>
+          <Text variant="heading-sm">Technique information</Text>
+        </div>
+        {/* Close button mockup */}
+        <div
+          className="w-7 h-7 rounded-lg flex items-center justify-center ml-4 mt-0.5 shrink-0"
+          style={{ background: "rgba(255,255,255,0.06)" }}
+        >
+          <svg width={12} height={12} viewBox="0 0 24 24" stroke="rgba(255,255,255,0.5)" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="6" y1="6" x2="18" y2="18" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div className="flex flex-col gap-3.5 px-5 py-5">
+        <Text variant="body-sm" color="text-2" className="flex items-center gap-1.5 flex-wrap">
+          Clicking the{" "}
+          <span
+            className="inline-flex w-5 h-5 rounded items-center justify-center shrink-0"
+            style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
+          >
+            <svg width={10} height={10} viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="16" x2="12" y2="12" />
+              <circle cx="12" cy="8" r="0.5" fill="rgba(255,255,255,0.5)" />
+            </svg>
+          </span>
+          {" "}icon opens this window.
+        </Text>
+        <Text variant="body-sm" color="text-1">
+          Here you'll find a breakdown of the technique, practical tips, and guidance on what to focus on.
+        </Text>
+        {/* Video placeholder */}
+        <div
+          className="rounded-xl px-5 py-6 flex flex-col items-center justify-center gap-2"
+          style={{
+            background: "rgba(255,255,255,0.04)",
+            border: "1px dashed rgba(255,255,255,0.15)",
+          }}
+        >
+          <span className="text-lg opacity-50">{"\u25B6"}</span>
+          <Text variant="caption" color="muted-1" className="text-center">
+            Some exercises include a video guide to walk you through the technique
+          </Text>
+        </div>
+      </div>
+
+    </div>
+  );
 }
 
 const STEPS: Step[] = [
@@ -36,7 +102,14 @@ const STEPS: Step[] = [
     mockup: "none",
     text: "",
     extra: (
-      <div className="flex flex-col gap-3">
+      <div
+        className="flex flex-col gap-3 rounded-2xl px-5 py-5"
+        style={{
+          background: "#0f0f1a",
+          border: "2px solid rgba(167,139,250,0.5)",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.6), 0 0 16px rgba(167,139,250,0.15)",
+        }}
+      >
         <div className="flex items-start gap-3">
           <span className="shrink-0 mt-0.5">
             <HeadphonesIcon />
@@ -61,12 +134,19 @@ const STEPS: Step[] = [
     ),
     button: "Next",
   },
-  { target: "info", mockup: "hill", text: "Tap this icon anytime to see detailed information.", button: "Next" },
+  { target: "info", mockup: "hill", text: "Clicking this icon opens up a window with guidance for the current exercise.", button: "Next" },
+  {
+    target: null,
+    mockup: "none",
+    text: "",
+    extra: <InfoModalMockup />,
+    button: "Next",
+  },
   { target: "reps-progress", mockup: "hill", text: "This shows your progress and how many reps are left.", button: "Next" },
   { target: "play-tone", mockup: "hill", text: "Some steps play a reference tone for you to match. Tap this to hear it again.", button: "Next" },
   { target: "start", mockup: "hill", text: "Sometimes you need to press Start to begin.", button: "Next" },
   { target: "canvas", mockup: "farinelli", text: "There's a variety of things to explore. Each one guides you.", button: "Next" },
-  { target: "next-skip", mockup: "farinelli", text: "To move on, tap Next — or Skip to come back later.", button: "Got it" },
+  { target: "next-skip", mockup: "farinelli-live", text: "To move on, tap Next — or Skip to come back later.", button: "" },
 ];
 
 // ── Minimal static mockups ──────────────────────────────────────────────────
@@ -218,7 +298,7 @@ function FarinelliMockup({ live, onComplete, onSkip }: { live?: boolean; onCompl
       {/* Bottom panel */}
       <div className="border-t border-white/[0.06] bg-white/[0.02] px-3 sm:px-5 py-2 sm:pt-2.5 sm:pb-1.5 flex flex-row items-center justify-end gap-2 sm:gap-3 shrink-0">
         {live ? (
-          <div className="flex gap-2">
+          <div data-spotlight="next-skip" className="flex gap-2">
             <Button variant="outline" onClick={onSkip} className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">
               Skip →
             </Button>
@@ -288,11 +368,14 @@ interface SpotlightOverlayProps {
   extra?: React.ReactNode;
   buttonLabel: string;
   onAction: () => void;
+  onBack?: () => void;
+  onSkip?: () => void;
+  stepLabel?: string;
   /** Show only the highlight ring — no overlay, no bubble. */
   ringOnly?: boolean;
 }
 
-function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAction, ringOnly }: SpotlightOverlayProps) {
+function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAction, onBack, onSkip, stepLabel, ringOnly }: SpotlightOverlayProps) {
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [containerRect, setContainerRect] = useState<DOMRect | null>(null);
 
@@ -329,12 +412,59 @@ function SpotlightOverlay({ target, containerRef, text, extra, buttonLabel, onAc
         <Text variant="body-sm" color="text-1">{text}</Text>
         {extra}
       </div>
-      <Button size="sm" onClick={onAction} className="self-start">{buttonLabel}</Button>
+      {(buttonLabel || onBack || onSkip) && (
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-2">
+            {onBack && (
+              <Button variant="outline" size="sm" onClick={onBack}>Back</Button>
+            )}
+            {buttonLabel && <Button size="sm" onClick={onAction}>{buttonLabel}</Button>}
+            {stepLabel && (
+              <Text variant="caption" color="muted-1" className="tabular-nums ml-auto">{stepLabel}</Text>
+            )}
+          </div>
+          {onSkip && (
+            <button onClick={onSkip} className="self-start text-xs text-white/35 cursor-pointer underline underline-offset-2 hover:text-white/50 transition-colors">
+              Skip walkthrough
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 
   // No spotlight target (summary step) — centered bubble, no overlay
   if (!target) {
+    // Full-width extra content (e.g. modal mockup) — render outside the narrow bubble
+    if (extra && !text) {
+      return (
+        <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none px-4">
+          <div className="pointer-events-auto w-full max-w-md flex flex-col gap-3">
+            {extra}
+            <div
+              className="flex flex-col gap-2 rounded-xl px-4 py-3 self-stretch"
+              style={{ background: "rgba(20,10,40,0.95)", border: "1px solid rgba(167,139,250,0.35)", boxShadow: "0 4px 24px rgba(0,0,0,0.5)" }}
+            >
+              <div className="flex items-center gap-2">
+                {onBack && (
+                  <Button variant="outline" size="sm" onClick={onBack}>Back</Button>
+                )}
+                <Button size="sm" onClick={onAction}>{buttonLabel}</Button>
+                {stepLabel && (
+                  <Text variant="caption" color="muted-1" className="tabular-nums ml-auto">{stepLabel}</Text>
+                )}
+              </div>
+              {onSkip && (
+                <button onClick={onSkip} className="self-start text-xs text-white/35 cursor-pointer underline underline-offset-2 hover:text-white/50 transition-colors">
+                  Skip walkthrough
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
         <div className="pointer-events-auto">
@@ -465,56 +595,47 @@ interface WalkthroughExerciseProps {
 
 export function WalkthroughExercise({ onComplete, onSkip, parentRef }: WalkthroughExerciseProps) {
   const [step, setStep] = useState(0);
-  const [done, setDone] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const current = STEPS[step];
+  const isLastStep = step === STEPS.length - 1;
 
   const handleAction = useCallback(() => {
-    if (step >= STEPS.length - 1) {
-      // Last step — dismiss overlay, show live buttons
-      setDone(true);
-    } else {
+    if (step < STEPS.length - 1) {
       setStep((s) => s + 1);
     }
   }, [step]);
 
+  const handleBack = useCallback(() => {
+    setStep((s) => Math.max(0, s - 1));
+  }, []);
+
   // Use parent ref for breadcrumb target, own ref for everything else
-  const activeTarget = done ? "next-skip" : current.target;
+  const activeTarget = current.target;
   const activeRef = activeTarget === "breadcrumb" && parentRef ? parentRef : containerRef;
 
   return (
     <div ref={containerRef} className="relative flex flex-col h-full overflow-hidden">
-      {/* Skip button — visible during walkthrough except on last step (which spotlights Next/Skip) */}
-      {!done && step < STEPS.length - 1 && (
-        <div className="absolute bottom-3 right-3 z-50">
-          <Button variant="outline" size="sm" onClick={onSkip} className="px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-xl text-xs sm:text-sm">
-            Skip →
-          </Button>
-        </div>
-      )}
-
       {/* Mockup layer */}
       <div className="flex-1 min-h-0 flex flex-col">
-        {done ? (
+        {current.mockup === "hill" && <HillMockup />}
+        {current.mockup === "farinelli" && <FarinelliMockup />}
+        {current.mockup === "farinelli-live" && (
           <FarinelliMockup live onComplete={onComplete} onSkip={onComplete} />
-        ) : (
-          <>
-            {current.mockup === "hill" && <HillMockup />}
-            {current.mockup === "farinelli" && <FarinelliMockup />}
-          </>
         )}
       </div>
 
-      {/* Spotlight + bubble (ring-only when done) */}
+      {/* Spotlight + bubble */}
       <SpotlightOverlay
         target={activeTarget}
         containerRef={activeRef}
-        text={done ? "" : current.text}
-        extra={done ? undefined : current.extra}
-        buttonLabel={done ? "" : current.button}
+        text={current.text}
+        extra={current.extra}
+        buttonLabel={current.button}
         onAction={handleAction}
-        ringOnly={done}
+        onBack={step > 0 ? handleBack : undefined}
+        onSkip={!isLastStep ? onSkip : undefined}
+        stepLabel={`${step + 1}/${STEPS.length}`}
       />
     </div>
   );
