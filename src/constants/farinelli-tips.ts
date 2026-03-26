@@ -1,3 +1,15 @@
+/** Short tips spoken aloud by the voice guide between breathing cycles. */
+export const FARINELLI_SPOKEN_TIPS = [
+  "Stay relaxed — that matters more than a high count.",
+  "Fill your lungs to about 80%, not 100%. Control, not capacity.",
+  "As the count grows, inhale more slowly.",
+  "During the hold, keep your ribs expanded. Small top-ups are fine.",
+  "Exhale fully each time.",
+  "Go at your own pace. Control builds over time.",
+  "If you feel lightheaded, stop and breathe normally.",
+];
+
+/** Detailed tips shown in the intro modal. */
 export const FARINELLI_TIPS = [
   "Stay relaxed — that matters more than hitting the highest count. Tension defeats the purpose.",
   "Don't aim for 100% — fill to roughly 80% each cycle. This is about control, not inflating to the top.",

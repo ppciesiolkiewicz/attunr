@@ -1,6 +1,6 @@
 import { journey } from "../../src/constants/journey";
 import type { FarinelliBreathworkConfig, LearnVoiceDrivenConfig } from "../../src/constants/journey";
-import { FARINELLI_TIPS } from "../../src/constants/farinelli-tips";
+import { FARINELLI_SPOKEN_TIPS } from "../../src/constants/farinelli-tips";
 import { type VoiceProfile, riley, australianBaritone } from "./settings";
 
 export interface VoiceSegment {
@@ -65,7 +65,7 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
     });
 
     // Tips — spoken by Riley voice
-    FARINELLI_TIPS.forEach((tip, i) => {
+    FARINELLI_SPOKEN_TIPS.forEach((tip, i) => {
       segments.push({
         name: `tip-${i + 1}`,
         ssml: `<speak>${tip}</speak>`,
