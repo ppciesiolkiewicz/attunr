@@ -50,15 +50,14 @@ function buildSegmentNames(maxCount: number): string[] {
   return names;
 }
 
-const VOICE_BASE_URL = process.env.NEXT_PUBLIC_VOICE_BASE_URL ?? "";
+import { voiceUrl } from "@/lib/voice-url";
 
 async function loadSegment(
   baseUrl: string,
   name: string,
 ): Promise<LoadedSegment> {
-  const fullBase = `${VOICE_BASE_URL}/${baseUrl}`;
-  const audioUrl = `${fullBase}/${name}.mp3`;
-  const timestampsUrl = `${fullBase}/${name}.timestamps.json`;
+  const audioUrl = voiceUrl(`${baseUrl}/${name}.mp3`);
+  const timestampsUrl = voiceUrl(`${baseUrl}/${name}.timestamps.json`);
 
   const [timestamps, audioBlob] = await Promise.all([
     fetch(timestampsUrl).then((r) => r.json()) as Promise<SegmentTimestamps>,
@@ -146,10 +145,9 @@ function FarinelliVoiceDrivenPlayer({
         });
 
         // Preload tip audio
-        const tipBase = `${VOICE_BASE_URL}/${voiceBaseUrl}`;
         const tipBlobs = await Promise.all(
           FARINELLI_TIPS.map((_, i) =>
-            fetch(`${tipBase}/tip-${i + 1}.mp3`).then((r) => r.blob()).catch(() => null),
+            fetch(voiceUrl(`${voiceBaseUrl}/tip-${i + 1}.mp3`)).then((r) => r.blob()).catch(() => null),
           ),
         );
         tipAudiosRef.current = tipBlobs

@@ -31,7 +31,7 @@ export interface VoiceIntroState {
   fastForward: () => void;
 }
 
-const VOICE_BASE_URL = process.env.NEXT_PUBLIC_VOICE_BASE_URL ?? "";
+import { voiceUrl } from "@/lib/voice-url";
 
 // ── Hook ─────────────────────────────────────────────────────────────────────
 
@@ -60,9 +60,8 @@ export function useVoiceIntro(
 
     preloadPromiseRef.current = (async () => {
       try {
-        const fullBase = VOICE_BASE_URL;
-        const audioUrl = `${fullBase}/${instructionUrl}`;
-        const tsUrl = `${fullBase}/${timestampsUrl}`;
+        const audioUrl = voiceUrl(instructionUrl);
+        const tsUrl = voiceUrl(timestampsUrl);
 
         const [timestamps, audioBlob] = await Promise.all([
           fetch(tsUrl).then((r) => r.json()) as Promise<SegmentTimestamps>,

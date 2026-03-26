@@ -31,7 +31,7 @@ type Status = "ready" | "loading" | "intro" | "playing" | "paused" | "complete";
 
 // ── Audio loading ────────────────────────────────────────────────────────────
 
-const VOICE_BASE_URL = process.env.NEXT_PUBLIC_VOICE_BASE_URL ?? "";
+import { voiceUrl } from "@/lib/voice-url";
 
 async function loadSegment(
   baseUrl: string,
@@ -43,9 +43,8 @@ async function loadSegment(
     return { name, audio: null, timestamps: null, text, hasVoice: false };
   }
 
-  const fullBase = `${VOICE_BASE_URL}/${baseUrl}`;
-  const audioUrl = `${fullBase}/${name}.mp3`;
-  const timestampsUrl = `${fullBase}/${name}.timestamps.json`;
+  const audioUrl = voiceUrl(`${baseUrl}/${name}.mp3`);
+  const timestampsUrl = voiceUrl(`${baseUrl}/${name}.timestamps.json`);
 
   const [timestamps, audioBlob] = await Promise.all([
     fetch(timestampsUrl).then((r) => r.json()) as Promise<SegmentTimestamps>,
