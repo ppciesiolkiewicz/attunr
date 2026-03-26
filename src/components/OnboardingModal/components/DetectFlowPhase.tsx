@@ -42,7 +42,9 @@ export function DetectFlowPhase({
 
   const voiceLabel =
     phase === "result" && detectedLowHz && detectedHighHz
-      ? VOICE_TYPES.find((v) => v.id === deriveVoiceType(detectedLowHz, detectedHighHz))?.label ?? "Custom"
+      ? (VOICE_TYPES.find(
+          (v) => v.id === deriveVoiceType(detectedLowHz, detectedHighHz),
+        )?.label ?? "Custom")
       : null;
 
   return (
@@ -50,7 +52,9 @@ export function DetectFlowPhase({
       <div>
         {phase === "detect-low" && (
           <>
-            <Text variant="heading-sm" color="text-1">Hum low — uu</Text>
+            <Text variant="heading-sm" color="text-1">
+              Hum low — uu
+            </Text>
             <Text variant="body" className="mt-1.5" color="text-1">
               Hum as low as you can. Let the sound come from deep in your belly.
               Feel the vibration in your chest, not your throat.
@@ -60,24 +64,46 @@ export function DetectFlowPhase({
         )}
         {phase === "detect-high" && (
           <>
-            <Text variant="heading-sm" color="text-1">Now hoo hoo — high</Text>
+            <Text variant="heading-sm" color="text-1">
+              Now hoo hoo — high
+            </Text>
             <Text variant="body" className="mt-1.5" color="text-1">
-              Reach as high as you can. Make a short rising <Text as="span" variant="body" className="italic" color="text-1">hoo hoo</Text> sound — like an owl.
+              Reach as high as you can. Make a short rising{" "}
+              <Text as="span" variant="body" className="italic" color="text-1">
+                hoo hoo
+              </Text>{" "}
+              sound — like an owl.
               {activeDetection ? " Hold your highest note." : ""}
             </Text>
           </>
         )}
         {phase === "result" && voiceLabel && (
           <>
-            <Text variant="body" className="font-medium" color="text-1">Your vocal range</Text>
+            <Text variant="body" className="font-medium" color="text-1">
+              Your vocal range
+            </Text>
             <Text variant="body-sm" className="mt-1" color="text-2">
               Likely{" "}
-              <Text as="span" variant="body-sm" className="font-medium" color="text-1">{voiceLabel}</Text>{" "}
+              <Text
+                as="span"
+                variant="body-sm"
+                className="font-medium"
+                color="text-1"
+              >
+                {voiceLabel}
+              </Text>{" "}
               · tap a note to re-detect.
             </Text>
           </>
         )}
       </div>
+
+      {(phase === "detect-low" || phase === "detect-high") &&
+        !activeDetection && (
+          <Text variant="body-sm" color="muted-2">
+            Tap start when you&apos;re ready
+          </Text>
+        )}
 
       <div className="w-full flex items-center justify-center gap-4">
         {phase === "detect-low" ? (
@@ -95,12 +121,18 @@ export function DetectFlowPhase({
             variant="low"
             mode="detected"
             valueHz={detectedLowHz}
-            onClick={(phase === "result" || phase === "detect-high") ? () => onAdjustNote("low") : undefined}
+            onClick={
+              phase === "result" || phase === "detect-high"
+                ? () => onAdjustNote("low")
+                : undefined
+            }
           />
         )}
 
         <div className="flex flex-col items-center">
-          <Text as="span" variant="body" className="text-lg" color="muted-2">→</Text>
+          <Text as="span" variant="body" className="text-lg" color="muted-2">
+            →
+          </Text>
         </div>
 
         {phase === "detect-high" ? (
@@ -118,28 +150,25 @@ export function DetectFlowPhase({
             variant="high"
             mode="detected"
             valueHz={detectedHighHz}
-            onClick={(phase === "result" || phase === "detect-low") && detectedHighHz ? () => onAdjustNote("high") : undefined}
+            onClick={
+              (phase === "result" || phase === "detect-low") && detectedHighHz
+                ? () => onAdjustNote("high")
+                : undefined
+            }
           />
         )}
       </div>
 
-      {(phase === "detect-low" || phase === "detect-high") && !activeDetection && (
-        <Text variant="body-sm" color="muted-2">
-          Tap start when you&apos;re ready
-        </Text>
-      )}
-
       {rangeTooSmall && (
         <Text variant="body-sm" className="px-2" color="warning">
-          Range seems narrow — detection may be off. Tap a note above
-          to re-detect, or try again in a quieter space.
+          Range seems narrow — detection may be off. Tap a note above to
+          re-detect, or try again in a quieter space.
         </Text>
       )}
 
       <div className="w-full min-h-25 flex flex-col gap-3">
         <Text variant="body-sm" className="px-2" color="muted-1">
-          Exercises will be tuned to your range. Re-detect anytime in
-          settings.
+          Exercises will be tuned to your range. Re-detect anytime in settings.
         </Text>
         <div
           className="w-full h-px shrink-0"
@@ -150,7 +179,9 @@ export function DetectFlowPhase({
           onClick={onFinish}
           disabled={!detectedLowHz || !detectedHighHz}
           className="w-full active:scale-[0.98] disabled:opacity-40"
-          style={detectedLowHz && detectedHighHz ? undefined : { boxShadow: "none" }}
+          style={
+            detectedLowHz && detectedHighHz ? undefined : { boxShadow: "none" }
+          }
         >
           Let&apos;s go →
         </Button>
