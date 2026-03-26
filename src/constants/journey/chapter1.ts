@@ -63,12 +63,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Walkthrough",
         cardSubtitle: "A quick look at how things work",
       },
-      {
-        exerciseTypeId: "learn-notes-1",
-        slug: "understanding-notes",
-        title: "Understanding notes",
-        cardSubtitle: "See where your voice sits — and what the notes mean",
-      },
       gen.hillSustain({
         slug: "gentle-hum",
         note: 4,
@@ -147,6 +141,12 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Sound uuuu (as in 'moon') on a comfortable tone in the middle of your range. Keep your mouth rounded like Uu — relaxed, not smiling.\n\nFeel where the sound sits — not too high, not too low. Just easy.\n\nSustaining a tone in your comfortable range trains your breath and steadies your voice without you noticing.\n\nKeep it relaxed. There's no wrong way to do this.",
         }),
       }),
+      {
+        exerciseTypeId: "learn-notes-1",
+        slug: "understanding-notes",
+        title: "Understanding notes",
+        cardSubtitle: "See where your voice sits — and what the notes mean",
+      },
       gen.zoneAbove({
         slug: "hoo-hoo",
         boundaryNote: -6,
