@@ -7,8 +7,6 @@ function capture(name: string, props?: Record<string, unknown>) {
 }
 
 export const analytics = {
-  pageView: (url: string) => capture("$pageview", { $current_url: url }),
-
   // Onboarding
   onboardingStarted: () => capture("onboarding_started"),
   onboardingMicGranted: () => capture("onboarding_mic_granted"),
@@ -58,12 +56,8 @@ export const analytics = {
   // Auth
   loginCodeSent: () => capture("login_code_sent"),
   loginSucceeded: () => capture("login_succeeded"),
-  logout: () => capture("logout"),
-
   // Settings
   settingsOpened: () => capture("settings_opened"),
-  settingsVoiceChanged: (voiceType: string) =>
-    capture("settings_changed", { setting: "voice_type", value: voiceType }),
   settingsTuningChanged: (tuning: string) =>
     capture("settings_changed", { setting: "tuning", value: tuning }),
 
