@@ -308,6 +308,7 @@ export interface FarinelliParams extends Omit<CommonParams, "instruction"> {
 }
 
 export interface FarinelliVoiceDrivenParams extends Omit<CommonParams, "instruction"> {
+  minCount: number;
   maxCount: number;
   voiceBaseUrl: string;
 }
@@ -804,6 +805,7 @@ export class ExerciseGenerator {
       cardSubtitle,
       introModal,
       completionModal,
+      minCount,
       maxCount,
       voiceBaseUrl,
     } = params;
@@ -820,6 +822,7 @@ export class ExerciseGenerator {
           : undefined,
       completionModal,
       exerciseTypeId: "farinelli-voice-driven",
+      minCount,
       maxCount,
       voiceBaseUrl,
     };

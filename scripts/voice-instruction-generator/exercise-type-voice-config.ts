@@ -1,5 +1,5 @@
 import { journey } from "../../src/constants/journey";
-import type { FarinelliBreathworkConfig, LearnVoiceDrivenConfig } from "../../src/constants/journey";
+import type { FarinelliBreathworkConfig, FarinelliVoiceDrivenConfig, LearnVoiceDrivenConfig } from "../../src/constants/journey";
 import { FARINELLI_SPOKEN_TIPS } from "../../src/constants/farinelli-tips";
 import { type VoiceProfile, riley, australianBaritone } from "./settings";
 
@@ -33,9 +33,17 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
       (e): e is FarinelliBreathworkConfig =>
         e.exerciseTypeId === "breathwork-farinelli",
     );
-    const maxCounts = farinelliExercises.map((e) => e.maxCount);
-    const minCount = 4;
-    const maxCount = Math.max(...maxCounts);
+    const voiceDrivenExercises = journey.exercises.filter(
+      (e): e is FarinelliVoiceDrivenConfig =>
+        e.exerciseTypeId === "farinelli-voice-driven",
+    );
+    const allMaxCounts = [
+      ...farinelliExercises.map((e) => e.maxCount),
+      ...voiceDrivenExercises.map((e) => e.maxCount),
+    ];
+    const allMinCounts = voiceDrivenExercises.map((e) => e.minCount);
+    const minCount = allMinCounts.length > 0 ? Math.min(...allMinCounts) : 4;
+    const maxCount = Math.max(...allMaxCounts);
 
     const segments: VoiceSegment[] = [
       {
@@ -56,13 +64,12 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
         ssml: `<speak>Hold. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(n)}</speak>`,
         voice: australianBaritone(),
       });
+      segments.push({
+        name: `exhale-${n}`,
+        ssml: `<speak>Exhale. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(n)}</speak>`,
+        voice: australianBaritone(),
+      });
     }
-
-    segments.push({
-      name: "exhale-8",
-      ssml: `<speak>Exhale. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(8)}</speak>`,
-      voice: australianBaritone(),
-    });
 
     // Tips — spoken by Riley voice
     FARINELLI_SPOKEN_TIPS.forEach((tip, i) => {

@@ -31,13 +31,15 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
           { type: "video" },
         ],
       },
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-extended",
+        minCount: 4,
         maxCount: 9,
         title: "Farinelli breathwork",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 9,
+          maxCount: 6,
           tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body responds as the rhythm lengthens. Feel everything settle.",
@@ -109,14 +111,16 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
     id: "ch5-deep-breath",
     title: "Deep Breath",
     exercises: [
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-deep-ch5",
+        minCount: 4,
         maxCount: 11,
         cardSubtitle: "The deepest breath cycle yet — 11 counts",
         title: "Farinelli breathwork",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 11,
+          maxCount: 8,
           tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. The deepest breathing yet.\n\nNotice how your body responds as the rhythm lengthens. Feel everything settle.",

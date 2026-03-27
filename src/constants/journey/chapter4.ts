@@ -103,13 +103,15 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelli({
+    gen.farinelliVoiceDriven({
       slug: "ch4-warmup-farinelli",
+      minCount: 4,
       maxCount: 5,
       title: "Farinelli breathwork",
+      voiceBaseUrl: "breathwork-farinelli",
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
-        maxCount: 5,
+        maxCount: 2,
         tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
@@ -366,13 +368,15 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
             "Play the tone and lip roll alongside it. Slide smoothly from your lowest to your highest — your full range.\n\nFeel the buzz travel through your entire voice. Notice how the resonance shifts from chest to head as you glide.\n\nFull-range lip rolls loosen everything and connect your registers into one continuous sound.\n\nDon't worry about matching exactly. Just follow the movement.",
         }),
       }),
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-ch4",
+        minCount: 4,
         maxCount: 9,
         title: "Farinelli breathwork",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 9,
+          maxCount: 6,
           tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. The deepest breathing yet.\n\nNotice how your body responds as the rhythm lengthens. Feel everything settle.",

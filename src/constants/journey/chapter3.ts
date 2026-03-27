@@ -103,13 +103,15 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelli({
+    gen.farinelliVoiceDriven({
       slug: "ch3-warmup-farinelli",
+      minCount: 2,
       maxCount: 5,
       title: "Farinelli breathwork",
+      voiceBaseUrl: "breathwork-farinelli",
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
-        maxCount: 5,
+        maxCount: 4,
         tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
@@ -333,13 +335,15 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "Sound oooo (as in 'go') in your mid range. Hold for 8 seconds — the longest holds yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into a rhythm.\n\nLonger holds carry your vowel further and build the stability behind your voice.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-ch3",
+        minCount: 2,
         maxCount: 7,
         title: "Farinelli breathwork",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 7,
+          maxCount: 6,
           tips: exerciseTips("farinelli", "intermediate"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat. Deeper breathing this time.\n\nNotice how your body responds as the rhythm lengthens.",

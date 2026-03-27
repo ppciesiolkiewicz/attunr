@@ -234,7 +234,9 @@ export interface FarinelliBreathworkConfig extends BaseExerciseConfig {
 
 export interface FarinelliVoiceDrivenConfig extends BaseExerciseConfig {
   exerciseTypeId: "farinelli-voice-driven";
-  /** Number of breathing cycles to complete — determines which audio segments to load. */
+  /** Lowest count to start from. */
+  minCount: number;
+  /** Highest count to reach. */
   maxCount: number;
   /** Base URL for voice segments on Vercel Blob. */
   voiceBaseUrl: string;

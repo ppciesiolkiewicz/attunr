@@ -108,13 +108,15 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelli({
+    gen.farinelliVoiceDriven({
       slug: "ch9-warmup-farinelli",
+      minCount: 4,
       maxCount: 7,
       title: "Farinelli breathwork",
+      voiceBaseUrl: "breathwork-farinelli",
       introModal: modal.farinelli({
         title: "Farinelli breathwork",
-        maxCount: 7,
+        maxCount: 4,
         tips: exerciseTips("farinelli", "introduction"),
         instruction:
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
@@ -408,13 +410,15 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
           "Hum each mantra as it appears. Feel it vibrate in its place.\nLet each one settle before the next arrives.\nJust notice what happens.",
         tips: exerciseTips("chakra", "advanced"),
       }),
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-ch9",
+        minCount: 4,
         maxCount: 9,
         title: "Farinelli breathwork",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 9,
+          maxCount: 6,
           tips: exerciseTips("farinelli", "advanced"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles after the chakra journey. Let the breath carry you home.",

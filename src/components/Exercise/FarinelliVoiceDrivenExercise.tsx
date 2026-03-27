@@ -37,14 +37,26 @@ function getBreathPhase(segmentName: string): BreathPhase {
   return null;
 }
 
+const COUNTDOWN_TEXT = "Inhale, hold, and exhale to the same count — each cycle adds one beat and flows straight into the next.";
+
+function getPhaseLabel(phase: BreathPhase, cycleCount: number): string | null {
+  if (!phase) return null;
+  if (phase === "inhale") return `Breathe in for ${cycleCount}`;
+  if (phase === "hold") return `Hold for ${cycleCount}`;
+  return `Breathe out for ${cycleCount}`;
+}
+
+function isCountdown(segmentName: string): boolean {
+  return segmentName === "countdown";
+}
+
 // ── Segment helpers ──────────────────────────────────────────────────────────
 
-function buildSegmentNames(maxCount: number): string[] {
-  const startCycle = 4;
+function buildSegmentNames(minCount: number, maxCount: number): string[] {
   const names: string[] = ["countdown"];
 
-  for (let n = startCycle; n <= maxCount; n++) {
-    names.push(`inhale-${n}`, `hold-${n}`, "exhale-8");
+  for (let n = minCount; n <= maxCount; n++) {
+    names.push(`inhale-${n}`, `hold-${n}`, `exhale-${n}`);
   }
 
   return names;
@@ -82,20 +94,22 @@ async function loadSegment(
 // ── Pause durations between segments (in ms) ────────────────────────────────
 
 function pauseAfterSegment(segmentName: string): number {
-  if (segmentName === "countdown") return 1000;
-  if (segmentName.startsWith("inhale-")) return 1500;
-  if (segmentName.startsWith("hold-")) return 1500;
-  if (segmentName.startsWith("exhale-")) return 2000;
-  return 1000;
+  if (segmentName === "countdown") return 800;
+  if (segmentName.startsWith("inhale-")) return 300;
+  if (segmentName.startsWith("hold-")) return 300;
+  if (segmentName.startsWith("exhale-")) return 500;
+  return 500;
 }
 
 // ── Component ────────────────────────────────────────────────────────────────
 
 function FarinelliVoiceDrivenPlayer({
+  minCount,
   maxCount,
   voiceBaseUrl,
   onComplete,
 }: {
+  minCount: number;
   maxCount: number;
   voiceBaseUrl: string;
   onComplete?: () => void;
@@ -105,11 +119,14 @@ function FarinelliVoiceDrivenPlayer({
   const [currentSegmentIndex, setCurrentSegmentIndex] = useState(0);
   const [breathPhase, setBreathPhase] = useState<BreathPhase>(null);
   const [segmentDuration, setSegmentDuration] = useState(0);
+  const [phaseLabel, setPhaseLabel] = useState<string | null>(null);
+  const [inCountdown, setInCountdown] = useState(false);
+  const [tipHasAppeared, setTipHasAppeared] = useState(false);
 
   const [tipText, setTipText] = useState("");
 
   const segmentsRef = useRef<LoadedSegment[]>([]);
-  const segmentNames = useRef(buildSegmentNames(maxCount));
+  const segmentNames = useRef(buildSegmentNames(minCount, maxCount));
   const animFrameRef = useRef<number>(0);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
@@ -171,6 +188,7 @@ function FarinelliVoiceDrivenPlayer({
       setStatus("complete");
       setDisplayText("");
       setTipText("");
+      setPhaseLabel(null);
       if (tipTimerRef.current) clearTimeout(tipTimerRef.current);
       onCompleteRef.current?.();
       return;
@@ -183,6 +201,14 @@ function FarinelliVoiceDrivenPlayer({
 
     const phase = getBreathPhase(segment.name);
     setBreathPhase(phase);
+    const isCountdownSegment = isCountdown(segment.name);
+    setInCountdown(isCountdownSegment);
+    if (isCountdownSegment) {
+      setPhaseLabel("Exhale all the air out");
+    } else {
+      const cycle = Math.floor((index - 1) / 3);
+      setPhaseLabel(getPhaseLabel(phase, minCount + cycle));
+    }
     // Estimate total duration: audio + pause after
     const pauseMs = pauseAfterSegment(segment.name);
     const lastWord = words[words.length - 1];
@@ -227,7 +253,8 @@ function FarinelliVoiceDrivenPlayer({
     const tipAudio = tips[tipIndexRef.current % tips.length];
     tipAudio.volume = 0.85;
     setTipText(FARINELLI_TIPS[tipIndexRef.current % FARINELLI_TIPS.length]);
-    tipAudio.onended = () => setTipText("");
+    setTipHasAppeared(true);
+    tipAudio.onended = () => {};
     tipAudio.play().catch(() => {});
     tipIndexRef.current++;
   }, []);
@@ -258,7 +285,7 @@ function FarinelliVoiceDrivenPlayer({
     };
   }, []);
 
-  const totalCycles = maxCount - 4 + 1;
+  const totalCycles = maxCount - minCount + 1;
   const cycleIndex = Math.max(
     0,
     Math.floor((currentSegmentIndex - 1) / 3), // -1 for countdown, /3 for inhale+hold+exhale
@@ -285,11 +312,8 @@ function FarinelliVoiceDrivenPlayer({
             <span className="text-xl font-semibold text-white">Start</span>
           </span>
         </button>
-        <div className="min-h-[4.5rem] flex flex-col items-center justify-start max-w-[300px] px-4 text-center">
-          <p className="text-sm text-white/70">
-            Inhale, hold, and exhale to the same count — each cycle adds one
-            beat and flows straight into the next.
-          </p>
+        <div className="min-h-[4.5rem] flex flex-col items-center justify-start max-w-75 px-4 text-center">
+          <p className="text-sm text-white/70">{COUNTDOWN_TEXT}</p>
         </div>
       </div>
     );
@@ -311,7 +335,10 @@ function FarinelliVoiceDrivenPlayer({
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8 px-6">
       <div className="min-h-[4.5rem] w-full flex flex-col items-center justify-end text-center">
-        {currentSegmentIndex > 0 && (
+        {phaseLabel && (
+          <p className="text-2xl font-medium text-white mb-1">{phaseLabel}</p>
+        )}
+        {currentSegmentIndex > 0 && !inCountdown && (
           <p className="text-white/65 text-sm">
             Cycle {cycleIndex + 1} of {totalCycles}
           </p>
@@ -360,11 +387,13 @@ function FarinelliVoiceDrivenPlayer({
         </div>
       </div>
 
-      <div className="min-h-[4.5rem] flex flex-col items-center justify-start max-w-70 px-4 text-center">
-        {tipText && (
+      <div className="min-h-[4.5rem] flex flex-col items-center justify-start max-w-75 px-4 text-center">
+        {tipText ? (
           <p className="text-xs text-white/65">
             Tip: {tipText}
           </p>
+        ) : !tipHasAppeared && (
+          <p className="text-sm text-white/70">{COUNTDOWN_TEXT}</p>
         )}
       </div>
     </div>
@@ -413,6 +442,7 @@ export function FarinelliVoiceDrivenExerciseContent({
     <>
       <div className="relative flex-1 min-h-0 flex items-center justify-center">
         <FarinelliVoiceDrivenPlayer
+          minCount={exercise.minCount}
           maxCount={exercise.maxCount}
           voiceBaseUrl={exercise.voiceBaseUrl}
           onComplete={() => setExerciseComplete(true)}

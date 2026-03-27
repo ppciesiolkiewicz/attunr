@@ -167,13 +167,14 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       }),
       gen.farinelliVoiceDriven({
         slug: "farinelli-1",
+        minCount: 2,
         maxCount: 7,
         title: "Farinelli breathwork",
         cardSubtitle: "Slow down. Breathe deep. Feel your body settle",
         voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 7,
+          maxCount: 6,
           tips: exerciseTips("farinelli", "introduction"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
@@ -311,14 +312,16 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-breath",
     title: "Breath",
     exercises: [
-      gen.farinelli({
+      gen.farinelliVoiceDriven({
         slug: "farinelli-2",
+        minCount: 2,
         maxCount: 5,
         title: "Farinelli breathwork",
         cardSubtitle: "Return to breath. Let everything slow down",
+        voiceBaseUrl: "breathwork-farinelli",
         introModal: modal.farinelli({
           title: "Farinelli breathwork",
-          maxCount: 5,
+          maxCount: 4,
           tips: exerciseTips("farinelli", "introduction"),
           instruction:
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body responds as the rhythm lengthens.",
