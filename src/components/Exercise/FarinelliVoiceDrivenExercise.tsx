@@ -200,10 +200,8 @@ function FarinelliVoiceDrivenPlayer({
       const cycle = Math.floor((index - 1) / 3);
       setPhaseLabel(getPhaseLabel(phase, minCount + cycle));
     }
-    // Estimate total duration from last word timestamp
-    const lastWord = words[words.length - 1];
-    const audioDuration = lastWord ? lastWord.end : 0;
-    setSegmentDuration(phase ? audioDuration : 0);
+    // Use actual audio duration so the ring fills exactly until the audio ends
+    setSegmentDuration(phase ? audio.duration : 0);
 
     // Track current word based on audio time
     function updateDisplay() {
