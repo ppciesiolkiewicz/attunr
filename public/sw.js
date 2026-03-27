@@ -1,5 +1,5 @@
-// Attunr service worker — handles notification clicks.
-// Minimal: no caching strategy (only used for notifications).
+// Attunr service worker — handles notification clicks and PWA installability.
+// Minimal fetch handler (no caching) required for Chrome PWA install prompt.
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
@@ -30,3 +30,7 @@ self.addEventListener("push", (event) => {
   };
   event.waitUntil(self.registration.showNotification(title, options));
 });
+
+// Fetch handler — pass through to network (no caching).
+// Required for Chrome to consider this a valid PWA service worker.
+self.addEventListener("fetch", () => {});
