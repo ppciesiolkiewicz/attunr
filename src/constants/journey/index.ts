@@ -46,7 +46,6 @@ export const journey = new Journey([
     slug: "breathe-deep",
     title: "Breathe Deep",
     description: "Pure breathwork. No singing. Just breath, body, and stillness.",
-    secret: true,
     stages: CHAPTER_5_STAGES,
   },
   {
@@ -54,7 +53,6 @@ export const journey = new Journey([
     slug: "rhythm-deep-dive",
     title: "Rhythm Deep Dive",
     description: "Complex rhythms, syncopation, and groove. Feel the pulse.",
-    secret: true,
     stages: CHAPTER_6_STAGES,
   },
   {
@@ -78,7 +76,6 @@ export const journey = new Journey([
     slug: "chakras",
     title: "Chakras",
     description: "Seven tones. Seven places in your body. Mantras, affirmations, and the chakra scale.",
-    secret: true,
     warmup: CHAPTER_9_WARMUP,
     stages: CHAPTER_9_STAGES,
   },
