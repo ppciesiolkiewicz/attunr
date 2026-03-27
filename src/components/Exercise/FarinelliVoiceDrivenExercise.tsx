@@ -91,15 +91,6 @@ async function loadSegment(
   };
 }
 
-// ── Pause durations between segments (in ms) ────────────────────────────────
-
-function pauseAfterSegment(segmentName: string): number {
-  if (segmentName === "countdown") return 800;
-  if (segmentName.startsWith("inhale-")) return 300;
-  if (segmentName.startsWith("hold-")) return 300;
-  if (segmentName.startsWith("exhale-")) return 500;
-  return 500;
-}
 
 // ── Component ────────────────────────────────────────────────────────────────
 
@@ -209,10 +200,9 @@ function FarinelliVoiceDrivenPlayer({
       const cycle = Math.floor((index - 1) / 3);
       setPhaseLabel(getPhaseLabel(phase, minCount + cycle));
     }
-    // Estimate total duration: audio + pause after
-    const pauseMs = pauseAfterSegment(segment.name);
+    // Estimate total duration from last word timestamp
     const lastWord = words[words.length - 1];
-    const audioDuration = lastWord ? lastWord.end + pauseMs / 1000 : pauseMs / 1000;
+    const audioDuration = lastWord ? lastWord.end : 0;
     setSegmentDuration(phase ? audioDuration : 0);
 
     // Track current word based on audio time
@@ -239,9 +229,7 @@ function FarinelliVoiceDrivenPlayer({
 
     audio.onended = () => {
       cancelAnimationFrame(animFrameRef.current);
-      // Pause between segments, then play next
-      const pause = pauseAfterSegment(segment.name);
-      setTimeout(() => playSegment(index + 1), pause);
+      playSegment(index + 1);
     };
 
     audio.play().catch(console.error);
