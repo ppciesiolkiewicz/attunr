@@ -15,6 +15,8 @@
       "purpose": "maskable"
     }
   ],
+  "start_url": "/journey",
+  "description": "Feel your voice in your body. A somatic practice that uses sound and breath to calm your nervous system.",
   "theme_color": "#111111",
   "background_color": "#111111",
   "display": "standalone"
