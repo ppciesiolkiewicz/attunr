@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import AppShell from "@/components/AppShell";
@@ -17,6 +17,12 @@ const baseUrl =
   process.env.NEXT_PUBLIC_SITE_URL ?? SITE_URL;
 const base = new URL(baseUrl);
 const ogImageUrl = `${SITE_URL}/web-app-manifest-512x512.png`;
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: base,
@@ -68,6 +74,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`h-full ${outfit.variable}`}>
       <head>
+        {/* Native app: redirect root to /journey/ before anything renders */}
+        <script dangerouslySetInnerHTML={{ __html:
+          `if(location.pathname==="/"&&/^capacitor:|ionic:/i.test(location.protocol))location.replace("/journey/")`
+        }} />
         {fbAppId && (
           <meta property="fb:app_id" content={fbAppId} />
         )}

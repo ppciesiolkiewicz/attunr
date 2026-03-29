@@ -41,7 +41,10 @@ export function NoteSlot({
           type="button"
           onClick={onClick}
           className="relative shrink-0 cursor-pointer transition-transform active:scale-95"
+          style={{ WebkitTapHighlightColor: "transparent", touchAction: "manipulation" }}
         >
+          {/* Invisible hit target covering the full button area */}
+          <div className="absolute inset-0 z-10" />
           <svg
             width={80}
             height={80}
@@ -95,10 +98,10 @@ export function NoteSlot({
               fill="none"
               stroke={color}
               strokeWidth={4}
-              strokeDasharray={`${2 * Math.PI * 34 * progress} ${2 * Math.PI * 34}`}
+              strokeDasharray={2 * Math.PI * 34}
+              strokeDashoffset={2 * Math.PI * 34 * (1 - (progress ?? 0))}
               strokeLinecap="round"
               transform="rotate(-90 40 40)"
-              style={{ transition: "stroke-dasharray 0.15s" }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">

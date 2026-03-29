@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button, Text } from "@/components/ui";
 import { analytics } from "@/lib/analytics";
+import { isNative } from "@/lib/platform";
 
 const EU_COUNTRY_CODES = new Set([
   "AT", "BE", "BG", "HR", "CY", "CZ", "DK", "EE", "FI", "FR", "DE", "GR",
@@ -24,6 +25,12 @@ export default function CookieConsent() {
   const [state, setState] = useState<ConsentState>("unknown");
 
   useEffect(() => {
+    // No cookie consent needed in native apps
+    if (isNative()) {
+      setState("accepted");
+      return;
+    }
+
     const stored = localStorage.getItem(CONSENT_KEY) as ConsentState | null;
     if (stored === "accepted" || stored === "declined") {
       setState(stored);

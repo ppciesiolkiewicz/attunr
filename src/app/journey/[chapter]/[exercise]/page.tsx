@@ -7,6 +7,13 @@ const ExercisePageClient = dynamic(() => import("./ExercisePageClient"), {
   loading: () => <ExerciseLoading />,
 });
 
+export function generateStaticParams() {
+  return journey.exercises.map((ex) => ({
+    chapter: ex.chapterSlug,
+    exercise: ex.slug,
+  }));
+}
+
 type Props = { params: Promise<{ chapter: string; exercise: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {

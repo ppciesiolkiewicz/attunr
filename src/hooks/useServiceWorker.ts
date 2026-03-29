@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { isNative } from "@/lib/platform";
 
 export function useServiceWorker() {
   const [registration, setRegistration] = useState<ServiceWorkerRegistration | null>(null);
   const attempted = useRef(false);
 
   const isSupported =
-    typeof window !== "undefined" && "serviceWorker" in navigator;
+    typeof window !== "undefined" && "serviceWorker" in navigator && !isNative();
 
   useEffect(() => {
     if (!isSupported || attempted.current) return;

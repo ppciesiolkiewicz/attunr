@@ -44,6 +44,9 @@ export function usePitchDetection(): PitchDetectionState {
   } | null>(null);
   const activeRef = useRef(false);
   const lastUiUpdateRef = useRef(0);
+  const readyRef = useRef(false);
+  const callbackCountRef = useRef(0);
+  const onReadyRef = useRef<(() => void) | null>(null);
 
   const pollPitch = useCallback(() => {
     if (!activeRef.current || !detectorRef.current) return;
@@ -52,6 +55,18 @@ export function usePitchDetection(): PitchDetectionState {
       if (!activeRef.current) return;
 
       const valid = freq && freq > MIN_VOICE_HZ && freq < MAX_VOICE_HZ ? freq : null;
+
+      // Wait for several inference cycles before reporting "listening".
+      // The first few CREPE inferences trigger TF.js WebGL shader compilation
+      // which blocks the main thread for ~1s each on mobile. We wait until
+      // that warm-up is over so the UI is responsive when we advance.
+      callbackCountRef.current++;
+      if (!readyRef.current && callbackCountRef.current >= 5) {
+        readyRef.current = true;
+        setStatus("listening");
+        onReadyRef.current?.();
+        onReadyRef.current = null;
+      }
 
       // ① Write ref immediately — canvas sees this on its very next RAF tick
       pitchHzRef.current = valid;
@@ -63,7 +78,8 @@ export function usePitchDetection(): PitchDetectionState {
         lastUiUpdateRef.current = now;
       }
 
-      pollPitch();
+      // Yield to browser between inferences so touch/UI events can be processed.
+      requestAnimationFrame(pollPitch);
     });
   }, []);
 
@@ -108,15 +124,18 @@ export function usePitchDetection(): PitchDetectionState {
       const ml5 = await import("ml5");
       activeRef.current = true;
 
-      detectorRef.current = ml5.pitchDetection(
-        CREPE_MODEL_URL,
-        audioCtx,
-        stream,
-        () => {
-          setStatus("listening");
-          pollPitch();
-        }
-      );
+      // Return a promise that resolves when the model produces its first pitch result
+      await new Promise<void>((resolve) => {
+        onReadyRef.current = resolve;
+        detectorRef.current = ml5.pitchDetection(
+          CREPE_MODEL_URL,
+          audioCtx,
+          stream,
+          () => {
+            pollPitch();
+          }
+        );
+      });
     } catch (err) {
       activeRef.current = false;
       const isDenied =
@@ -135,6 +154,8 @@ export function usePitchDetection(): PitchDetectionState {
 
   const stopListening = useCallback(() => {
     activeRef.current = false;
+    readyRef.current = false;
+    callbackCountRef.current = 0;
     detectorRef.current = null;
     pitchHzRef.current = null;
     setPitchHz(null);

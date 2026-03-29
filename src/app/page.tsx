@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Loading from "./loading";
+import { NativeRedirect } from "./NativeRedirect";
 
 const LandingPageV8 = dynamic(
   () => import("@/components/LandingPage/variants/v8/LandingPageV8"),
@@ -14,5 +15,10 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <LandingPageV8 />;
+  return (
+    <>
+      <NativeRedirect />
+      <LandingPageV8 />
+    </>
+  );
 }

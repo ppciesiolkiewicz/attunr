@@ -18,6 +18,7 @@ type Phase = "welcome" | "detect-low" | "detect-high" | "result";
 
 export interface OnboardingModalProps {
   pitchHz: number | null;
+  pitchHzRef: React.RefObject<number | null>;
   status: PitchDetectionStatus;
   micError: string | null;
   onBegin: (result: {
@@ -30,6 +31,7 @@ export interface OnboardingModalProps {
 
 export default function OnboardingModal({
   pitchHz,
+  pitchHzRef,
   status,
   micError,
   onBegin,
@@ -52,13 +54,16 @@ export default function OnboardingModal({
   const isError = status === "error";
   const currentNote = pitchHz !== null ? hzToNoteName(pitchHz) : null;
 
-
   const phaseRef = useRef(phase);
   const detectedLowHzRef = useRef(detectedLowHz);
   const completedRef = useRef(false);
 
-  useEffect(() => { phaseRef.current = phase; }, [phase]);
-  useEffect(() => { detectedLowHzRef.current = detectedLowHz; }, [detectedLowHz]);
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
+  useEffect(() => {
+    detectedLowHzRef.current = detectedLowHz;
+  }, [detectedLowHz]);
 
   useEffect(() => {
     const completed = completedRef;
@@ -115,11 +120,16 @@ export default function OnboardingModal({
       const dt = lastTickRef.current ? (now - lastTickRef.current) / 1000 : 0;
       lastTickRef.current = now;
 
-      const hasPitch =
-        lastPitchTimeRef.current > 0 && now - lastPitchTimeRef.current < 200;
+      // Use the synchronous ref for immediate pitch presence (no React throttle delay)
+      const hasPitch = pitchHzRef.current !== null;
+
+      // Collect samples directly from the ref (bypasses React throttle)
+      if (hasPitch && pitchHzRef.current !== null) {
+        samplesRef.current.push(pitchHzRef.current);
+      }
 
       if (phase === "detect-low") {
-        // Low note: hold steady for HOLD_SECONDS_LOW (unchanged)
+        // Low note: hold steady for HOLD_SECONDS_LOW
         if (hasPitch) {
           holdTimeRef.current += dt;
         } else {
@@ -145,7 +155,7 @@ export default function OnboardingModal({
         }
       } else {
         // High note: track the highest pitch held for PEAK_HOLD_SECONDS
-        const pitch = currentPitchRef.current;
+        const pitch = pitchHzRef.current;
 
         if (hasPitch && pitch !== null) {
           // Update peak — always drift upward
@@ -204,12 +214,25 @@ export default function OnboardingModal({
     }
   }, [pitchHz, phase, activeDetection]);
 
+  const [waitingForMic, setWaitingForMic] = useState(false);
+
   function handleStart() {
     if (isError || status === "idle") {
       onRetryMic();
+      setWaitingForMic(true);
+      // Stay on welcome screen — WelcomePhase shows "Loading pitch model..."
+      return;
     }
     setPhase("detect-low");
   }
+
+  // Advance to detect-low once mic + model are ready (user already tapped Begin)
+  useEffect(() => {
+    if (waitingForMic && status === "listening") {
+      setWaitingForMic(false);
+      setPhase("detect-low");
+    }
+  }, [waitingForMic, status]);
 
   function handleStartDetection() {
     setActiveDetection(true);
@@ -225,13 +248,21 @@ export default function OnboardingModal({
   function handleAdjustNote(which: "low" | "high") {
     if (which === "low") {
       if (detectedLowHz) {
-        analytics.onboardingNoteReadjusted("low", detectedLowHz, hzToNoteName(detectedLowHz));
+        analytics.onboardingNoteReadjusted(
+          "low",
+          detectedLowHz,
+          hzToNoteName(detectedLowHz),
+        );
       }
       setDetectedLowHz(null);
       setPhase("detect-low");
     } else {
       if (detectedHighHz) {
-        analytics.onboardingNoteReadjusted("high", detectedHighHz, hzToNoteName(detectedHighHz));
+        analytics.onboardingNoteReadjusted(
+          "high",
+          detectedHighHz,
+          hzToNoteName(detectedHighHz),
+        );
       }
       setDetectedHighHz(null);
       setPhase("detect-high");
@@ -261,7 +292,10 @@ export default function OnboardingModal({
         <ToneSpectrum />
 
         <div>
-          <Text variant="heading-lg" className="text-[2.1rem] tracking-tight leading-none">
+          <Text
+            variant="heading-lg"
+            className="text-[2.1rem] tracking-tight leading-none"
+          >
             attunr
           </Text>
           <Text variant="label" className="mt-1.5" color="muted-1">
@@ -275,7 +309,11 @@ export default function OnboardingModal({
         />
 
         {phase === "welcome" && (
-          <WelcomePhase status={status} micError={micError} onStart={handleStart} />
+          <WelcomePhase
+            status={status}
+            micError={micError}
+            onStart={handleStart}
+          />
         )}
 
         {isInFlow && (

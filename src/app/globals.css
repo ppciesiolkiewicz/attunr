@@ -11,8 +11,21 @@
   --color-crown:      #a855f7;
 }
 
+/* ── Safe area insets (Capacitor native apps) ────────────────────────────── */
+:root {
+  --sat: env(safe-area-inset-top);
+  --sab: env(safe-area-inset-bottom);
+  --sal: env(safe-area-inset-left);
+  --sar: env(safe-area-inset-right);
+}
+
 /* ── Base reset ──────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
+
+/* Eliminate 300ms tap delay in iOS WKWebView */
+button, a, [role="button"], input, select, textarea {
+  touch-action: manipulation;
+}
 
 html {
   font-size: 112.5%; /* 18px base — scales rem for better readability */

@@ -6,6 +6,8 @@ import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, "..", "public");
+const iosIconDir = path.join(__dirname, "..", "ios", "App", "App", "Assets.xcassets", "AppIcon.appiconset");
+const iosSplashDir = path.join(__dirname, "..", "ios", "App", "App", "Assets.xcassets", "Splash.imageset");
 
 const icons = [
   // Full "attunr" text icons
@@ -131,6 +133,54 @@ async function main() {
   // Clean up intermediate files
   for (const tmp of ["favicon-48.png", "favicon-32.png"]) {
     fs.unlinkSync(path.join(publicDir, tmp));
+  }
+
+  // --- iOS App Icon (1024x1024, no rounded corners — iOS applies its own mask) ---
+  if (fs.existsSync(iosIconDir)) {
+    const page = await (await chromium.launch()).newPage({
+      viewport: { width: 1064, height: 1064 },
+      deviceScaleFactor: 1,
+    });
+    await page.goto(`file://${path.join(__dirname, "generate-icons.html")}`);
+    await page.evaluate(() => document.fonts.ready);
+    await page.evaluate(() => {
+      const el = document.getElementById("icon");
+      el.style.setProperty("--size", "1024px");
+      el.style.borderRadius = "0"; // iOS applies its own mask
+    });
+    await page.locator("#icon").screenshot({
+      path: path.join(iosIconDir, "AppIcon-512@2x.png"),
+      omitBackground: false,
+    });
+    console.log("Generated iOS AppIcon-512@2x.png (1024x1024)");
+    await page.context().browser().close();
+  }
+
+  // --- iOS Splash Screen (2732x2732 at 1x/2x/3x) ---
+  if (fs.existsSync(iosSplashDir)) {
+    const browser2 = await chromium.launch();
+    const page = await browser2.newPage({
+      viewport: { width: 2772, height: 2772 },
+      deviceScaleFactor: 1,
+    });
+    await page.goto(`file://${path.join(__dirname, "generate-splash.html")}`);
+    await page.evaluate(() => document.fonts.ready);
+
+    await page.locator("#splash").screenshot({
+      path: path.join(iosSplashDir, "splash-2732x2732.png"),
+      omitBackground: false,
+    });
+    // Copy same image for all 3 scale slots
+    fs.copyFileSync(
+      path.join(iosSplashDir, "splash-2732x2732.png"),
+      path.join(iosSplashDir, "splash-2732x2732-1.png"),
+    );
+    fs.copyFileSync(
+      path.join(iosSplashDir, "splash-2732x2732.png"),
+      path.join(iosSplashDir, "splash-2732x2732-2.png"),
+    );
+    console.log("Generated iOS splash screens (2732x2732)");
+    await browser2.close();
   }
 }
 

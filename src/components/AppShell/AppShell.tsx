@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import SettingsPanel from "../SettingsPanel";
 import OnboardingModal from "../OnboardingModal";
 import FrequencyModal from "../FrequencyModal";
@@ -23,6 +23,8 @@ import { analytics } from "@/lib/analytics";
 import { hzToNoteName } from "@/lib/pitch";
 import type { ColoredNote } from "@/lib/VocalRange";
 import { Button, Text } from "@/components/ui";
+import { SplashScreen } from "@capacitor/splash-screen";
+import { isNative } from "@/lib/platform";
 import Logo from "../Logo";
 import { SettingsIcon, HamburgerIcon } from "./components/icons";
 import { MobileMenu } from "./components/MobileMenu";
@@ -30,10 +32,26 @@ import { MobileMenu } from "./components/MobileMenu";
 /** Outer shell — provides ToastProvider so inner hooks can use useToast. */
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const isLanding = pathname === "/";
+  const native = isNative();
 
-  // Landing page: skip all app chrome
-  if (isLanding) return <>{children}</>;
+  // Dismiss native splash screen once any page mounts
+  useEffect(() => {
+    if (native) SplashScreen.hide();
+  }, [native]);
+
+  // Native app: never show landing page — redirect to journey
+  useEffect(() => {
+    if (native && isLanding) {
+      router.replace("/journey");
+    }
+  }, [native, isLanding, router]);
+
+  if (isLanding) {
+    if (native) return null;
+    return <>{children}</>;
+  }
 
   return (
     <ToastProvider>
@@ -102,13 +120,16 @@ function AppShellInner({
     (currentExercise != null && !NO_MIC_TYPES.has(currentExercise.exerciseTypeId));
 
   useEffect(() => {
-    if (needsMic && status === "idle") {
+    // Don't auto-start mic during onboarding on native — iOS WKWebView requires
+    // getUserMedia to be called from a user gesture. The "Begin" button handles it.
+    const shouldStart = needsMic || (showOnboarding && !isNative());
+    if (shouldStart && status === "idle") {
       startListening();
-    } else if (!needsMic && status === "listening") {
+    } else if (!needsMic && !showOnboarding && status === "listening") {
       stopListening();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [needsMic]);
+  }, [needsMic, showOnboarding]);
 
   // Binaural is always on — no user toggle needed
   function handlePlayTone(band: ColoredNote) {
@@ -170,6 +191,7 @@ function AppShellInner({
         {(showOnboarding || redetect) && (
           <OnboardingModal
             pitchHz={pitchHz}
+            pitchHzRef={pitchHzRef}
             status={status}
             micError={micError}
             onBegin={handleOnboardingBegin}
@@ -197,8 +219,11 @@ function AppShellInner({
         />
 
         {/* Header */}
-        <header className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 border-b border-white/[0.06] shrink-0">
-          <Link href="/" className="text-lg sm:text-2xl">
+        <header
+          className="flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3 border-b border-white/[0.06] shrink-0"
+          style={{ paddingTop: `calc(var(--sat, 0px) + 0.625rem)` }}
+        >
+          <Link href={isNative() ? "/journey" : "/"} className="text-lg sm:text-2xl">
             <Logo layout="horizontal" size="sm" />
           </Link>
 

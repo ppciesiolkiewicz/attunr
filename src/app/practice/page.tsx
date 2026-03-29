@@ -1,7 +1,5 @@
 import PracticePage from "./PracticePage";
 
-export const dynamic = "force-dynamic";
-
 export const metadata = {
   title: "Practice",
   description:

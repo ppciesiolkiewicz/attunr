@@ -7,6 +7,10 @@ const ChapterPageClient = dynamic(() => import("./ChapterPageClient"), {
   loading: () => <ChapterLoading />,
 });
 
+export function generateStaticParams() {
+  return journey.chapters.map((ch) => ({ chapter: ch.slug }));
+}
+
 type Props = { params: Promise<{ chapter: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
