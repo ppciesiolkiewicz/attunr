@@ -10,6 +10,9 @@ export const AUDIO_LEAD_MS = 50;
 /** Visual lead-in before the first melody note (ms). */
 export const PRE_ROLL_MS = 2000;
 
+/** How far to rewind when pausing a melody exercise (ms). */
+export const PAUSE_ROLLBACK_MS = 1000;
+
 /** Binaural beat offset (Hz) — 6 Hz theta wave for calming/somatic effect. */
 export const BINAURAL_BEAT_HZ = 6;
 

@@ -9,6 +9,10 @@ interface UsePianoSamplerReturn {
   playNote: (frequencyHz: number, durationSec: number, delaySec?: number) => void;
   /** Schedule an entire timeline of notes at once for drift-free playback. */
   scheduleMelody: (notes: { frequencyHz: number; startSec: number; durationSec: number }[]) => void;
+  /** Pause playback at the current position. */
+  pause: () => void;
+  /** Resume playback from where it was paused. */
+  resume: () => void;
   /** Stop all scheduled notes and reset transport. */
   stop: () => void;
   isLoaded: boolean;
@@ -84,6 +88,19 @@ export function usePianoSampler(): UsePianoSamplerReturn {
     [isLoaded],
   );
 
+  const pause = useCallback(() => {
+    const transport = Tone.getTransport();
+    transport.pause();
+    samplerRef.current?.releaseAll();
+  }, []);
+
+  const resume = useCallback(() => {
+    const transport = Tone.getTransport();
+    if (transport.state === "paused") {
+      transport.start();
+    }
+  }, []);
+
   const stop = useCallback(() => {
     const transport = Tone.getTransport();
     transport.stop();
@@ -92,5 +109,5 @@ export function usePianoSampler(): UsePianoSamplerReturn {
     samplerRef.current?.releaseAll();
   }, []);
 
-  return { playNote, scheduleMelody, stop, isLoaded };
+  return { playNote, scheduleMelody, pause, resume, stop, isLoaded };
 }

@@ -48,6 +48,8 @@ interface PitchCanvasProps {
   melodyNotes?: MelodyRectNote[];
   /** performance.now() when melody playback began */
   melodyStartTime?: number;
+  /** When set, freeze melody scroll at this elapsed-ms value (pause mode) */
+  melodyPausedElapsedMs?: number;
 }
 
 import {
@@ -166,6 +168,7 @@ export default function PitchCanvas({
   onBandClick,
   melodyNotes,
   melodyStartTime,
+  melodyPausedElapsedMs,
 }: PitchCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const dotsRef = useRef<PitchDot[]>([]);
@@ -179,6 +182,7 @@ export default function PitchCanvas({
   const layoutRef = useRef({ W: 0, H: 0, bottomY: 0, topY: 0 });
   const melodyNotesRef = useRef<MelodyRectNote[] | undefined>(melodyNotes);
   const melodyStartTimeRef = useRef<number | undefined>(melodyStartTime);
+  const melodyPausedElapsedMsRef = useRef<number | undefined>(melodyPausedElapsedMs);
 
   // Sort on every prop change and flush stale dots so they don't appear in
   // the wrong position after a frequency-mode switch.
@@ -204,6 +208,10 @@ export default function PitchCanvas({
   useEffect(() => {
     melodyStartTimeRef.current = melodyStartTime;
   }, [melodyStartTime]);
+
+  useEffect(() => {
+    melodyPausedElapsedMsRef.current = melodyPausedElapsedMs;
+  }, [melodyPausedElapsedMs]);
 
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -329,8 +337,9 @@ export default function PitchCanvas({
     // ── Melody rectangles ──────────────────────────────────────────────────
     const mNotes = melodyNotesRef.current;
     const mStart = melodyStartTimeRef.current;
-    if (mNotes && mStart != null) {
-      const elapsedMs = now - mStart;
+    const mPaused = melodyPausedElapsedMsRef.current;
+    if (mNotes && (mStart != null || mPaused != null)) {
+      const elapsedMs = mPaused != null ? mPaused : now - mStart!;
       const rectH = Math.min(slotH * 0.75, 36);
 
       for (const mn of mNotes) {
