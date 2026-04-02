@@ -279,6 +279,8 @@ export interface ShiftingScaleParams extends CommonParams {
   scaleType?: string;
   /** Number of scale degrees to play per root (default 5). */
   numDegrees?: number;
+  /** Play approach chord + root chord before each iteration (like interval exercises). */
+  approachChords?: boolean;
   tempo?: number;
   noteDuration?: NoteDuration;
   minScore?: number;
@@ -668,6 +670,7 @@ export class ExerciseGenerator {
       endNote = 6,
       scaleType = "major",
       numDegrees = 5,
+      approachChords = false,
       tempo = 80,
       noteDuration = NoteDuration.Half,
       minScore = 0,
@@ -682,20 +685,43 @@ export class ExerciseGenerator {
     for (let r = hi - 1; r > lo; r--) roots.push(r);
     roots.push(lo);
 
-    // Scale pattern: ascending 1→numDegrees then descending back to 1
-    const events: MelodyEvent[] = [];
+    // Singing pattern: Root,2,3,4,5,4,3,2,Root
+    const singingEvents: MelodyEvent[] = [];
     for (let i = 1; i <= numDegrees; i++) {
-      events.push({ type: "note", target: toTarget(i), duration: noteDuration });
+      singingEvents.push({ type: "note", target: toTarget(i), duration: noteDuration });
     }
     for (let i = numDegrees - 1; i >= 1; i--) {
-      events.push({ type: "note", target: toTarget(i), duration: noteDuration });
+      singingEvents.push({ type: "note", target: toTarget(i), duration: noteDuration });
     }
 
-    const melody: MelodyScale[] = roots.map((root) => ({
-      type: scaleType,
-      root,
-      events,
-    }));
+    const rootChord: MelodyEvent = {
+      type: "play",
+      targets: [toTarget(1), toTarget(5), toTarget(8)],
+      duration: NoteDuration.Quarter,
+    };
+
+    const melody: MelodyScale[] = [];
+    for (let idx = 0; idx < roots.length; idx++) {
+      const root = roots[idx];
+      if (approachChords) {
+        // Previous root chord (transition) — skip for first iteration
+        if (idx > 0) {
+          melody.push({
+            type: "chromatic" as const,
+            root: roots[idx - 1],
+            events: [rootChord],
+          });
+        }
+        // Current root chord + singing
+        melody.push({
+          type: "chromatic" as const,
+          root,
+          events: [rootChord, ...singingEvents],
+        });
+      } else {
+        melody.push({ type: scaleType, root, events: singingEvents });
+      }
+    }
 
     // Display notes — approximate; melody resolver auto-derives from timeline
     const displayHi = hi + 12;
@@ -711,9 +737,9 @@ export class ExerciseGenerator {
     };
   }
 
-  /** 5-tone scale with shifting roots: Root→2nd→3rd→4th→5th→4th→3rd→2nd→Root, then shift root up. */
-  fiveToneScale(params: NamedMelodyParams & { numDegrees?: number }): ExerciseConfigInput {
-    return this.scaleIntervals({ ...params, scaleType: "major", numDegrees: 5 });
+  /** 5-tone scale with shifting roots and approach chords between iterations. */
+  fiveToneScale(params: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }): ExerciseConfigInput {
+    return this.scaleIntervals({ ...params, scaleType: "major", numDegrees: 5, approachChords: params.approachChords ?? true });
   }
 
   /** Minor scale intervals with shifting roots (5 degrees by default). */
