@@ -5,7 +5,7 @@ import confetti from "canvas-confetti";
 import { Pause, Play, Square, RotateCcw } from "lucide-react";
 import PitchCanvas from "@/components/PitchCanvas";
 import type { MelodyRectNote } from "@/components/PitchCanvas";
-import { Button, Text, Modal } from "@/components/ui";
+import { Button, Text, Modal, Slider } from "@/components/ui";
 import { ExerciseStartButton } from "./ExerciseStartButton";
 import { ProgressArc } from "./components/ProgressArc";
 import type { MelodyConfig } from "@/constants/journey";
@@ -54,6 +54,13 @@ export function MelodyExercise({
     [melodyTimeline],
   );
 
+  // ── Tempo adjustment ───────────────────────────────────────────────────
+  const baseTempo = resolved.tempo;
+  const [tempoBpm, setTempoBpm] = useState(baseTempo);
+  // tempoScale converts config-time → real-time (>1 = slower, <1 = faster)
+  const tempoScaleRef = useRef(1);
+  tempoScaleRef.current = baseTempo / tempoBpm;
+
   // ── Start gating ──────────────────────────────────────────────────────
   const [hasStarted, setHasStarted] = useState(false);
 
@@ -72,6 +79,8 @@ export function MelodyExercise({
   const isPlayingRef = useRef(false);
   // Elapsed ms at the moment of pause (so we can adjust melodyStartTime on resume)
   const pausedElapsedRef = useRef(0);
+  // Flag: tempo changed mid-exercise, restart on next frame
+  const pendingTempoRestart = useRef(false);
 
   // MelodyRectNote state for PitchCanvas
   const [melodyRectNotes, setMelodyRectNotes] = useState<MelodyRectNote[]>([]);
@@ -104,17 +113,19 @@ export function MelodyExercise({
     inTuneTimeRef.current = [];
     lastTickRef.current = 0;
     pausedElapsedRef.current = 0;
+    setTempoBpm(baseTempo);
     stopSampler();
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
   }, [exerciseId, stopSampler]);
 
   // ── Build initial MelodyRectNotes ──────────────────────────────────────
   const buildRectNotes = useCallback((): MelodyRectNote[] => {
+    const s = tempoScaleRef.current;
     return singableNotes.map((n, i) => ({
       index: i,
       note: n.note,
-      startMs: n.startMs + PRE_ROLL_MS,
-      durationMs: n.durationMs,
+      startMs: n.startMs * s + PRE_ROLL_MS,
+      durationMs: n.durationMs * s,
       silent: n.silent,
       status: "upcoming" as const,
     }));
@@ -125,6 +136,7 @@ export function MelodyExercise({
     if (!isLoaded || isPlayingRef.current) return;
 
     // Build schedule for Tone.js — all non-silent entries with audio
+    const s = tempoScaleRef.current;
     const audioNotes: { frequencyHz: number; startSec: number; durationSec: number }[] = [];
 
     for (const n of melodyTimeline) {
@@ -132,8 +144,8 @@ export function MelodyExercise({
       if (n.silent) continue;
       audioNotes.push({
         frequencyHz: n.note.frequencyHz,
-        startSec: (n.startMs + PRE_ROLL_MS - AUDIO_LEAD_MS) / 1000,
-        durationSec: n.durationMs / 1000,
+        startSec: (n.startMs * s + PRE_ROLL_MS - AUDIO_LEAD_MS) / 1000,
+        durationSec: (n.durationMs * s) / 1000,
       });
     }
 
@@ -155,6 +167,32 @@ export function MelodyExercise({
     setHasStarted(true);
     setTimeout(() => handleStart(), 500);
   }, [handleStart]);
+
+  // ── Apply tempo change mid-exercise ─────────────────────────────────────
+  useEffect(() => {
+    if (!pendingTempoRestart.current || !hasStarted) return;
+    pendingTempoRestart.current = false;
+
+    if (isPaused) {
+      // Rebuild rects at new tempo; rescale paused elapsed proportionally
+      const oldScale = melodyRectNotesRef.current.length > 0
+        ? (melodyRectNotesRef.current[0].startMs - PRE_ROLL_MS) / (singableNotes[0]?.startMs || 1)
+        : 1;
+      const newScale = tempoScaleRef.current;
+      const ratio = oldScale > 0 ? newScale / oldScale : 1;
+      pausedElapsedRef.current = pausedElapsedRef.current * ratio;
+
+      const rects = buildRectNotes();
+      melodyRectNotesRef.current = rects;
+      setMelodyRectNotes(rects);
+    } else {
+      // Playing — restart from the beginning
+      stopSampler();
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      isPlayingRef.current = false;
+      setTimeout(() => handleStart(), 0);
+    }
+  }, [tempoBpm, hasStarted, isPaused, stopSampler, handleStart, buildRectNotes, singableNotes]);
 
   // ── Pause / Resume / Stop ─────────────────────────────────────────────
   const handlePause = useCallback(() => {
@@ -196,14 +234,15 @@ export function MelodyExercise({
 
   const handleResume = useCallback(() => {
     const resumeElapsed = pausedElapsedRef.current;
+    const s = tempoScaleRef.current;
 
     // Reschedule audio from the resume point
     const resumeSec = resumeElapsed / 1000;
     const audioNotes: { frequencyHz: number; startSec: number; durationSec: number }[] = [];
     for (const n of melodyTimeline) {
       if (n.silent) continue;
-      const noteStartSec = (n.startMs + PRE_ROLL_MS - AUDIO_LEAD_MS) / 1000;
-      const noteEndSec = noteStartSec + n.durationMs / 1000;
+      const noteStartSec = (n.startMs * s + PRE_ROLL_MS - AUDIO_LEAD_MS) / 1000;
+      const noteEndSec = noteStartSec + (n.durationMs * s) / 1000;
       if (noteEndSec <= resumeSec) continue;
       const effectiveStart = Math.max(noteStartSec, resumeSec);
       audioNotes.push({
@@ -289,7 +328,7 @@ export function MelodyExercise({
       }
 
       // Check if melody is done
-      if (elapsedMs >= totalDurationMs + PRE_ROLL_MS) {
+      if (elapsedMs >= totalDurationMs * tempoScaleRef.current + PRE_ROLL_MS) {
         // Finalize any remaining active notes
         const finalRects = [...melodyRectNotesRef.current];
         const scores: number[] = [];
@@ -358,7 +397,7 @@ export function MelodyExercise({
   }, [onComplete]);
 
   const progress = isPlaying && melodyStartTime != null
-    ? Math.min(1, (performance.now() - melodyStartTime) / (totalDurationMs + PRE_ROLL_MS))
+    ? Math.min(1, (performance.now() - melodyStartTime) / (totalDurationMs * tempoScaleRef.current + PRE_ROLL_MS))
     : showScoreModal ? 1 : 0;
 
   return (
@@ -391,22 +430,45 @@ export function MelodyExercise({
           <ProgressArc progress={progress} complete={showScoreModal && passed} />
         </div>
 
+        {/* Tempo slider */}
+        {!showScoreModal && (
+          <div className="flex items-center gap-2 shrink-0">
+            <Text variant="caption" color="muted-1" className="tabular-nums whitespace-nowrap">
+              {tempoBpm} bpm
+            </Text>
+            <Slider
+              min={20}
+              max={200}
+              step={5}
+              value={tempoBpm}
+              onChange={(e) => {
+                setTempoBpm(Number(e.target.value));
+                pendingTempoRestart.current = true;
+              }}
+              className="w-20 sm:w-28"
+              title={`Tempo: ${tempoBpm} bpm`}
+            />
+          </div>
+        )}
+
         <div className="flex flex-row items-center gap-2 sm:gap-3 flex-1 min-w-0 sm:flex-initial sm:min-w-0 justify-end sm:ml-auto">
           {/* Playback controls */}
-          {hasStarted && !showScoreModal && (
+          {!showScoreModal && (
             <div className="flex items-center gap-1">
               {isPlaying ? (
                 <Button variant="icon-outline" color="subtle" onClick={handlePause} title="Pause">
                   <Pause size={18} />
                 </Button>
               ) : (
-                <Button variant="icon-outline" color="subtle" onClick={isPaused ? handleResume : handleStart} title={isPaused ? "Resume" : "Start"}>
+                <Button variant="icon-outline" color="subtle" onClick={isPaused ? handleResume : handleExerciseStart} title={isPaused ? "Resume" : "Start"}>
                   <Play size={18} />
                 </Button>
               )}
-              <Button variant="icon-outline" color="subtle" onClick={handleRetry} title="Restart">
-                <RotateCcw size={18} />
-              </Button>
+              {hasStarted && (
+                <Button variant="icon-outline" color="subtle" onClick={handleRetry} title="Restart">
+                  <RotateCcw size={18} />
+                </Button>
+              )}
               {(isPlaying || isPaused) && (
                 <Button variant="icon-outline" color="subtle" onClick={handleStop} title="Stop">
                   <Square size={18} />
