@@ -366,7 +366,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         title: "Precise melody",
         headerSubtitle: "Major scale · match 60%",
         cardSubtitle: "The major scale with sharper accuracy",
-        tempo: 60,
+        tempo: 48,
         minScore: 60,
         instruction:
           "The major scale at a faster tempo.\nPrecision matters — aim for each note cleanly.\nListen first, then match.",

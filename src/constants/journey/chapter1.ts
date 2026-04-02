@@ -277,7 +277,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Two-note step",
         headerSubtitle: "Two notes · listen and match",
         cardSubtitle: "Your first melody — just two adjacent notes",
-        tempo: 100,
+        tempo: 80,
         instruction:
           "Match the two notes as they appear.\nListen and match — this is the smallest melodic step.\nThere's no rush. Just notice the distance between them.",
         introModal: modal.melody({
