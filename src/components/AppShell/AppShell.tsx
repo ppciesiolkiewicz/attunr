@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import SettingsPanel from "../SettingsPanel";
+import CookieConsent from "../CookieConsent";
 import OnboardingModal from "../OnboardingModal";
 import FrequencyModal from "../FrequencyModal";
 import Footer from "../Footer";
@@ -312,6 +313,7 @@ function AppShellInner({
         </main>
 
         <Footer />
+        <CookieConsent />
         <PostHogPageView />
       </div>
     </AppContext.Provider>
