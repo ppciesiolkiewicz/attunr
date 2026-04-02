@@ -233,6 +233,22 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Hum mmmm through a nine-note scale — up five notes, then back down the same way. The piano plays each note for you.\n\nFeel the buzz shift as the pitch rises and falls. Notice where each note lives in your body.\n\nHumming through a scale combines placement and pitch awareness — your voice learns the distances between notes.\n\nMatch 40% to continue. There's no rush.",
         }),
       },
+      gen.fiveToneScale({
+        slug: "five-tone-scale",
+        title: "5-tone scale",
+        headerSubtitle: "5 notes · shifting roots",
+        cardSubtitle: "The five-tone pattern moving through your range",
+        tempo: 50,
+        minScore: 40,
+        instruction:
+          "A five-note scale that shifts up through your range.\nEach repetition starts a half-step higher.\nListen and follow.",
+        introModal: modal.melody({
+          minScore: 40,
+          tips: exerciseTips("melody", "advanced"),
+          instruction:
+            "Sing a five-note scale — up five notes and back down. Then the same pattern shifts up a half-step to a new root.\n\nFeel how the same shape carries through different starting points. The intervals stay the same — your voice learns to transpose on the fly.\n\nThe shifting five-tone scale builds melodic fluency across your entire range.\n\nMatch 40% to continue. Just follow the sound.",
+        }),
+      }),
       gen.hillSustain({
         slug: "oo-scale-hill",
         note: [3, 12],
@@ -300,6 +316,25 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Match two rising phrases, each starting on a different root. The piano plays each note for you.\n\nFeel how the second phrase lifts from where the first left off. Notice the shift — same pattern, new starting point.\n\nCarrying a melody across two roots builds fluency. Your voice learns to move between tonal centres with confidence.\n\nMatch 50% to continue. Just follow the sound.",
         }),
       },
+      gen.scaleDegrees({
+        slug: "scale-degrees-down",
+        title: "Scale degrees — descending",
+        headerSubtitle: "Top→degree→Top · descending",
+        cardSubtitle: "Feel each interval from the top — stepping down through the scale",
+        startNote: 1,
+        endNote: 8,
+        direction: "descending",
+        tempo: 45,
+        minScore: 40,
+        instruction:
+          "Start at the top, then drop to each degree, then back up.\nFeel how each interval reaches deeper.\nListen first, then match.",
+        introModal: modal.melody({
+          minScore: 40,
+          tips: exerciseTips("melody", "advanced"),
+          instruction:
+            "Sing from the octave down to each scale degree and back up. Start with the seventh, then sixth — all the way down to the root.\n\nFeel how each downward interval reaches deeper. Notice the character of each drop — familiar but different from ascending.\n\nDescending intervals are often harder — your ear is less practised going down. This exercise fills that gap.\n\nMatch 40% to continue. Let it be easy.",
+        }),
+      }),
       gen.hillSustain({
         slug: "ah-sustained",
         note: [5, 9],
@@ -359,6 +394,25 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
           tips: exerciseTips("sustain", "advanced"),
           instruction:
             "A sustained tone within a narrow 2-semitone zone. Hold each tone for 8 seconds.\n\nFeel the precision. Notice how small adjustments keep you in the zone — tiny movements of breath and placement.\n\nNarrow-zone sustains build fine pitch control. Your voice learns to hold steady in a tight space.\n\nIt's okay to drift. Just notice and adjust. There's no wrong way to explore.",
+        }),
+      }),
+      gen.scaleDegrees({
+        slug: "scale-degrees-both",
+        title: "Scale degrees — full",
+        headerSubtitle: "Ascending then descending",
+        cardSubtitle: "Every interval from the root — up and back down",
+        startNote: 1,
+        endNote: 8,
+        direction: "both",
+        tempo: 45,
+        minScore: 50,
+        instruction:
+          "All intervals ascending, then all intervals descending.\nThe full picture — every degree from both directions.\nListen and follow.",
+        introModal: modal.melody({
+          minScore: 50,
+          tips: exerciseTips("melody", "advanced"),
+          instruction:
+            "The complete scale degree exercise — ascending intervals from root to octave, then descending intervals from octave to root.\n\nFeel the symmetry. Going up, each leap grows wider. Coming down, each drop reaches deeper. Together they cover every interval.\n\nThis is comprehensive interval training — the most complete exercise for melodic hearing.\n\nMatch 50% to continue. Take your time.",
         }),
       }),
       gen.majorScale({

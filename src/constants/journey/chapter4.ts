@@ -299,6 +299,25 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
             "Match the major scale — up and back down. The piano plays each note for you.\n\nFeel the steps between notes. Notice how the scale has a shape — rising tension, then release coming home.\n\nThe major scale is the foundation of melody. Every song you know lives inside it.\n\nMatch 40% to continue. Just follow the sound.",
         }),
       }),
+      gen.scaleDegrees({
+        slug: "scale-degrees-up",
+        title: "Scale degrees — ascending",
+        headerSubtitle: "Root→degree→Root · ascending",
+        cardSubtitle: "Feel each interval from the root — stepping up through the scale",
+        startNote: 1,
+        endNote: 8,
+        direction: "ascending",
+        tempo: 45,
+        minScore: 30,
+        instruction:
+          "Root, then up to each degree, then back to root.\nFeel how each interval grows wider.\nListen first, then match.",
+        introModal: modal.melody({
+          minScore: 30,
+          tips: exerciseTips("melody", "intermediate"),
+          instruction:
+            "Sing from the root to each scale degree and back. Start with the second, then third, then fourth — all the way to the octave.\n\nFeel how each interval grows wider. Notice the different character of each leap — some feel natural, others stretch.\n\nScale degree exercises train your ear to hear every interval from the root. This is the foundation of melodic hearing.\n\nMatch 30% to continue. Just follow the sound.",
+        }),
+      }),
       {
         exerciseTypeId: "rhythm",
         slug: "rhythm-groove",

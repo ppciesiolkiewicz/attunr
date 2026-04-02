@@ -264,6 +264,21 @@ export interface ScaleDegreeParams extends CommonParams {
   startNote: number;
   endNote: number;
   scaleType?: string;
+  /** "ascending" (default): Root→degree→Root upward.
+   *  "descending": Top→degree→Top downward.
+   *  "both": ascending then descending. */
+  direction?: "ascending" | "descending" | "both";
+  tempo?: number;
+  noteDuration?: NoteDuration;
+  minScore?: number;
+}
+
+export interface ShiftingScaleParams extends CommonParams {
+  startNote?: number;
+  endNote?: number;
+  scaleType?: string;
+  /** Number of scale degrees to play per root (default 5). */
+  numDegrees?: number;
   tempo?: number;
   noteDuration?: NoteDuration;
   minScore?: number;
@@ -545,14 +560,17 @@ export class ExerciseGenerator {
 
   /**
    * Scale degrees exercise. Single MelodyScale.
-   * For each degree above root: root→degree→root pattern, then pause (Quarter).
-   * Root = lo.
+   *
+   * - "ascending" (default): Root→degree→Root for each degree upward.
+   * - "descending": Top→degree→Top for each degree downward.
+   * - "both": ascending then descending.
    */
   scaleDegrees(params: ScaleDegreeParams): ExerciseConfigInput {
     const {
       startNote,
       endNote,
       scaleType = "major",
+      direction = "ascending",
       tempo = 80,
       noteDuration = NoteDuration.Half,
       minScore = 0,
@@ -562,23 +580,25 @@ export class ExerciseGenerator {
     const hi = Math.max(startNote, endNote);
 
     const events: MelodyEvent[] = [];
-    for (let degree = lo + 1; degree <= hi; degree++) {
-      events.push({
-        type: "note",
-        target: toTarget(lo),
-        duration: noteDuration,
-      });
-      events.push({
-        type: "note",
-        target: toTarget(degree),
-        duration: noteDuration,
-      });
-      events.push({
-        type: "note",
-        target: toTarget(lo),
-        duration: noteDuration,
-      });
-      events.push({ type: "pause", duration: NoteDuration.Quarter });
+
+    // Ascending: Root → degree → Root for each degree above root
+    if (direction === "ascending" || direction === "both") {
+      for (let degree = lo + 1; degree <= hi; degree++) {
+        events.push({ type: "note", target: toTarget(lo), duration: noteDuration });
+        events.push({ type: "note", target: toTarget(degree), duration: noteDuration });
+        events.push({ type: "note", target: toTarget(lo), duration: noteDuration });
+        events.push({ type: "pause", duration: NoteDuration.Quarter });
+      }
+    }
+
+    // Descending: Top → degree → Top for each degree below top
+    if (direction === "descending" || direction === "both") {
+      for (let degree = hi - 1; degree >= lo; degree--) {
+        events.push({ type: "note", target: toTarget(hi), duration: noteDuration });
+        events.push({ type: "note", target: toTarget(degree), duration: noteDuration });
+        events.push({ type: "note", target: toTarget(hi), duration: noteDuration });
+        events.push({ type: "pause", duration: NoteDuration.Quarter });
+      }
     }
 
     const melody: MelodyScale[] = [{ type: scaleType, root: lo, events }];
@@ -597,16 +617,6 @@ export class ExerciseGenerator {
     };
   }
 
-  /** Perfect fifth interval exercise (chromaticDegree = 8, defaults startNote=4, endNote=-4). */
-  fifth(params: NamedMelodyParams): ExerciseConfigInput {
-    return this.interval({
-      ...params,
-      startNote: params.startNote ?? 4,
-      endNote: params.endNote ?? -4,
-      chromaticDegree: 8,
-    });
-  }
-
   /** Major second interval exercise (chromaticDegree = 3, defaults startNote=1, endNote=6). */
   majorSecond(params: NamedMelodyParams): ExerciseConfigInput {
     return this.interval({
@@ -614,6 +624,26 @@ export class ExerciseGenerator {
       startNote: params.startNote ?? 1,
       endNote: params.endNote ?? 6,
       chromaticDegree: 3,
+    });
+  }
+
+  /** Perfect fourth interval exercise (chromaticDegree = 6, defaults startNote=1, endNote=6). */
+  fourth(params: NamedMelodyParams): ExerciseConfigInput {
+    return this.interval({
+      ...params,
+      startNote: params.startNote ?? 1,
+      endNote: params.endNote ?? 6,
+      chromaticDegree: 6,
+    });
+  }
+
+  /** Perfect fifth interval exercise (chromaticDegree = 8, defaults startNote=4, endNote=-4). */
+  fifth(params: NamedMelodyParams): ExerciseConfigInput {
+    return this.interval({
+      ...params,
+      startNote: params.startNote ?? 4,
+      endNote: params.endNote ?? -4,
+      chromaticDegree: 8,
     });
   }
 
@@ -625,6 +655,75 @@ export class ExerciseGenerator {
       endNote: params.endNote ?? -4,
       chromaticDegree: 13,
     });
+  }
+
+  /**
+   * Scale intervals with shifting roots.
+   * Roots arc chromatically from startNote → endNote → startNote.
+   * Each root plays ascending degrees 1→numDegrees then descending back.
+   */
+  scaleIntervals(params: ShiftingScaleParams): ExerciseConfigInput {
+    const {
+      startNote = 1,
+      endNote = 6,
+      scaleType = "major",
+      numDegrees = 5,
+      tempo = 80,
+      noteDuration = NoteDuration.Half,
+      minScore = 0,
+    } = params;
+
+    const lo = Math.min(startNote, endNote);
+    const hi = Math.max(startNote, endNote);
+
+    // Root arc: lo → hi → lo
+    const roots: number[] = [];
+    for (let r = lo; r <= hi; r++) roots.push(r);
+    for (let r = hi - 1; r > lo; r--) roots.push(r);
+    roots.push(lo);
+
+    // Scale pattern: ascending 1→numDegrees then descending back to 1
+    const events: MelodyEvent[] = [];
+    for (let i = 1; i <= numDegrees; i++) {
+      events.push({ type: "note", target: toTarget(i), duration: noteDuration });
+    }
+    for (let i = numDegrees - 1; i >= 1; i--) {
+      events.push({ type: "note", target: toTarget(i), duration: noteDuration });
+    }
+
+    const melody: MelodyScale[] = roots.map((root) => ({
+      type: scaleType,
+      root,
+      events,
+    }));
+
+    // Display notes — approximate; melody resolver auto-derives from timeline
+    const displayHi = hi + 12;
+    const allActive = Array.from({ length: displayHi - lo + 1 }, (_, k) => lo + k);
+
+    return {
+      ...pickCommon(params),
+      exerciseTypeId: "melody",
+      tempo,
+      melody,
+      displayNotes: buildDisplayNotes(lo, displayHi, allActive),
+      minScore,
+    };
+  }
+
+  /** 5-tone scale with shifting roots: Root→2nd→3rd→4th→5th→4th→3rd→2nd→Root, then shift root up. */
+  fiveToneScale(params: NamedMelodyParams & { numDegrees?: number }): ExerciseConfigInput {
+    return this.scaleIntervals({ ...params, scaleType: "major", numDegrees: 5 });
+  }
+
+  /** Minor scale intervals with shifting roots (5 degrees by default). */
+  minorScaleIntervals(params: NamedMelodyParams & { numDegrees?: number }): ExerciseConfigInput {
+    return this.scaleIntervals({ ...params, scaleType: "minor" });
+  }
+
+  /** Pentatonic scale intervals with shifting roots (5 degrees by default). */
+  pentatonicScaleIntervals(params: NamedMelodyParams & { numDegrees?: number }): ExerciseConfigInput {
+    return this.scaleIntervals({ ...params, scaleType: "major pentatonic" });
   }
 
   /** Major scale exercise (scaleType = "major", defaults startNote=4, endNote=-4). */

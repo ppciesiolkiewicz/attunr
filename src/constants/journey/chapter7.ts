@@ -331,6 +331,22 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "A pentatonic scale — five notes up and back down. The piano plays each note for you.\n\nFeel how the notes fit together naturally. The pentatonic scale is the most universal melodic pattern — it appears in every musical tradition on earth.\n\nSinging pentatonic melodies builds your ear for natural intervals and trains your voice to move with ease.\n\nMatch 50% to continue. Just follow the sound.",
         }),
       }),
+      gen.pentatonicScaleIntervals({
+        slug: "pentatonic-intervals",
+        title: "Pentatonic intervals",
+        headerSubtitle: "Pentatonic · shifting roots",
+        cardSubtitle: "The pentatonic pattern moving through your range",
+        tempo: 50,
+        minScore: 40,
+        instruction:
+          "A five-note pattern that shifts up through your range.\nEach repetition starts a half-step higher.\nListen first, then match.",
+        introModal: modal.melody({
+          minScore: 40,
+          tips: exerciseTips("melody", "intermediate"),
+          instruction:
+            "Sing a five-note pentatonic pattern, then the same pattern shifts up a half-step. Each repetition starts on a new root.\n\nFeel how the same shape moves through your range — the intervals stay the same, but the pitch centre rises.\n\nShifting-root scales train your voice to maintain a pattern while adapting to new starting points.\n\nMatch 40% to continue. Let it be easy.",
+        }),
+      }),
       gen.hillSustain({
         slug: "ee-pentatonic",
         note: [4, 10],

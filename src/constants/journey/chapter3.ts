@@ -259,6 +259,22 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
     id: "ch3-wider-intervals",
     title: "Wider Intervals",
     exercises: [
+      gen.fourth({
+        slug: "fourth-melody",
+        title: "Perfect fourth",
+        headerSubtitle: "A comfortable leap · listen and match",
+        cardSubtitle: "A natural jump — the sound of a fanfare",
+        tempo: 55,
+        minScore: 0,
+        instruction:
+          "Match the two notes — a wider jump than the second.\nListen to the piano and follow the leap.\nLet your voice move freely.",
+        introModal: modal.melody({
+          minScore: 0,
+          tips: exerciseTips("melody", "intermediate"),
+          instruction:
+            "A perfect fourth — wider than anything you've sung so far. The piano plays each note for you.\n\nFeel the jump. Notice how your voice needs to reach a bit further — not as far as a fifth, but further than a second.\n\nThe perfect fourth is one of the most natural intervals in music — the first notes of many folk songs.\n\nThere's no rush. Listen first, then follow.",
+        }),
+      }),
       gen.fifth({
         slug: "fifth-melody",
         title: "Perfect fifth",
