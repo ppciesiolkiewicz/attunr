@@ -44,10 +44,6 @@ export const analytics = {
   landingVariantViewed: (variant: string) =>
     capture("landing_variant_viewed", { variant }),
 
-  // Cookie consent
-  cookieConsentResponded: (response: "accepted" | "declined") =>
-    capture("cookie_consent_responded", { response }),
-
   // Journey navigation
   journeyViewed: () => capture("journey_viewed"),
   chapterViewed: (chapterId: number, chapterTitle: string) =>

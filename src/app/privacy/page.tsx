@@ -28,8 +28,8 @@ export default function PrivacyPage() {
             settings at any time.
           </Text>
           <Text variant="body-sm" color="text-2">
-            If you accept cookies (when shown), we may use them for the same
-            purpose. We do not use tracking or advertising cookies.
+            We do not use cookies. Anonymous usage analytics (via PostHog) are
+            stored in localStorage. We do not use tracking or advertising cookies.
           </Text>
           <Text variant="body-sm" color="text-2">
             For questions, please reach out through the contact details on the
