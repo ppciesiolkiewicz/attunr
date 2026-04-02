@@ -31,7 +31,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
           { type: "video" },
         ],
       },
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-extended",
         minCount: 4,
         maxCount: 9,
@@ -111,7 +111,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
     id: "ch5-deep-breath",
     title: "Deep Breath",
     exercises: [
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-deep-ch5",
         minCount: 4,
         maxCount: 11,

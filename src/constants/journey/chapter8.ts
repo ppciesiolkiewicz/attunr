@@ -37,7 +37,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
-    gen.lipRoll({
+    gen.lipRolls.slide({
       slug: "ch8-warmup-lip-rolls",
       startNote: 1,
       endNote: -1,
@@ -53,7 +53,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch8-warmup-hum",
       note: 4,
       seconds: 3,
@@ -71,7 +71,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch8-warmup-low-uu",
       note: 4,
       seconds: 3,
@@ -89,7 +89,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
-    gen.zoneAbove({
+    gen.pitch.zoneAbove({
       slug: "ch8-warmup-hoo-hoo",
       boundaryNote: -6,
       seconds: 3,
@@ -106,7 +106,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelliVoiceDriven({
+    gen.breathwork.farinelliVoiceDriven({
       slug: "ch8-warmup-farinelli",
       minCount: 4,
       maxCount: 5,
@@ -120,7 +120,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch8-warmup-oo-hill",
       note: 6,
       seconds: 3,
@@ -138,7 +138,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Sound oooo (as in 'go') on a low tone. Keep your mouth rounded and open.\n\nFeel the warmth settle in your chest. Notice how the rounded shape changes the resonance.\n\nOo grounds your voice with a rounder, warmer quality — a quick reset before we begin.\n\nLet it be easy. There's no rush.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch8-warmup-ah-hill",
       note: 5,
       seconds: 3,
@@ -156,7 +156,7 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
           "Sound ahhh (as in 'father') on a low tone. Open your mouth wide — jaw dropped, tongue low.\n\nFeel the openness in your throat. Notice how the resonance fills your chest.\n\nAh grounds your voice with full openness — a warm reset before we begin.\n\nIt's okay to pause. There's no rush.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch8-warmup-ee-hill",
       note: [7, 11],
       seconds: 3,
@@ -183,7 +183,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
     id: "ch8-full-scale",
     title: "Full Scale",
     exercises: [
-      gen.majorScale({
+      gen.scales.major({
         slug: "full-major-scale",
         title: "Full major scale",
         headerSubtitle: "Major scale · match 50%",
@@ -233,7 +233,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Hum mmmm through a nine-note scale — up five notes, then back down the same way. The piano plays each note for you.\n\nFeel the buzz shift as the pitch rises and falls. Notice where each note lives in your body.\n\nHumming through a scale combines placement and pitch awareness — your voice learns the distances between notes.\n\nMatch 40% to continue. There's no rush.",
         }),
       },
-      gen.fiveToneScale({
+      gen.scaleIntervals.fiveTone({
         slug: "five-tone-scale",
         title: "5-tone scale",
         headerSubtitle: "5 notes · shifting roots",
@@ -249,7 +249,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Sing a five-note scale — up five notes and back down. Then the same pattern shifts up a half-step to a new root.\n\nFeel how the same shape carries through different starting points. The intervals stay the same — your voice learns to transpose on the fly.\n\nThe shifting five-tone scale builds melodic fluency across your entire range.\n\nMatch 40% to continue. Just follow the sound.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "oo-scale-hill",
         note: [3, 12],
         seconds: 8,
@@ -316,7 +316,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Match two rising phrases, each starting on a different root. The piano plays each note for you.\n\nFeel how the second phrase lifts from where the first left off. Notice the shift — same pattern, new starting point.\n\nCarrying a melody across two roots builds fluency. Your voice learns to move between tonal centres with confidence.\n\nMatch 50% to continue. Just follow the sound.",
         }),
       },
-      gen.scaleDegrees({
+      gen.scales.scaleDegrees({
         slug: "scale-degrees-down",
         title: "Scale degrees — descending",
         headerSubtitle: "Top→degree→Top · descending",
@@ -335,7 +335,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Sing from the octave down to each scale degree and back up. Start with the seventh, then sixth — all the way down to the root.\n\nFeel how each downward interval reaches deeper. Notice the character of each drop — familiar but different from ascending.\n\nDescending intervals are often harder — your ear is less practised going down. This exercise fills that gap.\n\nMatch 40% to continue. Let it be easy.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "ah-sustained",
         note: [5, 9],
         seconds: 10,
@@ -353,7 +353,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Sound ahhh (as in 'father') in your mid range. Hold each tone for 10 seconds — the longest sustain yet.\n\nFeel the openness in your throat and chest. Notice how the resonance deepens as you hold longer.\n\nLonger sustains build breath control and teach your voice to stay steady under pressure.\n\nThere's no rush. Breathe whenever you need to.",
         }),
       }),
-      gen.lipRoll({
+      gen.lipRolls.slide({
         slug: "lip-roll-full-ch8",
         startNote: 1,
         endNote: -1,
@@ -377,7 +377,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
     id: "ch8-precision",
     title: "Precision",
     exercises: [
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "narrow-zone",
         note: [6, 8],
         seconds: 8,
@@ -396,7 +396,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "A sustained tone within a narrow 2-semitone zone. Hold each tone for 8 seconds.\n\nFeel the precision. Notice how small adjustments keep you in the zone — tiny movements of breath and placement.\n\nNarrow-zone sustains build fine pitch control. Your voice learns to hold steady in a tight space.\n\nIt's okay to drift. Just notice and adjust. There's no wrong way to explore.",
         }),
       }),
-      gen.scaleDegrees({
+      gen.scales.scaleDegrees({
         slug: "scale-degrees-both",
         title: "Scale degrees — full",
         headerSubtitle: "Ascending then descending",
@@ -415,7 +415,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "The complete scale degree exercise — ascending intervals from root to octave, then descending intervals from octave to root.\n\nFeel the symmetry. Going up, each leap grows wider. Coming down, each drop reaches deeper. Together they cover every interval.\n\nThis is comprehensive interval training — the most complete exercise for melodic hearing.\n\nMatch 50% to continue. Take your time.",
         }),
       }),
-      gen.majorScale({
+      gen.scales.major({
         slug: "precise-melody",
         title: "Precise melody",
         headerSubtitle: "Major scale · match 60%",
@@ -487,7 +487,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
     id: "ch8-coming-together",
     title: "Coming Together",
     exercises: [
-      gen.majorScale({
+      gen.scales.major({
         slug: "final-melody",
         title: "Final melody",
         headerSubtitle: "Major scale · match 60%",
@@ -503,7 +503,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Match the full major scale one final time. The piano plays each note for you.\n\nFeel how far you've come. Scales, vowels, rhythm, breath — everything you've practised lives in this melody.\n\nThis is integration. Your voice knows more than you think — trust what your body has learned.\n\nMatch 60% to continue. Let it be easy.",
         }),
       }),
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-ch8",
         minCount: 4,
         maxCount: 11,

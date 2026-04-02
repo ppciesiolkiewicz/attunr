@@ -34,7 +34,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
-    gen.lipRoll({
+    gen.lipRolls.slide({
       slug: "warmup-lip-rolls",
       startNote: 1,
       endNote: -1,
@@ -50,7 +50,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "warmup-hum",
       note: 4,
       seconds: 3,
@@ -68,7 +68,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "warmup-low-uu",
       note: 4,
       seconds: 3,
@@ -86,7 +86,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
           "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
-    gen.zoneAbove({
+    gen.pitch.zoneAbove({
       slug: "warmup-hoo-hoo",
       boundaryNote: -6,
       seconds: 3,
@@ -103,7 +103,7 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelliVoiceDriven({
+    gen.breathwork.farinelliVoiceDriven({
       slug: "warmup-farinelli",
       minCount: 2,
       maxCount: 5,
@@ -180,7 +180,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
             "Sound uuuu (as in 'moon') at three rising pitches. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
         }),
       },
-      gen.lipRoll({
+      gen.lipRolls.slide({
         slug: "lip-rolls-high-to-low",
         startNote: -1,
         endNote: 1,
@@ -349,7 +349,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     id: "ch2-sustain-control",
     title: "Sustain & Control",
     exercises: [
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "hum-mid-long",
         note: [5, 9],
         seconds: 8,
@@ -366,7 +366,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
             "Hum mmmm on a mid tone. Hold it steady for 8 seconds — longer than before.\n\nFeel the buzz settle in your chest and face. Notice how it deepens as you hold.\n\nLonger holds train your breath control and build stability without you noticing.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "u-mid",
         note: [5, 9],
         seconds: 8,
@@ -383,7 +383,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
             "Sound uuuu (as in 'moon') on a mid tone. Hold for 8 seconds.\n\nNotice the resonance in your chest and face. Feel how the vowel opens up with a longer hold.\n\nLonger vowel holds carry your resonance further and build the breath support behind your voice.\n\nKeep your mouth rounded like Uu — relaxed, not smiling. Breathe whenever you need to.",
         }),
       }),
-      gen.lipRollSustain({
+      gen.lipRolls.sustain({
         slug: "lip-roll-sustain-mid",
         note: 7,
         seconds: 6,
@@ -399,7 +399,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
             "Play the tone and lip roll alongside it. Hold the buzz at a steady mid pitch.\n\nNotice where the resonance sits — lips, face, or deeper. Feel the vibration without forcing it.\n\nSustaining a lip roll at one pitch builds breath control and stability.\n\nTake a breath between each one. Just notice what happens.",
         }),
       }),
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-deep",
         minCount: 2,
         maxCount: 7,

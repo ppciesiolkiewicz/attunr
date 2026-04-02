@@ -37,7 +37,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
-    gen.lipRoll({
+    gen.lipRolls.slide({
       slug: "ch7-warmup-lip-rolls",
       startNote: 1,
       endNote: -1,
@@ -53,7 +53,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch7-warmup-hum",
       note: 4,
       seconds: 3,
@@ -71,7 +71,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch7-warmup-low-uu",
       note: 4,
       seconds: 3,
@@ -89,7 +89,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
-    gen.zoneAbove({
+    gen.pitch.zoneAbove({
       slug: "ch7-warmup-hoo-hoo",
       boundaryNote: -6,
       seconds: 3,
@@ -106,7 +106,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelliVoiceDriven({
+    gen.breathwork.farinelliVoiceDriven({
       slug: "ch7-warmup-farinelli",
       minCount: 4,
       maxCount: 5,
@@ -120,7 +120,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body settles as the rhythm deepens.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch7-warmup-oo-hill",
       note: 6,
       seconds: 3,
@@ -138,7 +138,7 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
           "Sound oooo (as in 'go') on a low tone. Keep your mouth rounded and open.\n\nFeel the warmth settle in your chest. Notice how the rounded shape changes the resonance.\n\nOo grounds your voice with a rounder, warmer quality — a quick reset before we begin.\n\nLet it be easy. There's no rush.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch7-warmup-ah-hill",
       note: 5,
       seconds: 3,
@@ -184,7 +184,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
           { type: "video" },
         ],
       },
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "ee-mid",
         note: [7, 11],
         seconds: 5,
@@ -204,7 +204,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "Sound eeee (as in 'see') in your mid-high range. Let the sound project forward — bright, focused, resonating in your face.\n\nNotice where the buzz lands. Feel it in your sinuses, your cheekbones, the front of your mouth. That's forward placement.\n\nEe teaches your voice to find the mask — the place where sound carries furthest with the least effort.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
-      gen.zoneAbove({
+      gen.pitch.zoneAbove({
         slug: "ee-high",
         boundaryNote: -5,
         seconds: 4,
@@ -289,7 +289,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "Three vowels — Ee, Uu, Ee — each on a different pitch. The piano plays each note for you.\n\nFeel the contrast. Ee is bright and forward — buzzing in your face. Uu is warm and round — settling in your chest. Then Ee pulls you forward again.\n\nContrasting bright and warm vowels builds awareness of how placement changes with shape.\n\nMatch 30% to continue. It's okay to pause.",
         }),
       },
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "vowel-transition-hill",
         note: [5, 9],
         seconds: 6,
@@ -315,7 +315,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
     id: "ch7-pentatonic",
     title: "Pentatonic",
     exercises: [
-      gen.pentatonic({
+      gen.scales.pentatonic({
         slug: "pentatonic-melody",
         title: "Pentatonic melody",
         headerSubtitle: "Pentatonic scale · match 50%",
@@ -331,9 +331,9 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "A pentatonic scale — five notes up and back down. The piano plays each note for you.\n\nFeel how the notes fit together naturally. The pentatonic scale is the most universal melodic pattern — it appears in every musical tradition on earth.\n\nSinging pentatonic melodies builds your ear for natural intervals and trains your voice to move with ease.\n\nMatch 50% to continue. Just follow the sound.",
         }),
       }),
-      gen.pentatonicScaleIntervals({
-        slug: "pentatonic-intervals",
-        title: "Pentatonic intervals",
+      gen.scaleIntervals.pentatonic({
+        slug: "pentatonic-scale",
+        title: "Pentatonic scale",
         headerSubtitle: "Pentatonic · shifting roots",
         cardSubtitle: "The pentatonic pattern moving through your range",
         tempo: 50,
@@ -347,7 +347,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "Sing a five-note pentatonic pattern, then the same pattern shifts up a half-step. Each repetition starts on a new root.\n\nFeel how the same shape moves through your range — the intervals stay the same, but the pitch centre rises.\n\nShifting-root scales train your voice to maintain a pattern while adapting to new starting points.\n\nMatch 40% to continue. Let it be easy.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "ee-pentatonic",
         note: [4, 10],
         seconds: 6,
@@ -365,7 +365,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "Sound eeee (as in 'see') across a wider range than before. Hold each tone for 6 seconds.\n\nNotice how the forward placement holds — even as the pitch moves, Ee keeps its brightness and focus in your face.\n\nSinging Ee across a wider range strengthens forward placement and builds consistency.\n\nThere's no rush. Breathe whenever you need to.",
         }),
       }),
-      gen.lipRoll({
+      gen.lipRolls.slide({
         slug: "lip-roll-pentatonic",
         startNote: 3,
         endNote: -3,
@@ -390,7 +390,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
     id: "ch7-weaving",
     title: "Weaving",
     exercises: [
-      gen.majorScale({
+      gen.scales.major({
         slug: "vowel-weave",
         title: "Major scale weave",
         headerSubtitle: "Major scale · match 40%",
@@ -407,7 +407,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "A full major scale — up and back down. The piano plays each note for you.\n\nFeel the steps between notes. Notice how the scale weaves through your range — each note a different colour.\n\nThe major scale is the foundation of melody. Weaving through it builds fluency and confidence.\n\nMatch 40% to continue. Let it be easy.",
         }),
       }),
-      gen.lipRoll({
+      gen.lipRolls.slide({
         slug: "lip-roll-full-ch7",
         startNote: 1,
         endNote: -1,
@@ -423,7 +423,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
             "Play the tone and lip roll alongside it. Slide smoothly from your lowest to your highest — your full range.\n\nFeel the buzz travel through your entire voice. Notice how the resonance shifts from chest to head as you glide.\n\nFull-range lip rolls loosen everything and connect your registers into one continuous sound.\n\nDon't worry about matching exactly. Just follow the movement.",
         }),
       }),
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-ch7",
         minCount: 4,
         maxCount: 9,

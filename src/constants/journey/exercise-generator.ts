@@ -423,6 +423,68 @@ function buildDisplayNotes(
 // ── ExerciseGenerator ─────────────────────────────────────────────────────────
 
 export class ExerciseGenerator {
+  // ── Sub-generators ─────────────────────────────────────────────────────
+
+  /** Pitch sustain/zone exercises. */
+  readonly pitch = {
+    /** Hill sustain — hold a note with directional targeting. */
+    hillSustain: (p: HillSustainParams) => this.hillSustain(p),
+    /** Zone below — sing below a boundary note. */
+    zoneBelow: (p: ZoneBelowParams) => this.zoneBelow(p),
+    /** Zone above — sing above a boundary note. */
+    zoneAbove: (p: ZoneAboveParams) => this.zoneAbove(p),
+    /** Zone between — sing within a note range. */
+    zoneBetween: (p: ZoneBetweenParams) => this.zoneBetween(p),
+  };
+
+  /** Lip roll exercises. */
+  readonly lipRolls = {
+    /** Lip roll slide — glide between notes. */
+    slide: (p: LipRollParams) => this.lipRoll(p),
+    /** Lip roll sustain — hold a single note. */
+    sustain: (p: LipRollSustainParams) => this.lipRollSustain(p),
+  };
+
+  /** Breathwork exercises. */
+  readonly breathwork = {
+    /** Farinelli breathwork. */
+    farinelli: (p: FarinelliParams) => this.farinelli(p),
+    /** Voice-driven Farinelli — audio segments drive the UI. */
+    farinelliVoiceDriven: (p: FarinelliVoiceDrivenParams) => this.farinelliVoiceDriven(p),
+  };
+
+  /** Shifting-root exercises: root moves chromatically each iteration. */
+  readonly scaleIntervals = {
+    /** 5-tone major scale, approach chords on by default. */
+    fiveTone: (p: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }) => this.fiveToneScale(p),
+    /** Pentatonic scale, shifting roots. */
+    pentatonic: (p: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }) => this.pentatonicScale(p),
+    /** Minor scale, shifting roots. */
+    minor: (p: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }) => this.shiftingMinorScale(p),
+    /** Major second interval (root→2nd→root), shifting roots. */
+    majorSecond: (p: NamedMelodyParams) => this.majorSecond(p),
+    /** Perfect fourth interval, shifting roots. */
+    fourth: (p: NamedMelodyParams) => this.fourth(p),
+    /** Perfect fifth interval, shifting roots. */
+    fifth: (p: NamedMelodyParams) => this.fifth(p),
+    /** Octave interval, shifting roots. */
+    octave: (p: NamedMelodyParams) => this.octave(p),
+  };
+
+  /** Fixed-root scale/interval exercises. */
+  readonly scales = {
+    /** Major scale — up and back down. */
+    major: (p: NamedMelodyParams) => this.majorScale(p),
+    /** Minor scale — up and back down. */
+    minor: (p: NamedMelodyParams) => this.minorScale(p),
+    /** Pentatonic scale — up and back down. */
+    pentatonic: (p: NamedMelodyParams) => this.pentatonic(p),
+    /** Scale degrees: root→degree→root for each degree. Supports ascending/descending/both. */
+    scaleDegrees: (p: ScaleDegreeParams) => this.scaleDegrees(p),
+  };
+
+  // ── Interval exercises (root→degree→root patterns) ─────────────────────
+
   /**
    * Interval exercise with shifting roots.
    * Roots arc from startNote → endNote → startNote. Each step is a separate
@@ -659,12 +721,14 @@ export class ExerciseGenerator {
     });
   }
 
+  // ── Scale exercises (root shifts chromatically, optional approach chords) ──
+
   /**
-   * Scale intervals with shifting roots.
+   * Scale exercise with shifting roots.
    * Roots arc chromatically from startNote → endNote → startNote.
    * Each root plays ascending degrees 1→numDegrees then descending back.
    */
-  scaleIntervals(params: ShiftingScaleParams): ExerciseConfigInput {
+  shiftingScale(params: ShiftingScaleParams): ExerciseConfigInput {
     const {
       startNote = 1,
       endNote = 6,
@@ -739,18 +803,20 @@ export class ExerciseGenerator {
 
   /** 5-tone scale with shifting roots and approach chords between iterations. */
   fiveToneScale(params: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }): ExerciseConfigInput {
-    return this.scaleIntervals({ ...params, scaleType: "major", numDegrees: 5, approachChords: params.approachChords ?? true });
+    return this.shiftingScale({ ...params, scaleType: "major", numDegrees: 5, approachChords: params.approachChords ?? true });
   }
 
-  /** Minor scale intervals with shifting roots (5 degrees by default). */
-  minorScaleIntervals(params: NamedMelodyParams & { numDegrees?: number }): ExerciseConfigInput {
-    return this.scaleIntervals({ ...params, scaleType: "minor" });
+  /** Shifting minor scale (5 degrees by default). */
+  shiftingMinorScale(params: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }): ExerciseConfigInput {
+    return this.shiftingScale({ ...params, scaleType: "minor" });
   }
 
-  /** Pentatonic scale intervals with shifting roots (5 degrees by default). */
-  pentatonicScaleIntervals(params: NamedMelodyParams & { numDegrees?: number }): ExerciseConfigInput {
-    return this.scaleIntervals({ ...params, scaleType: "major pentatonic" });
+  /** Shifting pentatonic scale (5 degrees by default). */
+  pentatonicScale(params: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }): ExerciseConfigInput {
+    return this.shiftingScale({ ...params, scaleType: "major pentatonic" });
   }
+
+  // ── Fixed-root scale exercises ─────────────────────────────────────────
 
   /** Major scale exercise (scaleType = "major", defaults startNote=4, endNote=-4). */
   majorScale(params: NamedMelodyParams): ExerciseConfigInput {

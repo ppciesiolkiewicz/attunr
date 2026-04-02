@@ -63,7 +63,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Walkthrough",
         cardSubtitle: "A quick look at how things work",
       },
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "gentle-hum",
         note: 4,
         seconds: 3,
@@ -89,7 +89,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Close your lips and hum mmmm on a low tone. Keep the sound steady.\n\nFeel the buzz in your lips and teeth. Notice if it spreads into your chest.\n\nHumming is the simplest way to connect your voice to your body. It warms up your vocal cords and helps you find where sound lives.\n\nBreathe whenever you need to — there's no rush. There's no wrong way to hum.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "low-uu",
         note: 4,
         seconds: 3,
@@ -115,7 +115,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let the sound settle deep.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel naturally opens your chest voice. It's the warmest, most grounding sound you can make.\n\nBreathe whenever you need to — there's no rush.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "middle-tone",
         note: [5, 10],
         seconds: 3,
@@ -147,7 +147,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         title: "Understanding notes",
         cardSubtitle: "See where your voice sits — and what the notes mean",
       },
-      gen.zoneAbove({
+      gen.pitch.zoneAbove({
         slug: "hoo-hoo",
         boundaryNote: -6,
         seconds: 2,
@@ -165,7 +165,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light and gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.",
         }),
       }),
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-1",
         minCount: 2,
         maxCount: 7,
@@ -229,7 +229,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Let your lips buzz loosely — like a motorboat. No pitch, no melody, just the buzz. Keep buzzing until the progress line is full.\n\nNotice the vibration spreading through your lips and face. Feel how your breath drives the sound.\n\nLip rolls loosen tension in your face and jaw. They wake up the connection between breath and voice — the foundation for everything that follows.\n\nIt's okay to take breaths between rolls. Just notice what happens.",
         }),
       }),
-      gen.lipRoll({
+      gen.lipRolls.slide({
         slug: "lip-roll-slide",
         startNote: 13,
         endNote: 1,
@@ -255,7 +255,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-first-melody",
     title: "First Melody",
     exercises: [
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "hum-mid-low",
         note: [2, 6],
         seconds: 5,
@@ -272,7 +272,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Hum mmmm just above your lowest comfortable tone. Keep it steady and warm.\n\nNotice the warmth spreading through your chest. Feel where the buzz sits.\n\nHumming at this pitch grounds your voice in your body. It's a return to the simplest sound — a foundation before melody.\n\nBreathe whenever you need to.",
         }),
       }),
-      gen.majorSecond({
+      gen.scaleIntervals.majorSecond({
         slug: "two-note-step",
         title: "Two-note step",
         headerSubtitle: "Two notes · listen and match",
@@ -287,7 +287,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Match the two notes as they appear — the piano plays each one for you.\n\nNotice the distance between the notes. Feel how your voice shifts — even a small step changes where the sound lives.\n\nThis is your first melody. Two notes, one small step. Everything larger builds from here.\n\nThere's no rush. Listen first, then follow.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "u-mid-low",
         note: [2, 6],
         seconds: 6,
@@ -312,7 +312,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
     id: "ch1-breath",
     title: "Breath",
     exercises: [
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-2",
         minCount: 2,
         maxCount: 5,
@@ -327,7 +327,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Inhale, hold, and exhale for the same count — each cycle adds one beat.\n\nNotice how your body responds as the rhythm lengthens.",
         }),
       }),
-      gen.lipRollSustain({
+      gen.lipRolls.sustain({
         slug: "lip-roll-sustain",
         note: 5,
         seconds: 5,
@@ -343,7 +343,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             "Play the tone and lip roll alongside it. Hold the buzz at a steady pitch.\n\nNotice where the resonance sits — lips, face, or deeper. Feel the vibration without forcing it.\n\nSustaining a lip roll at one pitch trains your breath control and builds stability. It's practice for holding any tone steady.\n\nTake a breath between each one.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "hum-mid",
         note: [5, 9],
         seconds: 6,

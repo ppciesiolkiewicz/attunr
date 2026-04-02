@@ -39,7 +39,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
-    gen.lipRoll({
+    gen.lipRolls.slide({
       slug: "ch9-warmup-lip-rolls",
       startNote: 1,
       endNote: -1,
@@ -55,7 +55,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch9-warmup-hum",
       note: 4,
       seconds: 3,
@@ -73,7 +73,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch9-warmup-low-uu",
       note: 4,
       seconds: 3,
@@ -91,7 +91,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
           "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
-    gen.zoneAbove({
+    gen.pitch.zoneAbove({
       slug: "ch9-warmup-hoo-hoo",
       boundaryNote: -6,
       seconds: 3,
@@ -108,7 +108,7 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelliVoiceDriven({
+    gen.breathwork.farinelliVoiceDriven({
       slug: "ch9-warmup-farinelli",
       minCount: 4,
       maxCount: 7,
@@ -148,7 +148,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
           { type: "video" },
         ],
       },
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "lam-root",
         note: 1,
         seconds: 6,
@@ -167,7 +167,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
             "Hum LAM on a low tone. Let the vibration settle at the base of your spine.\n\nFeel the grounding — heavy, warm, rooted. Notice where the sound lands in your body.\n\nThe root chakra is your foundation. This tone connects you to the earth beneath you.\n\nThere's no rush. Just let it hum through you.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "vam-sacral",
         note: 2,
         seconds: 6,
@@ -194,7 +194,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
     id: "ch9-solar-heart",
     title: "Solar Plexus & Heart",
     exercises: [
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "ram-solar",
         note: 3,
         seconds: 6,
@@ -213,7 +213,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
             "Hum RAM on this tone. Feel the vibration in your solar plexus — your core.\n\nNotice the strength there. Let the sound radiate outward from your centre.\n\nThe solar plexus is where confidence lives. This tone wakes it up.\n\nBreathe whenever you need to.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "yam-heart",
         note: 4,
         seconds: 6,
@@ -232,7 +232,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
             "Hum YAM on this tone. Feel your chest open as the vibration settles.\n\nNotice the space — wider, softer. Let the sound fill your heart.\n\nThe heart chakra is where openness lives. This tone invites it.\n\nThere's no wrong way to feel this. Just notice what happens.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "heart-ah",
         note: [5, 9],
         seconds: 8,
@@ -258,7 +258,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
     id: "ch9-upper-chakras",
     title: "Throat, Third Eye & Crown",
     exercises: [
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "ham-throat",
         note: 5,
         seconds: 5,
@@ -277,7 +277,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
             "Hum HAM on this tone. Feel the vibration settle in your throat.\n\nNotice the clarity — this is where your voice lives. Let it speak freely.\n\nThe throat chakra is truth. This tone opens the channel.\n\nThere's no rush. Just let the sound be.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "om-third-eye",
         note: 6,
         seconds: 5,
@@ -410,7 +410,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
           "Hum each mantra as it appears. Feel it vibrate in its place.\nLet each one settle before the next arrives.\nJust notice what happens.",
         tips: exerciseTips("chakra", "advanced"),
       }),
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-ch9",
         minCount: 4,
         maxCount: 9,

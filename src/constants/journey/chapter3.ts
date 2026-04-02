@@ -34,7 +34,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
           "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
-    gen.lipRoll({
+    gen.lipRolls.slide({
       slug: "ch3-warmup-lip-rolls",
       startNote: 1,
       endNote: -1,
@@ -50,7 +50,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
           "Play the tone and lip roll alongside it. Slide smoothly from low to high.\n\nFeel the buzz travel through your lips. Notice how the resonance shifts as the pitch rises.\n\nLip rolls loosen tension and wake up the connection between breath and voice.\n\nDon't worry about matching exactly. Just follow the movement.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch3-warmup-hum",
       note: 4,
       seconds: 3,
@@ -68,7 +68,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
           "Close your lips and hum mmmm on a low tone. Let it wobble gently.\n\nFeel the buzz in your lips and chest. Notice where the warmth settles.\n\nHumming grounds your voice in your body — the simplest way to reconnect.\n\nBreathe whenever you need to. There's no wrong way to hum.",
       }),
     }),
-    gen.hillSustain({
+    gen.pitch.hillSustain({
       slug: "ch3-warmup-low-uu",
       note: 4,
       seconds: 3,
@@ -86,7 +86,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
           "Sound uuuu (as in 'moon') on a low tone. Keep your mouth rounded like Uu — relaxed, not smiling. Let it wobble gently.\n\nNotice where the resonance lands — chest, throat, or somewhere in between.\n\nThis vowel opens your chest voice and grounds you in your body.\n\nBreathe whenever you need to — there's no rush.",
       }),
     }),
-    gen.zoneAbove({
+    gen.pitch.zoneAbove({
       slug: "ch3-warmup-hoo-hoo",
       boundaryNote: -6,
       seconds: 3,
@@ -103,7 +103,7 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
           "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
-    gen.farinelliVoiceDriven({
+    gen.breathwork.farinelliVoiceDriven({
       slug: "ch3-warmup-farinelli",
       minCount: 2,
       maxCount: 5,
@@ -144,7 +144,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
           { type: "video" },
         ],
       },
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "oo-low",
         note: 4,
         seconds: 5,
@@ -163,7 +163,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "Sound oooo (as in 'go') on a low tone. Keep your mouth rounded and open — wider than Uu. Let it wobble gently.\n\nFeel the warmth settle in your chest. Notice how the extra openness changes the resonance compared to Uu.\n\nOo opens your throat and introduces a rounder, warmer quality to your voice.\n\nBreathe whenever you need to. Just notice what happens.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "oo-mid",
         note: [5, 9],
         seconds: 5,
@@ -217,7 +217,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "Sound uuuu on the first tone, then gradually open into oooo as the pitches rise. Follow the piano.\n\nFeel the shape change in your mouth — your lips stay rounded but your jaw drops slightly. Notice how the resonance warms and opens.\n\nVowel transitions train your voice to move between shapes without tension. It's the beginning of expressive singing.\n\nYou don't need to get this right. Just notice the shift.",
         }),
       },
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "oo-longer",
         note: [5, 9],
         seconds: 6,
@@ -235,7 +235,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "Sound oooo (as in 'go') in your mid range. Hold for 6 seconds — longer than before.\n\nFeel the vowel settle as you sustain it. Notice how the resonance deepens the longer you hold.\n\nLonger holds build breath control and let your voice find its natural placement.\n\nBreathe whenever you need to. It's okay to pause.",
         }),
       }),
-      gen.lipRoll({
+      gen.lipRolls.slide({
         slug: "lip-roll-low-high",
         startNote: -1,
         endNote: 1,
@@ -259,7 +259,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
     id: "ch3-wider-intervals",
     title: "Wider Intervals",
     exercises: [
-      gen.fourth({
+      gen.scaleIntervals.fourth({
         slug: "fourth-melody",
         title: "Perfect fourth",
         headerSubtitle: "A comfortable leap · listen and match",
@@ -275,7 +275,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "A perfect fourth — wider than anything you've sung so far. The piano plays each note for you.\n\nFeel the jump. Notice how your voice needs to reach a bit further — not as far as a fifth, but further than a second.\n\nThe perfect fourth is one of the most natural intervals in music — the first notes of many folk songs.\n\nThere's no rush. Listen first, then follow.",
         }),
       }),
-      gen.fifth({
+      gen.scaleIntervals.fifth({
         slug: "fifth-melody",
         title: "Perfect fifth",
         headerSubtitle: "A wider leap · listen and match",
@@ -290,7 +290,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "A perfect fifth — two notes with a wider gap than anything so far. The piano plays each one for you.\n\nFeel the leap in your body. Notice how the higher note lifts and the lower note grounds.\n\nWider intervals stretch your voice and build confidence in jumping between distant pitches.\n\nThere's no rush. Listen first, then follow.",
         }),
       }),
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "oo-wide",
         note: [3, 10],
         seconds: 6,
@@ -308,7 +308,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "Sound oooo (as in 'go') across a wider range than before. Keep your mouth rounded and open.\n\nNotice how the vowel changes colour as you move through different pitches — warmer low, brighter high.\n\nSounding a vowel across a wider range trains your voice to carry resonance everywhere.\n\nLet it be easy. Breathe whenever you need to.",
         }),
       }),
-      gen.zoneAbove({
+      gen.pitch.zoneAbove({
         slug: "hoo-hoo-high",
         boundaryNote: -6,
         seconds: 4,
@@ -333,7 +333,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
     id: "ch3-settling-in",
     title: "Settling In",
     exercises: [
-      gen.hillSustain({
+      gen.pitch.hillSustain({
         slug: "oo-settle",
         note: [5, 9],
         seconds: 8,
@@ -351,7 +351,7 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
             "Sound oooo (as in 'go') in your mid range. Hold for 8 seconds — the longest holds yet.\n\nFeel how the resonance deepens the longer you sustain. Notice your breath settling into a rhythm.\n\nLonger holds carry your vowel further and build the stability behind your voice.\n\nBreathe whenever you need to. There's no rush.",
         }),
       }),
-      gen.farinelliVoiceDriven({
+      gen.breathwork.farinelliVoiceDriven({
         slug: "farinelli-ch3",
         minCount: 2,
         maxCount: 7,
