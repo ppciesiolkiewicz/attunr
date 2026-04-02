@@ -90,8 +90,6 @@ Encapsulate the code into single direcory containing components, hooks, context,
 
 ## Maillist vs signup
 
-## Feedback form via posthog
-
 ## PWA
 
 ## Decreasing progress in exercises
