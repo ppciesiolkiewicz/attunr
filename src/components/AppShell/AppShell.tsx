@@ -102,12 +102,13 @@ function AppShellInner({
   // Hydrate onboarding flag after mount — also trigger onboarding when voice
   // range is missing (e.g. user from a previous app version).
   useEffect(() => {
+    if (pathname.startsWith("/debug")) return;
     const onboarded = localStorage.getItem("attunr.onboarded");
     const hasVoice =
       Number(localStorage.getItem("attunr.vocalRangeLowHz")) > 0 &&
       Number(localStorage.getItem("attunr.vocalRangeHighHz")) > 0;
     if (!onboarded || !hasVoice) setShowOnboarding(true);
-  }, []);
+  }, [pathname]);
 
   // Start mic only on exercise pages that need it; stop when navigating away
   const exerciseMatch = pathname.match(/^\/journey\/([^/]+)\/([^/]+)/);
@@ -188,7 +189,7 @@ function AppShellInner({
   return (
     <AppContext.Provider value={contextValue}>
       <div className="flex flex-col h-full relative">
-        {(showOnboarding || redetect) && (
+        {(showOnboarding || redetect) && !pathname.startsWith("/debug") && (
           <OnboardingModal
             pitchHz={pitchHz}
             pitchHzRef={pitchHzRef}
