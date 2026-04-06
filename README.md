@@ -23,7 +23,12 @@ The app works without Supabase (localStorage-only mode). To enable auth and DB-b
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-anon-key
    ```
-3. Run the schema migration — paste `supabase/migrations/001_initial_schema.sql` into the Supabase Dashboard SQL Editor and execute
+3. Link your Supabase project and run the migration:
+   ```bash
+   npx supabase link --project-ref <your-project-ref>
+   npm run db:migrate
+   ```
+   Alternatively, paste `supabase/migrations/001_initial_schema.sql` into the Supabase Dashboard SQL Editor
 4. (Optional) Set token expiry to 1 year in Supabase Dashboard → Auth → Settings
 
 ## Tech stack

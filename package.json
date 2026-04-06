@@ -14,7 +14,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "analytics:usage": "node scripts/analytics.mjs usage",
-    "analytics:contacts": "node scripts/analytics.mjs contacts"
+    "analytics:contacts": "node scripts/analytics.mjs contacts",
+    "db:migrate": "npx supabase db push"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.0",
