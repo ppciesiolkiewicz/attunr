@@ -326,17 +326,20 @@ function AppShellInner({
             >
               Learn
             </Link>
-            <AuthButton auth={auth} />
             <StreakBadge />
+            {!auth.user && !auth.isLoading && (
+              <div className="w-px h-5 bg-white/10 mx-1" />
+            )}
+            <AuthButton auth={auth} />
             <Button variant="icon" color="subtle" onClick={handleOpenSettings}>
               <SettingsIcon />
             </Button>
           </div>
 
-          {/* Mobile: hamburger + settings */}
+          {/* Mobile: login + streak + hamburger */}
           <div className="flex sm:hidden items-center gap-1">
-            <AuthButton auth={auth} />
             <StreakBadge />
+            <AuthButton auth={auth} />
             <Button
               variant="icon"
               color="subtle"
@@ -345,14 +348,11 @@ function AppShellInner({
             >
               <HamburgerIcon />
             </Button>
-            <Button variant="icon" color="subtle" onClick={handleOpenSettings}>
-              <SettingsIcon />
-            </Button>
           </div>
         </header>
 
         {menuOpen && (
-          <MobileMenu pathname={pathname} onClose={() => setMenuOpen(false)} />
+          <MobileMenu pathname={pathname} onClose={() => setMenuOpen(false)} onOpenSettings={handleOpenSettings} />
         )}
 
         <main className="flex-1 min-h-0 relative overflow-auto">

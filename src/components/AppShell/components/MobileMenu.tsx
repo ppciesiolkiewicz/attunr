@@ -6,14 +6,16 @@ import {
   MenuJourneyIcon,
   MenuPracticeIcon,
   MenuLearnIcon,
+  SettingsIcon,
 } from "./icons";
 
 interface MobileMenuProps {
   pathname: string;
   onClose: () => void;
+  onOpenSettings: () => void;
 }
 
-export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
+export function MobileMenu({ pathname, onClose, onOpenSettings }: MobileMenuProps) {
   return (
     <div className="fixed inset-0 z-50 sm:hidden" onClick={onClose}>
       <div
@@ -80,6 +82,16 @@ export function MobileMenu({ pathname, onClose }: MobileMenuProps) {
             </Text>
             Learn
           </Link>
+          <div className="h-px bg-white/[0.06] mx-3 my-1.5" />
+          <button
+            className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all cursor-pointer"
+            onClick={() => { onOpenSettings(); onClose(); }}
+          >
+            <Text as="span" variant="body-sm" color="text-2">
+              <SettingsIcon />
+            </Text>
+            Settings
+          </button>
         </nav>
         <div className="mt-auto px-5 py-5 pt-5 border-t border-white/[0.06]">
           <Text

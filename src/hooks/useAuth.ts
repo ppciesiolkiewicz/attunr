@@ -39,14 +39,26 @@ export function useAuth() {
     [supabase],
   );
 
+  const verifyOtp = useCallback(
+    async (email: string, token: string) => {
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: "email",
+      });
+      return { error };
+    },
+    [supabase],
+  );
+
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
     setUser(null);
   }, [supabase]);
 
   return useMemo(
-    () => ({ user, isLoading, signIn, signOut, supabase }),
-    [user, isLoading, signIn, signOut, supabase],
+    () => ({ user, isLoading, signIn, verifyOtp, signOut, supabase }),
+    [user, isLoading, signIn, verifyOtp, signOut, supabase],
   );
 }
 
