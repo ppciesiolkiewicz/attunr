@@ -74,7 +74,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "Your first pitched sound — a low, steady hum",
         instruction:
           "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
-        introModalInfoOnly: true,
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -94,7 +93,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "A low Uu that settles in your chest",
         instruction:
           "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
-        introModalInfoOnly: true,
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -114,7 +112,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "A steady Uu in the middle of your voice",
         instruction:
           "Uuuu (as in 'moon') — keep the ball between the markers.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
-        introModalInfoOnly: true,
         introModal: modal.hill({
           seconds: 3,
           reps: 5,

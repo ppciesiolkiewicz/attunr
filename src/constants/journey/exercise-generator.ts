@@ -236,8 +236,6 @@ export interface CommonParams {
   cardSubtitle?: string;
   instruction: string;
   introModal?: ModalConfig;
-  /** When true, introModal only opens via (i) icon — not automatically. */
-  introModalInfoOnly?: boolean;
   completionModal?: ModalConfig;
   /** Voice guidance audio — plays at exercise start. */
   voice?: VoiceConfig;
@@ -387,7 +385,6 @@ function pickCommon(params: CommonParams) {
     cardSubtitle: params.cardSubtitle,
     instruction: params.instruction,
     introModal: resolveIntroModal(params),
-    introModalInfoOnly: params.introModalInfoOnly,
     completionModal: params.completionModal,
     voice: params.voice,
   };

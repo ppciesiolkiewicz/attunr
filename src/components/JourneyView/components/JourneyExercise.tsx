@@ -4,7 +4,7 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { InfoButton } from "../../TabInfoModal";
 import { Button, Text } from "@/components/ui";
-import { getSkippedInfoExerciseIds, getStepInStage } from "../utils";
+import { getStepInStage } from "../utils";
 import { ExerciseInfoModal } from "./ExerciseInfoModal";
 import { BaseExercise } from "@/components/Exercise";
 import { PartCompleteModal } from "./PartCompleteModal";
@@ -71,13 +71,7 @@ export function JourneyExercise({
     exercise.exerciseTypeId === "learn-notes-1" ||
     exercise.exerciseTypeId === "learn-voice-driven" ||
     exercise.exerciseTypeId === "walkthrough";
-  // TODO: this should be set on modal config on exercise
-  const shouldAutoShowInfo = () => {
-    if (isLearnType) return false;
-    if (exercise.introModalInfoOnly) return false;
-    if (exercise.exerciseTypeId === "breathwork-farinelli") return true;
-    return !getSkippedInfoExerciseIds().has(exerciseId);
-  };
+  const shouldAutoShowInfo = !isLearnType;
   const [showInfoModal, setShowInfoModal] = useState(shouldAutoShowInfo);
 
   // Trigger notification prompt when info modal is shown for flagged exercises
@@ -218,7 +212,6 @@ export function JourneyExercise({
           exerciseId={exerciseId}
           onStart={() => setShowInfoModal(false)}
           onDismiss={() => setShowInfoModal(false)}
-          showDontShowAgain={exercise.exerciseTypeId !== "breathwork-farinelli"}
         />
       )}
 

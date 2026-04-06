@@ -146,8 +146,6 @@ export interface BaseExerciseConfig {
   cardSubtitle?: string;
   /** Shown before exercise starts. */
   introModal?: ModalConfig;
-  /** When true, introModal only opens via (i) icon — not automatically on first visit. Default: false (auto-opens). */
-  introModalInfoOnly?: boolean;
   /** Shown after exercise completes (e.g. part-complete summary). */
   completionModal?: ModalConfig;
   /** Show the "enable practice reminders" toast when this exercise's info modal is displayed. */
