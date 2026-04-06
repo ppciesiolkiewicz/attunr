@@ -90,20 +90,20 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
       }),
     }),
     gen.pitch.zoneAbove({
-      slug: "ch7-warmup-hoo-hoo",
+      slug: "ch7-warmup-hoo",
       boundaryNote: -6,
       seconds: 3,
       repeats: 5,
-      title: "Hoo hoo",
+      title: "Hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
+        "Sound a long 'hooo' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound a long 'hooo' on a high tone — light and floating. Keep it gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.breathwork.farinelliVoiceDriven({

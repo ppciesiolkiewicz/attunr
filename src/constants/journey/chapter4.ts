@@ -87,20 +87,20 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
       }),
     }),
     gen.pitch.zoneAbove({
-      slug: "ch4-warmup-hoo-hoo",
+      slug: "ch4-warmup-hoo",
       boundaryNote: -6,
       seconds: 3,
       repeats: 5,
-      title: "Hoo hoo",
+      title: "Hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nTake as many breaths as you need.",
+        "Sound a long 'hooo' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head.\nTake as many breaths as you need.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound a long 'hooo' on a high tone — light and floating. Keep it gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.breathwork.farinelliVoiceDriven({
@@ -241,20 +241,20 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         }),
       }),
       gen.pitch.zoneAbove({
-        slug: "hoo-hoo-higher",
+        slug: "hoo-higher",
         boundaryNote: -5,
         seconds: 5,
         repeats: 3,
-        title: "Hoo hoo — higher",
+        title: "Hoo — higher",
         headerSubtitle: "Head voice · 5 seconds × 3",
         instruction:
-          "Sound 'hoo hoo' higher than before — pushing into your upper range.\nNotice the lightness — the sound floats.\nTake as many breaths as you need.",
+          "Sound a long 'hooo' higher than before — pushing into your upper range.\nNotice the lightness — the sound floats.\nTake as many breaths as you need.",
         introModal: modal.hill({
           seconds: 5,
           reps: 3,
           tips: exerciseTips("headVoice", "intermediate"),
           instruction:
-            "Sound 'hoo hoo' on a higher tone than before — reaching further into your head voice.\n\nNotice how the sound floats — lighter, more agile, further from your chest.\n\nPushing your head voice boundary expands the top of your range and builds flexibility.\n\nKeep it gentle. You don't need to get this right.",
+            "Sound a long 'hooo' on a higher tone than before — reaching further into your head voice.\n\nNotice how the sound floats — lighter, more agile, further from your chest.\n\nPushing your head voice boundary expands the top of your range and builds flexibility.\n\nKeep it gentle. You don't need to get this right.",
         }),
       }),
     ],

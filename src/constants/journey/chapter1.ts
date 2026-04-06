@@ -127,21 +127,21 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         cardSubtitle: "See where your voice sits — and what the notes mean",
       },
       gen.pitch.zoneAbove({
-        slug: "hoo-hoo",
+        slug: "hoo",
         boundaryNote: -6,
         seconds: 2,
         repeats: 5,
-        title: "Hoo hoo",
+        title: "Hoo",
         headerSubtitle: "Head voice · 2 seconds × 5",
-        cardSubtitle: "Find your head voice — light, owl-like, floating",
+        cardSubtitle: "Find your head voice — light, floating, easy",
         instruction:
-          "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head and face.\nKeep it gentle. There's no wrong way.",
+          "Sound a long 'hooo' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head and face.\nKeep it gentle. There's no wrong way.",
         introModal: modal.hill({
           seconds: 2,
           reps: 5,
           tips: exerciseTips("headVoice", "introduction"),
           instruction:
-            "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light and gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.",
+            "Sound a long 'hooo' on a high tone — light and floating. Keep it gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.",
         }),
       }),
       gen.breathwork.farinelliVoiceDriven({

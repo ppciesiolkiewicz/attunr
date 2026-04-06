@@ -87,20 +87,20 @@ export const CHAPTER_3_WARMUP: StageConfigInput = {
       }),
     }),
     gen.pitch.zoneAbove({
-      slug: "ch3-warmup-hoo-hoo",
+      slug: "ch3-warmup-hoo",
       boundaryNote: -6,
       seconds: 3,
       repeats: 5,
-      title: "Hoo hoo",
+      title: "Hoo",
       headerSubtitle: "Head voice · 3 seconds × 5",
       instruction:
-        "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
+        "Sound a long 'hooo' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.",
       introModal: modal.hill({
         seconds: 3,
         reps: 5,
         tips: exerciseTips("headVoice", "introduction"),
         instruction:
-          "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
+          "Sound a long 'hooo' on a high tone — light and floating. Keep it gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice wakes up a lighter resonance and expands your range.\n\nKeep it gentle. You don't need to get this right.",
       }),
     }),
     gen.breathwork.farinelliVoiceDriven({
@@ -309,20 +309,20 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
         }),
       }),
       gen.pitch.zoneAbove({
-        slug: "hoo-hoo-high",
+        slug: "hoo-high",
         boundaryNote: -6,
         seconds: 4,
         repeats: 3,
-        title: "Hoo hoo",
+        title: "Hoo",
         headerSubtitle: "Head voice · 4 seconds × 3",
         instruction:
-          "Sound 'hoo hoo' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle and easy.",
+          "Sound a long 'hooo' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle and easy.",
         introModal: modal.hill({
           seconds: 4,
           reps: 3,
           tips: exerciseTips("headVoice", "intermediate"),
           instruction:
-            "Sound 'hoo hoo' on a high tone, like an owl calling. Keep it light and easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.",
+            "Sound a long 'hooo' on a high tone — light and floating. Keep it easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.",
         }),
       }),
     ],

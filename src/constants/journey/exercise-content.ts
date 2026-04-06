@@ -244,11 +244,11 @@ export interface HeadVoiceContentParams {
 function headVoiceContent(p: HeadVoiceContentParams): ExerciseContent {
   const base: ExerciseContent = {
     headerSubtitle: `Head voice · ${p.seconds} seconds × ${p.reps}`,
-    cardSubtitle: `Find your head voice — light, owl-like, floating`,
+    cardSubtitle: `Find your head voice — light, floating, easy`,
     instruction:
-      `Sing '${p.sound}' on a high tone, like an owl.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.`,
+      `Sing '${p.sound}' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.`,
     introInstruction:
-      `Sing '${p.sound}' on a high tone, like an owl calling. Keep it light and gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.`,
+      `Sing '${p.sound}' on a high tone — light and floating. Keep it gentle.\n\nNotice how the sound lifts — away from your chest and into your head and face.\n\nHead voice is a lighter resonance. Finding it expands your range and gives you access to a completely different quality of sound.\n\nKeep it gentle. You don't need to get this right.`,
     tips: exerciseTips("headVoice", p.variant),
   };
 
@@ -257,7 +257,7 @@ function headVoiceContent(p: HeadVoiceContentParams): ExerciseContent {
     base.instruction =
       `Sing '${p.sound}' on a high tone.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle and easy.`;
     base.introInstruction =
-      `Sing '${p.sound}' on a high tone, like an owl calling. Keep it light and easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.`;
+      `Sing '${p.sound}' on a high tone — light and floating. Keep it easy.\n\nNotice how the sound floats — away from your chest and into your head and face.\n\nHead voice exercises expand your range and wake up a lighter, more agile part of your voice.\n\nKeep it gentle. Just notice what happens.`;
   }
 
   if (p.variant === "advanced") {
