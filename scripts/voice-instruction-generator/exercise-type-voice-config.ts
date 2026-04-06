@@ -17,9 +17,7 @@ export abstract class ExerciseTypeVoiceConfig {
   abstract segments(): VoiceSegment[];
 
   static countSequence(n: number): string {
-    return Array.from({ length: n }, (_, i) => `${i + 1}`).join(
-      ' <break time="1s"/> ',
-    );
+    return Array.from({ length: n }, (_, i) => `${i + 1}`).join(". ") + ".";
   }
 }
 
@@ -48,26 +46,26 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
     const segments: VoiceSegment[] = [
       {
         name: "countdown",
-        ssml: "<speak>Let's exhale all the air out. <break time=\"2s\"/> Three. <break time=\"1s\"/> Two. <break time=\"1s\"/> One.</speak>",
-        voice: australianBaritone(),
+        ssml: "Let's exhale all the air out. Three. Two. One.",
+        voice: australianBaritone({ speed: 0.73 }),
       },
     ];
 
     for (let n = minCount; n <= maxCount; n++) {
       segments.push({
         name: `inhale-${n}`,
-        ssml: `<speak>Inhale. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(n)}</speak>`,
-        voice: australianBaritone(),
+        ssml: `Inhale. ${ExerciseTypeVoiceConfig.countSequence(n)}`,
+        voice: australianBaritone({ speed: 0.73 }),
       });
       segments.push({
         name: `hold-${n}`,
-        ssml: `<speak>Hold. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(n)}</speak>`,
-        voice: australianBaritone(),
+        ssml: `Hold. ${ExerciseTypeVoiceConfig.countSequence(n)}`,
+        voice: australianBaritone({ speed: 0.73 }),
       });
       segments.push({
         name: `exhale-${n}`,
-        ssml: `<speak>Exhale. <break time="1s"/> ${ExerciseTypeVoiceConfig.countSequence(n)}</speak>`,
-        voice: australianBaritone(),
+        ssml: `Exhale. ${ExerciseTypeVoiceConfig.countSequence(n)}`,
+        voice: australianBaritone({ speed: 0.73 }),
       });
     }
 
@@ -75,7 +73,7 @@ class FarinelliVoiceConfig extends ExerciseTypeVoiceConfig {
     FARINELLI_SPOKEN_TIPS.forEach((tip, i) => {
       segments.push({
         name: `tip-${i + 1}`,
-        ssml: `<speak>${tip}</speak>`,
+        ssml: tip,
         voice: riley(),
       });
     });
@@ -101,8 +99,8 @@ class LearnVoiceDrivenVoiceConfig extends ExerciseTypeVoiceConfig {
       .filter((s) => s.spokenText)
       .map((s) => ({
         name: s.name,
-        ssml: `<speak>${s.spokenText}</speak>`,
-        voice: australianBaritone({ speed: 0.8 }),
+        ssml: s.spokenText!,
+        voice: australianBaritone(),
       }));
   }
 
@@ -118,8 +116,8 @@ class LearnVoiceDrivenVoiceConfig extends ExerciseTypeVoiceConfig {
         .filter((s) => s.spokenText)
         .map((s) => ({
           name: s.name,
-          ssml: `<speak>${s.spokenText}</speak>`,
-          voice: australianBaritone({ speed: 0.8 }),
+          ssml: s.spokenText!,
+          voice: australianBaritone(),
         })),
     );
   }

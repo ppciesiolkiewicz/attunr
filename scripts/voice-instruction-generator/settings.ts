@@ -42,8 +42,8 @@ export function australianBaritone(overrides?: VoiceOverrides): VoiceProfile {
 // ── Global settings ─────────────────────────────────────────────────────────
 
 export const voiceSettings = {
-  /** ElevenLabs model to use. Must support SSML break tags (not v3). */
-  modelId: "eleven_multilingual_v2",
+  /** ElevenLabs model to use. */
+  modelId: "eleven_v3",
   /** Language code for multilingual models. */
   languageCode: "en",
 };

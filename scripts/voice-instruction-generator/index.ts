@@ -1,3 +1,6 @@
+// After uploading new audio, bump AUDIO_VERSION in src/constants/settings.ts
+// to force clients to re-download cached voice files.
+
 import * as fs from "fs";
 import * as path from "path";
 import { config } from "dotenv";
@@ -59,7 +62,6 @@ async function generateSegmentAudio(
             }
           : {}),
         language_code: voiceSettings.languageCode,
-        enable_ssml_parsing: true,
       }),
     },
   );
@@ -251,8 +253,8 @@ function collectVoiceEntries(chapterSlug: string): GenerationEntry[] {
           exerciseTypeId: ex.exerciseTypeId,
           segments: voiced.map((s) => ({
             name: s.name,
-            ssml: `<speak>${s.spokenText}</speak>`,
-            voice: australianBaritone({ speed: 0.8 }),
+            ssml: s.spokenText!,
+            voice: australianBaritone(),
           })),
         });
       }
@@ -265,8 +267,8 @@ function collectVoiceEntries(chapterSlug: string): GenerationEntry[] {
         exerciseTypeId: exercise.exerciseTypeId,
         segments: [{
           name: "instruction",
-          ssml: `<speak>${exercise.voice.spokenText}</speak>`,
-          voice: australianBaritone({ speed: 0.85 }),
+          ssml: exercise.voice.spokenText,
+          voice: australianBaritone(),
         }],
       });
     }
@@ -414,9 +416,128 @@ async function uploadAll() {
 // ── test ─────────────────────────────────────────────────────────────────────
 
 async function test() {
-  const ssml = `<speak>Inhale. <break time="1s"/> 1 <break time="1s"/> 2 <break time="1s"/> 3</speak>`;
+  const text = "Inhale. 1. 2. 3.";
   const dir = path.join(OUTPUT_DIR, "_test");
-  await generateSegmentAudio(ssml, "test", dir);
+  await generateSegmentAudio(text, "test", dir);
+}
+
+// ── test-v3 ─────────────────────────────────────────────────────────────────
+// TODO: remove test-v3 command once v3 migration is fully validated
+
+interface TestVariant {
+  name: string;
+  text: string;
+  modelId: string;
+  enableSsml: boolean;
+  speed?: number;
+}
+
+async function testV3() {
+  const dir = path.join(OUTPUT_DIR, "_test-v3");
+
+  // Two test phrases: one for counted breathwork, one for spoken instruction
+  const phrases = {
+    counting: {
+      label: "counting",
+      variants: [
+        {
+          name: "v2-ssml-baseline",
+          text: '<speak>Inhale. <break time="1s"/> 1 <break time="1s"/> 2 <break time="1s"/> 3</speak>',
+          modelId: "eleven_multilingual_v2",
+          enableSsml: true,
+          speed: undefined as number | undefined,
+        },
+        ...[0.73].map((speed) => ({
+          name: `v3-plain-${speed}`,
+          text: "Inhale. 1. 2. 3.",
+          modelId: "eleven_v3",
+          enableSsml: false,
+          speed,
+        })),
+      ] satisfies TestVariant[],
+    },
+    instruction: {
+      label: "instruction",
+      variants: [
+        ...[0.73].map((speed) => ({
+          name: `v3-plain-${speed}`,
+          text: "Put your hand on your chest. Now hum a low note. Feel that vibration? That's your voice, living in your body.",
+          modelId: "eleven_v3",
+          enableSsml: false,
+          speed,
+        })),
+      ] satisfies TestVariant[],
+    },
+  };
+
+  // tmp: filter to just the variant we want
+  const ONLY = "v3-plain-0.73";
+
+  for (const [, { label, variants }] of Object.entries(phrases)) {
+    console.log(`\n═══ ${label} ═══`);
+    for (const variant of variants.filter((v) => v.name === ONLY)) {
+      const segDir = path.join(dir, label);
+      const voice = australianBaritone({ speed: variant.speed });
+
+      // Temporarily override model and ssml settings
+      const origModel = voiceSettings.modelId;
+      voiceSettings.modelId = variant.modelId;
+
+      // Generate with custom ssml flag
+      if (!ELEVENLABS_API_KEY) throw new Error("ELEVENLABS_API_KEY not set in .env.local");
+
+      const charCount = variant.text.length;
+      console.log(`\n  [${variant.name}] model=${variant.modelId} speed=${variant.speed ?? "default"} (${charCount} chars)`);
+
+      const { speed, stability, similarityBoost, style, speakerBoost } = voice;
+      const hasVoiceSettings = speed !== undefined || stability !== undefined;
+      const ttsResponse = await fetch(
+        `https://api.elevenlabs.io/v1/text-to-speech/${voice.voiceId}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "xi-api-key": ELEVENLABS_API_KEY,
+            Accept: "audio/mpeg",
+          },
+          body: JSON.stringify({
+            text: variant.text,
+            model_id: variant.modelId,
+            ...(hasVoiceSettings
+              ? {
+                  voice_settings: {
+                    ...(speed !== undefined && { speed }),
+                    ...(stability !== undefined && { stability }),
+                    ...(similarityBoost !== undefined && { similarity_boost: similarityBoost }),
+                    ...(style !== undefined && { style }),
+                    ...(speakerBoost !== undefined && { use_speaker_boost: speakerBoost }),
+                  },
+                }
+              : {}),
+            language_code: voiceSettings.languageCode,
+            ...(variant.enableSsml && { enable_ssml_parsing: true }),
+          }),
+        },
+      );
+
+      if (!ttsResponse.ok) {
+        const errorText = await ttsResponse.text();
+        console.error(`  [${variant.name}] ERROR: ${errorText}`);
+        voiceSettings.modelId = origModel;
+        continue;
+      }
+
+      const audioBuffer = Buffer.from(await ttsResponse.arrayBuffer());
+      fs.mkdirSync(segDir, { recursive: true });
+      fs.writeFileSync(path.join(segDir, `${variant.name}.mp3`), audioBuffer);
+      console.log(`  [${variant.name}] ✓ ${(audioBuffer.length / 1024).toFixed(1)} KB`);
+
+      voiceSettings.modelId = origModel;
+    }
+  }
+
+  console.log(`\n\nAll test files written to: ${dir}`);
+  console.log("Compare the .mp3 files side by side!");
 }
 
 // ── CLI ──────────────────────────────────────────────────────────────────────
@@ -473,6 +594,9 @@ async function main() {
     case "test":
       await test();
       break;
+    case "test-v3":
+      await testV3();
+      break;
     case "--help":
     case "help":
       console.log(`Voice Instruction Generator
@@ -487,6 +611,7 @@ Commands:
   upload-all                                        Upload everything in output/exercise-types/ to blob
 
   test                                              Generate a short test segment
+  test-v3                                           Compare v2 vs v3 pause variants side by side
 
 Options:
   --force   Regenerate even if files already exist

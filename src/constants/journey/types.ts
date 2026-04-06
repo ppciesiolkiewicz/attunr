@@ -170,7 +170,7 @@ export interface LearnVoiceSegment {
   name: string;
   /** Full text for this segment — shown on screen as words accumulate. */
   text: string;
-  /** SSML text for TTS generation. May include <break> tags. Falls back to text if omitted — no audio generated. */
+  /** Text for TTS generation. Falls back to text if omitted — no audio generated. */
   spokenText?: string;
 }
 

@@ -87,3 +87,8 @@ export const MAX_TRAIL_DOTS = 90;
 
 /** Volume sampling interval for volume-detection exercises (ms). ~30 fps. */
 export const VOLUME_SAMPLE_INTERVAL_MS = 33;
+
+// ── Voice ───────────────────────────────────────────────────────────────────
+
+/** Bump after uploading new audio to force clients to re-download. Appended as `?v=<version>` to all voice asset URLs. */
+export const AUDIO_VERSION = "v2";

@@ -1,8 +1,4 @@
-/**
- * Bump this after uploading new audio to force clients to re-download.
- * Appended as `?v=<version>` to all voice audio/timestamp URLs.
- */
-const AUDIO_VERSION = "v1";
+import { AUDIO_VERSION } from "@/constants/settings";
 
 const BASE = process.env.NEXT_PUBLIC_VOICE_BASE_URL ?? "";
 

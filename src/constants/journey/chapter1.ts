@@ -41,19 +41,19 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
             name: "intro",
             text: "Put your hand on your chest. Now hum a low note. Feel that vibration? That's your voice, living in your body.",
             spokenText:
-              'Put your hand on your chest. <break time="1s"/> Now hum a low note. <break time="3s"/> Feel that vibration? <break time="3s"/> That\'s your voice, living in your body.',
+              "Put your hand on your chest. Now hum a low note. Feel that vibration? That's your voice, living in your body.",
           },
           {
             name: "explore",
             text: "Now hum a little higher. Notice how the buzz moves — up from your chest, into your throat, maybe into your face. Every pitch has a home.",
             spokenText:
-              'Now hum a little higher. <break time="0.5s"/> Notice how the buzz moves <break time="0.3s"/> up from your chest, <break time="0.3s"/> into your throat, <break time="0.3s"/> maybe into your face. <break time="0.5s"/> Every pitch has a home.',
+              "Now hum a little higher. Notice how the buzz moves up from your chest, into your throat, maybe into your face. Every pitch has a home.",
           },
           {
             name: "closing",
             text: "That awareness — knowing where sound lives — is vocal placement. You already have it. We're just going to sharpen it.",
             spokenText:
-              'That awareness <break time="0.3s"/> knowing where sound lives <break time="0.3s"/> is vocal placement. <break time="0.5s"/> You already have it. <break time="0.5s"/> We\'re just going to sharpen it.',
+              "That awareness — knowing where sound lives — is vocal placement. You already have it. We're just going to sharpen it.",
           },
         ],
       }),
@@ -75,12 +75,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         instruction:
           "Hum mmmm — keep the ball at the bottom of the hill.\nSlightly wobble your voice to keep it loose.\nBreathe whenever you need to — there's no rush.",
         introModalInfoOnly: true,
-        voice: {
-          instructionUrl: "pitch-detection-hill/chapters/introduction/gentle-hum/instruction.mp3",
-          instructionTimestampsUrl: "pitch-detection-hill/chapters/introduction/gentle-hum/instruction.timestamps.json",
-          spokenText: 'Close your lips and hum mmmm on a low tone. <break time="1s"/> Keep the sound steady. <break time="0.5s"/> Feel the buzz in your lips and teeth. <break time="0.5s"/> There\'s no rush. <break time="0.5s"/> There\'s no wrong way to hum.',
-          displayText: "Close your lips and hum mmmm on a low tone. Keep the sound steady. Feel the buzz in your lips and teeth. There's no rush. There's no wrong way to hum.",
-        },
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -101,12 +95,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         instruction:
           "Uuuu (as in 'moon') — keep the ball at the bottom of the hill.\nSlightly wobble your voice — let it settle in your chest.\nBreathe whenever you need to — there's no rush.",
         introModalInfoOnly: true,
-        voice: {
-          instructionUrl: "pitch-detection-hill/chapters/introduction/low-uu/instruction.mp3",
-          instructionTimestampsUrl: "pitch-detection-hill/chapters/introduction/low-uu/instruction.timestamps.json",
-          spokenText: 'Sound uuuu, as in moon, on a low tone. <break time="0.5s"/> Keep your mouth rounded. <break time="0.5s"/> Relaxed, not smiling. <break time="0.5s"/> Let the sound settle deep. <break time="0.5s"/> Notice where the resonance lands. <break time="0.5s"/> Breathe whenever you need to.',
-          displayText: "Sound uuuu, as in moon, on a low tone. Keep your mouth rounded. Relaxed, not smiling. Let the sound settle deep. Notice where the resonance lands. Breathe whenever you need to.",
-        },
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
@@ -127,12 +115,6 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
         instruction:
           "Uuuu (as in 'moon') — keep the ball between the markers.\nKeep it steady and relaxed.\nBreathe whenever you need to — there's no rush.",
         introModalInfoOnly: true,
-        voice: {
-          instructionUrl: "pitch-detection-hill/chapters/introduction/middle-tone/instruction.mp3",
-          instructionTimestampsUrl: "pitch-detection-hill/chapters/introduction/middle-tone/instruction.timestamps.json",
-          spokenText: 'Sound uuuu, as in moon, on a comfortable tone in the middle of your range. <break time="0.5s"/> Keep your mouth rounded. <break time="0.5s"/> Feel where the sound sits. <break time="0.5s"/> Not too high, not too low. <break time="0.5s"/> Just easy. <break time="0.5s"/> Keep it relaxed. There\'s no wrong way to do this.',
-          displayText: "Sound uuuu, as in moon, on a comfortable tone in the middle of your range. Keep your mouth rounded. Feel where the sound sits. Not too high, not too low. Just easy. Keep it relaxed. There's no wrong way to do this.",
-        },
         introModal: modal.hill({
           seconds: 3,
           reps: 5,
