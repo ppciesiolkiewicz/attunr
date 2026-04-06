@@ -121,4 +121,9 @@ export class JourneyProgress {
   reload(): void {
     this.data = JourneyProgress.load();
   }
+
+  /** Replace progress data with the given data (e.g. loaded from DB). */
+  loadData(data: JourneyProgressData): void {
+    this.data = data;
+  }
 }

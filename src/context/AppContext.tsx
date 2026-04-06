@@ -4,11 +4,13 @@ import { createContext, useContext } from "react";
 import type { ColoredNote } from "@/lib/VocalRange";
 import type { Settings } from "@/hooks/useSettings";
 import type { JourneyProgressHook } from "@/hooks/useJourneyProgress";
+import type { AuthHook } from "@/hooks/useAuth";
 
 export interface AppContextValue {
   settings: Settings;
   updateSettings: <K extends keyof Settings>(key: K, value: Settings[K]) => void;
   journeyProgress: JourneyProgressHook;
+  auth: AuthHook;
   pitchHz: number | null;
   pitchHzRef: React.RefObject<number | null>;
   playTone: (band: ColoredNote) => void;

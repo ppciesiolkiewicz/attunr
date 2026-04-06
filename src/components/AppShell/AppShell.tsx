@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useMemo, Suspense } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import SettingsPanel from "../SettingsPanel";
@@ -25,6 +25,15 @@ import type { ColoredNote } from "@/lib/VocalRange";
 import { Button, Text } from "@/components/ui";
 import { SplashScreen } from "@capacitor/splash-screen";
 import { isNative } from "@/lib/platform";
+import { useAuth } from "@/hooks/useAuth";
+import { AuthButton } from "../AuthButton";
+import {
+  migrateLocalProgressToDb,
+  migrateProfileToDb,
+  loadProgressFromDb,
+  writeCompletionToDb,
+} from "@/lib/supabase/sync";
+import type { ExerciseConfig } from "@/constants/journey";
 import Logo from "../Logo";
 import { SettingsIcon, HamburgerIcon } from "./components/icons";
 import { MobileMenu } from "./components/MobileMenu";
@@ -87,6 +96,34 @@ function AppShellInner({
     stopListening,
   } = usePitchDetection();
   const { playTone, playSlide } = useTonePlayer();
+  const auth = useAuth();
+
+  // On auth: migrate local data on first login, then load DB progress
+  useEffect(() => {
+    if (!auth.user || !auth.supabase) return;
+
+    const userId = auth.user.id;
+    const sb = auth.supabase;
+
+    (async () => {
+      // Check if this is a new account (zero completions in DB)
+      const { count } = await sb
+        .from("exercise_completions")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", userId);
+
+      if (count === 0) {
+        // First login — migrate localStorage to DB
+        await migrateLocalProgressToDb(sb, userId);
+        await migrateProfileToDb(sb, userId);
+      }
+
+      // Load DB progress and apply to JourneyProgress instance
+      const dbData = await loadProgressFromDb(sb, userId);
+      journeyProgress.progress.loadData(dbData);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user?.id]);
 
   // Notifications: service worker, scheduler, and prompt flow
   useServiceWorker();
@@ -150,10 +187,28 @@ function AppShellInner({
     analytics.settingsOpened();
   }
 
+  const wrappedJourneyProgress = useMemo(() => ({
+    ...journeyProgress,
+    completeExercise: (exercise: ExerciseConfig) => {
+      journeyProgress.completeExercise(exercise);
+      if (auth.user && auth.supabase) {
+        writeCompletionToDb(
+          auth.supabase,
+          auth.user.id,
+          exercise.chapterSlug,
+          exercise.stageId,
+          exercise.slug,
+          Date.now(),
+        );
+      }
+    },
+  }), [journeyProgress, auth.user, auth.supabase]);
+
   const contextValue = {
     settings,
     updateSettings: update,
-    journeyProgress,
+    journeyProgress: wrappedJourneyProgress,
+    auth,
     pitchHz,
     pitchHzRef,
     playTone: handlePlayTone,
@@ -181,6 +236,21 @@ function AppShellInner({
       hzToNoteName(result.lowHz),
       hzToNoteName(result.highHz),
     );
+
+    // Sync to DB if logged in
+    if (auth.user && auth.supabase) {
+      auth.supabase
+        .from("profiles")
+        .update({
+          voice_type: result.voiceType,
+          vocal_range_low_hz: result.lowHz,
+          vocal_range_high_hz: result.highHz,
+        })
+        .eq("id", auth.user.id)
+        .then(({ error }: { error: { message: string } | null }) => {
+          if (error) console.error("Failed to sync voice profile:", error.message);
+        });
+    }
   }
 
   const showMicGate =
@@ -257,14 +327,19 @@ function AppShellInner({
               Learn
             </Link>
             <StreakBadge />
+            {!auth.user && !auth.isLoading && (
+              <div className="w-px h-5 bg-white/10 mx-1" />
+            )}
+            <AuthButton auth={auth} />
             <Button variant="icon" color="subtle" onClick={handleOpenSettings}>
               <SettingsIcon />
             </Button>
           </div>
 
-          {/* Mobile: hamburger + settings */}
+          {/* Mobile: login + streak + hamburger */}
           <div className="flex sm:hidden items-center gap-1">
             <StreakBadge />
+            <AuthButton auth={auth} />
             <Button
               variant="icon"
               color="subtle"
@@ -273,14 +348,11 @@ function AppShellInner({
             >
               <HamburgerIcon />
             </Button>
-            <Button variant="icon" color="subtle" onClick={handleOpenSettings}>
-              <SettingsIcon />
-            </Button>
           </div>
         </header>
 
         {menuOpen && (
-          <MobileMenu pathname={pathname} onClose={() => setMenuOpen(false)} />
+          <MobileMenu pathname={pathname} onClose={() => setMenuOpen(false)} onOpenSettings={handleOpenSettings} />
         )}
 
         <main className="flex-1 min-h-0 relative overflow-auto">

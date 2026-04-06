@@ -14,7 +14,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "analytics:usage": "node scripts/analytics.mjs usage",
-    "analytics:contacts": "node scripts/analytics.mjs contacts"
+    "analytics:contacts": "node scripts/analytics.mjs contacts",
+    "db:migrate": "npx supabase db push"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.0",
@@ -27,6 +28,8 @@
     "@capacitor/local-notifications": "^8.0.2",
     "@capacitor/splash-screen": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
+    "@supabase/ssr": "^0.10.0",
+    "@supabase/supabase-js": "^2.101.1",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",
     "lucide-react": "^0.577.0",

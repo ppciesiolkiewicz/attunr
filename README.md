@@ -13,6 +13,24 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Supabase setup
+
+The app works without Supabase (localStorage-only mode). To enable auth and DB-backed progress:
+
+1. Create a project at [supabase.com](https://supabase.com)
+2. Add env vars to `.env.local` (see `.env.example`):
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY=your-anon-key
+   ```
+3. Link your Supabase project and run the migration:
+   ```bash
+   npx supabase link --project-ref <your-project-ref>
+   npm run db:migrate
+   ```
+   Alternatively, paste `supabase/migrations/001_initial_schema.sql` into the Supabase Dashboard SQL Editor
+4. (Optional) Set token expiry to 1 year in Supabase Dashboard → Auth → Settings
+
 ## Tech stack
 
 | Concern | Solution |
@@ -21,7 +39,8 @@ Open [http://localhost:3000](http://localhost:3000).
 | Styling | Tailwind CSS v4 |
 | Pitch detection | ml5 CREPE (deep-learning, voice-optimised) |
 | Tone playback | Web Audio API — binaural beats, synthesised |
-| Persistence | localStorage — no backend, no account |
+| Persistence | localStorage (guest) / Supabase Postgres (logged in) |
+| Auth | Supabase magic link (optional — no account required) |
 | Deployment | Vercel (push to `main` → auto-deploy) |
 
 ## Project structure
