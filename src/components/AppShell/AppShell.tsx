@@ -236,6 +236,21 @@ function AppShellInner({
       hzToNoteName(result.lowHz),
       hzToNoteName(result.highHz),
     );
+
+    // Sync to DB if logged in
+    if (auth.user && auth.supabase) {
+      auth.supabase
+        .from("profiles")
+        .update({
+          voice_type: result.voiceType,
+          vocal_range_low_hz: result.lowHz,
+          vocal_range_high_hz: result.highHz,
+        })
+        .eq("id", auth.user.id)
+        .then(({ error }: { error: { message: string } | null }) => {
+          if (error) console.error("Failed to sync voice profile:", error.message);
+        });
+    }
   }
 
   const showMicGate =
