@@ -150,17 +150,6 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
               Start →
             </Button>
           )}
-          {(isInProgress || !started) && (
-            <Button
-              variant="ghost"
-              size="compact"
-              color="accent"
-              onClick={handleBrowse}
-              className="flex-1"
-            >
-              Browse ↗
-            </Button>
-          )}
           {isComplete && (
             <Button
               variant="ghost"
@@ -168,10 +157,20 @@ export function ChapterCard({ chapter, jp }: ChapterCardProps) {
               color="muted"
               onClick={handleStartRestart}
               className="flex-1"
+              style={{ borderRight: "1px solid rgba(255,255,255,0.05)" }}
             >
               Replay
             </Button>
           )}
+          <Button
+            variant="ghost"
+            size="compact"
+            color="accent"
+            onClick={handleBrowse}
+            className="flex-1"
+          >
+            Browse ↗
+          </Button>
         </div>
       )}
 
