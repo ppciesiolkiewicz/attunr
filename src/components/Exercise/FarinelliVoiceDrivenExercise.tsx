@@ -37,7 +37,8 @@ function getBreathPhase(segmentName: string): BreathPhase {
   return null;
 }
 
-const COUNTDOWN_TEXT = "Inhale, hold, and exhale to the same count — each cycle adds one beat and flows straight into the next.";
+const COUNTDOWN_TEXT =
+  "Inhale, hold, and exhale to the same count — each cycle adds one beat and flows straight into the next.";
 
 function getPhaseLabel(phase: BreathPhase, cycleCount: number): string | null {
   if (!phase) return null;
@@ -80,7 +81,11 @@ async function loadSegment(
   // Wait until audio is ready to play
   await new Promise<void>((resolve, reject) => {
     audio.addEventListener("canplaythrough", () => resolve(), { once: true });
-    audio.addEventListener("error", () => reject(new Error(`Failed to load ${audioUrl}`)), { once: true });
+    audio.addEventListener(
+      "error",
+      () => reject(new Error(`Failed to load ${audioUrl}`)),
+      { once: true },
+    );
     audio.load();
   });
 
@@ -90,7 +95,6 @@ async function loadSegment(
     timestamps,
   };
 }
-
 
 // ── Component ────────────────────────────────────────────────────────────────
 
@@ -112,8 +116,6 @@ function FarinelliVoiceDrivenPlayer({
   const [segmentDuration, setSegmentDuration] = useState(0);
   const [phaseLabel, setPhaseLabel] = useState<string | null>(null);
   const [inCountdown, setInCountdown] = useState(false);
-  const [tipHasAppeared, setTipHasAppeared] = useState(false);
-
   const [tipText, setTipText] = useState("");
 
   const segmentsRef = useRef<LoadedSegment[]>([]);
@@ -121,7 +123,6 @@ function FarinelliVoiceDrivenPlayer({
   const animFrameRef = useRef<number>(0);
   const onCompleteRef = useRef(onComplete);
   onCompleteRef.current = onComplete;
-  const tipAudiosRef = useRef<HTMLAudioElement[]>([]);
   const tipIndexRef = useRef(0);
   const tipTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
@@ -151,23 +152,15 @@ function FarinelliVoiceDrivenPlayer({
           };
         });
 
-        // Preload tip audio
-        const tipBlobs = await Promise.all(
-          FARINELLI_TIPS.map((_, i) =>
-            fetch(voiceUrl(`${voiceBaseUrl}/tip-${i + 1}.mp3`)).then((r) => r.blob()).catch(() => null),
-          ),
-        );
-        tipAudiosRef.current = tipBlobs
-          .filter((b): b is Blob => b !== null)
-          .map((blob) => new Audio(URL.createObjectURL(blob)));
-
         if (!cancelled) setStatus("ready");
       } catch (err) {
         console.error("Failed to preload voice segments:", err);
       }
     })();
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [voiceBaseUrl]);
 
   // Play current segment and track word timestamps
@@ -231,24 +224,17 @@ function FarinelliVoiceDrivenPlayer({
     audio.play().catch(console.error);
   }, []);
 
-  const playNextTip = useCallback(() => {
-    const tips = tipAudiosRef.current;
-    if (tips.length === 0) return;
-    const tipAudio = tips[tipIndexRef.current % tips.length];
-    tipAudio.volume = 0.85;
+  const showNextTip = useCallback(() => {
     setTipText(FARINELLI_TIPS[tipIndexRef.current % FARINELLI_TIPS.length]);
-    setTipHasAppeared(true);
-    tipAudio.onended = () => {};
-    tipAudio.play().catch(() => {});
     tipIndexRef.current++;
   }, []);
 
   function handleStart() {
     setStatus("playing");
     playSegment(0);
-    // Start tip interval — first tip after 10s, then every 15s
+    // Show text tips on interval — first after 10s, then every 15s
     tipTimerRef.current = setTimeout(function scheduleTip() {
-      playNextTip();
+      showNextTip();
       tipTimerRef.current = setTimeout(scheduleTip, 15_000);
     }, 10_000);
   }
@@ -258,7 +244,6 @@ function FarinelliVoiceDrivenPlayer({
     return () => {
       cancelAnimationFrame(animFrameRef.current);
       if (tipTimerRef.current) clearTimeout(tipTimerRef.current);
-      tipAudiosRef.current.forEach((a) => { a.pause(); a.src = ""; });
       segmentsRef.current.forEach((s) => {
         s.audio.pause();
         s.audio.src = "";
@@ -342,14 +327,18 @@ function FarinelliVoiceDrivenPlayer({
         >
           <svg className="w-full h-full -rotate-90 block" viewBox="0 0 100 100">
             <circle
-              cx="50" cy="50" r="42"
+              cx="50"
+              cy="50"
+              r="42"
               fill="none"
               stroke="rgba(255,255,255,0.1)"
               strokeWidth="6"
             />
             {breathPhase && segmentDuration > 0 && (
               <circle
-                cx="50" cy="50" r="42"
+                cx="50"
+                cy="50"
+                r="42"
                 fill="none"
                 stroke="rgba(167,139,250,0.9)"
                 strokeWidth="6"
@@ -363,17 +352,17 @@ function FarinelliVoiceDrivenPlayer({
             )}
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-4xl font-light text-white">{displayText}</span>
+            <span className="text-4xl font-light text-white">
+              {displayText}
+            </span>
           </div>
         </div>
       </div>
 
       <div className="min-h-[4.5rem] flex flex-col items-center justify-start max-w-75 px-4 text-center">
         {tipText ? (
-          <p className="text-xs text-white/65">
-            Tip: {tipText}
-          </p>
-        ) : !tipHasAppeared && (
+          <p className="text-xs text-white/65">Tip: {tipText}</p>
+        ) : (
           <p className="text-sm text-white/70">{COUNTDOWN_TEXT}</p>
         )}
       </div>
