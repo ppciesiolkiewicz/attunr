@@ -36,7 +36,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "quarter-beat",
         title: "Quarter notes",
-        headerSubtitle: "Rhythm · 90 bpm",
+        headerSubtitle: "Rhythm",
         cardSubtitle: "Straight quarter notes — feel the pulse",
         tempo: 90,
         pattern: [
@@ -85,7 +85,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "dotted-quarter",
         title: "Dotted quarter",
-        headerSubtitle: "Rhythm · 90 bpm",
+        headerSubtitle: "Rhythm",
         cardSubtitle:
           "A longer beat followed by a short one — feel the swing",
         tempo: 90,
@@ -137,7 +137,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "half-quarter-mix",
         title: "Half and quarter",
-        headerSubtitle: "Rhythm · 100 bpm",
+        headerSubtitle: "Rhythm",
         tempo: 100,
         pattern: [
           // 4-beat intro
@@ -176,7 +176,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "dotted-patterns",
         title: "Dotted patterns",
-        headerSubtitle: "Rhythm · 100 bpm",
+        headerSubtitle: "Rhythm",
         tempo: 100,
         pattern: [
           // 4-beat intro
@@ -226,7 +226,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "mixed-durations",
         title: "Mixed durations",
-        headerSubtitle: "Rhythm · 110 bpm",
+        headerSubtitle: "Rhythm",
         tempo: 110,
         pattern: [
           // 4-beat intro
@@ -268,7 +268,7 @@ export const CHAPTER_6_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "full-groove",
         title: "The full groove",
-        headerSubtitle: "Rhythm · 110 bpm",
+        headerSubtitle: "Rhythm",
         tempo: 110,
         pattern: [
           // 4-beat intro

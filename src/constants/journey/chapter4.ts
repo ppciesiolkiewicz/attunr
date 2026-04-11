@@ -16,22 +16,24 @@ export const CHAPTER_4_WARMUP: StageConfigInput = {
     gen.timeBased({
       slug: "ch4-warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 21 seconds",
-      cues: [
-        { text: "sss", seconds: 3 },
-        ...repeat([
+      headerSubtitle: "Wake up breath",
+      cues: repeat(
+        [
+          { text: "sss", seconds: 3 },
           { text: "zzz", seconds: 3 },
           { text: "sss", seconds: 3 },
-        ], 3),
-      ],
+          { text: "Inhale", seconds: 1 },
+        ],
+        3,
+      ),
       instruction:
-        "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
+        "Alternate sss and zzz — feel the vibration shift.\nQuick inhale between rounds.",
       tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
-        targetSeconds: 21,
+        targetSeconds: 30,
         tips: exerciseTips("breathSound", "introduction"),
         instruction:
-          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Take a quick inhale between rounds. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
     gen.lipRolls.slide({
@@ -286,7 +288,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
       gen.scales.major({
         slug: "major-scale",
         title: "Major scale",
-        headerSubtitle: "Scale · match 40%",
+        headerSubtitle: "Scale",
         cardSubtitle: "A full major scale — the sound of home",
         tempo: 55,
         minScore: 40,
@@ -302,7 +304,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
       gen.scales.scaleDegrees({
         slug: "scale-degrees-up",
         title: "Scale degrees — ascending",
-        headerSubtitle: "Root→degree→Root · ascending",
+        headerSubtitle: "Root→degree→Root",
         cardSubtitle: "Feel each interval from the root — stepping up through the scale",
         startNote: 1,
         endNote: 8,
@@ -322,7 +324,7 @@ export const CHAPTER_4_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm",
         slug: "rhythm-groove",
         title: "Rhythm groove",
-        headerSubtitle: "Tap along · match 60%",
+        headerSubtitle: "Tap along",
         cardSubtitle: "Lock into the groove — feel the pulse",
         tempo: 90,
         pattern: [

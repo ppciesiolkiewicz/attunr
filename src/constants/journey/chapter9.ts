@@ -18,25 +18,24 @@ export const CHAPTER_9_WARMUP: StageConfigInput = {
     gen.timeBased({
       slug: "ch9-warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 21 seconds",
-      cues: [
-        { text: "sss", seconds: 3 },
-        ...repeat(
-          [
-            { text: "zzz", seconds: 3 },
-            { text: "sss", seconds: 3 },
-          ],
-          3,
-        ),
-      ],
+      headerSubtitle: "Wake up breath",
+      cues: repeat(
+        [
+          { text: "sss", seconds: 3 },
+          { text: "zzz", seconds: 3 },
+          { text: "sss", seconds: 3 },
+          { text: "Inhale", seconds: 1 },
+        ],
+        3,
+      ),
       instruction:
-        "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
+        "Alternate sss and zzz — feel the vibration shift.\nQuick inhale between rounds.",
       tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
-        targetSeconds: 21,
+        targetSeconds: 30,
         tips: exerciseTips("breathSound", "introduction"),
         instruction:
-          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Take a quick inhale between rounds. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
     gen.lipRolls.slide({
@@ -299,7 +298,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "crown-silence",
         title: "Crown silence",
-        headerSubtitle: "Awareness · 36 seconds",
+        headerSubtitle: "Awareness",
         cardSubtitle: "The crown is silence — just breathe and notice",
         cues: [
           ...repeat(
@@ -319,7 +318,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody" as const,
         slug: "chakra-ascent",
         title: "7-tone ascent",
-        headerSubtitle: "7 tones · ascending",
+        headerSubtitle: "7 tones",
         tempo: 40,
         melody: [
           {
@@ -358,7 +357,7 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody" as const,
         slug: "chakra-flow",
         title: "7-tone flow",
-        headerSubtitle: "7 tones · up and down",
+        headerSubtitle: "7 tones",
         cardSubtitle: "All seven tones — ascending and returning",
         tempo: 35,
         melody: [
@@ -395,19 +394,25 @@ export const CHAPTER_9_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "mantra-flow",
         title: "Mantra sequence",
-        headerSubtitle: "Mantras · 35 seconds",
+        headerSubtitle: "Mantras",
         cardSubtitle: "Seven mantras — feel where each one lives",
         cues: [
           { text: "LAM", seconds: 5 },
+          { text: "Inhale", seconds: 1 },
           { text: "VAM", seconds: 5 },
+          { text: "Inhale", seconds: 1 },
           { text: "RAM", seconds: 5 },
+          { text: "Inhale", seconds: 1 },
           { text: "YAM", seconds: 5 },
+          { text: "Inhale", seconds: 1 },
           { text: "HAM", seconds: 5 },
+          { text: "Inhale", seconds: 1 },
           { text: "OM", seconds: 5 },
+          { text: "Inhale", seconds: 1 },
           { text: "Silence", seconds: 5 },
         ],
         instruction:
-          "Hum each mantra as it appears. Feel it vibrate in its place.\nLet each one settle before the next arrives.\nJust notice what happens.",
+          "Hum each mantra as it appears. Feel it vibrate in its place.\nQuick inhale between mantras.\nJust notice what happens.",
         tips: exerciseTips("chakra", "advanced"),
       }),
       gen.breathwork.farinelliVoiceDriven({

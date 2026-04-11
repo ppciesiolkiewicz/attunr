@@ -48,7 +48,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "breath-cycles",
         title: "Breath cycles",
-        headerSubtitle: "Guided breath · 56 seconds",
+        headerSubtitle: "Guided breath",
         cardSubtitle:
           "Inhale, hold, exhale — a rhythm your body already knows",
         cues: repeat(
@@ -75,22 +75,23 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "extended-sss-zzz",
         title: "Extended sss-zzz",
-        headerSubtitle: "Breath sound · 30 seconds",
+        headerSubtitle: "Breath sound",
         cues: repeat(
           [
             { text: "sss", seconds: 5 },
             { text: "zzz", seconds: 5 },
+            { text: "Inhale", seconds: 1 },
           ],
           3,
         ),
         tips: exerciseTips("breathSound", "intermediate"),
         instruction:
-          "Alternate sss and zzz — longer holds this time.\nFeel the vibration shift between voiceless and voiced.\nIt's okay to pause between sounds.",
+          "Alternate sss and zzz — longer holds this time.\nFeel the vibration shift between voiceless and voiced.\nQuick inhale between rounds.",
       }),
       gen.timeBased({
         slug: "body-scan",
         title: "Body scan breathing",
-        headerSubtitle: "Body awareness · 32 seconds",
+        headerSubtitle: "Body awareness",
         cardSubtitle:
           "Move your breath through your body — belly, chest, shoulders",
         cues: [
@@ -129,7 +130,7 @@ export const CHAPTER_5_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "extended-exhale",
         title: "Extended exhale",
-        headerSubtitle: "Extended exhale · 48 seconds",
+        headerSubtitle: "Extended exhale",
         cues: repeat(
           [
             { text: "Inhale", seconds: 4 },

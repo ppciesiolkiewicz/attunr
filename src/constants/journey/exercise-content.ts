@@ -99,7 +99,7 @@ export interface HumContentParams {
 
 function humContent(p: HumContentParams): ExerciseContent {
   const base: ExerciseContent = {
-    headerSubtitle: `Hum · ${p.seconds} seconds × ${p.reps}`,
+    headerSubtitle: `Hum`,
     cardSubtitle: "Your first pitched sound — a low, steady hum",
     instruction:
       "Hum mmmm — keep the ball at the bottom of the hill.\nKeep the sound steady — feel the buzz in your lips.\nBreathe whenever you need to.",
@@ -199,7 +199,7 @@ function vowelSustainContent(p: VowelSustainContentParams): ExerciseContent {
   const soundLabel = `${vowelLower}${vowelLower}${vowelLower}${vowelLower}`;
 
   const base: ExerciseContent = {
-    headerSubtitle: `${profile.headerLabel} · ${p.seconds} seconds × ${p.reps}`,
+    headerSubtitle: `${profile.headerLabel}`,
     cardSubtitle: `A low ${p.vowel} that settles in your chest`,
     instruction:
       `Sing ${soundLabel} (as in '${profile.example}') ${pitchLabel}.\n${profile.mouthShape}\nBreathe whenever you need to.`,
@@ -243,7 +243,7 @@ export interface HeadVoiceContentParams {
 
 function headVoiceContent(p: HeadVoiceContentParams): ExerciseContent {
   const base: ExerciseContent = {
-    headerSubtitle: `Head voice · ${p.seconds} seconds × ${p.reps}`,
+    headerSubtitle: `Head voice`,
     cardSubtitle: `Find your head voice — light, floating, easy`,
     instruction:
       `Sing '${p.sound}' on a high tone — light and floating.\nNotice the lightness — the sound lifts into your head.\nKeep it gentle.`,
@@ -288,7 +288,7 @@ function lipRollContent(p: LipRollContentParams): ExerciseContent {
 
   if (p.direction === "sustained") {
     return {
-      headerSubtitle: `Hold the buzz · play ${p.requiredPlays} times`,
+      headerSubtitle: `Hold the buzz`,
       cardSubtitle: "Keep the buzz steady — lips vibrating without force",
       instruction:
         "Lip roll alongside the tone.\nKeep the buzz steady — lips vibrating without force.\nNotice where the resonance sits.",
@@ -299,7 +299,7 @@ function lipRollContent(p: LipRollContentParams): ExerciseContent {
   }
 
   const base: ExerciseContent = {
-    headerSubtitle: `Glide ${dirLabel} · play ${p.requiredPlays} times`,
+    headerSubtitle: `Glide ${dirLabel}`,
     cardSubtitle: `Lip roll ${dirLabel} — loosen up`,
     instruction:
       `Lip roll alongside the tone.\nSlide smoothly ${dirLabel} — loosen your lips.`,
@@ -330,7 +330,7 @@ function breathSoundContent(p: BreathSoundContentParams): ExerciseContent {
   const hasPair = p.sounds.length > 1;
 
   const base: ExerciseContent = {
-    headerSubtitle: `Breath sound · ${p.totalSeconds} seconds`,
+    headerSubtitle: `Breath sound`,
     cardSubtitle: `${soundList} — all breath, no voice`,
     instruction: hasPair
       ? `Alternate ${soundList} — feel the vibration shift.\nIt's okay to take breaths between sounds.`
@@ -528,7 +528,7 @@ export interface FarinelliContentParams {
 
 function farinelliContent(p: FarinelliContentParams): ExerciseContent {
   const base: ExerciseContent = {
-    headerSubtitle: `Breathwork · ${p.maxCount} cycles`,
+    headerSubtitle: `Breathwork`,
     cardSubtitle: "Slow down. Breathe deep. Feel your body settle",
     instruction: "",
     introInstruction:
@@ -567,7 +567,7 @@ function zoneContent(p: ZoneContentParams): ExerciseContent {
     : "in the target zone";
 
   const base: ExerciseContent = {
-    headerSubtitle: `Hold ${zoneLabel} · ${p.seconds}s × ${p.reps}`,
+    headerSubtitle: `Hold ${zoneLabel}`,
     cardSubtitle: `Sing ${zoneLabel} — hold the tone steady`,
     instruction:
       `Sing a tone ${zoneLabel}.\nHold it steady for ${p.seconds} seconds.\nAny pitch in the zone counts.`,
@@ -601,7 +601,7 @@ export interface ChakraContentParams {
 
 function chakraContent(p: ChakraContentParams): ExerciseContent {
   const base: ExerciseContent = {
-    headerSubtitle: `${p.chakra} · ${p.vowel}`,
+    headerSubtitle: `${p.chakra}`,
     cardSubtitle: `${p.vowel} — feel the ${p.chakra.toLowerCase()} resonate`,
     instruction:
       `Sing ${p.vowel} and direct the vibration to your ${p.chakra.toLowerCase()}.\nLet the mantra hum through you.\nNotice what you feel.`,

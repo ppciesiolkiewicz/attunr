@@ -16,25 +16,24 @@ export const CHAPTER_7_WARMUP: StageConfigInput = {
     gen.timeBased({
       slug: "ch7-warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 21 seconds",
-      cues: [
-        { text: "sss", seconds: 3 },
-        ...repeat(
-          [
-            { text: "zzz", seconds: 3 },
-            { text: "sss", seconds: 3 },
-          ],
-          3,
-        ),
-      ],
+      headerSubtitle: "Wake up breath",
+      cues: repeat(
+        [
+          { text: "sss", seconds: 3 },
+          { text: "zzz", seconds: 3 },
+          { text: "sss", seconds: 3 },
+          { text: "Inhale", seconds: 1 },
+        ],
+        3,
+      ),
       instruction:
-        "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
+        "Alternate sss and zzz — feel the vibration shift.\nQuick inhale between rounds.",
       tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
-        targetSeconds: 21,
+        targetSeconds: 30,
         tips: exerciseTips("breathSound", "introduction"),
         instruction:
-          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Take a quick inhale between rounds. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
     gen.lipRolls.slide({
@@ -318,7 +317,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
       gen.scales.pentatonic({
         slug: "pentatonic-melody",
         title: "Pentatonic melody",
-        headerSubtitle: "Pentatonic scale · match 50%",
+        headerSubtitle: "Pentatonic scale",
         cardSubtitle:
           "The most natural melodic pattern — five notes that feel like home",
         minScore: 50,
@@ -334,7 +333,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
       gen.scaleIntervals.pentatonic({
         slug: "pentatonic-scale",
         title: "Pentatonic scale",
-        headerSubtitle: "Pentatonic · shifting roots",
+        headerSubtitle: "Pentatonic",
         cardSubtitle: "The pentatonic pattern moving through your range",
         tempo: 50,
         minScore: 40,
@@ -393,7 +392,7 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
       gen.scales.major({
         slug: "vowel-weave",
         title: "Major scale weave",
-        headerSubtitle: "Major scale · match 40%",
+        headerSubtitle: "Major scale",
         cardSubtitle:
           "Weave through the major scale — up and back down",
         tempo: 50,

@@ -128,7 +128,7 @@ export class IntroModalGenerator {
   rhythm(p: ModalInstruction & { minScore: number }): ModalConfig {
     return {
       title: "",
-      subtitle: `Tap along — match ${p.minScore}% to continue`,
+      subtitle: `Tap along`,
       elements: [
         { type: "video" },
         ...instructionParagraphs(p.instruction),

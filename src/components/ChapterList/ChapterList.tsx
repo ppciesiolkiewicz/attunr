@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { journey } from "@/constants/journey";
-import { Text } from "@/components/ui";
+import { Button, Text } from "@/components/ui";
 import { useApp } from "@/context/AppContext";
 import { analytics } from "@/lib/analytics";
 import { ChapterCard } from "./components/ChapterCard";
@@ -14,12 +14,23 @@ export function ChapterList() {
     analytics.journeyViewed();
   }, []);
 
+  function handleUnlockAll() {
+    for (const exercise of journey.exercises) {
+      jp.completeExercise(exercise);
+    }
+  }
+
   return (
     <div className="h-full overflow-y-auto">
       <div className="flex flex-col gap-4 px-5 py-5 max-w-2xl mx-auto w-full">
-        <Text variant="heading" as="h1" className="sm:text-2xl">
-          Journey
-        </Text>
+        <div className="flex items-center justify-between gap-3">
+          <Text variant="heading" as="h1" className="sm:text-2xl">
+            Journey
+          </Text>
+          <Button variant="outline" size="sm" onClick={handleUnlockAll}>
+            Unlock all
+          </Button>
+        </div>
         <div className="flex flex-col gap-2">
           <Text
             variant="body-sm"

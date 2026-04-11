@@ -16,25 +16,24 @@ export const CHAPTER_8_WARMUP: StageConfigInput = {
     gen.timeBased({
       slug: "ch8-warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 21 seconds",
-      cues: [
-        { text: "sss", seconds: 3 },
-        ...repeat(
-          [
-            { text: "zzz", seconds: 3 },
-            { text: "sss", seconds: 3 },
-          ],
-          3,
-        ),
-      ],
+      headerSubtitle: "Wake up breath",
+      cues: repeat(
+        [
+          { text: "sss", seconds: 3 },
+          { text: "zzz", seconds: 3 },
+          { text: "sss", seconds: 3 },
+          { text: "Inhale", seconds: 1 },
+        ],
+        3,
+      ),
       instruction:
-        "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
+        "Alternate sss and zzz — feel the vibration shift.\nQuick inhale between rounds.",
       tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
-        targetSeconds: 21,
+        targetSeconds: 30,
         tips: exerciseTips("breathSound", "introduction"),
         instruction:
-          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Take a quick inhale between rounds. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
     gen.lipRolls.slide({
@@ -186,7 +185,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
       gen.scales.major({
         slug: "full-major-scale",
         title: "Full major scale",
-        headerSubtitle: "Major scale · match 50%",
+        headerSubtitle: "Major scale",
         cardSubtitle: "The full major scale — up and back down",
         tempo: 55,
         minScore: 50,
@@ -203,7 +202,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody" as const,
         slug: "hum-scale",
         title: "Hum scale",
-        headerSubtitle: "Hum · 9 notes",
+        headerSubtitle: "Hum",
         cardSubtitle: "Hum through the full scale — feel the steps in your body",
         tempo: 50,
         melody: [
@@ -236,7 +235,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
       gen.scaleIntervals.fiveTone({
         slug: "five-tone-scale",
         title: "5-tone scale",
-        headerSubtitle: "5 notes · shifting roots",
+        headerSubtitle: "5 notes",
         cardSubtitle: "The five-tone pattern moving through your range",
         tempo: 50,
         minScore: 40,
@@ -279,7 +278,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody" as const,
         slug: "multi-root-melody",
         title: "Multi-root melody",
-        headerSubtitle: "Two phrases · rising",
+        headerSubtitle: "Two phrases",
         cardSubtitle: "Carry the melody across two starting points — feel the shift",
         tempo: 50,
         melody: [
@@ -319,7 +318,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
       gen.scales.scaleDegrees({
         slug: "scale-degrees-down",
         title: "Scale degrees — descending",
-        headerSubtitle: "Top→degree→Top · descending",
+        headerSubtitle: "Top→degree→Top",
         cardSubtitle: "Feel each interval from the top — stepping down through the scale",
         startNote: 1,
         endNote: 8,
@@ -418,7 +417,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
       gen.scales.major({
         slug: "precise-melody",
         title: "Precise melody",
-        headerSubtitle: "Major scale · match 60%",
+        headerSubtitle: "Major scale",
         cardSubtitle: "The major scale with sharper accuracy",
         tempo: 48,
         minScore: 60,
@@ -435,7 +434,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
         exerciseTypeId: "rhythm" as const,
         slug: "fast-rhythm",
         title: "Fast rhythm",
-        headerSubtitle: "Tap along · match 70%",
+        headerSubtitle: "Tap along",
         cardSubtitle: "Eighth notes at speed — feel the pulse quicken",
         tempo: 120,
         pattern: [
@@ -490,7 +489,7 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
       gen.scales.major({
         slug: "final-melody",
         title: "Final melody",
-        headerSubtitle: "Major scale · match 60%",
+        headerSubtitle: "Major scale",
         cardSubtitle: "Everything you've learned — one final melody",
         tempo: 55,
         minScore: 60,

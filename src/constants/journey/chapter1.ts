@@ -162,26 +162,25 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.timeBased({
         slug: "sss-zzz-sss",
         title: "Sss-zzz-sss",
-        headerSubtitle: "Breath sound · 14 seconds",
+        headerSubtitle: "Breath sound",
         cardSubtitle: "All breath, no voice — feel what happens",
-        cues: [
-          { text: "sss", seconds: 2 },
-          ...repeat(
-            [
-              { text: "zzz", seconds: 2 },
-              { text: "sss", seconds: 2 },
-            ],
-            3,
-          ),
-        ],
+        cues: repeat(
+          [
+            { text: "sss", seconds: 2 },
+            { text: "zzz", seconds: 2 },
+            { text: "sss", seconds: 2 },
+            { text: "Inhale", seconds: 1 },
+          ],
+          3,
+        ),
         instruction:
-          "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start.\nIt's okay to take breaths between sounds.",
+          "Make a steady sss sound — no pitch needed, just breath.\nSwitch to zzz and feel the vibration start, then back to sss.\nQuick inhale between rounds.",
         tips: exerciseTips("breathSound", "introduction"),
         introModal: modal.volumeDetection({
-          targetSeconds: 14,
+          targetSeconds: 21,
           tips: exerciseTips("breathSound", "introduction"),
           instruction:
-            "Make a steady sss sound — like air escaping. No pitch needed, just breath. When you're ready, switch to zzz and feel the vibration start. Then back to sss. You'll do 3 rounds of 6 seconds each.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape. It's okay to take breaths between sounds.",
+            "Make a steady sss sound — like air escaping. No pitch needed, just breath. Switch to zzz and feel the vibration start, then back to sss. Take a quick inhale, then repeat. You'll do 3 rounds.\n\nNotice how your body settles when you focus on the sound. Feel the difference between sss (just air) and zzz (voice arrives).\n\nThis exercise wakes up your breath control and teaches you to feel the moment voice joins the breath. It's the bridge between breathing and sounding.\n\nKeep your mouth relaxed and avoid changing its shape.",
         }),
       }),
     ],
@@ -195,7 +194,7 @@ export const CHAPTER_1_STAGES: StageConfigInput[] = [
       gen.volumeDetection({
         slug: "voiceless-lip-roll",
         title: "Voiceless lip roll",
-        headerSubtitle: "Lip buzz · 15 seconds",
+        headerSubtitle: "Lip buzz",
         cardSubtitle: "Just buzz. No pitch. No pressure.",
         targetSeconds: 15,
         cues: [{ text: "lip roll", seconds: 15 }],

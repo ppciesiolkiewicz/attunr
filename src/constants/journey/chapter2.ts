@@ -16,22 +16,48 @@ export const CHAPTER_2_WARMUP: StageConfigInput = {
     gen.timeBased({
       slug: "warmup-sss-zzz",
       title: "Sss-zzz",
-      headerSubtitle: "Wake up breath · 21 seconds",
-      cues: [
-        { text: "sss", seconds: 3 },
-        ...repeat([
+      headerSubtitle: "Wake up breath",
+      cues: repeat(
+        [
+          { text: "sss", seconds: 3 },
           { text: "zzz", seconds: 3 },
           { text: "sss", seconds: 3 },
-        ], 3),
-      ],
+          { text: "Inhale", seconds: 1 },
+        ],
+        3,
+      ),
       instruction:
-        "Alternate sss and zzz — feel the vibration shift.\nIt's okay to take breaths between sounds.",
+        "Alternate sss and zzz — feel the vibration shift.\nQuick inhale between rounds.",
+      tips: exerciseTips("breathSound", "introduction"),
+      introModal: modal.volumeDetection({
+        targetSeconds: 30,
+        tips: exerciseTips("breathSound", "introduction"),
+        instruction:
+          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Take a quick inhale between rounds. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+      }),
+    }),
+    gen.timeBased({
+      slug: "warmup-zzz-sss-zzz",
+      title: "Zzz-sss-zzz",
+      headerSubtitle: "Wake up voice",
+      cardSubtitle: "Start with voice — feel the buzz lead",
+      cues: repeat(
+        [
+          { text: "zzz", seconds: 2 },
+          { text: "sss", seconds: 2 },
+          { text: "zzz", seconds: 2 },
+          { text: "Inhale", seconds: 1 },
+        ],
+        3,
+      ),
+      instruction:
+        "Start with zzz — feel the vibration lead.\nDrop voice for sss, then bring it back.\nQuick inhale between rounds.",
       tips: exerciseTips("breathSound", "introduction"),
       introModal: modal.volumeDetection({
         targetSeconds: 21,
         tips: exerciseTips("breathSound", "introduction"),
         instruction:
-          "Alternate between sss and zzz sounds. Feel how sss is just air and zzz adds voice. Follow along with the cues.\n\nNotice the vibration shift — from voiceless to voiced and back.\n\nThis wakes up your breath and reconnects you to where sound starts.\n\nKeep your mouth relaxed. There's no rush.",
+          "This time voice leads. Start with zzz and feel the vibration, then drop to sss (just air), then back to zzz. Take a quick inhale, then repeat. You'll do 3 rounds.\n\nNotice how it feels to start with voice instead of breath. The buzz is already there — you just release it.\n\nThis flips the previous pattern and trains you to enter sound from a voiced place.\n\nKeep your mouth relaxed. There's no rush.",
       }),
     }),
     gen.lipRolls.slide({
@@ -130,7 +156,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "hum-low-to-mid",
         title: "Hum — low to mid",
-        headerSubtitle: "Hum · 3 rising pitches",
+        headerSubtitle: "Hum · 8 seconds × 3",
         tempo: 40,
         melody: [
           {
@@ -157,7 +183,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         exerciseTypeId: "melody",
         slug: "u-low-to-mid",
         title: "U — low to mid",
-        headerSubtitle: "Vowel U · 3 rising pitches",
+        headerSubtitle: "Vowel U · 8 seconds × 3",
         tempo: 40,
         melody: [
           {
@@ -356,7 +382,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         repeats: 3,
         direction: "between",
         title: "Hum — mid",
-        headerSubtitle: "Hum · 8 seconds × 3",
+        headerSubtitle: "Hum",
         instruction:
           "Hum mmmm — keep the ball between the markers.\nFeel the buzz settle.\nBreathe whenever you need to.",
         introModal: modal.hill({
@@ -373,7 +399,7 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
         repeats: 3,
         direction: "between",
         title: "U — mid",
-        headerSubtitle: "Vowel U · 8 seconds × 3",
+        headerSubtitle: "Vowel U",
         instruction:
           "Uuuu (as in 'moon') — keep the ball between the markers.\nKeep your mouth rounded like Uu, not smiling.\nFeel the resonance in your chest and face.",
         introModal: modal.hill({
