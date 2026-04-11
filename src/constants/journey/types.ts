@@ -118,7 +118,7 @@ export interface ModalConfig {
 export interface VoiceConfig {
   instructionUrl: string;
   instructionTimestampsUrl: string;
-  /** SSML text for TTS generation. Used by the voice-instruction-generator only — not consumed at runtime. */
+  /** SSML text for TTS generation. */
   spokenText: string;
   /** Display text shown on screen as words accumulate. Falls back to exercise instruction if omitted. */
   displayText?: string;

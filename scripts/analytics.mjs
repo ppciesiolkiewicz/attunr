@@ -4,8 +4,9 @@
  * CLI tool for pulling PostHog analytics data.
  *
  * Usage:
- *   node scripts/analytics.mjs usage [--days 7]
- *   node scripts/analytics.mjs contacts [--days 30]
+ *   node scripts/analytics.mjs projects                     — list org projects
+ *   node scripts/analytics.mjs usage [--days 7] [--project name]
+ *   node scripts/analytics.mjs contacts [--days 30] [--project name]
  *
  * Requires POSTHOG_PERSONAL_API_KEY in .env.local
  * Get one from PostHog → Settings → Personal API Keys
@@ -46,10 +47,35 @@ async function fetchPostHog(endpoint, params = {}) {
   return res.json();
 }
 
-async function getProjectId() {
+async function getProjects() {
   const data = await fetchPostHog("/api/projects/");
   if (!data.results?.length) throw new Error("No PostHog projects found");
-  return data.results[0].id;
+  return data.results;
+}
+
+async function getProjectId(projectName) {
+  const projects = await getProjects();
+  if (projectName) {
+    const match = projects.find(
+      (p) => p.name.toLowerCase() === projectName.toLowerCase()
+    );
+    if (!match) {
+      console.error(
+        `Project "${projectName}" not found. Available projects:\n` +
+          projects.map((p) => `  - ${p.name}`).join("\n")
+      );
+      process.exit(1);
+    }
+    return match.id;
+  }
+  if (projects.length > 1) {
+    console.error(
+      "Multiple projects found — use --project <name> to select one:\n" +
+        projects.map((p) => `  - ${p.name}`).join("\n")
+    );
+    process.exit(1);
+  }
+  return projects[0].id;
 }
 
 async function fetchAllEvents(projectId, eventName, after) {
@@ -76,8 +102,17 @@ function isLocalhost(event) {
 
 // --- Commands ---
 
-async function cmdUsage(days) {
-  const projectId = await getProjectId();
+async function cmdProjects() {
+  const projects = await getProjects();
+  console.log(`\nOrg projects (${projects.length})\n${"─".repeat(40)}`);
+  for (const p of projects) {
+    console.log(`  ${p.name} (id: ${p.id})`);
+  }
+  console.log("");
+}
+
+async function cmdUsage(days, projectName) {
+  const projectId = await getProjectId(projectName);
   const after = daysAgo(days);
 
   console.log(`\nUsage stats — last ${days} days\n${"─".repeat(40)}`);
@@ -128,8 +163,8 @@ async function cmdUsage(days) {
   console.log("");
 }
 
-async function cmdContacts(days) {
-  const projectId = await getProjectId();
+async function cmdContacts(days, projectName) {
+  const projectId = await getProjectId(projectName);
   const after = daysAgo(days);
 
   console.log(`\nContact submissions — last ${days} days\n${"─".repeat(40)}\n`);
@@ -162,33 +197,57 @@ function daysAgo(n) {
   return d.toISOString();
 }
 
+const KNOWN_FLAGS = new Set(["--days", "--project"]);
+
+function showHelp(exitCode = 0) {
+  console.log(
+    "Usage:\n" +
+      "  node scripts/analytics.mjs projects                              — list org projects\n" +
+      "  node scripts/analytics.mjs usage    [--days 7] [--project name]  — pageviews, visitors, key events\n" +
+      "  node scripts/analytics.mjs contacts [--days 30] [--project name] — contact form submissions"
+  );
+  process.exit(exitCode);
+}
+
 function parseArgs() {
   const args = process.argv.slice(2);
   const command = args[0];
+
+  // Check for unknown flags
+  const flags = args.filter((a) => a.startsWith("--"));
+  const unknown = flags.filter((f) => !KNOWN_FLAGS.has(f));
+  if (unknown.length > 0) {
+    console.error(`Unknown flag(s): ${unknown.join(", ")}\n`);
+    showHelp(1);
+  }
+
   let days = 7;
   const daysIdx = args.indexOf("--days");
   if (daysIdx !== -1 && args[daysIdx + 1]) {
     days = parseInt(args[daysIdx + 1], 10);
   }
-  return { command, days };
+  let project;
+  const projIdx = args.indexOf("--project");
+  if (projIdx !== -1 && args[projIdx + 1]) {
+    project = args[projIdx + 1];
+  }
+  return { command, days, project };
 }
 
 // --- Main ---
 
-const { command, days } = parseArgs();
+const { command, days, project } = parseArgs();
 
 switch (command) {
+  case "projects":
+    await cmdProjects();
+    break;
   case "usage":
-    await cmdUsage(days);
+    await cmdUsage(days, project);
     break;
   case "contacts":
-    await cmdContacts(days);
+    await cmdContacts(days, project);
     break;
   default:
-    console.log(
-      "Usage:\n" +
-        "  node scripts/analytics.mjs usage    [--days 7]   — pageviews, visitors, key events\n" +
-        "  node scripts/analytics.mjs contacts  [--days 30]  — contact form submissions"
-    );
-    process.exit(command ? 1 : 0);
+    showHelp(command ? 1 : 0);
 }

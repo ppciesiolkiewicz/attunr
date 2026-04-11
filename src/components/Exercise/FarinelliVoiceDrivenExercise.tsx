@@ -126,13 +126,12 @@ function FarinelliVoiceDrivenPlayer({
   const tipTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
 
   const loadedMapRef = useRef<Map<string, LoadedSegment>>(new Map());
-  const preloadPromiseRef = useRef<Promise<void> | null>(null);
 
-  // Start preloading immediately but don't block UI
+  // Preload all audio before showing start button
   useEffect(() => {
     let cancelled = false;
 
-    preloadPromiseRef.current = (async () => {
+    (async () => {
       try {
         const uniqueNames = [...new Set(segmentNames.current)];
         const loaded = await Promise.all(
@@ -161,13 +160,12 @@ function FarinelliVoiceDrivenPlayer({
         tipAudiosRef.current = tipBlobs
           .filter((b): b is Blob => b !== null)
           .map((blob) => new Audio(URL.createObjectURL(blob)));
+
+        if (!cancelled) setStatus("ready");
       } catch (err) {
         console.error("Failed to preload voice segments:", err);
       }
     })();
-
-    // Show start button immediately — preload runs in background
-    setStatus("ready");
 
     return () => { cancelled = true; };
   }, [voiceBaseUrl]);
@@ -245,10 +243,7 @@ function FarinelliVoiceDrivenPlayer({
     tipIndexRef.current++;
   }, []);
 
-  async function handleStart() {
-    setStatus("loading");
-    // Wait for preload to finish if still in progress
-    if (preloadPromiseRef.current) await preloadPromiseRef.current;
+  function handleStart() {
     setStatus("playing");
     playSegment(0);
     // Start tip interval — first tip after 10s, then every 15s

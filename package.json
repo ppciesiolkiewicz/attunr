@@ -13,8 +13,9 @@
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "analytics:usage": "node scripts/analytics.mjs usage",
-    "analytics:contacts": "node scripts/analytics.mjs contacts",
+    "analytics:projects": "node scripts/analytics.mjs projects",
+    "analytics:usage": "node scripts/analytics.mjs usage --project attunr",
+    "analytics:contacts": "node scripts/analytics.mjs contacts --project attunr",
     "db:migrate": "npx supabase db push"
   },
   "dependencies": {
