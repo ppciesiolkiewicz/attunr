@@ -1,21 +1,33 @@
 import Link from "next/link";
 import { Button, Text } from "@/components/ui";
 import Logo from "../../Logo";
+import { useToast } from "@/context/ToastContext";
+import type { AuthHook } from "@/hooks/useAuth";
 import {
   CloseIcon,
   MenuJourneyIcon,
   MenuPracticeIcon,
   MenuLearnIcon,
   SettingsIcon,
+  LogoutIcon,
 } from "./icons";
 
 interface MobileMenuProps {
   pathname: string;
+  auth: AuthHook;
   onClose: () => void;
   onOpenSettings: () => void;
 }
 
-export function MobileMenu({ pathname, onClose, onOpenSettings }: MobileMenuProps) {
+export function MobileMenu({ pathname, auth, onClose, onOpenSettings }: MobileMenuProps) {
+  const { toast } = useToast();
+
+  async function handleLogout() {
+    await auth.signOut();
+    toast({ variant: "success", title: "Successfully logged out" });
+    onClose();
+  }
+
   return (
     <div className="fixed inset-0 z-50 sm:hidden" onClick={onClose}>
       <div
@@ -92,6 +104,17 @@ export function MobileMenu({ pathname, onClose, onOpenSettings }: MobileMenuProp
             </Text>
             Settings
           </button>
+          {auth.user && (
+            <button
+              className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium text-white/85 hover:bg-white/[0.06] active:bg-white/[0.08] transition-all cursor-pointer"
+              onClick={handleLogout}
+            >
+              <Text as="span" variant="body-sm" color="text-2">
+                <LogoutIcon />
+              </Text>
+              Log out
+            </button>
+          )}
         </nav>
         <div className="mt-auto px-5 py-5 pt-5 border-t border-white/[0.06]">
           <Text
