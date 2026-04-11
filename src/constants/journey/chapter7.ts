@@ -228,66 +228,56 @@ export const CHAPTER_7_STAGES: StageConfigInput[] = [
     id: "ch7-vowel-sequences",
     title: "Vowel Sequences",
     exercises: [
-      {
-        exerciseTypeId: "melody",
+      gen.scaleIntervals.pattern({
         slug: "vowel-rotation",
         title: "Vowel rotation",
-        headerSubtitle: "A-O-U-O-A · listen and match",
+        headerSubtitle: "A-O-U-O-A · shifting roots",
         cardSubtitle:
           "Move through five vowels — feel each shape change in your mouth",
-        tempo: 45,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-            ],
-          },
-        ],
+        tempo: 80,
         minScore: 30,
+        startNote: 1,
+        endNote: 8,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+        ],
         instruction:
-          "Move through the vowels — A, O, U, O, A.\nFeel each shape change in your mouth as you move between them.\nLet it be easy.",
+          "Move through the vowels — A, O, U, O, A.\nThe pattern shifts up a half-step each repeat.\nFeel each shape change in your mouth as you move between them.",
         introModal: modal.melody({
           minScore: 30,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Move through five vowels — A, O, U, O, A — each on a different pitch. The piano plays each note for you.\n\nFeel how your mouth changes shape with each vowel. Notice the journey — from open Ah, through rounded Oo, to warm Uu, and back.\n\nVowel rotation trains your voice to move smoothly between shapes while maintaining placement.\n\nMatch 30% to continue. Just follow the sound.",
+            "Move through five vowels — A, O, U, O, A — each on a different pitch. The pattern shifts a half-step higher each repeat.\n\nFeel how your mouth changes shape with each vowel. Notice the journey — from open Ah, through rounded Oo, to warm Uu, and back.\n\nVowel rotation trains your voice to move smoothly between shapes while maintaining placement.\n\nMatch 30% to continue. Just follow the sound.",
         }),
-      },
-      {
-        exerciseTypeId: "melody",
+      }),
+      gen.scaleIntervals.pattern({
         slug: "ee-uu-ee",
         title: "Ee-Uu-Ee",
-        headerSubtitle: "Ee-Uu-Ee · listen and match",
+        headerSubtitle: "Ee-Uu-Ee · shifting roots",
         cardSubtitle:
           "Bright to warm and back — feel the contrast in your face",
-        tempo: 45,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-            ],
-          },
-        ],
+        tempo: 80,
         minScore: 30,
+        startNote: 1,
+        endNote: 8,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+        ],
         instruction:
-          "Sound Ee, then Uu, then back to Ee.\nFeel the contrast — bright Ee forward in your face, warm Uu settling deeper.\nNotice how your placement shifts.",
+          "Sound Ee, then Uu, then back to Ee.\nThe pattern shifts up a half-step each repeat.\nFeel the contrast — bright Ee forward in your face, warm Uu settling deeper.",
         introModal: modal.melody({
           minScore: 30,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Three vowels — Ee, Uu, Ee — each on a different pitch. The piano plays each note for you.\n\nFeel the contrast. Ee is bright and forward — buzzing in your face. Uu is warm and round — settling in your chest. Then Ee pulls you forward again.\n\nContrasting bright and warm vowels builds awareness of how placement changes with shape.\n\nMatch 30% to continue. It's okay to pause.",
+            "Three vowels — Ee, Uu, Ee — each on a different pitch. The pattern shifts a half-step higher each repeat.\n\nFeel the contrast. Ee is bright and forward — buzzing in your face. Uu is warm and round — settling in your chest. Then Ee pulls you forward again.\n\nContrasting bright and warm vowels builds awareness of how placement changes with shape.\n\nMatch 30% to continue. It's okay to pause.",
         }),
-      },
+      }),
       gen.pitch.hillSustain({
         slug: "vowel-transition-hill",
         note: [5, 9],

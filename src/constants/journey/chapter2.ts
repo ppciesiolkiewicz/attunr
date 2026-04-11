@@ -1,6 +1,10 @@
 import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
-import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
+import {
+  ExerciseGenerator,
+  IntroModalGenerator,
+  repeat,
+} from "./exercise-generator";
 import { exerciseTips } from "./exercise-content";
 
 const gen = new ExerciseGenerator();
@@ -152,60 +156,48 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     id: "ch2-finding-range",
     title: "Finding Your Range",
     exercises: [
-      {
-        exerciseTypeId: "melody",
+      gen.scaleIntervals.pattern({
         slug: "hum-low-to-mid",
         title: "Hum — low to mid",
-        headerSubtitle: "Hum · 8 seconds × 3",
-        tempo: 40,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: 8 },
-            ],
-          },
+        headerSubtitle: "Hum · 3 tones · shifting roots",
+        tempo: 80,
+        startNote: 1,
+        endNote: 6,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: NoteDuration.Half },
         ],
-        minScore: 0,
         instruction:
-          "Hum at three rising pitches — low, mid-low, mid.\nFeel the resonance shift as you rise.\nKeep each hum steady and relaxed.",
+          "Hum at three rising pitches — low, mid-low, mid.\nThe pattern shifts up a half-step each repeat.\nKeep each hum steady and relaxed.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("hum", "introduction"),
           instruction:
-            "Hum mmmm at three rising pitches. The piano plays each one — match what you hear.\n\nFeel where the resonance lives at each pitch. Notice how it shifts as you rise — from chest to throat to face.\n\nThis is your first pitched hum sequence. It maps where sound lives across your low-to-mid range.\n\nThere's no rush. Listen first, then follow.",
+            "Hum mmmm at three rising pitches. The pattern shifts a half-step higher each repeat.\n\nFeel where the resonance lives at each pitch. Notice how it shifts as you rise — from chest to throat to face.\n\nThis is your first pitched hum sequence. It maps where sound lives across your low-to-mid range.\n\nThere's no rush. Listen first, then follow.",
         }),
-      },
-      {
-        exerciseTypeId: "melody",
+      }),
+      gen.scaleIntervals.pattern({
         slug: "u-low-to-mid",
         title: "U — low to mid",
-        headerSubtitle: "Vowel U · 8 seconds × 3",
-        tempo: 40,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: 8 },
-            ],
-          },
+        headerSubtitle: "Vowel U · 3 tones · shifting roots",
+        tempo: 80,
+        startNote: 1,
+        endNote: 6,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 7 }, duration: NoteDuration.Half },
         ],
-        minScore: 0,
         instruction:
-          "Sound uuu, stepping from low to mid-low to mid.\nFeel the resonance shift as you rise.\nKeep each tone warm and open.",
+          "Sound uuu, stepping from low to mid-low to mid.\nThe pattern shifts up a half-step each repeat.\nKeep each tone warm and open.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("vowel", "introduction"),
           instruction:
-            "Sound uuuu (as in 'moon') at three rising pitches. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
+            "Sound uuuu (as in 'moon') at three rising pitches. The pattern shifts a half-step higher each repeat. Keep your mouth rounded like Uu — relaxed, not smiling.\n\nNotice how the vowel feels different at each pitch — warmer low, more open mid.\n\nMoving a vowel through your range builds awareness of how resonance shifts with pitch.\n\nLet it be easy. There's no wrong way.",
         }),
-      },
+      }),
       gen.lipRolls.slide({
         slug: "lip-rolls-high-to-low",
         startNote: -1,
@@ -279,94 +271,66 @@ export const CHAPTER_2_STAGES: StageConfigInput[] = [
     id: "ch2-first-scale",
     title: "First Scale",
     exercises: [
-      {
-        exerciseTypeId: "melody",
+      gen.scaleIntervals.fiveTone({
         slug: "5-tone-scale",
         title: "5-tone scale",
-        headerSubtitle: "5 notes up and back down",
-        cardSubtitle: "Your first scale — stepping up and back down",
-        tempo: 55,
-        melody: [
-          {
-            type: "major",
-            root: 3,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 2 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 2 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-            ],
-          },
-        ],
-        minScore: 0,
+        headerSubtitle: "5 notes · shifting roots",
+        cardSubtitle: "Your first scale — stepping up and back down through keys",
+        tempo: 80,
+        startNote: 1,
+        endNote: 6,
+        approachChords: false,
         instruction:
-          "Match each note as it scrolls past.\nUp five notes, then back down.\nListen to the piano and follow along.",
+          "Match each note as it scrolls past.\nUp five notes, then back down — the pattern shifts up a half-step each repeat.\nListen to the piano and follow along.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "introduction"),
           instruction:
-            "Match each note as it scrolls past — up five notes, then back down. The piano plays each one for you.\n\nNotice how the distance between notes feels. Feel your voice stepping through the scale.\n\nThis is your first scale. Five notes up and five back down — the building block of melody.\n\nThere's no rush. Listen first, then follow.",
+            "Match each note as it scrolls past — up five notes, then back down. The piano plays each one for you.\n\nThe pattern shifts a half-step higher each repeat. Notice how the distance between notes feels, and how the shape carries across different starting points.\n\nThis is your first scale. Five notes up and five back down — the building block of melody.\n\nThere's no rush. Listen first, then follow.",
         }),
-      },
-      {
-        exerciseTypeId: "melody",
+      }),
+      gen.scaleIntervals.pattern({
         slug: "hum-sequence",
         title: "Hum sequence",
-        headerSubtitle: "3 tones rising",
-        tempo: 40,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: 8 },
-            ],
-          },
+        headerSubtitle: "3 tones · shifting roots",
+        tempo: 80,
+        startNote: 1,
+        endNote: 6,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
         ],
-        minScore: 0,
         instruction:
-          "Hum three tones rising from low.\nMove smoothly between each tone.\nFeel the resonance shift as you rise.",
+          "Hum three tones rising from low.\nThe pattern shifts up a half-step each repeat.\nMove smoothly between each tone.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("hum", "introduction"),
           instruction:
-            "Hum mmmm on three rising tones. The piano plays each one — follow along.\n\nFeel the resonance shift as you rise. Notice where each tone lives in your body.\n\nHumming through a sequence builds the bridge between single tones and melody.\n\nJust follow the sound. There's no wrong way.",
+            "Hum mmmm on three rising tones. The pattern shifts a half-step higher each repeat — follow along.\n\nFeel the resonance shift as you rise. Notice where each tone lives in your body.\n\nHumming through a sequence builds the bridge between single tones and melody.\n\nJust follow the sound. There's no wrong way.",
         }),
-      },
-      {
-        exerciseTypeId: "melody",
+      }),
+      gen.scaleIntervals.pattern({
         slug: "u-sequence",
         title: "U sequence",
-        headerSubtitle: "3 tones rising",
-        tempo: 40,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: 8 },
-            ],
-          },
+        headerSubtitle: "3 tones · shifting roots",
+        tempo: 80,
+        startNote: 1,
+        endNote: 6,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
         ],
-        minScore: 0,
         instruction:
-          "Sound uuuu (as in 'moon') on three rising tones.\nKeep your mouth rounded like Uu — relaxed, not smiling.\nFeel the vowel resonate differently at each pitch.",
+          "Sound uuuu (as in 'moon') on three rising tones.\nThe pattern shifts up a half-step each repeat.\nKeep your mouth rounded like Uu — relaxed, not smiling.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("vowel", "introduction"),
           instruction:
-            "Sound uuuu (as in 'moon') on three rising tones. Keep your mouth rounded like Uu — relaxed, not smiling. Match the piano at each step.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSounding a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
+            "Sound uuuu (as in 'moon') on three rising tones. The pattern shifts a half-step higher each repeat. Keep your mouth rounded like Uu — relaxed, not smiling.\n\nFeel how the vowel changes colour at each pitch — warmer low, more open higher.\n\nSounding a vowel through a sequence trains your voice to carry resonance across pitches.\n\nLet it be easy. Breathe whenever you need to.",
         }),
-      },
+      }),
     ],
   },
 

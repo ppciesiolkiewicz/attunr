@@ -291,6 +291,19 @@ export interface NamedMelodyParams extends CommonParams {
   minScore?: number;
 }
 
+export interface ShiftingPatternParams extends CommonParams {
+  /** Singing events replayed per root. Targets are relative to each root. */
+  events: MelodyEvent[];
+  /** Scale type for each iteration (default "chromatic"). */
+  scaleType?: string;
+  /** First root (default 1). */
+  startNote?: number;
+  /** Last root — roots arc lo→hi→lo (default 6). */
+  endNote?: number;
+  tempo?: number;
+  minScore?: number;
+}
+
 export interface ZoneBelowParams extends CommonParams {
   boundaryNote: number;
   seconds: number;
@@ -466,6 +479,8 @@ export class ExerciseGenerator {
     fifth: (p: NamedMelodyParams) => this.fifth(p),
     /** Octave interval, shifting roots. */
     octave: (p: NamedMelodyParams) => this.octave(p),
+    /** Custom event pattern with shifting roots. */
+    pattern: (p: ShiftingPatternParams) => this.shiftingPattern(p),
   };
 
   /** Fixed-root scale/interval exercises. */
@@ -811,6 +826,64 @@ export class ExerciseGenerator {
   /** Shifting pentatonic scale (5 degrees by default). */
   pentatonicScale(params: NamedMelodyParams & { numDegrees?: number; approachChords?: boolean }): ExerciseConfigInput {
     return this.shiftingScale({ ...params, scaleType: "major pentatonic" });
+  }
+
+  /**
+   * Shifting-root exercise with a caller-supplied event pattern.
+   * Roots arc lo→hi→lo. Each root replays `events` at its own root.
+   * Event targets are relative to the current root.
+   */
+  shiftingPattern(params: ShiftingPatternParams): ExerciseConfigInput {
+    const {
+      events,
+      scaleType = "chromatic",
+      startNote = 1,
+      endNote = 6,
+      tempo = 80,
+      minScore = 0,
+    } = params;
+
+    const lo = Math.min(startNote, endNote);
+    const hi = Math.max(startNote, endNote);
+
+    const roots: number[] = [];
+    for (let r = lo; r <= hi; r++) roots.push(r);
+    for (let r = hi - 1; r > lo; r--) roots.push(r);
+    if (hi !== lo) roots.push(lo);
+
+    const melody: MelodyScale[] = roots.map((root) => ({
+      type: scaleType,
+      root,
+      events,
+    }));
+
+    // Display range: lo..hi + max index offset used by events
+    let maxIndex = 0;
+    for (const ev of events) {
+      if (ev.type === "note") {
+        if (ev.target.kind === BandTargetKind.Index && ev.target.i > maxIndex) {
+          maxIndex = ev.target.i;
+        }
+      } else if (ev.type === "play") {
+        for (const t of ev.targets) {
+          if (t.kind === BandTargetKind.Index && t.i > maxIndex) maxIndex = t.i;
+        }
+      }
+    }
+    const displayHi = hi + Math.max(0, maxIndex - 1);
+    const allActive = Array.from(
+      { length: displayHi - lo + 1 },
+      (_, k) => lo + k,
+    );
+
+    return {
+      ...pickCommon(params),
+      exerciseTypeId: "melody",
+      tempo,
+      melody,
+      displayNotes: buildDisplayNotes(lo, displayHi, allActive),
+      minScore,
+    };
   }
 
   // ── Fixed-root scale exercises ─────────────────────────────────────────

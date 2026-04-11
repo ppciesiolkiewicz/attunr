@@ -1,4 +1,4 @@
-import { BandTargetKind } from "./types";
+import { BandTargetKind, NoteDuration } from "./types";
 import type { StageConfigInput } from "./types";
 import { ExerciseGenerator, IntroModalGenerator, repeat } from "./exercise-generator";
 import { exerciseTips } from "./exercise-content";
@@ -191,34 +191,28 @@ export const CHAPTER_3_STAGES: StageConfigInput[] = [
     id: "ch3-vowel-transitions",
     title: "Vowel Transitions",
     exercises: [
-      {
-        exerciseTypeId: "melody",
+      gen.scaleIntervals.pattern({
         slug: "uu-oo-transition",
         title: "Uu→Oo transition",
-        headerSubtitle: "Vowel shift",
+        headerSubtitle: "Vowel shift · shifting roots",
         cardSubtitle: "Feel the shape change — from Uu to Oo",
-        tempo: 45,
-        melody: [
-          {
-            type: "chromatic",
-            root: 1,
-            events: [
-              { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: 8 },
-              { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: 8 },
-            ],
-          },
+        tempo: 80,
+        startNote: 1,
+        endNote: 6,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
         ],
-        minScore: 0,
         instruction:
-          "Start with uuuu, then open into oooo as the pitch rises.\nFeel the shape change — lips stay rounded but jaw drops.\nLet the transition be smooth.",
+          "Start with uuuu, then open into oooo as the pitch rises.\nThe pattern shifts up a half-step each repeat.\nFeel the shape change — lips stay rounded but jaw drops.",
         introModal: modal.melody({
           minScore: 0,
           tips: exerciseTips("melody", "intermediate"),
           instruction:
-            "Sound uuuu on the first tone, then gradually open into oooo as the pitches rise. Follow the piano.\n\nFeel the shape change in your mouth — your lips stay rounded but your jaw drops slightly. Notice how the resonance warms and opens.\n\nVowel transitions train your voice to move between shapes without tension. It's the beginning of expressive singing.\n\nYou don't need to get this right. Just notice the shift.",
+            "Sound uuuu on the first tone, then gradually open into oooo as the pitches rise. The pattern shifts a half-step higher each repeat.\n\nFeel the shape change in your mouth — your lips stay rounded but your jaw drops slightly. Notice how the resonance warms and opens.\n\nVowel transitions train your voice to move between shapes without tension. It's the beginning of expressive singing.\n\nYou don't need to get this right. Just notice the shift.",
         }),
-      },
+      }),
       gen.pitch.hillSustain({
         slug: "oo-longer",
         note: [5, 9],

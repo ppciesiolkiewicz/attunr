@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { ExerciseGenerator } from "./exercise-generator";
 import { BandTargetKind, NoteDuration } from "./types";
+import type { MelodyEvent } from "./types";
 
 const gen = new ExerciseGenerator();
 const base = { slug: "test", title: "Test", instruction: "Test instruction" };
@@ -396,5 +397,82 @@ describe("common params", () => {
     expect(result.cardSubtitle).toBeUndefined();
     expect(result.introModal).toBeUndefined();
     expect(result.completionModal).toBeUndefined();
+  });
+});
+
+// ── shiftingPattern() ────────────────────────────────────────────────────────
+
+describe("shiftingPattern()", () => {
+  const simpleEvents: MelodyEvent[] = [
+    { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+    { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+    { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
+  ];
+
+  it("returns exerciseTypeId melody", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents, startNote: 1, endNote: 3 });
+    expect(result.exerciseTypeId).toBe("melody");
+  });
+
+  it("generates one MelodyScale per root in lo→hi→lo arc", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents, startNote: 1, endNote: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    // roots: 1, 2, 3, 2, 1
+    expect(result.melody.map((m) => m.root)).toEqual([1, 2, 3, 2, 1]);
+  });
+
+  it("each root replays the same events", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents, startNote: 1, endNote: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    for (const scale of result.melody) {
+      expect(scale.events).toEqual(simpleEvents);
+    }
+  });
+
+  it("defaults scaleType to chromatic", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents, startNote: 1, endNote: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    for (const scale of result.melody) {
+      expect(scale.type).toBe("chromatic");
+    }
+  });
+
+  it("honours custom scaleType", () => {
+    const result = gen.shiftingPattern({
+      ...base,
+      events: simpleEvents,
+      scaleType: "major",
+      startNote: 1,
+      endNote: 2,
+    });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    for (const scale of result.melody) {
+      expect(scale.type).toBe("major");
+    }
+  });
+
+  it("single-root range (startNote === endNote) produces one scale", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents, startNote: 4, endNote: 4 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    expect(result.melody.map((m) => m.root)).toEqual([4]);
+  });
+
+  it("uses default tempo 80 and minScore 0", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    expect(result.tempo).toBe(80);
+    expect(result.minScore).toBe(0);
+  });
+
+  it("displayNotes range extends by max event index offset", () => {
+    const result = gen.shiftingPattern({ ...base, events: simpleEvents, startNote: 1, endNote: 3 });
+    if (result.exerciseTypeId !== "melody") throw new Error("wrong type");
+    const scale = result.displayNotes![0];
+    const maxTarget = Math.max(...scale.notes.map((n) => {
+      if (n.target.kind !== BandTargetKind.Index) throw new Error("expected Index");
+      return n.target.i;
+    }));
+    // hi (3) + (maxIndex - 1 = 4) = 7
+    expect(maxTarget).toBe(7);
   });
 });

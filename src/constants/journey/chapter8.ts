@@ -198,40 +198,25 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
             "Match the full major scale — all the way up and back down. The piano plays each note for you.\n\nFeel each step as a distinct pitch. Notice how the scale builds and resolves — rising tension, then release.\n\nThe full major scale ties together everything you've sung so far — intervals, breath, and placement in one continuous line.\n\nMatch 50% to continue. Let it be easy.",
         }),
       }),
-      {
-        exerciseTypeId: "melody" as const,
+      gen.scaleIntervals.fiveTone({
         slug: "hum-scale",
         title: "Hum scale",
-        headerSubtitle: "Hum",
-        cardSubtitle: "Hum through the full scale — feel the steps in your body",
-        tempo: 50,
-        melody: [
-          {
-            type: "major" as const,
-            root: 3,
-            events: [
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 2 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 2 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-            ],
-          },
-        ],
+        headerSubtitle: "Hum · shifting roots",
+        cardSubtitle: "Hum through the scale — feel the steps in your body across keys",
+        tempo: 80,
         minScore: 40,
+        startNote: 1,
+        endNote: 10,
+        approachChords: false,
         instruction:
-          "Hum mmmm through the scale — up five notes, then back down.\nFeel each step land in your body.\nBreathe whenever you need to.",
+          "Hum mmmm through the five-tone scale — up and back down.\nThe pattern shifts up a half-step each repeat.\nFeel each step land in your body.",
         introModal: modal.melody({
           minScore: 40,
           tips: exerciseTips("hum", "advanced"),
           instruction:
-            "Hum mmmm through a nine-note scale — up five notes, then back down the same way. The piano plays each note for you.\n\nFeel the buzz shift as the pitch rises and falls. Notice where each note lives in your body.\n\nHumming through a scale combines placement and pitch awareness — your voice learns the distances between notes.\n\nMatch 40% to continue. There's no rush.",
+            "Hum mmmm through a five-tone scale — up five notes, then back down the same way. The pattern shifts a half-step higher each repeat.\n\nFeel the buzz shift as the pitch rises and falls. Notice where each note lives in your body across different keys.\n\nHumming through a shifting scale combines placement and pitch awareness — your voice learns the distances between notes in every key.\n\nMatch 40% to continue. There's no rush.",
         }),
-      },
+      }),
       gen.scaleIntervals.fiveTone({
         slug: "five-tone-scale",
         title: "5-tone scale",
@@ -274,47 +259,32 @@ export const CHAPTER_8_STAGES: StageConfigInput[] = [
     id: "ch8-longer-phrases",
     title: "Longer Phrases",
     exercises: [
-      {
-        exerciseTypeId: "melody" as const,
+      gen.scaleIntervals.pattern({
         slug: "multi-root-melody",
         title: "Multi-root melody",
-        headerSubtitle: "Two phrases",
-        cardSubtitle: "Carry the melody across two starting points — feel the shift",
-        tempo: 50,
-        melody: [
-          {
-            type: "major" as const,
-            root: 3,
-            events: [
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 2 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
-            ],
-          },
-          {
-            type: "major" as const,
-            root: 6,
-            events: [
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 2 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
-              { type: "note" as const, target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
-            ],
-          },
-        ],
+        headerSubtitle: "Rising phrase · shifting roots",
+        cardSubtitle: "Carry the melody across many starting points — feel the shift",
+        tempo: 80,
         minScore: 50,
+        scaleType: "major",
+        startNote: 1,
+        endNote: 10,
+        events: [
+          { type: "note", target: { kind: BandTargetKind.Index, i: 1 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 2 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 3 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 4 }, duration: NoteDuration.Half },
+          { type: "note", target: { kind: BandTargetKind.Index, i: 5 }, duration: NoteDuration.Half },
+        ],
         instruction:
-          "Two rising phrases — the second starts higher than the first.\nCarry the melody across both starting points.\nListen first, then match.",
+          "A rising five-note phrase over the major scale.\nThe pattern shifts up a half-step each repeat.\nCarry the melody across every starting point.",
         introModal: modal.melody({
           minScore: 50,
           tips: exerciseTips("melody", "advanced"),
           instruction:
-            "Match two rising phrases, each starting on a different root. The piano plays each note for you.\n\nFeel how the second phrase lifts from where the first left off. Notice the shift — same pattern, new starting point.\n\nCarrying a melody across two roots builds fluency. Your voice learns to move between tonal centres with confidence.\n\nMatch 50% to continue. Just follow the sound.",
+            "Match a rising five-note phrase over the major scale. The pattern shifts a half-step higher each repeat.\n\nFeel how each phrase lifts from where the last left off. Notice the shift — same shape, new starting point.\n\nCarrying a melody across many roots builds fluency. Your voice learns to move between tonal centres with confidence.\n\nMatch 50% to continue. Just follow the sound.",
         }),
-      },
+      }),
       gen.scales.scaleDegrees({
         slug: "scale-degrees-down",
         title: "Scale degrees — descending",
