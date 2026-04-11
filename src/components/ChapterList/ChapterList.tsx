@@ -14,10 +14,16 @@ export function ChapterList() {
     analytics.journeyViewed();
   }, []);
 
+  const allUnlocked = journey.exercises.every((ex) => jp.isCompleted(ex));
+
   function handleUnlockAll() {
     for (const exercise of journey.exercises) {
       jp.completeExercise(exercise);
     }
+  }
+
+  function handleResetProgress() {
+    jp.resetAll();
   }
 
   return (
@@ -28,9 +34,15 @@ export function ChapterList() {
             <Text variant="heading" as="h1" className="sm:text-2xl">
               Journey
             </Text>
-            <Button variant="outline" size="sm" onClick={handleUnlockAll}>
-              Unlock all
-            </Button>
+            {allUnlocked ? (
+              <Button variant="outline" size="sm" onClick={handleResetProgress}>
+                Reset progress
+              </Button>
+            ) : (
+              <Button variant="outline" size="sm" onClick={handleUnlockAll}>
+                Unlock all
+              </Button>
+            )}
           </div>
           <Text
             variant="caption"
@@ -38,7 +50,9 @@ export function ChapterList() {
             className="text-right"
             style={{ color: "rgba(255,255,255,0.35)" }}
           >
-            For the impatient souls eager to explore — no judgment.
+            {allUnlocked
+              ? "Wipe the slate clean and begin anew."
+              : "For the impatient souls eager to explore — no judgment."}
           </Text>
         </div>
         <div className="flex flex-col gap-2">

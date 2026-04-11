@@ -25,6 +25,11 @@ export function useJourneyProgress() {
     [progress, rerender],
   );
 
+  const resetAll = useCallback(() => {
+    progress.resetAll();
+    rerender();
+  }, [progress, rerender]);
+
   const isCompleted = useCallback(
     (exercise: ExerciseConfig) =>
       progress.isCompleted(exercise.chapterSlug, exercise.stageId, exercise.slug),
@@ -115,6 +120,7 @@ export function useJourneyProgress() {
     () => ({
       progress,
       completeExercise,
+      resetAll,
       isCompleted,
       isUnlocked,
       isStageCompleted,
@@ -125,7 +131,7 @@ export function useJourneyProgress() {
       isStarted,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [progress, completeExercise, isCompleted, isUnlocked, isStageCompleted, isChapterCompleted, isChapterLocked, completedCount, findNextExercise, isStarted],
+    [progress, completeExercise, resetAll, isCompleted, isUnlocked, isStageCompleted, isChapterCompleted, isChapterLocked, completedCount, findNextExercise, isStarted],
   );
 }
 
